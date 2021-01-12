@@ -1,0 +1,30 @@
+[08-Jan-2021 17:17:49 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) in /home/kinetixb/inventix.kinetixbd.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:38
+Stack trace:
+#0 /home/kinetixb/inventix.kinetixbd.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php(38): PDO->__construct('mysql:host=127....', 'forge', '', Array)
+#1 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(67): Doctrine\DBAL\Driver\PDOConnection->__construct('mysql:host=127....', 'forge', '', Array)
+#2 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=127....', 'forge', '', Array)
+#3 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql in /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 671
+[08-Jan-2021 17:17:52 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) in /home/kinetixb/inventix.kinetixbd.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:38
+Stack trace:
+#0 /home/kinetixb/inventix.kinetixbd.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php(38): PDO->__construct('mysql:host=127....', 'forge', '', Array)
+#1 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(67): Doctrine\DBAL\Driver\PDOConnection->__construct('mysql:host=127....', 'forge', '', Array)
+#2 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=127....', 'forge', '', Array)
+#3 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql in /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 671
+[08-Jan-2021 17:17:53 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) in /home/kinetixb/inventix.kinetixbd.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:38
+Stack trace:
+#0 /home/kinetixb/inventix.kinetixbd.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php(38): PDO->__construct('mysql:host=127....', 'forge', '', Array)
+#1 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(67): Doctrine\DBAL\Driver\PDOConnection->__construct('mysql:host=127....', 'forge', '', Array)
+#2 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=127....', 'forge', '', Array)
+#3 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql in /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 671
+[08-Jan-2021 17:18:19 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) in /home/kinetixb/inventix.kinetixbd.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:38
+Stack trace:
+#0 /home/kinetixb/inventix.kinetixbd.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php(38): PDO->__construct('mysql:host=127....', 'forge', '', Array)
+#1 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(67): Doctrine\DBAL\Driver\PDOConnection->__construct('mysql:host=127....', 'forge', '', Array)
+#2 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=127....', 'forge', '', Array)
+#3 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql in /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 671
+[08-Jan-2021 17:18:30 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) in /home/kinetixb/inventix.kinetixbd.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:38
+Stack trace:
+#0 /home/kinetixb/inventix.kinetixbd.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php(38): PDO->__construct('mysql:host=127....', 'forge', '', Array)
+#1 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(67): Doctrine\DBAL\Driver\PDOConnection->__construct('mysql:host=127....', 'forge', '', Array)
+#2 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=127....', 'forge', '', Array)
+#3 /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql in /home/kinetixb/inventix.kinetixbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 671

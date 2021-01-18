@@ -93,7 +93,7 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <aside class="main-sidebar sidebar-dark-primary mb-5 elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
       <img src="{{asset('dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -334,6 +334,68 @@
               </li>
             </ul>
           </li>
+          {{-- Accounting --}}
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="fas fa-calculator"></i>
+              <p>
+                Accounting
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right">8</span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview mb-5">
+              <li class="nav-item">
+                <a href="/acc-heads" class="nav-link">
+                  <i class="fas fa-bahai nav-icon"></i>
+                  <p>Account Head</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/voucher-entry" class="nav-link">
+                  <i class="fas fa-door-open nav-icon"></i>
+                  <p>Voucher Entry</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/voucher-history" class="nav-link">
+                  <i class="fas fa-history nav-icon"></i>
+                  <p>Voucher History</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/ledger" class="nav-link">
+                  <i class="fas fa-chart-bar nav-icon"></i>
+                  <p>Ledger Reports</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/trial-balance" class="nav-link">
+                  <i class="fas fa-comment-dollar nav-icon"></i>
+                  <p>Trial Balance</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/income-statement" class="nav-link">
+                  <i class="fas fa-info nav-icon"></i>
+                  <p>Income Statement</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="cash-book" class="nav-link">
+                  <i class="fas fa-money-bill nav-icon"></i>
+                  <p>Cash Book</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="balance-sheet" class="nav-link">
+                  <i class="fas fa-balance-scale nav-icon"></i>
+                  <p>Balance Sheet</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          {{-- Accounting --}}
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="fas fa-file-invoice-dollar"></i>
@@ -430,6 +492,8 @@
               </li>
             </ul>
           </li>
+
+          
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

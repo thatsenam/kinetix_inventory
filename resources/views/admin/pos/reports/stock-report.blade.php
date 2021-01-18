@@ -70,9 +70,9 @@
                                 <th>Product</th>
                                 <th>Unit Price</th>
                                 <th>Opening Stock</th>
-                                <th>Current Stock</th>
                                 <th>Total Unit Purchased</th>
                                 <th>Total Unit Sold</th>
+                                <th>Current Stock</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -183,9 +183,9 @@
                     {data:'product_name',},
                     {data:'price',},
                     {data:'OpenngS',},
-                    {data:'currenTstock',},
                     {data:'pPurchase',},
-                    {data:'psold',}
+                    {data:'psold',},
+                    {data:'currenTstock',},
                 ]
             });
         }

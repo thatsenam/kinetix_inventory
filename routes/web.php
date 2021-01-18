@@ -1,9 +1,18 @@
 <?php
 
-use Illuminate\Http\Request;
 use App\Products;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Console\Input\Input;
+
+use App\Http\Livewire\Accounting\LedgerIndex;
+use App\Http\Livewire\Accounting\AccHeadIndex;
+use App\Http\Livewire\Accounting\CashBookIndex;
+use App\Http\Livewire\Accounting\BalanceSheetIndex;
+use App\Http\Livewire\Accounting\TrialBalanceIndex;
+use App\Http\Livewire\Accounting\VoucherEntryIndex;
+use App\Http\Livewire\Accounting\VoucherHistoryIndex;
+use App\Http\Livewire\Accounting\IncomeStatementIndex;
 
 /*
 |--------------------------------------------------------------------------
@@ -319,3 +328,15 @@ Route::post('/dashboard/save_bank_withdraw', 'PosBankController@save_bank_withdr
 Route::get('/dashboard/bank_ledger', 'PosBankController@bank_ledger')->name('bank_ledger')->middleware('auth');
 
 Route::post('/dashboard/get_bank_ledger', 'PosBankController@get_bank_ledger')->name('get_bank_ledger')->middleware('auth');
+
+
+// Accounting Route
+
+Route::get('/acc-heads', 'AccountingPageController@acc_head_index');
+Route::get('/voucher-entry', 'AccountingPageController@voucher_entry_index');
+Route::get('/voucher-history','AccountingPageController@voucher_history_index');
+Route::get('/income-statement','AccountingPageController@income_statement_index');
+Route::get('/balance-sheet', 'AccountingPageController@balance_sheet_index');
+Route::get('/cash-book', 'AccountingPageController@cash_book_index');
+Route::get('/ledger', 'AccountingPageController@ledger_index');
+Route::get('/trial-balance','AccountingPageController@trial_balance_index');

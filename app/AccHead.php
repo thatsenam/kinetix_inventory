@@ -8,5 +8,4 @@ class AccHead extends Model
 {
     protected $guarded = [];
 
-    protected $table= "acc_heads";
 }

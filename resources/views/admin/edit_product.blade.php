@@ -39,6 +39,7 @@
             @php( $featured = $product->is_featured )
             @php( $image = $product->product_img )
             @php( $barcode = $product->barcode )
+            @php( $serial = $product->serial )
                                         
         @endforeach
       </div><!-- /.container-fluid -->
@@ -101,24 +102,31 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="inputCategory">Select Category</label>
-                            <select id="inputCategory" name="inputCategory" class="form-control custom-select">
-                                @for ($i = 0; $i < count($catArray);)
-                                    <option value="{{ $catArray[$i + 1] }}" {{ $product->cat_id ==$catArray[$i + 1]?'selected':'' }}>{{ $catArray[$i] }}</option>
-                                        {{ $i = $i + 2 }}
-                                @endfor
-                            </select>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="inputCategory">Select Category</label>
+                                    <select id="inputCategory" name="inputCategory" class="form-control custom-select">
+                                        @for ($i = 0; $i < count($catArray);)
+                                            <option value="{{ $catArray[$i + 1] }}" {{ $product->cat_id ==$catArray[$i + 1]?'selected':'' }}>{{ $catArray[$i] }}</option>
+                                                {{ $i = $i + 2 }}
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="inputBrand">Select Brand</label>
+                                    <select id="inputBrand" name="inputBrand" class="form-control custom-select">
+                                        @for ($i = 0; $i < count($bransArray);)
+                                            <option value="{{ $bransArray[$i + 1] }}" {{ $product->brand_id ==$bransArray[$i + 1]?'selected':'' }}>{{ $bransArray[$i] }}</option>
+                                                {{ $i = $i + 2 }}
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="inputBrand">Select Brand</label>
-                            <select id="inputBrand" name="inputBrand" class="form-control custom-select">
-                                @for ($i = 0; $i < count($bransArray);)
-                                    <option value="{{ $bransArray[$i + 1] }}" {{ $product->brand_id ==$bransArray[$i + 1]?'selected':'' }}>{{ $bransArray[$i] }}</option>
-                                        {{ $i = $i + 2 }}
-                                @endfor
-                            </select>
-                        </div>
+                        
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
@@ -139,25 +147,43 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Product Code</label>
-                            <input type="text" name="inputCode" class="form-control" value="{{$code}}">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputImage">Product Image</label> <br>
-                            <img src="/images/products/{{$image}}" alt="" width="70px" style="border-radius: 100%;">
-                            <div class="custom-file">
-                                <input type="file" name="inputImage" class="custom-file-input" id="inputImage">
-                                <label class="custom-file-label" for="inputImage">Choose file</label>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Product Code</label>
+                                    <input type="text" name="inputCode" class="form-control" value="{{$code}}">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="inputImage">Product Image</label> <br>
+                                    <img src="/images/products/{{$image}}" alt="" width="70px" style="border-radius: 100%;">
+                                    <div class="custom-file">
+                                        <input type="file" name="inputImage" class="custom-file-input" id="inputImage">
+                                        <label class="custom-file-label" for="inputImage">Choose file</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="inputStatus">Product Type</label>
+                                    <select id="inputStatus" name="inputStatus" class="form-control custom-select">
+                                        <option selected value="{{$featured}}"><?php if($featured == 0){ echo 'Regular Product';}elseif($featured == 1){ echo 'Featured Product';} ?></option>
+                                        <option value="0">Regular Product</option>
+                                        <option value="1">Featured Product</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="inputStatus">Product Type</label>
-                            <select id="inputStatus" name="inputStatus" class="form-control custom-select">
-                                <option selected value="{{$featured}}"><?php if($featured == 0){ echo 'Regular Product';}elseif($featured == 1){ echo 'Featured Product';} ?></option>
-                                <option value="0">Regular Product</option>
-                                <option value="1">Featured Product</option>
-                            </select>
+                            <div class="form-check text-center">
+                                <input name="serial" type="hidden" value="0">
+                                <input name="serial" class="form-check-input" type="checkbox" value="1" id="SerialCheckbox" {{ $serial == '1' ? 'checked' : '' }}>
+                                <label class="form-check-label font-weight-bold" for="SerialCheckbox">
+                                  SERIAL NUMBER ?
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <!-- /.card-body -->

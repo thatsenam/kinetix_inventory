@@ -53,7 +53,7 @@
                     @enderror
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
-                    <button wire:click.prevent="store" type="submit" class="btn btn-success rounded-0">Add New</button>
+                    <button wire:click.prevent="store" type="submit" class="btn btn-success rounded-0">Save</button>
                 </div>
             </div>
         </form>

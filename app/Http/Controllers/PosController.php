@@ -24,7 +24,9 @@ class PosController extends Controller
 
     public function index(){
 
+        $client_id = auth()->user()->id;
         $user_id = Auth::id();
+        
         $get_license = DB::table('users')
             ->where('client_id',auth()->user()->client_id)
             ->where('id', $user_id)->first();
@@ -63,8 +65,75 @@ class PosController extends Controller
         $monthlyPurchasePayment = DB::table('purchase_primary')->where('client_id',auth()->user()->client_id)->whereBetween('date', [$lastday, $today])->sum('payment');
         $monthlySalesDue = DB::table('sales_invoice')->where('client_id',auth()->user()->client_id)->whereBetween('date', [$monthDate, $today])->sum('due');
 
+        $getSKU = DB::table('purchase_details')
+            ->where('purchase_details.client_id', $client_id)
+            ->select('purchase_details.pid','purchase_details.price','products.product_name')
+            ->join('products','purchase_details.pid', 'products.id')
+            ->groupBy('products.id')->get();
 
-        return view('admin.pos.index')->with(compact('todaysPurchase','todaysSales','todaysPurchasePayment','todaysSalesDue','weeklyPurchase','weeklySales','weeklyPurchasePayment','weeklySalesDue','monthlyPurchase','monthlySales','monthlyPurchasePayment','monthlySalesDue'));
+        $Oldsold = 0;
+        $oldPurchase = 0;
+        $psold = 0;
+        $pPurchase = 0;
+        $returns = 0;
+        $pur_return = 0;
+        $sale_return = 0;
+        $total_stock = 0;
+        $stock_amount = 0;
+        
+        foreach($getSKU as $index=>$sku){
+            // dd($sku);
+            $pid = $sku->pid;
+            $pPurchase = DB::table('purchase_details')->where('client_id', $client_id)
+                        ->where('pid',$pid)->sum('qnt');
+            $psold = DB::table('sales_invoice_details')->where('client_id', $client_id)
+                        ->where('pid',$pid)->sum('qnt');
+            $returns = DB::table('purchase_returns')->where('client_id', $client_id)
+                        ->where('pid',$pid)->sum('qnt');
+            $sale_return = DB::table('sales_return')->where('client_id', $client_id)
+                        ->where('pid',$pid)->sum('qnt');
+
+            $qty = $pPurchase - $returns - $psold + $sale_return;
+            $total_stock += $qty;
+            
+            $avg_purchase_price = DB::table('purchase_details')->where('client_id', $client_id)
+                        ->where('pid', $pid)->avg('price');
+            $stock_amount += $qty * $avg_purchase_price;
+        }
+
+        // Weekly Sales 7 Days
+        $lastday = date('Y-m-d', strtotime('-6 days'));
+        $WeekDayArray = array();
+        $SaleByDateArray = array();
+
+        for($i = 0; $i < 7; $i++ )
+        {
+            $date = $lastday . ' +' . $i . ' days';
+            $day = date('Y-m-d', strtotime($date));
+            $WeekDayArray[] = date('Y-M-d', strtotime($date));
+
+            $SaleByDateArray[] = DB::table('sales_invoice')->where('client_id', $client_id)
+                ->whereDate('date', $day)->sum('gtotal');
+        }
+
+        //////Get Monthly Sales//////
+        $thisMonth = date('Y-M');
+        $monthsArray = array();
+        $SaleByMonthArray = array();
+        for($i = 11; $i >= 0; $i-- )
+        {
+            $month = date('Y-M', strtotime($thisMonth . ' -' . $i . ' months'));
+            $firstDay = date('Y-m-01', strtotime($month));
+            $lastDay = date('Y-m-t', strtotime($month));
+            $monthsArray[] = date('M', strtotime($thisMonth . ' -' . $i . ' months'));
+
+            $SaleByMonthArray[] = DB::table('sales_invoice')->where('client_id', $client_id)
+                ->whereDate('date', '>=', $firstDay)
+                ->whereDate('date', '<=', $lastDay)
+                ->sum('gtotal');
+        }
+
+        return view('admin.pos.index')->with(compact('todaysPurchase','todaysSales','todaysPurchasePayment','todaysSalesDue','weeklyPurchase','weeklySales','weeklyPurchasePayment','weeklySalesDue','monthlyPurchase','monthlySales','monthlyPurchasePayment','monthlySalesDue', 'total_stock', 'stock_amount', 'WeekDayArray','SaleByDateArray', 'monthsArray','SaleByMonthArray'));
     }
 
      public function pos_client_registration(){

@@ -15,11 +15,12 @@ class CreateAccHeadsTable extends Migration
     {
         Schema::create('acc_heads', function (Blueprint $table) {
             $table->id();
+            $table->string('cid', 30)->nullable();
+            $table->string('parent_head')->nullable();
+            $table->string('sub_head')->nullable();
+            $table->string('head')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('client_id');
-            $table->string('parent_head');
-            $table->string('sub_head')->nullable();
-            $table->string('head');
             $table->string('lkey')->nullable();
             $table->timestamps();
         });

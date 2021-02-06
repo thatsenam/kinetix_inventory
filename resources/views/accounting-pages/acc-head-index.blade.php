@@ -2,6 +2,8 @@
 
 @section('content')
 
-    @livewire('accounting.acc-head-index')
+    <div class="content-wrapper">
+        @livewire('accounting.acc-head-index')
+    </div>
 
 @endsection

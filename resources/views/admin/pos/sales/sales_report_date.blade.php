@@ -47,12 +47,14 @@
                             <tr>
                                 <th>Date</th>
                                 <th>Invoice</th>
+                                <th>Serial</th>
                                 <th>Customer</th>
                                 <th>VAT</th>
                                 <th>S.Charge</th>
                                 <th>Discount</th>
                                 <th>Amount</th>
                                 <th>Total</th>
+                                <th>Profit</th>
                                 <th>Payment</th>
                                 <th>Due</th>
                                 <th>Actions</th>
@@ -61,11 +63,13 @@
                         <tbody>
                             
                         </tbody>
-                        <tfoot align="right">
+                        <tfoot>
                             <tr>
-                                <th colspan="5">Total Amount</th>
-                                <th colspan="2"></th>
-                                <th colspan="2">Total Paid</th>
+                                <th colspan="7">Total</th>
+                                <th colspan="1"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                                 <th colspan="2"></th>
                             </tr>
                         </tfoot>
@@ -120,7 +124,13 @@
                         <div id="prodlistDiv" class="row" style="margin: 10px 0;">
                             <div class="col-12" style="padding-right: 0 !important; padding-left: 0 !important;">
                                 <table id="prodlist" class="price-table custom-table" style="">
-                                    <tr><th style="width: 30%;">Item</th><th style="width: 20%;">price</th><th style="width: 20%;">Qty</th><th style="width: 20%;">Total</th><th style="width: 10%;">Delete</th></tr>
+                                    <tr>
+                                        <th style="width: 30%;">Item</th>
+                                        <th style="width: 20%;">Price</th>
+                                        <th style="width: 20%;">Qty</th>
+                                        <th style="width: 20%;">Total</th>
+                                        <th style="width: 10%;">Delete</th>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -152,7 +162,28 @@
                     </div>
             <!--------------------------------->
             
-            <button class="btn btn-success btn-lg print" style="margin-top: 20px;"> Print</button>    
+            @php
+                $ledger = false;
+                $pos = false;
+                $settings = \App\GeneralSetting::where('client_id', auth()->user()->client_id)->first();
+                if($settings)
+                {
+                    if($settings->print_opt == 1)
+                    {
+                        $ledger = true;
+                    }
+                    else
+                    {
+                        $pos = true;
+                    }
+                }
+            @endphp
+
+            @if($pos)
+                <button class="btn btn-success btn-lg print" style="margin-top: 20px;"> Print</button> 
+            @else
+                <button onclick="ledgerPrint()" class="btn btn-success btn-lg" style="margin-top: 20px;">Print</button>   
+            @endif   
             
             
         </div>
@@ -176,7 +207,8 @@
                 "precessing": true,
                 "serverSide": true,
                 "columnDefs": [
-                    { "orderable": false, "targets": 0 }
+                    { "orderable": false, "targets": 0 },
+                    {"bSearchable": true, "bVisible": false, "aTargets": [ 2 ]},
                 ],
                 dom: 'Bfrtip',
                 buttons: [
@@ -194,28 +226,51 @@
                     };
         
                     // Total over all pages
-                    total = api
+                    amount = api
                         .column( 6 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
 
+                    total = api
+                        .column( 7 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
 
-                    // Payment Total
-                    payTotal = api
+                    profit = api
                         .column( 8 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    // Payment Total
+                    payTotal = api
+                        .column( 9 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    due = total - payTotal;
         
                     // Update footer
-                    $( api.column( 5 ).footer() ).html(
-                        'TK-'+ total
+                    $( api.column( 6 ).footer() ).html(
+                        amount
+                    );
+                    $( api.column( 7 ).footer() ).html(
+                        total
+                    );
+                    $( api.column( 8 ).footer() ).html(
+                        profit
                     );
                     $( api.column( 9 ).footer() ).html(
-                        'TK-'+ payTotal
+                        payTotal
+                    );
+                    $( api.column( 10 ).footer() ).html(
+                        due
                     );
                 },
                 ajax: {
@@ -225,12 +280,14 @@
                 columns: [
                     {data:'date',},
                     {data:'invoice_no',},
-                    {data:'cid',},
+                    {data:'serial',},
+                    {data:'cname',},
                     {data:'vat',},
                     {data:'scharge',},
                     {data:'discount',},
                     {data:'amount',},
                     {data:'gtotal',},
+                    {data:'profit',},
                     {data:'payment',},
                     {data:'due',},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -449,6 +506,18 @@
              WinPrint.close();
         }
     });
+    function ledgerPrint() {
+        
+        document.getElementById("prodlist").style.width = "100%";
+        
+        var printContents = document.getElementById("printdiv").innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        location.reload();
+    }
 </script>
 
 @endsection

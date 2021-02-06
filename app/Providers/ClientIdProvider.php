@@ -29,6 +29,7 @@ use App\Sales;
 use App\SalesInvoice;
 use App\SalesInvoiceDetails;
 use App\SalesReturn;
+use App\Serial;
 use App\Settings;
 use App\Supplier;
 use App\UserProfiles;
@@ -253,11 +254,15 @@ class ClientIdProvider extends ServiceProvider
             $model->user_id = auth()->user()->id;
 
         });
-
+        
         UserProfiles::creating(function ($model) {
             $model->client_id = auth()->user()->client_id;
             $model->user_id = auth()->user()->id;
-
+        });
+        
+        Serial::creating(function ($model) {
+            $model->client_id = auth()->user()->client_id;
+            $model->user_id = auth()->user()->id;
         });
 
     }

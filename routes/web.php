@@ -5,14 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Console\Input\Input;
 
-use App\Http\Livewire\Accounting\LedgerIndex;
-use App\Http\Livewire\Accounting\AccHeadIndex;
-use App\Http\Livewire\Accounting\CashBookIndex;
-use App\Http\Livewire\Accounting\BalanceSheetIndex;
-use App\Http\Livewire\Accounting\TrialBalanceIndex;
-use App\Http\Livewire\Accounting\VoucherEntryIndex;
-use App\Http\Livewire\Accounting\VoucherHistoryIndex;
-use App\Http\Livewire\Accounting\IncomeStatementIndex;
 
 /*
 |--------------------------------------------------------------------------
@@ -187,6 +179,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get','post'],'/payment/invoice/{id}','PosCustomerController@payinvoice');
     Route::match(['get','post'],'/dashboard/sales_invoice/{id}','PosCustomerController@saleinvoice');
 
+
     //POS Suppliers Options
     Route::match(['get','post'],'/dashboard/suppliers','PosSupplierController@setSupplier')->name('set_supplier');
     Route::match(['get','post'],'/dashboard/update_supp','PosSupplierController@edit')->name('edit_supplier');
@@ -263,11 +256,16 @@ Route::post('/dashboard/delete_purchase', 'PosPurchaseController@delete_purchase
 
 Route::get('/dashboard/purchase_return_report_date', 'PosPurchaseController@purchase_return_report_date')->name('purchase_return_report_date')->middleware('auth');
 
-Route::post('/dashboard/get_purchase_return_report_date', 'PosPurchaseController@get_purchase_return_report_date')->name('get_purchase_return_report_date')->middleware('auth');
+Route::match(['get', 'post'], '/dashboard/get_purchase_return_report_date', 'PosPurchaseController@get_purchase_return_report_date')->name('get_purchase_return_report_date')->middleware('auth');
 
 Route::post('/dashboard/delete_purchase_return', 'PosPurchaseController@delete_purchase_return')->name('delete_purchase_return')->middleware('auth');
 
 Route::post('/dashboard/get_purchase_invoice_details', 'PosPurchaseController@get_purchase_invoice_details')->name('get_purchase_invoice_details')->middleware('auth');
+
+Route::get('/dashboard/purchase_report_brand', 'PosPurchaseController@purchase_report_brand')->name('purchase_report_brand')->middleware('auth');
+
+Route::match(['get','post'],'/dashboard/get_purchase_report_brand', 'PosPurchaseController@get_purchase_report_brand')->name('get_purchase_report_brand')->middleware('auth');
+
 
 Route::get('/dashboard/sales_invoice', 'PosSalesController@sales_invoice')->name('sales_invoice')->middleware('auth');
 
@@ -301,9 +299,18 @@ Route::post('/dashboard/get_invoice_details', 'PosSalesController@get_invoice_de
 
 Route::get('/dashboard/sales_return_report_date', 'PosSalesController@sales_return_report_date')->name('sales_return_report_date')->middleware('auth');
 
-Route::post('/dashboard/get_sales_return_report_date', 'PosSalesController@get_sales_return_report_date')->name('get_sales_return_report_date')->middleware('auth');
+Route::match(['get', 'post'], '/dashboard/get_sales_return_report_date', 'PosSalesController@get_sales_return_report_date')->name('get_sales_return_report_date')->middleware('auth');
 
 Route::post('/dashboard/delete_sales_return', 'PosSalesController@delete_sales_return')->name('delete_sales_return')->middleware('auth');
+
+Route::get('/get_serial/{product}', 'PosSalesController@get_serial');
+Route::get('/get_serial_sold/{product}', 'PosSalesController@get_serial_sold');
+Route::get('/get_serial_purchased/{product}', 'PosPurchaseController@get_serial_purchased');
+
+Route::match(['get','post'],'/dashboard/sales_report_brand', 'PosSalesController@sales_report_brand')->name('sales_report_brand')->middleware('auth');
+
+Route::match(['get','post'],'/dashboard/get_sales_report_brand', 'PosSalesController@get_sales_report_brand')->name('get_sales_report_brand')->middleware('auth');
+
 
 
 

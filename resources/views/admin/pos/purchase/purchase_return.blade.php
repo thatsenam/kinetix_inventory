@@ -95,6 +95,32 @@
              </div>
              
         </form> 
+
+        <!-- Modal -->
+        <div class="modal fade" id="serial_modal" tabindex="-1" role="dialog" aria-labelledby="serial_modalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title w-100" id="serial_modalLabel">Product Serial</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div id="serial_input">
+
+                        </div>
+                        <div class="float-right">
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                            <button type="button" id="serial_save" class="btn btn-primary">SAVE</button>
+                        </div>
+                    </form>
+                </div>
+            
+            </div>
+            </div>
+        </div>
              
       </div>
     </div>
@@ -104,6 +130,11 @@
 @section('page-js-script')
 
 <script type="text/javascript">
+
+    var product_id;
+    var product_serial;
+    var serial_qty;
+    var serial_array = {};
 
     $(document).ready(function(){
         
@@ -141,7 +172,9 @@
                         var id = $(this).find(".active").attr("data-id");    
                         var name = $(this).find(".active").attr("data-name");
                         var price = $(this).find(".active").attr("data-price");  
-                        
+
+                        product_id = id;
+                        product_serial = $(this).find(".active").attr("data-serial");
                         
                         $('#search').val(name);
                         $('#pid_hid').val(id);
@@ -371,6 +404,41 @@
             	}); 
                    
             });
+
+        $('#serial_save').click(function (e) {
+            var i, val = [];
+            var qnt = $('#qnt').val();
+            var access = 0;
+
+            for(i=0; i<serial_qty; i++)
+            {
+                var ser = $('#serial-'+i).val();
+                if(ser == '')
+                {
+                    $('#serial-'+i).addClass("is-invalid");
+                    access = 1;
+                }
+                else
+                {
+                    $('#serial-'+i).removeClass("is-invalid");
+                }
+            }
+            if(access == 1)
+            {
+                return;
+            }
+            for(i=0; i<serial_qty; i++)
+            {
+                var ser = $('#serial-'+i).val();
+                
+                val[i] = ser;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+            }
+            serial_array[product_id] = val;
+
+            $('#serial_modal').modal('hide');
+            
+            console.log(JSON.stringify(serial_array));
+        });
         
         $('#qnt').on('keyup', function(e){
             
@@ -384,6 +452,61 @@
                 var memo = $('#supp_memo').val();
                 var qnt = Number($(this).val());
                 var price = Number($('#price').val());
+
+                serial_qty = qnt;
+
+                if(product_serial == 1)
+                {
+                    $("#serial_input").empty();
+                    for(i=0;i<qnt;i++)
+                    {
+                        $('#serial_input').append(
+                            "<div class='form-group row'>" +
+                                "<label for='serial-"+i+"' class='col-3 col-form-label'>Serial "+(i+1)+"</label>" +
+                                "<div class='col-9'>" + 
+                                    "<input list='serial_suggest' type='text' class='form-control' id='serial-"+i+"' required>" +
+                                    "<datalist id='serial_suggest'></datalist>" +
+                                "</div>" +
+                            "</div>"
+                        );
+                    }
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        url: "/get_serial_purchased/" + product_id,
+                        method: 'get',
+                        data: '',
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType: "json",
+                        beforeSend: function() {},
+                        error: function(ts) {},
+                        success: function(response) {
+                            // var obj = JSON.parse(JSON.stringify(response));
+                            serial_unsold = response;
+                            console.log(serial_unsold);
+                            $("datalist").empty();
+                            var j; 
+                            for (j = 0; j < serial_unsold.length; ++j) {
+                                $('datalist').append(
+                                    "<option>" + serial_unsold[j] + "</option>"
+                                );
+                            }
+
+                            $('#serial_modal').modal('toggle');
+
+                            $('#serial_modal').on('shown.bs.modal', function () {
+                                    $('#serial-'+0).trigger('focus')
+                            });
+                        }
+                    });
+                }
                 
                 if(name == '' || qnt == '' || price == '' || memo == ''){
                     
@@ -454,6 +577,7 @@
            
             formData.append('fieldValues', JSON.stringify(fieldValues)); 
             formData.append('cartData', JSON.stringify(cartData)); 
+            formData.append('serialArray', JSON.stringify(serial_array));
            		
             $.ajaxSetup({
                 headers: {
@@ -530,7 +654,11 @@
          $('body').on('click', '.delete', function(e){
             
             var totalPriceTd = Number($(this).closest('tr').find('.totalPriceTd').html());
-            
+            var productID = Number($(this).closest('tr').find("td").attr('data-prodid'));
+
+            alert(productID);
+            delete serial_array[productID];
+
             var grandTotal = Number($('#total').val());
         
             var totalPrice = $('#hid_total').val();
@@ -602,12 +730,14 @@
       
     });
     
-    function selectProducts(id, name, price){
+    function selectProducts(id, name, price, serial){
 
         $('#search').val(name);
         $('#pid_hid').val(id);
         $('#price').val(price);
-                                    
+        product_id = id;
+        product_serial = serial;  
+
         $("#price").focus();
         $("#products_div").hide();
         

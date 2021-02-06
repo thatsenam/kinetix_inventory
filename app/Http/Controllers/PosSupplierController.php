@@ -30,12 +30,12 @@ class PosSupplierController extends Controller
             $sid = (DB::table('suppliers')->max('id'));
 
 //            DB::table('acc_heads')->insert([
-                AccHead::create([
+            AccHead::create([
                 'cid' => 'sid'." ".$sid,
-                'parent_head' => 'Expense',
-                'sub_head' => 'Payments',
+                'parent_head' => 'Liabilities',
+                'sub_head' => 'Suppliers Payable',
                 'head' => $data['inputName']." ".$data['inputPhone'],
-                'user' => Auth::id(),
+                // 'user' => Auth::id(),
             ]);
 
             return redirect('/dashboard/suppliers')->with('flash_message_success', 'Supplier Created Successfully!');
@@ -66,9 +66,30 @@ class PosSupplierController extends Controller
         $address = $request->address;
         $email = $request->email;
 
+        $prev_supplier = Supplier::find($id);
+
         DB::table('suppliers')
             ->where('client_id',auth()->user()->client_id)
             ->where(['id'=>$id])->update(['name'=>$name,'phone'=>$phone,'address'=>$address,'email'=>$email]);
+        
+        $sid = "sid ".$id;
+        $head = $name." ".$phone;
+        
+        AccHead::where('client_id', auth()->user()->client_id)
+                ->where('cid', $sid)->update([
+                    'head' => $head,
+                ]);
+
+        $prev_supp_name = $prev_supplier->name;
+        // $prev_cust_phone = $prev_supplier->phone;
+        // $cust_head = $prev_cust_name." ".$prev_cust_phone;
+        
+        AccTransaction::where('client_id', auth()->user()->client_id)
+            ->where('sort_by', $sid)
+            ->where('head', $prev_supp_name)
+            ->update([
+                'head' => $name,
+            ]);
 
         echo 'Supplier Data Updated Successfully!';
     }

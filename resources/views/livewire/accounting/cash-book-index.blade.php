@@ -3,7 +3,9 @@
     @section('title', 'Cash Book')
 
     <div class="content-wrapper">
-        <h1>Cash Book</h1>
+        <div class="card">
+            <div class="card-body">
+                <h1>Cash Book</h1>
         <div class="container pb-4">
             <form wire:submit.prevent="gatherCashbook">
     
@@ -103,6 +105,8 @@
     
                     </table>
                 </div>
+            </div>
+        </div>
             </div>
         </div>
     </div>

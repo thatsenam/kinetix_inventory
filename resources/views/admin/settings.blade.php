@@ -66,6 +66,46 @@
                       <label for="siteAddress">Address</label>
                       <input type="text" name="siteAddress" class="form-control" id="siteAddress"  value="<?php echo $settings->site_address ?? "N/A";?>">
                     </div>
+                    <div class="row">
+                      <div class="form-group col-md">
+                        <label for="vat">Vat</label>
+                        <div class="input-group">
+                          <input type="text" name="vat" class="form-control" id="vat"  value="<?php echo $settings->vat ?? "N/A";?>">
+                          <div class="input-group-append">
+                            <span class="input-group-text font-weight-bold">%</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group col-md">
+                        <label for="scharge">Service Charge</label>
+                        <input type="text" name="scharge" class="form-control" id="scharge"  value="<?php echo $settings->scharge ?? "N/A";?>">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      @php
+                          $ledger = false;
+                          $pos = false;
+                          if( $settings ){
+                            if($settings->print_opt == '1')
+                            {
+                              $ledger = true;
+                            }
+                            elseif($settings->print_opt == '2')
+                            {
+                              $pos = true;
+                            }
+                          }
+                      @endphp
+                      <label class="mr-5">Print Type</label>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="printOpt" id="inlineRadio1" value="1" {{ $ledger ? 'checked' : '' }}>
+                        <label class="form-check-label" for="inlineRadio1">Ledger Print</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="printOpt" id="inlineRadio2" value="2" {{ $pos ? 'checked' : '' }}>
+                        <label class="form-check-label" for="inlineRadio2">POS Print</label>
+                      </div>
+                    </div>
                     <div class="form-group">
                         <label>Favicon</label>
                         <input type="file" name="favicon" class="form-control">

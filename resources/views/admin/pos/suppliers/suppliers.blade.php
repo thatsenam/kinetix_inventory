@@ -409,6 +409,8 @@
 @section('page-js-script')
 
 <script type="text/javascript">
+    var supplierID;
+
     $(function () {
         $('#addSupplier').validate({
             rules: {
@@ -552,6 +554,7 @@
 
     });
     function open_container2(id){
+      supplierID = id.getAttribute('data-id');
       $.ajaxSetup({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -648,7 +651,8 @@
             alert("Info fields can't be empty! Please give info to continue.");
             return false;
         }
-        var id = $("#suppabc").attr('data-id');
+        // var id = $("#suppabc").attr('data-id');
+        var id = supplierID;
         var name = $("#name").val();
         var phone = $("#phone").val();
         var address = $("#address").val();

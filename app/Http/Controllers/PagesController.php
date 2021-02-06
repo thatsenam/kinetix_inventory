@@ -142,18 +142,24 @@ class PagesController extends Controller
         $phone       = $req['phone'];
         $siteAddress = $req['siteAddress'];
         $email       = $req['email'];
+        $printOpt    = $req['printOpt'];
+        $vat         = $req['vat'];
+        $scharge     = $req['scharge'];
 
         $general_settings = GeneralSetting::firstWhere('client_id',auth()->user()->client_id);
 
-            if ($general_settings ==null){
-                $general_settings = new GeneralSetting();
-            }
+        if ($general_settings ==null){
+            $general_settings = new GeneralSetting();
+        }
 
         $general_settings->site_name    = $siteName;
         $general_settings->site_tagline = $siteTagline;
         $general_settings->site_address = $siteAddress;
         $general_settings->phone        = $phone;
         $general_settings->email        = $email;
+        $general_settings->vat          = $vat;
+        $general_settings->scharge      = $scharge;
+        $general_settings->print_opt    = $printOpt;
 
         if($req->hasFile('favicon')){
             $prev_img = $general_settings->favicon;

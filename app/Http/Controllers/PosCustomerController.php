@@ -66,14 +66,15 @@ class PosCustomerController extends Controller
             $customer->user = Auth::id();
             $customer->save();
 
-            $cust_id = (DB::table('customers')->max('id'));
+            $cust_id = $customer->id;
 
-//            DB::table('acc_heads')->insert([
-                AccHead::create([
+            $data = AccHead::create([
                 'cid' => "cid ".$cust_id,
+                'parent_head' => 'Asset',
+                'sub_head' => 'Customers Receivable',
                 'head' => $data['inputName']." ".$data['inputPhone'],
-                'user' => Auth::id(),
             ]);
+
             return redirect('/dashboard/customers')->with('flash_message_success', 'Customer Created Successfully!');
         }
         $customers = DB::table('customers')
@@ -123,7 +124,29 @@ class PosCustomerController extends Controller
         $phone = $request->phone;
         $address = $request->address;
 
+        $prev_customer = Customer::find($id);
+
         DB::table('customers')->where(['id'=>$id])->update(['name'=>$name,'phone'=>$phone,'address'=>$address]);
+
+        $cid = "cid ".$id;
+        $head = $name." ".$phone;
+        
+        AccHead::where('client_id', auth()->user()->client_id)
+                ->where('cid', $cid)->update([
+                    'head' => $head,
+                ]);
+
+        $prev_cust_name = $prev_customer->name;
+        $prev_cust_phone = $prev_customer->phone;
+        $cust_head = $prev_cust_name." ".$prev_cust_phone;
+        
+        AccTransaction::where('client_id', auth()->user()->client_id)
+                ->where('sort_by', $cid)
+                ->where('head', $cust_head)
+                ->update([
+                    'head' => $head,
+                ]);
+
         echo 'Customer Data Updated Successfully!';
     }
 

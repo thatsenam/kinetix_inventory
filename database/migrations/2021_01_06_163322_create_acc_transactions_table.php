@@ -15,9 +15,7 @@ class CreateAccTransactionsTable extends Migration
     {
         Schema::create('acc_transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('client_id');
-            $table->unsignedBigInteger('sort_by');
+            $table->string('sort_by', 55)->nullable();
             $table->string('vno');
             $table->string('head')->nullable();
             $table->string('description')->nullable();
@@ -28,6 +26,8 @@ class CreateAccTransactionsTable extends Migration
             $table->date('date');
             $table->string('type')->nullable();
             $table->unsignedBigInteger('type_id')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('client_id');
             $table->timestamps();
         });
     }

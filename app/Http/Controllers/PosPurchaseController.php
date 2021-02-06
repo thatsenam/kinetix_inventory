@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use Image;
+use App\Filter;
+use App\Seller;
+use App\Serial;
+use App\Company;
+use App\Category;
+use App\Products;
+use App\Supplier;
+use App\Manufacturer;
+use App\ProductImage;
 use App\AccTransaction;
 use App\PurchaseDetails;
 use App\PurchasePrimary;
 use App\PurchaseReturns;
-use App\Supplier;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Products;
-use App\ProductImage;
-use App\Company;
-use App\Manufacturer;
-use App\Category;
-use App\Filter;
-use App\Seller;
-use Image;
-use Auth;
 
 class PosPurchaseController extends Controller
 {
@@ -49,6 +50,7 @@ class PosPurchaseController extends Controller
 
             $id = $row->id;
             $name = $row->product_name;
+            $serial = $row->serial;
 
             $products_price = DB::table('purchase_details')
                 ->where('client_id',auth()->user()->client_id)
@@ -64,7 +66,7 @@ class PosPurchaseController extends Controller
 
             $url = config('global.url'); ?>
 
-            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>'><?php echo $name; ?> </li>
+            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>'><?php echo $name; ?> </li>
 
             <?php
 
@@ -133,8 +135,19 @@ class PosPurchaseController extends Controller
         <?php
     }
 
+    public function get_serial_purchased($product)
+    {
+        $serials = Serial::where('client_id', auth()->user()->client_id)
+            ->where('product_id', $product)
+            ->whereNull('status')
+            ->orWhere('status', 'sale_ret')
+            ->pluck('serial');
+        return $serials;
+    }
+
     public function save_purchase_products(Request $req){
 
+        
         $fieldValues = json_decode($req['fieldValues'], true);
 
         $supp_name = $fieldValues['supp_name'];
@@ -167,7 +180,7 @@ class PosPurchaseController extends Controller
         $pur_inv = "PUR-".$maxid;
 
 //        DB::table('purchase_primary')->insert([
-            PurchasePrimary::create([
+        PurchasePrimary::create([
             'pur_inv' => $pur_inv,
             'sid' => $supp_id,
             'supp_inv' => $supp_memo,
@@ -178,6 +191,21 @@ class PosPurchaseController extends Controller
             'date' => $date,
             'user' => $user
         ]);
+
+        $serials = json_decode($req['serialArray'], true);
+
+        foreach($serials as $productID => $serial)
+        {
+            foreach($serial as $ser)
+            {
+                Serial::create([
+                    'product_id' => $productID,
+                    'serial' => $ser,
+                    'supplier_id' => $supp_id,
+                    'pur_inv' => $pur_inv,
+                ]);
+            }
+        }
 
 
         $take_cart_items = json_decode($req['cartData'], true);
@@ -239,7 +267,11 @@ class PosPurchaseController extends Controller
 
         if($payment > 0){
 
-            $vno = (DB::table('acc_transactions')->max('id') + 1);
+            // $vno = (DB::table('acc_transactions')->max('id') + 1);
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
+                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            
 
             $head = "Purchase";
             $description = "Purchase from Invoice ".$pur_inv;
@@ -280,7 +312,11 @@ class PosPurchaseController extends Controller
 
         }else{
 
-            $vno = (DB::table('acc_transactions')->max('id') + 1);
+            // $vno = (DB::table('acc_transactions')->max('id') + 1);
+            
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
+                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = "Purchase";
             $description = "Purchase from Invoice ".$pur_inv;
@@ -379,13 +415,34 @@ class PosPurchaseController extends Controller
             $i = $i + 5;
         }
 
+        $serials = json_decode($req['serialArray'], true);
+
+        foreach($serials as $productID => $serial)
+        {
+            foreach($serial as $ser)
+            {
+                Serial::where('client_id', auth()->user()->client_id)
+                    ->where('product_id', $productID)
+                    ->where('serial', $ser)
+                    ->update([
+                        'status' => 'pur_ret',
+                        'pur_ret_inv' => $supp_memo,
+                    ]);
+            }
+        }
+
         //////Save to Accounts//////
 
         $supplier = DB::table('suppliers')
             ->where('client_id',auth()->user()->client_id)
             ->where('id', $supp_id)->first();
 
-            $vno = (DB::table('acc_transactions')->max('id') + 1);
+            // $vno = (DB::table('acc_transactions')->max('id') + 1);
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
+                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            
+            
 
             $head = "Purchase Return";
             $description = "Purchase Return from Supplier Memo ".$supp_memo;
@@ -447,6 +504,18 @@ class PosPurchaseController extends Controller
             ->where('purchase_primary.client_id',auth()->user()->client_id)
             ->whereBetween('date', [$stdate, $enddate])->get();
 
+        $purchase->map(function($purchase){
+            $serials = Serial::where('client_id', auth()->user()->client_id)
+                ->where('pur_inv', $purchase->pur_inv)->pluck('serial')->toArray();
+            if($serials){
+                $serials = implode (", ", $serials);
+                $purchase->serial = $serials;
+            }else{
+                $purchase->serial = '';
+            }
+            return $purchase;
+        });
+
         return DataTables()->of($purchase)
         ->addIndexColumn()
         ->addColumn('action', function($row){
@@ -463,6 +532,80 @@ class PosPurchaseController extends Controller
         //     <td><a title='Details' href='#' class='view mr-2'><span class='btn btn-xs btn-info'><i class='mdi mdi-eye'></i></span></a> <a title='Delete' href='#' class='delete'><span class='btn btn-xs btn-danger'><i class='mdi mdi-delete'></i></span></a></td>
         //     </tr>";
         // }
+    }
+
+    public function purchase_report_brand()
+    {
+        $brands = DB::table('brands')->where('client_id', auth()->user()->client_id)->get();
+        $suppliers = DB::table('suppliers')->where('client_id', auth()->user()->client_id)->get();
+        return view("admin.pos.purchase.purchase_report_brand", compact('brands', 'suppliers'));
+    }
+
+    public function get_purchase_report_brand(Request $req)
+    {
+        $stdate = $req['from_date'];
+        $enddate = $req['to_date'];
+        $brand_id = $req['brand_id'];
+        $supplier_id = $req['supplier_id'];
+        $brand_product_array = [];
+
+        if(!$stdate){
+            $stdate = date('Y-m-d', strtotime('-1 day')); 
+        }
+        if(!$enddate){
+            $enddate = date('Y-m-d', strtotime('+1 day'));
+        }
+        
+        if($supplier_id)
+        {
+            $i = 1;
+            $brand_product_array = DB::table('purchase_primary')->where('purchase_primary.client_id', auth()->user()->client_id)
+                        ->join('purchase_details', 'purchase_primary.pur_inv', 'purchase_details.pur_inv')
+                        ->join('suppliers', 'purchase_primary.sid', 'suppliers.id')
+                        ->join('products', 'purchase_details.pid', 'products.id')
+                        ->where('sid', $supplier_id)
+                        ->get(); 
+            $brand_product_array->map(function($query, $i){
+                $query->sl = $i + 1;
+                return $query;
+            });
+            // dd($brand_product_array);
+        }
+        else
+        {
+            $products = DB::table('products')->where('client_id', auth()->user()->client_id)
+                        ->where('brand_id', $brand_id)->get();                          
+
+            foreach($products as $i => $product)
+            {
+                $pname = $product->product_name;
+
+                $qnt = DB::table('purchase_details')->where('pid', $product->id)
+                    ->whereDate('created_at', '>=', $stdate)
+                    ->whereDate('created_at', '<=', $enddate)
+                    ->sum('qnt');
+                $price = DB::table('purchase_details')->where('pid', $product->id)
+                    ->whereDate('created_at', '>=', $stdate)
+                    ->whereDate('created_at', '<=', $enddate)
+                    ->avg('price');
+
+                $price = round($price, 2);
+
+                $total = $qnt * $price;
+
+                $total = round($total, 2);
+
+                $brand_product_array[] = [
+                    'sl' => $i + 1,
+                    'product_name' => $pname,
+                    'qnt' => $qnt,
+                    'price' => $price,
+                    'total' => $total,
+                ];
+            }
+        }
+        
+        return DataTables()->of($brand_product_array)->make(true);
     }
 
     public function delete_purchase(Request $req){
@@ -524,25 +667,51 @@ class PosPurchaseController extends Controller
 
         $enddate = $req['enddate'];
 
-        $purchase = DB::table('purchase_returns')
-
-            ->where('purchase_returns.client_id',auth()->user()->client_id)
-        ->select('purchase_returns.id as retid', 'purchase_returns.date as date','purchase_returns.pur_inv as pur_inv','products.product_name as pname',
-        'suppliers.name as sname', 'purchase_returns.qnt as qnt', 'purchase_returns.price as price','purchase_returns.total as total')
-        ->join('suppliers', 'purchase_returns.sid', 'suppliers.id')
-        ->join('products', 'purchase_returns.pid', 'products.id')
-        ->whereBetween('date', [$stdate, $enddate])->get();
-
-        $trow = "";
-
-       foreach($purchase as $pur){
-            $trow .= "<tr><td class='retid'>".$pur->retid."</td><td>".$pur->date."</td><td class='invoice'>".$pur->pur_inv."</td>
-            <td>".$pur->sname."</td><td>".$pur->pname."</td><td>".$pur->qnt."</td><td>".$pur->price."</td><td>".$pur->total."</td>
-            <td><a title='Delete' href='#' class='delete'><span class='btn btn-xs btn-danger'><i class='mdi mdi-delete'></i></span></a></td>
-            </tr>";
+        if(!$stdate){
+            $stdate = date('Y-m-d', strtotime('-1 day'));
+        }
+        if(!$enddate){
+            $enddate = date('Y-m-d', strtotime('+1 day'));
         }
 
-        return $trow;
+        $purchase = DB::table('purchase_returns')->where('purchase_returns.client_id',auth()->user()->client_id)
+            ->select('purchase_returns.id as retid', 'purchase_returns.date as date','purchase_returns.pur_inv as pur_inv','products.product_name as pname',
+            'suppliers.name as sname', 'purchase_returns.qnt as qnt', 'purchase_returns.price as price','purchase_returns.total as total')
+            ->join('suppliers', 'purchase_returns.sid', 'suppliers.id')
+            ->join('products', 'purchase_returns.pid', 'products.id')
+            ->whereBetween('date', [$stdate, $enddate])->get();
+        
+        $purchase->map(function($purchase){
+            $serials = Serial::where('client_id', auth()->user()->client_id)
+                ->where('pur_ret_inv', $purchase->pur_inv)->pluck('serial')->toArray();
+            if($serials){
+                $serials = implode (", ", $serials);
+                $purchase->serial = $serials;
+            }else{
+                $purchase->serial = '';
+            }
+            return $purchase;
+        });
+
+        return DataTables()->of($purchase)
+            ->addIndexColumn()
+            ->addColumn('action', function($row){
+                $action = '<a data-id='.$row->retid.' data-invoice='.$row->pur_inv.' title="delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
+                return $action;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+
+    //     $trow = "";
+
+    //    foreach($purchase as $pur){
+    //         $trow .= "<tr><td class='retid'>".$pur->retid."</td><td>".$pur->date."</td><td class='invoice'>".$pur->pur_inv."</td>
+    //         <td>".$pur->sname."</td><td>".$pur->pname."</td><td>".$pur->qnt."</td><td>".$pur->price."</td><td>".$pur->total."</td>
+    //         <td><a title='Delete' href='#' class='delete'><span class='btn btn-xs btn-danger'><i class='mdi mdi-delete'></i></span></a></td>
+    //         </tr>";
+    //     }
+
+    //     return $trow;
     }
 
     public function delete_purchase_return(Request $req){
@@ -597,15 +766,20 @@ class PosPurchaseController extends Controller
 
         $get_invoice = DB::table('purchase_details')->join('products', 'purchase_details.pid', 'products.id')
             ->where('purchase_details.client_id',auth()->user()->client_id)
-
             ->where('purchase_details.pur_inv', '=', $s_text)->get();
-
         $trow = "";
 
         foreach($get_invoice as $row){
-
-            $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
-
+            $serials = Serial::where('client_id', auth()->user()->client_id)
+                ->where('pur_inv', $row->pur_inv)
+                ->where('product_id', $row->pid)->pluck('serial')->toArray();
+            if($serials)
+            {
+                $serials = implode (", ", $serials);
+                $trow .= "<tr><td>".$row->product_name ."<br>". $serials."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+            }else{
+                $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+            }
         }
 
         $get_invoice = DB::table('purchase_primary')

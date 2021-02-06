@@ -20,7 +20,7 @@ class ProductsController extends Controller
     public function addProduct(Request $request){
         $category = Category::orderBy('name', 'ASC')->get();
         $brands = Brands::orderBy('name', 'ASC')->get();
-
+        
         if($request->isMethod('post')){
 
             $slug = Str::slug($request->inputName);
@@ -56,6 +56,7 @@ class ProductsController extends Controller
             $product->sku = $data['inputSKU'];
             $product->stock = $data['inputStock'];
             $product->is_featured = $data['inputStatus'];
+            $product->serial = $data['serial'];
 
             if($request->hasFile('inputImage')){
                 $file = $request->file('inputImage');
@@ -137,7 +138,22 @@ class ProductsController extends Controller
             }
 
             $data = $req->all();
-            Products::where(['id'=>$id])->update(['cat_id'=>$data['inputCategory'],'brand_id'=>$data['inputBrand'],'product_name'=>$data['inputName'],'product_desc'=>$data['inputDescription'],'product_specs'=>$data['inputSpecs'],'before_price'=>$data['inputPrice'],'after_pprice'=>$data['DiscountPrice'],'barcode'=>$barcode,'product_code'=>$data['inputCode'],'sku'=>$data['inputSKU'],'product_size'=>$data['inputSize'],'stock'=>$data['inputStock'],'is_featured'=>$data['inputStatus']]);
+            Products::where(['id'=>$id])->update([
+                'cat_id'=>$data['inputCategory'],
+                'brand_id'=>$data['inputBrand'],
+                'product_name'=>$data['inputName'],
+                'product_desc'=>$data['inputDescription'],
+                'product_specs'=>$data['inputSpecs'],
+                'before_price'=>$data['inputPrice'],
+                'after_pprice'=>$data['DiscountPrice'],
+                'barcode'=>$barcode,
+                'product_code'=>$data['inputCode'],
+                'sku'=>$data['inputSKU'],
+                'product_size'=>$data['inputSize'],
+                'stock'=>$data['inputStock'],
+                'is_featured'=>$data['inputStatus'],
+                'serial' => $data['serial'],
+            ]);
 
             $DataProduct = Products::where('id', $id)->first();
             $getSKU = $DataProduct['sku'];

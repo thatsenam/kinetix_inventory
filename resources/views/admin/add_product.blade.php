@@ -83,26 +83,33 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="inputCategory">Select Category<span class="text-danger">*</span></label>
-                            <select id="inputCategory" name="inputCategory" class="form-control custom-select">
-                                <option selected disabled>Select One</option>
-                                <?php if($category != null){ 
-                                    foreach($category as $cat){ ?>
-                                    <option value="<?php echo $cat['id'] ?>"><?php echo $cat['name'] ?> </option>
-                                <?php } }?>
-                            </select>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="inputCategory">Select Category<span class="text-danger">*</span></label>
+                                    <select id="inputCategory" name="inputCategory" class="form-control custom-select">
+                                        <option selected disabled>Select One</option>
+                                        <?php if($category != null){ 
+                                            foreach($category as $cat){ ?>
+                                            <option value="<?php echo $cat['id'] ?>"><?php echo $cat['name'] ?> </option>
+                                        <?php } }?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="inputBrand">Select Brand<span class="text-danger">*</span></label>
+                                    <select id="inputBrand" name="inputBrand" class="form-control custom-select">
+                                        <option selected disabled>Select One</option>
+                                        <?php if($brands != null){ 
+                                            foreach($brands as $brand){ ?>
+                                            <option value="<?php echo $brand['id'] ?>"><?php echo $brand['name'] ?> </option>
+                                        <?php } }?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="inputBrand">Select Brand<span class="text-danger">*</span></label>
-                            <select id="inputBrand" name="inputBrand" class="form-control custom-select">
-                                <option selected disabled>Select One</option>
-                                <?php if($brands != null){ 
-                                    foreach($brands as $brand){ ?>
-                                    <option value="<?php echo $brand['id'] ?>"><?php echo $brand['name'] ?> </option>
-                                <?php } }?>
-                            </select>
-                        </div>
+                        
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
@@ -123,24 +130,42 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Product Code</label>
-                            <input type="text" name="inputCode" class="form-control" placeholder="Enter ...">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputImage">Product Image<span class="text-danger">*</span></label>
-                            <div class="custom-file">
-                                <input type="file" name="inputImage" class="custom-file-input" id="inputImage">
-                                <label class="custom-file-label" for="inputImage">Choose file</label>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Product Code</label>
+                                    <input type="text" name="inputCode" class="form-control" placeholder="Enter ...">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="inputImage">Product Image</label>
+                                    <div class="custom-file">
+                                        <input type="file" name="inputImage" class="custom-file-input" id="inputImage">
+                                        <label class="custom-file-label" for="inputImage">Choose file</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="inputStatus">Product Type<span class="text-danger">*</span></label>
+                                    <select id="inputStatus" name="inputStatus" class="form-control custom-select">
+                                        {{-- <option selected disabled>Select one</option> --}}
+                                        <option value="0">Regular Product</option>
+                                        <option value="1">Featured Product</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="inputStatus">Product Type<span class="text-danger">*</span></label>
-                            <select id="inputStatus" name="inputStatus" class="form-control custom-select">
-                                <option selected disabled>Select one</option>
-                                <option value="0">Regular Product</option>
-                                <option value="1">Featured Product</option>
-                            </select>
+                            <div class="form-check text-center">
+                                <input name="serial" type="hidden" value="0">
+                                <input name="serial" class="form-check-input" type="checkbox" value="1" id="SerialCheckbox">
+                                <label class="form-check-label font-weight-bold" for="SerialCheckbox">
+                                  SERIAL NUMBER ?
+                                </label>
+                            </div>
                         </div>
                   </div>
                   <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
@@ -216,9 +241,9 @@
                 inputBrand: {
                     required: true
                 },
-                inputImage: {
-                    required: true
-                },
+                // inputImage: {
+                //     required: true
+                // },
                 inputStatus: {
                     required: true
                 },
@@ -242,9 +267,9 @@
                 inputBrand: {
                     required: "Please Select Brand.",
                 },
-                inputImage: {
-                    required: "Please Select Product Image.",
-                },
+                // inputImage: {
+                //     required: "Please Select Product Image.",
+                // },
                 inputStatus: {
                     required: "Please Select Product Status.",
                 },

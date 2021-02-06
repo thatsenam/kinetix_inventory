@@ -204,7 +204,7 @@
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="fas fa-file-invoice-dollar"></i>
+              <i class="nav-icon fas fa-file-invoice-dollar"></i>
               <p>
                 Sales
                 <i class="fas fa-angle-left right"></i>
@@ -219,15 +219,15 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('sales_report_date')}}" class="nav-link">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Sales Report Date</p>
-                </a>
-              </li>
-              <li class="nav-item">
                 <a href="{{route('sales_return')}}" class="nav-link">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Sales Return</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('sales_report_date')}}" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Sales Report Date</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -236,11 +236,17 @@
                   <p>Sales Return Report</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{route('sales_report_brand')}}" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Sales Report By Brand</p>
+                </a>
+              </li>
             </ul>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="fas fa-file-invoice"></i>
+              <i class="nav-icon fas fa-file-invoice"></i>
               <p>
                 Purchase
                 <i class="fas fa-angle-left right"></i>
@@ -272,11 +278,17 @@
                   <p>Purchase Return Report</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{route('purchase_report_brand')}}" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Purchase Report By Brand</p>
+                </a>
+              </li>
             </ul>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="fas fa-money-check-alt"></i>
+              <i class="nav-icon fas fa-money-check-alt"></i>
               <p>
                 Banking
                 <i class="fas fa-angle-left right"></i>
@@ -312,7 +324,7 @@
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="fas fa-user-shield"></i>
+              <i class="nav-icon fas fa-user-shield"></i>
               <p>
                 Contacts
                 <i class="fas fa-angle-left right"></i>
@@ -337,14 +349,14 @@
           {{-- Accounting --}}
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="fas fa-calculator"></i>
+              <i class="nav-icon fas fa-calculator"></i>
               <p>
                 Accounting
                 <i class="fas fa-angle-left right"></i>
                 <span class="badge badge-info right">8</span>
               </p>
             </a>
-            <ul class="nav nav-treeview mb-5">
+            <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="/acc-heads" class="nav-link">
                   <i class="fas fa-bahai nav-icon"></i>
@@ -382,13 +394,13 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="cash-book" class="nav-link">
+                <a href="/cash-book" class="nav-link">
                   <i class="fas fa-money-bill nav-icon"></i>
                   <p>Cash Book</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="balance-sheet" class="nav-link">
+                <a href="/balance-sheet" class="nav-link">
                   <i class="fas fa-balance-scale nav-icon"></i>
                   <p>Balance Sheet</p>
                 </a>
@@ -396,9 +408,9 @@
             </ul>
           </li>
           {{-- Accounting --}}
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="fas fa-file-invoice-dollar"></i>
+              <i class="nav-icon fas fa-file-invoice-dollar"></i>
               <p>
                 Accounts
                 <i class="fas fa-angle-left right"></i>
@@ -431,10 +443,10 @@
                 </a>
               </li>
             </ul>
-          </li>
+          </li> --}}
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="fas fa-sort-alpha-up"></i>
+              <i class="nav-icon fas fa-sort-alpha-up"></i>
               <p>
                 General Reports
                 <i class="fas fa-angle-left right"></i>
@@ -474,9 +486,9 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item mb-5">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-cogs"></i>
+              <i class="nav-icon nav-icon fas fa-cogs"></i>
               <p>
                 General Settings
                 <i class="fas fa-angle-left right"></i>

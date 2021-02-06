@@ -420,6 +420,7 @@
 @section('page-js-script')
 
 <script type="text/javascript">
+    var customerID;
     $(function () {
         $('#contact_add_form').validate({
             rules: {
@@ -594,6 +595,7 @@
       }
     function open_container2(id)
     {
+        customerID = id.getAttribute('data-id');
         $.ajaxSetup({
             headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -624,10 +626,12 @@
             alert("Info fields can't be empty! Please give info to continue.");
             return false;
         }
-        var id = $("#abc").attr('data-id');
+        // var id = $("#abc").attr('data-id');
+        var id = customerID;
         var name = $("#name").val();
         var phone = $("#phone").val();
         var address = $("#address").val();
+        
         $.ajax({
           url: "{{url('/dashboard/customerUp')}}",
           data:'id=' + id + '&name=' + name + '&phone=' + phone + '&address=' + address,

@@ -1394,32 +1394,20 @@ class PosSalesController extends Controller
             $enddate = date('Y-m-d', strtotime('+1 day'));
         }
 
-        foreach($products as $i => $product)
+        if($brand_id)
         {
-            $pname = $product->product_name;
-            $qnt = DB::table('sales_invoice_details')->where('pid', $product->id)
-                ->whereDate('created_at', '>=', $stdate)
-                ->whereDate('created_at', '<=', $enddate)
-                ->sum('qnt');
-            $price = DB::table('sales_invoice_details')->where('pid', $product->id)
-                ->whereDate('created_at', '>=', $stdate)
-                ->whereDate('created_at', '<=', $enddate)
-                ->avg('price');
-
-            $price = round($price, 2);
-
-            $total = $qnt * $price;
-
-            $total = round($total, 2);
-
-            $brand_product_array[] = [
-                'sl' => $i + 1,
-                'pname' => $pname,
-                'qnt' => $qnt,
-                'price' => $price,
-                'total' => $total,
-            ];
+            $brand_product_array = DB::table('sales_invoice')->where('sales_invoice.client_id', auth()->user()->client_id)
+                        ->join('sales_invoice_details', 'sales_invoice.invoice_no', 'sales_invoice_details.invoice_no')
+                        ->join('products', 'sales_invoice_details.pid', 'products.id')
+                        ->join('brands', 'products.brand_id', 'brands.id')
+                        ->where('brand_id', $brand_id)
+                        ->get(); 
+            $brand_product_array->map(function($query, $i){
+                $query->sl = $i + 1;
+                return $query;
+            });
         }
+
         return DataTables()->of($brand_product_array)->make(true);
     }
 

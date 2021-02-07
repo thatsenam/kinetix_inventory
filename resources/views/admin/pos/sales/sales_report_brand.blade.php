@@ -35,11 +35,11 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <input type="text" name="from_date" id="from_date" value="{{ date('Y-m-01') }}"
+                                <input type="text" name="from_date" id="from_date" value="{{ date('01-m-Y') }}"
                                     class="form-control" placeholder="From Date">
                             </div>
                             <div class="col-md-3">
-                                <input type="text" name="to_date" id="to_date" value="{{ date('Y-m-d') }}"
+                                <input type="text" name="to_date" id="to_date" value="{{ date('d-m-Y') }}"
                                     class="form-control" placeholder="To Date">
                             </div>
                             <div class="col-md-3">
@@ -55,6 +55,7 @@
                                     <thead>
                                         <tr>
                                             <th>SL</th>
+                                            <th>Invoice</th>
                                             <th>Product Name</th>
                                             <th>Qnt</th>
                                             <th>Price</th>
@@ -66,7 +67,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="2">Total</th>
+                                            <th colspan="3">Total</th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
@@ -125,34 +126,34 @@
 
                         // Total over all pages
                         qnt = api
-                            .column(2)
-                            .data()
-                            .reduce(function(a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
-
-                        price = api
                             .column(3)
                             .data()
                             .reduce(function(a, b) {
                                 return intVal(a) + intVal(b);
                             }, 0);
 
-                        total = api
+                        price = api
                             .column(4)
                             .data()
                             .reduce(function(a, b) {
                                 return intVal(a) + intVal(b);
                             }, 0);
 
+                        total = api
+                            .column(5)
+                            .data()
+                            .reduce(function(a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
+
                         // Update footer
-                        $(api.column(2).footer()).html(
+                        $(api.column(3).footer()).html(
                             qnt
                         );
-                        $(api.column(3).footer()).html(
+                        $(api.column(4).footer()).html(
                             price
                         );
-                        $(api.column(4).footer()).html(
+                        $(api.column(5).footer()).html(
                             total
                         );
                     },
@@ -168,7 +169,10 @@
                             data: 'sl',
                         },
                         {
-                            data: 'pname',
+                            data: 'invoice_no',
+                        },
+                        {
+                            data: 'product_name',
                         },
                         {
                             data: 'qnt',

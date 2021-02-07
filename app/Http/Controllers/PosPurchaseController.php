@@ -556,53 +556,48 @@ class PosPurchaseController extends Controller
             $enddate = date('Y-m-d', strtotime('+1 day'));
         }
         
-        if($supplier_id)
+        if($supplier_id && $brand_id)
         {
-            $i = 1;
             $brand_product_array = DB::table('purchase_primary')->where('purchase_primary.client_id', auth()->user()->client_id)
                         ->join('purchase_details', 'purchase_primary.pur_inv', 'purchase_details.pur_inv')
                         ->join('suppliers', 'purchase_primary.sid', 'suppliers.id')
                         ->join('products', 'purchase_details.pid', 'products.id')
+                        ->join('brands', 'products.brand_id', 'brands.id')
+                        ->where('sid', $supplier_id)
+                        ->where('brand_id', $brand_id)
+                        ->get(); 
+            $brand_product_array->map(function($query, $i){
+                $query->sl = $i + 1;
+                return $query;
+            });
+        }
+        else if($supplier_id)
+        {
+            $brand_product_array = DB::table('purchase_primary')->where('purchase_primary.client_id', auth()->user()->client_id)
+                        ->join('purchase_details', 'purchase_primary.pur_inv', 'purchase_details.pur_inv')
+                        ->join('suppliers', 'purchase_primary.sid', 'suppliers.id')
+                        ->join('products', 'purchase_details.pid', 'products.id')
+                        ->join('brands', 'products.brand_id', 'brands.id')
                         ->where('sid', $supplier_id)
                         ->get(); 
             $brand_product_array->map(function($query, $i){
                 $query->sl = $i + 1;
                 return $query;
             });
-            // dd($brand_product_array);
         }
-        else
+        else if($brand_id)
         {
-            $products = DB::table('products')->where('client_id', auth()->user()->client_id)
-                        ->where('brand_id', $brand_id)->get();                          
-
-            foreach($products as $i => $product)
-            {
-                $pname = $product->product_name;
-
-                $qnt = DB::table('purchase_details')->where('pid', $product->id)
-                    ->whereDate('created_at', '>=', $stdate)
-                    ->whereDate('created_at', '<=', $enddate)
-                    ->sum('qnt');
-                $price = DB::table('purchase_details')->where('pid', $product->id)
-                    ->whereDate('created_at', '>=', $stdate)
-                    ->whereDate('created_at', '<=', $enddate)
-                    ->avg('price');
-
-                $price = round($price, 2);
-
-                $total = $qnt * $price;
-
-                $total = round($total, 2);
-
-                $brand_product_array[] = [
-                    'sl' => $i + 1,
-                    'product_name' => $pname,
-                    'qnt' => $qnt,
-                    'price' => $price,
-                    'total' => $total,
-                ];
-            }
+            $brand_product_array = DB::table('purchase_primary')->where('purchase_primary.client_id', auth()->user()->client_id)
+                        ->join('purchase_details', 'purchase_primary.pur_inv', 'purchase_details.pur_inv')
+                        ->join('suppliers', 'purchase_primary.sid', 'suppliers.id')
+                        ->join('products', 'purchase_details.pid', 'products.id')
+                        ->join('brands', 'products.brand_id', 'brands.id')
+                        ->where('brand_id', $brand_id)
+                        ->get(); 
+            $brand_product_array->map(function($query, $i){
+                $query->sl = $i + 1;
+                return $query;
+            });
         }
         
         return DataTables()->of($brand_product_array)->make(true);

@@ -770,8 +770,6 @@
         
             var productID = Number($(this).closest('tr').find(".name").attr('data-prodid'));
 
-            alert(productID);
-
             delete serial_array[productID];
             
             var grandTotal = Number($('#total').val());

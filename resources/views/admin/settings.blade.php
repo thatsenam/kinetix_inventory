@@ -81,29 +81,53 @@
                         <input type="text" name="scharge" class="form-control" id="scharge"  value="<?php echo $settings->scharge ?? "N/A";?>">
                       </div>
                     </div>
-                    <div class="form-group">
-                      @php
-                          $ledger = false;
-                          $pos = false;
-                          if( $settings ){
-                            if($settings->print_opt == '1')
-                            {
-                              $ledger = true;
-                            }
-                            elseif($settings->print_opt == '2')
-                            {
-                              $pos = true;
-                            }
-                          }
-                      @endphp
-                      <label class="mr-5">Print Type</label>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="printOpt" id="inlineRadio1" value="1" {{ $ledger ? 'checked' : '' }}>
-                        <label class="form-check-label" for="inlineRadio1">Ledger Print</label>
+                    
+                    <div class="row">
+                      <div class="col-sm">
+                        <div class="form-group">
+                          @php
+                              $ledger = false;
+                              $pos = false;
+                              if( $settings ){
+                                if($settings->print_opt == '1')
+                                {
+                                  $ledger = true;
+                                }
+                                elseif($settings->print_opt == '2')
+                                {
+                                  $pos = true;
+                                }
+                              }
+                          @endphp
+                          <label for="print_opt">Print Type</label>
+                          <select id="print_opt" name="print_opt" class="form-control custom-select">
+                              <option value="1" {{ $ledger ? 'selected' : '' }}>Ledger Print</option>
+                              <option value="2" {{ $pos ? 'selected' : '' }}>Pos Print</option>
+                          </select>
+                        </div>
                       </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="printOpt" id="inlineRadio2" value="2" {{ $pos ? 'checked' : '' }}>
-                        <label class="form-check-label" for="inlineRadio2">POS Print</label>
+                      <div class="col-sm">
+                        <div class="form-group">
+                          @php
+                              $avg = false;
+                              $latest = false;
+                              if( $settings ){
+                                if($settings->profit_clc == '1')
+                                {
+                                  $avg = true;
+                                }
+                                elseif($settings->profit_clc == '2')
+                                {
+                                  $latest = true;
+                                }
+                              }
+                          @endphp
+                            <label for="profit_clc">Profit Calculation</label>
+                            <select id="profit_clc" name="profit_clc" class="form-control custom-select">
+                                <option value="1" {{ $avg ? 'selected' : '' }}>Average Price</option>
+                                <option value="2" {{ $latest ? 'selected' : '' }}>Latest Price</option>
+                            </select>
+                        </div>
                       </div>
                     </div>
                     <div class="form-group">

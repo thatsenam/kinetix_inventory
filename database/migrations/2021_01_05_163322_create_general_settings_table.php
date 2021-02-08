@@ -26,6 +26,7 @@ class CreateGeneralSettingsTable extends Migration
             $table->decimal('vat', 12)->nullable()->default(0.00);
             $table->decimal('scharge', 12)->nullable();
             $table->tinyInteger('print_opt')->nullable();
+            $table->tinyInteger('profit_clc')->nullable();
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at')->useCurrent();
             $table->unsignedBigInteger('user_id')->nullable();

@@ -212,6 +212,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get','post'],'reports/get_stocks', 'PosReportController@dateStocks')->name('reports.stocks');
     Route::resource('reports', 'PosReportController');
 
+    Route::view('/dashboard/reports/loss-profit-report', 'admin.pos.reports.loss-profit-index');
+
     //Charts
     Route::get('/get-post-chart-data', 'ChartDataController@getMonthlyPostData')->name('orders.chart');
 

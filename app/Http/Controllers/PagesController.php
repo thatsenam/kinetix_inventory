@@ -142,9 +142,10 @@ class PagesController extends Controller
         $phone       = $req['phone'];
         $siteAddress = $req['siteAddress'];
         $email       = $req['email'];
-        $printOpt    = $req['printOpt'];
         $vat         = $req['vat'];
         $scharge     = $req['scharge'];
+        $print_opt    = $req['print_opt'];
+        $profit_clc  = $req['profit_clc'];
 
         $general_settings = GeneralSetting::firstWhere('client_id',auth()->user()->client_id);
 
@@ -159,7 +160,8 @@ class PagesController extends Controller
         $general_settings->email        = $email;
         $general_settings->vat          = $vat;
         $general_settings->scharge      = $scharge;
-        $general_settings->print_opt    = $printOpt;
+        $general_settings->print_opt    = $print_opt;
+        $general_settings->profit_clc   = $profit_clc;
 
         if($req->hasFile('favicon')){
             $prev_img = $general_settings->favicon;

@@ -227,28 +227,29 @@
         
                     // Total over all pages
                     amount = api
-                        .column( 6 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                    total = api
                         .column( 7 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
 
-                    profit = api
+                    total = api
                         .column( 8 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+
+                    profit = api
+                        .column( 9 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    profit = profit.toFixed(2);
                     // Payment Total
                     payTotal = api
-                        .column( 9 )
+                        .column( 10 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
@@ -257,19 +258,19 @@
                     due = total - payTotal;
         
                     // Update footer
-                    $( api.column( 6 ).footer() ).html(
+                    $( api.column( 7 ).footer() ).html(
                         amount
                     );
-                    $( api.column( 7 ).footer() ).html(
+                    $( api.column( 8 ).footer() ).html(
                         total
                     );
-                    $( api.column( 8 ).footer() ).html(
+                    $( api.column( 9 ).footer() ).html(
                         profit
                     );
-                    $( api.column( 9 ).footer() ).html(
+                    $( api.column( 10 ).footer() ).html(
                         payTotal
                     );
-                    $( api.column( 10 ).footer() ).html(
+                    $( api.column( 11 ).footer() ).html(
                         due
                     );
                 },

@@ -654,9 +654,9 @@
          $('body').on('click', '.delete', function(e){
             
             var totalPriceTd = Number($(this).closest('tr').find('.totalPriceTd').html());
-            var productID = Number($(this).closest('tr').find("td").attr('data-prodid'));
 
-            alert(productID);
+            var productID = Number($(this).closest('tr').find(".name").attr('data-prodid'));
+
             delete serial_array[productID];
 
             var grandTotal = Number($('#total').val());

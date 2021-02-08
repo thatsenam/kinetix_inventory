@@ -784,7 +784,6 @@
                     var totalPriceTd = Number($(this).closest('tr').find('.totalPriceTd').html());
                     var productID = Number($(this).closest('tr').find("td").attr('data-prodid'));
 
-                    alert(productID);
                     delete serial_array[productID];
                     
                     var totalPrice = $('#hid_total').val();

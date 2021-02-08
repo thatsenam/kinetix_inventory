@@ -1329,6 +1329,9 @@ class PosSalesController extends Controller
             $enddate = date('Y-m-d', strtotime('+1 day'));
         }
 
+        $profitCalculation = DB::table('general_settings')->where('client_id', auth()->user()->client_id)
+                                    ->pluck('profit_clc')->first();
+
         $sales = DB::table('sales_invoice')->where('sales_invoice.client_id', auth()->user()->client_id)
             ->select('sales_invoice.id as id', 'sales_invoice.date as date','sales_invoice.invoice_no as invoice_no',
                 'customers.name as cname', 'sales_invoice.vat as vat', 'sales_invoice.scharge as scharge', 'sales_invoice.discount as discount',
@@ -1350,13 +1353,22 @@ class PosSalesController extends Controller
             $sales_product =  SalesInvoiceDetails::where('client_id', auth()->user()->client_id)
                                 ->where('invoice_no', $inv)->select('price','pid','qnt')->get();
             $netProfit = 0;
-            foreach($sales_product as $sale_product){
+            foreach($sales_product as $sale_product)
+            {
+                // if($profitCalculation == '2')
+                // {
+                //     $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+                //         ->where('pid', $sale_product->pid)->latest()->first()->price;
+                // }else{
+                //     $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+                //     ->where('pid', $sale_product->pid)->avg('price');
+                // }
                 $purchasePrice =  PurchaseDetails::where('client_id', auth()->user()->client_id)
                                     ->where('pid', $sale_product->pid)->avg('price');
                 $profit = ($sale_product->price - $purchasePrice) * $sale_product->qnt;
                 $netProfit += $profit;
             }  
-            $sale->profit = $netProfit; 
+            $sale->profit = round($netProfit, 2); 
              
             return $sale;
           });

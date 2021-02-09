@@ -2,21 +2,156 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use App\Product;
-use App\ProductImage;
-use App\Company;
-use App\Manufacturer;
-use App\Category;
+use Auth;
+use Image;
 use App\Filter;
 use App\Seller;
-use Image;
-use Auth;
+use App\AccHead;
+use App\BankAcc;
+use App\Company;
+use App\Product;
+use App\BankCard;
+use App\BankInfo;
+use App\Category;
+use App\Manufacturer;
+use App\ProductImage;
+use App\AccTransaction;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PosBankController extends Controller
 {
+
+    public function add_bank(Request $request)
+    {
+        if($request->isMethod('post')){
+            //dd($request->all());
+            $category = $request->category;
+            $name = $request->bank_name;
+            $address = $request->bank_address ?? '';
+            $acc_name = $request->acc_name ?? '';
+            $acc_no = $request->acc_no;
+            $cards = $request->card_name ?? '';
+
+            $bank_info=new BankInfo();
+            $bank_info->name = $name;
+            $bank_info->address = $address;
+            $bank_info->type = $category;
+            $bank_info->save();
+
+            $bank_acc = new BankAcc();
+            $bank_acc->bank_id = $bank_info->id;
+            $bank_acc->acc_name = $acc_name;
+            $bank_acc->acc_no = $acc_no;
+            $bank_acc->save();
+
+            if($cards){
+                foreach($cards as $card){
+                    $bank_card=new BankCard();
+                    $bank_card->bank_id = $bank_info->id;
+                    $bank_card->acc_no = $bank_acc->id;
+                    $bank_card->card_name = $card;
+                    $bank_card->save();
+                }
+            }
+            
+
+            $acc_head = new AccHead();
+            $acc_head->parent_head = "Asset";
+            if($category=="mobile_bank"){
+                $acc_head->sub_head = "Mobile Bank";
+            }else{
+                $acc_head->sub_head = "General Bank";
+            }
+            $acc_head->head = $name . ' ' . $acc_no;
+            $acc_head->save();
+
+            return redirect('/dashboard/add_bank')->with('flash_message_success', 'ব্যাংক সফলভাবে যুক্ত হয়েছে!');
+        }
+
+        return view('admin.pos.banking.add_bank');
+    }
+
+    public function view_banks()
+    {
+        $banks = BankInfo::orderBy('name')->get();
+        return view('admin.pos.banking.view_bank', compact('banks'));
+    }
+
+    public function edit_bank(Request $req, $id = null){
+        $bank = BankInfo::where(['id'=>$id])->first();
+        $cards=$bank->cards ?? '';
+        if($req->isMethod('post')){
+            $data = $req->all();
+            $prev_cards=$req->card_name_prev ?? '';
+            $new_cards=$req->card_name ?? '';
+
+            AccHead::where(['head'=>$bank->name . ' ' . $bank->account->acc_no])->update(['head'=>$data['bank_name'] . ' ' . $data['acc_no'],]);
+            $acc_transaction_head = AccTransaction::where('head', $bank->name . ' ' . $bank->account->acc_no)->get();
+            foreach($acc_transaction_head as $acc){
+                $acc->head = $data['bank_name'] . ' ' . $data['acc_no'];
+                $acc->save();
+            }
+            BankInfo::where(['id'=>$id])->update(['name'=>$data['bank_name'],'address'=>$data['bank_address'],]);
+            BankAcc::where(['bank_id'=>$id])->update(['acc_name'=>$data['acc_name'],'acc_no'=>$data['acc_no'],]);
+            if($prev_cards){
+                foreach($prev_cards as $key=>$value){
+                    BankCard::where(['id'=>$key])->update(['card_name'=>$value,]);
+                }
+            }
+            if($new_cards){
+                foreach($new_cards as $card){
+                    $bank_card=new BankCard();
+                    $bank_card->bank_id = $id;
+                    $bank_card->acc_no = $bank->account->id;
+                    $bank_card->card_name = $card;
+                    $bank_card->save();
+                }
+            }
+            
+           // Cost::where(['id'=>$id])->update(['category_id'=>$data['category'],'sub_category'=>$data['sub_category'],'reason'=>$data['reason'],'amount'=>$data['amount'],'details'=>$data['details'],'date'=>$data['date'],]);
+            
+            return redirect('/dashboard/view_banks')->with('flash_message_success', ' ব্যাংক সফলভাবে আপডেট হয়েছে!');
+        }
+        return view('admin.pos.banking.edit_bank')->with('bank', $bank)->with('cards', $cards)->with('id', $id);
+
+    }
+
+    public function get_mobile_bank()
+    {
+        $mobile_banks = BankInfo::where('type','mobile_bank');
+        $bank_infos=array();
+        foreach($mobile_banks as $bank){
+            $bank_infos[$bank->name]=$bank->name;
+            $bank_infos[$bank->name]=$bank->id;
+            $bank_infos[$bank->name]=$bank->account->id;
+            $bank_infos[$bank->name]=$bank->account->acc_name;
+        }
+        
+        ?>
+
+        <ul class='bank-acc-list sugg-list'>
+
+            <?php $i = 1;
+
+            foreach($mobile_banks as $row){
+
+                $id = $row->id;
+
+                $acc_name = $row->name;
+                $acc_name = $row->account->acc_no;
+
+                $i = $i + 1; ?>
+
+                <li tabindex='<?php echo $i; ?>' onclick='selectAccount("<?php echo $id; ?>","<?php echo $acc_name; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $acc_name; ?>'><?php echo $acc_name; ?></li>
+
+            <?php } ?>
+
+        </ul>
+
+        <?php
+    }
 
     public function get_bank(Request $req){
 

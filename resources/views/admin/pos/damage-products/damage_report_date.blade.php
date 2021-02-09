@@ -179,7 +179,7 @@
 
                 var id = $(this).data("id");
                 var invoice = $(this).data("invoice");
-                
+
                 var formData = new FormData();
         	        formData.append('id', id);
         	        formData.append('invoice', invoice);
@@ -191,7 +191,7 @@
                 });
         			
                 $.ajax({
-            		  url: "{{ URL::route('delete_purchase_return')}}",
+            		  url: "{{ URL::route('delete_damage_product')}}",
                       method: 'post',
                       data: formData,
                       contentType: false,

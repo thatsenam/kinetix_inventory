@@ -929,7 +929,7 @@ class PosPurchaseController extends Controller
             ->make(true);
     }
 
-    public function delete_damage(Request $req){
+    public function delete_damage_product(Request $req){
 
         $id = $req['id'];
         $invoice = $req['invoice'];
@@ -956,9 +956,11 @@ class PosPurchaseController extends Controller
                 ->where('id', $pid)->update(['stock' => $stock]);
         }
 
-        DB::table('damage_products')
+        $abc = DB::table('damage_products')
             ->where('client_id',auth()->user()->client_id)
             ->where('id', $id)->delete();
+
+        dd($abc);
 
         // $get_accounts = DB::table('acc_transactions')
         //     ->where('client_id',auth()->user()->client_id)

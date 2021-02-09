@@ -9,6 +9,7 @@ return array(
     'App\\AccHead' => $baseDir . '/app/AccHead.php',
     'App\\AccTransaction' => $baseDir . '/app/AccTransaction.php',
     'App\\BankAcc' => $baseDir . '/app/BankAcc.php',
+    'App\\BankCard' => $baseDir . '/app/BankCard.php',
     'App\\BankInfo' => $baseDir . '/app/BankInfo.php',
     'App\\BankTransaction' => $baseDir . '/app/BankTransaction.php',
     'App\\BankTransfer' => $baseDir . '/app/BankTransfer.php',

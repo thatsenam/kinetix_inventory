@@ -567,6 +567,7 @@ class ComposerStaticInit21cae6532322a43a3bee6fb32f0fd415
         'App\\AccHead' => __DIR__ . '/../..' . '/app/AccHead.php',
         'App\\AccTransaction' => __DIR__ . '/../..' . '/app/AccTransaction.php',
         'App\\BankAcc' => __DIR__ . '/../..' . '/app/BankAcc.php',
+        'App\\BankCard' => __DIR__ . '/../..' . '/app/BankCard.php',
         'App\\BankInfo' => __DIR__ . '/../..' . '/app/BankInfo.php',
         'App\\BankTransaction' => __DIR__ . '/../..' . '/app/BankTransaction.php',
         'App\\BankTransfer' => __DIR__ . '/../..' . '/app/BankTransfer.php',

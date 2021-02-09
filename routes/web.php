@@ -313,6 +313,8 @@ Route::get('/dashboard/damage_products', 'PosPurchaseController@damage_products'
 
 Route::post('/dashboard/save_damage_products', 'PosPurchaseController@save_damage_products')->name('save_damage_products')->middleware('auth');
 
+Route::post('/dashboard/delete_damage_product', 'PosPurchaseController@delete_damage_product')->name('delete_damage_product')->middleware('auth');
+
 
 Route::match(['get','post'],'/dashboard/sales_report_brand', 'PosSalesController@sales_report_brand')->name('sales_report_brand')->middleware('auth');
 
@@ -346,6 +348,11 @@ Route::post('/dashboard/save_bank_withdraw', 'PosBankController@save_bank_withdr
 Route::get('/dashboard/bank_ledger', 'PosBankController@bank_ledger')->name('bank_ledger')->middleware('auth');
 
 Route::post('/dashboard/get_bank_ledger', 'PosBankController@get_bank_ledger')->name('get_bank_ledger')->middleware('auth');
+
+Route::match(['get','post'],'/dashboard/add_bank', 'PosBankController@add_bank')->name('add_bank')->middleware('auth');
+Route::match(['get','post'],'/dashboard/edit_bank/{id}','PosBankController@edit_bank')->middleware('auth');
+
+Route::get('/dashboard/view_banks', 'PosBankController@view_banks')->middleware('auth');
 
 
 // Accounting Route

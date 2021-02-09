@@ -309,6 +309,18 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
+                <a href="{{url('/dashboard/add_bank')}}" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>নতুন ব্যাংক যুক্ত করুন</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{url('/dashboard/view_banks')}}" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>ব্যাংক তথ্য দেখুন</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{route('check_clearance')}}" class="nav-link">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Check Clearance</p>

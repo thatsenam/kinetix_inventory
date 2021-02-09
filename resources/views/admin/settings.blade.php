@@ -46,9 +46,9 @@
               <div class="card-body">
                 <form class="forms-sample" action="{{route('general_settings_save')}}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <div class="form-group">
+                    <div class="">
                         {{-- <label for="siteTagline">Website Tagline</label> --}}
-                        <input type="hide" name="siteTagline" class="form-control" id="siteTagline" value="<?php echo $settings->site_tagline ?? "N/A";?>">
+                        <input type="hidden" name="siteTagline" class="form-control" id="siteTagline" value="<?php echo $settings->site_tagline ?? "N/A";?>">
                     </div>
                     <div class="form-group">
                         <label for="siteName">Shop Name</label>

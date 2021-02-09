@@ -23,6 +23,7 @@ class CreateBankInfoTable extends Migration
             $table->string('contact_no', 191)->nullable();
             $table->string('user', 191)->nullable();
             $table->string('lkey', 191)->nullable();
+            $table->string('type')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
             $table->unsignedBigInteger('user_id');

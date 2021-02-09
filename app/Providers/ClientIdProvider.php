@@ -14,6 +14,7 @@ use App\Cart;
 use App\Category;
 use App\Coupon;
 use App\Customer;
+use App\DamageProduct;
 use App\GeneralSetting;
 use App\Order;
 use App\Order_detail;
@@ -261,6 +262,11 @@ class ClientIdProvider extends ServiceProvider
         });
         
         Serial::creating(function ($model) {
+            $model->client_id = auth()->user()->client_id;
+            $model->user_id = auth()->user()->id;
+        });
+
+        DamageProduct::creating(function ($model) {
             $model->client_id = auth()->user()->client_id;
             $model->user_id = auth()->user()->id;
         });

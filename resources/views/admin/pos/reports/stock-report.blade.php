@@ -71,19 +71,25 @@
                                 <th>Unit Price</th>
                                 <th>Opening Stock</th>
                                 <th>Total Unit Purchased</th>
+                                <th>Purchase Return</th>
                                 <th>Total Unit Sold</th>
+                                <th>Sold Return</th>
+                                <th>Damage</th>
                                 <th>Current Stock</th>
                             </tr>
                         </thead>
                         <tbody>
                             
                         </tbody>
-                        <tfoot align="right">
+                        <tfoot>
                             <tr>
                                 <th colspan="3" ></th>
-                                <th class="text-left"></th>
                                 <th></th>
-                                <th class="text-left"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -127,14 +133,20 @@
         
                     // computing column Total of the complete result 
                     var pur = api
+                        .column( 3 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    var pur_ret = api
                         .column( 4 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
                     // Total over this page
-                    pagePurTotal = api
-                        .column( 4, { page: 'current'} )
+                        pagePurTotal = api
+                        .column( 3, { page: 'current'} )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
@@ -147,26 +159,47 @@
                             return intVal(a) + intVal(b);
                         }, 0 );
 
-                        var sold = api
+                    var sold = api
                         .column( 5 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
 
-                        pageSoldTotal = api
-                        .column( 5, { page: 'current'} )
+                    var sale_ret = api
+                        .column( 6 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
-                    
+                    var damage = api
+                        .column( 7 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    pageSoldTotal = api
+                        .column( 4, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    var current_stock = api
+                        .column( 8 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
                         
                     // Update footer by showing the total with the reference of the column index 
-                    $( api.column( 0 ).footer() ).html('Total Purchased');
+                    $( api.column( 0 ).footer() ).html('Total');
                     $( api.column( 3 ).footer() ).html(pur);
-                    $( api.column( 4 ).footer() ).html('Total Sold');
+                    $( api.column( 4 ).footer() ).html(pur_ret);
                     $( api.column( 5 ).footer() ).html(sold);
+                    $( api.column( 6 ).footer() ).html(sale_ret);
+                    $( api.column( 7 ).footer() ).html(damage);
+                    $( api.column( 8 ).footer() ).html(current_stock);
                 },
                 "columnDefs": [
                     { "orderable": false, "targets": 0 }
@@ -184,7 +217,10 @@
                     {data:'price',},
                     {data:'OpenngS',},
                     {data:'pPurchase',},
+                    {data:'returns',},
                     {data:'psold',},
+                    {data:'sale_return',},
+                    {data:'damage',},
                     {data:'currenTstock',},
                 ]
             });

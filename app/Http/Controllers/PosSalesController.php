@@ -1339,7 +1339,8 @@ class PosSalesController extends Controller
             ->join('customers', 'sales_invoice.cid', 'customers.id')
             ->whereBetween('date', [$stdate, $enddate])->get();
 
-        $sales->map( function($sale) {
+        foreach($sales as $sale) 
+        {
             $inv = $sale->invoice_no;
             $serials = Serial::where('client_id', auth()->user()->client_id)
                 ->where('sale_inv', $inv)->pluck('serial')->toArray();
@@ -1355,14 +1356,14 @@ class PosSalesController extends Controller
             $netProfit = 0;
             foreach($sales_product as $sale_product)
             {
-                // if($profitCalculation == '2')
-                // {
-                //     $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
-                //         ->where('pid', $sale_product->pid)->latest()->first()->price;
-                // }else{
-                //     $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
-                //     ->where('pid', $sale_product->pid)->avg('price');
-                // }
+                if($profitCalculation == '2')
+                {
+                    $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+                        ->where('pid', $sale_product->pid)->latest()->first()->price;
+                }else{
+                    $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $sale_product->pid)->avg('price');
+                }
                 $purchasePrice =  PurchaseDetails::where('client_id', auth()->user()->client_id)
                                     ->where('pid', $sale_product->pid)->avg('price');
                 $profit = ($sale_product->price - $purchasePrice) * $sale_product->qnt;
@@ -1370,8 +1371,7 @@ class PosSalesController extends Controller
             }  
             $sale->profit = round($netProfit, 2); 
              
-            return $sale;
-          });
+        }
 
         return DataTables()->of($sales)
         ->addIndexColumn()

@@ -309,11 +309,20 @@ Route::get('/get_serial/{product}', 'PosSalesController@get_serial');
 Route::get('/get_serial_sold/{product}', 'PosSalesController@get_serial_sold');
 Route::get('/get_serial_purchased/{product}', 'PosPurchaseController@get_serial_purchased');
 
+Route::get('/dashboard/damage_products', 'PosPurchaseController@damage_products')->name('damage_products')->middleware('auth');
+
+Route::post('/dashboard/save_damage_products', 'PosPurchaseController@save_damage_products')->name('save_damage_products')->middleware('auth');
+
+
 Route::match(['get','post'],'/dashboard/sales_report_brand', 'PosSalesController@sales_report_brand')->name('sales_report_brand')->middleware('auth');
 
 Route::match(['get','post'],'/dashboard/get_sales_report_brand', 'PosSalesController@get_sales_report_brand')->name('get_sales_report_brand')->middleware('auth');
 
+Route::get('/dashboard/damage_report_date', 'PosPurchaseController@damage_report_date')->name('damage_report_date')->middleware('auth');
 
+Route::match(['get', 'post'], '/dashboard/get_damage_report_date', 'PosPurchaseController@get_damage_report_date')->name('get_damage_report_date')->middleware('auth');
+
+Route::post('/dashboard/delete_damage', 'PosPurchaseController@delete_damage')->name('delete_damage')->middleware('auth');
 
 
 Route::get('/dashboard/check_clearance', 'PosBankController@check_clearance')->name('check_clearance')->middleware('auth');

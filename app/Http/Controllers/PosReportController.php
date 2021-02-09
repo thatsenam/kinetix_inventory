@@ -373,9 +373,10 @@ class PosReportController extends Controller
         $getSKU = DB::table('purchase_details')
             ->where('purchase_details.client_id',auth()->user()->client_id)
             ->select('purchase_details.pid','purchase_details.price','products.product_name')
-        ->join('products','purchase_details.pid', 'products.id')
-        ->groupBy('products.id')->get();
+            ->join('products','purchase_details.pid', 'products.id')
+            ->groupBy('products.id')->get();
 
+        
         $TotalSold = DB::table('sales_invoice_details')->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($newtime, $lastTime))->sum('qnt');
 
         $TotalPurchase = DB::table('purchase_details')->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($newtime, $lastTime))->sum('qnt');
@@ -385,14 +386,25 @@ class PosReportController extends Controller
         $psold = 0;
         $pPurchase = 0;
         $returns = 0;
+        $pur_return = 0;
+        $sale_return = 0;
+
         foreach($getSKU as $index=>$sku){
             // dd($sku);
             $pid = $sku->pid;
             $sku->psold = DB::table('sales_invoice_details')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at', array($newtime, $lastTime))->sum('qnt');
 
             $sku->returns = DB::table('purchase_returns')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at',[$newtime, $lastTime])->sum('qnt');
+            $sku->sale_return = DB::table('sales_return')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at',[$newtime, $lastTime])->sum('qnt');
+
+            $sku->damage = DB::table('damage_products')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at',[$newtime, $lastTime])->sum('qnt');
 
             $sku->Oldsold = DB::table('sales_invoice_details')
+            ->where('pid',$pid)
+            ->whereBetween('created_at', array($beforeTime, $newtime))
+            ->sum('qnt');
+
+            $sku->OldSaleReturn = DB::table('sales_return')
             ->where('pid',$pid)
             ->whereBetween('created_at', array($beforeTime, $newtime))
             ->sum('qnt');
@@ -402,15 +414,25 @@ class PosReportController extends Controller
             ->whereBetween('created_at', array($beforeTime, $newtime))
             ->sum('qnt');
 
+            $sku->oldPurchaseReturn = DB::table('purchase_returns')
+            ->where('pid',$pid)
+            ->whereBetween('created_at', array($beforeTime, $newtime))
+            ->sum('qnt');
+
+            $sku->oldDamage = DB::table('damage_products')
+            ->where('client_id',auth()->user()->client_id)->where('pid',$pid)
+            ->whereBetween('created_at',[$beforeTime, $newtime])
+            ->sum('qnt');
+
+
             $sku->pPurchase = DB::table('purchase_details')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at', array($newtime, $lastTime))->sum('qnt');
 
             $oldDetails = Order_detail::where('product_id',$pid)->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($beforeTime, $newtime))->get();
 
             foreach($oldDetails as $count=>$orderOldDetail){
                 $oldOrderId = $orderOldDetail->order_id;
-                $Oldorder = Order::where('order_number',$oldOrderId)            ->where('client_id',auth()->user()->client_id)
+                $Oldorder = Order::where('order_number',$oldOrderId)->where('client_id',auth()->user()->client_id)
                     ->first();
-                // dd($order);
                 if(!$Oldorder){
                     continue;
                 }
@@ -424,7 +446,7 @@ class PosReportController extends Controller
             // dd($details);
             foreach($details as $count=>$orderDetail){
                 $orderId = $orderDetail->order_id;
-                $order = Order::where('order_number',$orderId)            ->where('client_id',auth()->user()->client_id)
+                $order = Order::where('order_number',$orderId)->where('client_id',auth()->user()->client_id)
                     ->first();
                 // dd($order);
                 if(!$order){
@@ -435,8 +457,13 @@ class PosReportController extends Controller
                 }
             }
 
-            $sku->OpenngS = $sku->oldPurchase - $sku->Oldsold;
-            $sku->currenTstock = $sku->OpenngS + ($sku->pPurchase - $sku->psold - $sku->returns);
+            $sku->OpenngS = $sku->oldPurchase - $sku->oldPurchaseReturn - $sku->Oldsold + $sku->OldSaleReturn - $sku->oldDamage;
+            
+            $current_qty = $sku->OpenngS + ($sku->pPurchase - $sku->psold - $sku->returns + $sku->sale_return);
+
+            $prod = DB::table('products')->find($sku->pid);
+            
+            $sku->currenTstock = $sku->OpenngS + ($sku->pPurchase - $sku->psold - $sku->returns + $sku->sale_return - $sku->damage);
 
         }
 

@@ -13,6 +13,7 @@ use App\Products;
 use App\Supplier;
 use App\Manufacturer;
 use App\ProductImage;
+use App\DamageProduct;
 use App\AccTransaction;
 use App\PurchaseDetails;
 use App\PurchasePrimary;
@@ -139,9 +140,10 @@ class PosPurchaseController extends Controller
     {
         $serials = Serial::where('client_id', auth()->user()->client_id)
             ->where('product_id', $product)
-            ->whereNull('status')
-            ->orWhere('status', 'sale_ret')
-            ->pluck('serial');
+            ->where(function($query){
+                $query->whereNull('status')
+                      ->orWhere('status', 'sale_ret');
+            })->pluck('serial');
         return $serials;
     }
 
@@ -483,6 +485,128 @@ class PosPurchaseController extends Controller
 
     }
 
+    public function damage_products()
+    {
+        $dmg_count = DamageProduct::whereDate('date', date('Y-m-d'))
+                                ->where('client_id', auth()->user()->client_id)->distinct()->count('dmg_inv');
+        $dmg_inv = 'DMG-' . ($dmg_count + 1);
+
+        return view('admin.pos.damage-products.damage_products', compact('dmg_inv'));
+    }
+
+    public function save_damage_products (Request $req)
+    {
+        $fieldValues = json_decode($req['fieldValues'], true);
+
+        // $supp_id = $fieldValues['supp_id'];
+        // $supp_memo = $fieldValues['supp_memo'];
+        $total = $fieldValues['total'];
+        $date = $fieldValues['date'];
+        $dmg_inv = $fieldValues['dmg_inv'];
+
+        $take_cart_items = json_decode($req['cartData'], true);
+
+        $count = count($take_cart_items);
+
+        for($i = 0; $i < $count;)
+        {
+            $j = $i;
+            $j1 = $i+1;
+            $j2 = $i+2;
+            $j3 = $i+3;
+            $j4 = $i+4;
+
+            $product = DB::table('products')->where('client_id',auth()->user()->client_id)
+                        ->where('id', $take_cart_items[$j])->first();
+
+            $stock = $product->stock;
+            $stock = ($stock - $take_cart_items[$j3]);
+
+            DB::table('products')
+                ->where('client_id',auth()->user()->client_id)
+                ->where('id', $take_cart_items[$j])->update(['stock' => $stock]);
+
+            $pid = $take_cart_items[$j];
+
+            DamageProduct::create([
+                'date' => $date,
+                'dmg_inv' => $dmg_inv,
+                'pid' => $pid,
+                'qnt' => $take_cart_items[$j3],
+                'price' => $take_cart_items[$j2],
+                'total' => $take_cart_items[$j4],
+            ]);
+
+            $i = $i + 5;
+        }
+
+        $serials = json_decode($req['serialArray'], true);
+
+        foreach($serials as $productID => $serial)
+        {
+            foreach($serial as $ser)
+            {
+                Serial::where('client_id', auth()->user()->client_id)
+                    ->where('product_id', $productID)
+                    ->where('serial', $ser)
+                    ->update([
+                        'status' => 'damage',
+                    ]);
+            }
+        }
+
+        //////Save to Accounts//////
+
+        // $supplier = DB::table('suppliers')
+        //     ->where('client_id',auth()->user()->client_id)
+        //     ->where('id', $supp_id)->first();
+
+        //     // $vno = (DB::table('acc_transactions')->max('id') + 1);
+        //     $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
+        //                             ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+        //     $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            
+            
+
+        //     $head = "Purchase Return";
+        //     $description = "Purchase Return from Supplier Memo ".$supp_memo;
+        //     $credit = $total;
+        //     $debit = 0;
+
+        //     AccTransaction::create([
+
+        //         'vno' => $vno,
+        //         'head' => $head,
+        //         'sort_by' => "sid"." ".$supp_id,
+        //         'description' => $description,
+        //         'debit' => $debit,
+        //         'credit' => $credit,
+        //         'date' => $date,
+        //         'user' => $user,
+
+        //     ]);
+
+
+        //     $head = $supplier->name;
+        //     $description = "Purchase Return";
+        //     $credit = 0;
+        //     $debit = $total;
+
+        //     AccTransaction::create([
+
+        //             'vno' => $vno,
+        //             'head' => $head,
+        //             'sort_by' => "sid"." ".$supp_id,
+        //             'description' => $description,
+        //             'debit' => $debit,
+        //             'credit' => $credit,
+        //             'date' => $date,
+        //             'user' => $user,
+
+        //     ]);
+
+    }
+
 
     public function purchase_report_date(){
         return view("admin.pos.purchase.purchase_report_date");
@@ -752,6 +876,102 @@ class PosPurchaseController extends Controller
                 ->where('client_id',auth()->user()->client_id)
                 ->where('vno', $vno)->delete();
         }
+
+    }
+
+    public function damage_report_date()
+    {
+        return view("admin.pos.damage-products.damage_report_date");
+    }
+
+    public function get_damage_report_date(Request $req)
+    {
+        $stdate = $req['stdate'];
+
+        $enddate = $req['enddate'];
+
+        if(!$stdate){
+            $stdate = date('Y-m-d', strtotime('-1 day'));
+        }
+        if(!$enddate){
+            $enddate = date('Y-m-d', strtotime('+1 day'));
+        }
+
+        $damage = DB::table('damage_products')->where('damage_products.client_id',auth()->user()->client_id)
+            ->select('damage_products.id as dmg_id', 'damage_products.date as date','damage_products.dmg_inv as dmg_inv',
+            'products.product_name as pname', 'products.id as pid',
+            'damage_products.qnt as qnt', 'damage_products.price as price','damage_products.total as total')
+            // ->join('suppliers', 'damage_products.sid', 'suppliers.id')
+            ->join('products', 'damage_products.pid', 'products.id')
+            ->whereBetween('date', [$stdate, $enddate])->get();
+
+        $damage->map(function($damage){
+            $serials = Serial::where('client_id', auth()->user()->client_id)
+                ->where('dmg_inv', $damage->dmg_inv)
+                ->where('product_id', $damage->pid)
+                ->pluck('serial')->toArray();
+            if($serials){
+                $serials = implode (", ", $serials);
+                $damage->serial = $serials;
+            }else{
+                $damage->serial = '';
+            }
+            return $damage;
+        });
+
+        return DataTables()->of($damage)
+            ->addIndexColumn()
+            ->addColumn('action', function($row){
+                $action = '<a data-id='.$row->dmg_id.' data-invoice='.$row->dmg_inv.' title="delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
+                return $action;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function delete_damage(Request $req){
+
+        $id = $req['id'];
+        $invoice = $req['invoice'];
+
+        $damage_products = DB::table('damage_products')
+            ->where('client_id',auth()->user()->client_id)
+            ->where('id', $id)->get();
+
+        foreach($damage_products as $row){
+
+            $pid = $row->pid;
+
+            $qnt = $row->qnt;
+
+            $get_products = DB::table('products')->where('client_id',auth()->user()->client_id)
+                ->where('id', $pid)->first();
+
+            $stock = $get_products->stock;
+
+            $stock = ($stock + $qnt);
+
+            DB::table('products')
+                ->where('client_id',auth()->user()->client_id)
+                ->where('id', $pid)->update(['stock' => $stock]);
+        }
+
+        DB::table('damage_products')
+            ->where('client_id',auth()->user()->client_id)
+            ->where('id', $id)->delete();
+
+        // $get_accounts = DB::table('acc_transactions')
+        //     ->where('client_id',auth()->user()->client_id)
+        //     ->where('description', 'like', '%Memo '.$invoice)->get();
+
+        // foreach($get_accounts as $row){
+
+        //     $vno = $row->vno;
+
+        //     DB::table('acc_transactions')
+        //         ->where('client_id',auth()->user()->client_id)
+        //         ->where('vno', $vno)->delete();
+        // }
 
     }
 

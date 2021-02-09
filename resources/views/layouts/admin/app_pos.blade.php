@@ -267,6 +267,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="/dashboard/damage_products" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Damage Products</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{route('purchase_report_date')}}" class="nav-link">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Purchase Report</p>
@@ -282,6 +288,12 @@
                 <a href="{{route('purchase_report_brand')}}" class="nav-link">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Purchase Report By Brand</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('damage_report_date')}}" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Damage Report</p>
                 </a>
               </li>
             </ul>

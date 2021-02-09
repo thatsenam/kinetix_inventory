@@ -71,6 +71,9 @@ class PosController extends Controller
             ->join('products','purchase_details.pid', 'products.id')
             ->groupBy('products.id')->get();
 
+        $profitCalculation = DB::table('general_settings')->where('client_id', auth()->user()->client_id)
+            ->pluck('profit_clc')->first();
+
         $Oldsold = 0;
         $oldPurchase = 0;
         $psold = 0;
@@ -92,13 +95,21 @@ class PosController extends Controller
                         ->where('pid',$pid)->sum('qnt');
             $sale_return = DB::table('sales_return')->where('client_id', $client_id)
                         ->where('pid',$pid)->sum('qnt');
-
-            $qty = $pPurchase - $returns - $psold + $sale_return;
+            $damage = DB::table('damage_products')->where('client_id',auth()->user()->client_id)
+                        ->where('pid',$pid)->sum('qnt');
+            $qty = $pPurchase - $returns - $psold + $sale_return - $damage;
             $total_stock += $qty;
             
-            $avg_purchase_price = DB::table('purchase_details')->where('client_id', $client_id)
-                        ->where('pid', $pid)->avg('price');
+            if($profitCalculation == '2')
+            {
+                $avg_purchase_price = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->latest()->first()->price;
+            }else{
+                $avg_purchase_price = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+                ->where('pid', $pid)->avg('price');
+            }
             $stock_amount += $qty * $avg_purchase_price;
+            $stock_amount = round($stock_amount, 2);
         }
 
         // Weekly Sales 7 Days

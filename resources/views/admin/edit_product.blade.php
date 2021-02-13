@@ -40,6 +40,7 @@
             @php( $image = $product->product_img )
             @php( $barcode = $product->barcode )
             @php( $serial = $product->serial )
+            @php( $warranty = $product->warranty )
                                         
         @endforeach
       </div><!-- /.container-fluid -->
@@ -142,8 +143,19 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label for="inputStock">Stock</label>
-                                    <input type="text" name="inputStock" id="inputStock" value="{{$stock}}" class="form-control"/>
+                                    <label for="inputWarranty">Warranty</label>
+                                    <div class="input-group">
+                                        <input type="text" value="{{ $warranty }}" name="inputWarranty" id="inputWarranty" placeholder="Enter Warranty" class="form-control"/>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">Month</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="">
+                                <div class="">
+                                    {{-- <label for="inputStock">Stock</label> --}}
+                                    <input type="hidden" name="inputStock" id="inputStock" placeholder="Enter Stock" class="form-control"/>
                                 </div>
                             </div>
                         </div>

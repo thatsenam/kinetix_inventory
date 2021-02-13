@@ -578,6 +578,7 @@ class ComposerStaticInit21cae6532322a43a3bee6fb32f0fd415
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Coupon' => __DIR__ . '/../..' . '/app/Coupon.php',
         'App\\Customer' => __DIR__ . '/../..' . '/app/Customer.php',
+        'App\\CustomerDueCollection' => __DIR__ . '/../..' . '/app/CustomerDueCollection.php',
         'App\\DamageProduct' => __DIR__ . '/../..' . '/app/DamageProduct.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\GeneralSetting' => __DIR__ . '/../..' . '/app/GeneralSetting.php',

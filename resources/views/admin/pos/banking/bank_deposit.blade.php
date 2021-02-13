@@ -212,12 +212,12 @@
             		      
             		      alert(ts.responseText);
                           
-                          
+                          location.reload();
                       },
                       success: function(data){
                          
                           alert(data);
-                          
+                          location.reload();
                       }
             		   
                 }); 

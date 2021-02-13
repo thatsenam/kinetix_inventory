@@ -32,7 +32,8 @@ class CreateProductsTable extends Migration
             $table->integer('stock')->nullable();
             $table->string('product_img')->nullable();
             $table->tinyInteger('is_featured');
-            $table->tinyInteger('serial');
+            $table->tinyInteger('serial')->nullable();
+            $table->tinyInteger('warranty')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();

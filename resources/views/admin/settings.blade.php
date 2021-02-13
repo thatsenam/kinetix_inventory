@@ -1,6 +1,27 @@
 @extends('layouts.admin.app_pos')
 @section('content')
 
+  @php
+      $ledger = false;
+      $pos = false;
+      $avg = false;
+      $latest = false;
+      $product_stock = 0;
+      $purchase_price = 0;
+      $prevent_sale = 0;
+
+      if( $settings )
+      {
+        $settings->print_opt == '1' ? $ledger = true : $pos = true;
+        $settings->profit_clc == '1' ? $avg = true : $latest = true;
+
+        $product_stock = $settings->product_stock == '1' ? 1 : 0;
+        $purchase_price = $settings->purchase_price == '1' ? 1 : 0;
+        $prevent_sale = $settings->prevent_sale == '1' ? 1 : 0;
+      }
+      
+  @endphp
+
    <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -85,20 +106,7 @@
                     <div class="row">
                       <div class="col-sm">
                         <div class="form-group">
-                          @php
-                              $ledger = false;
-                              $pos = false;
-                              if( $settings ){
-                                if($settings->print_opt == '1')
-                                {
-                                  $ledger = true;
-                                }
-                                elseif($settings->print_opt == '2')
-                                {
-                                  $pos = true;
-                                }
-                              }
-                          @endphp
+                          
                           <label for="print_opt">Print Type</label>
                           <select id="print_opt" name="print_opt" class="form-control custom-select">
                               <option value="1" {{ $ledger ? 'selected' : '' }}>Ledger Print</option>
@@ -108,20 +116,6 @@
                       </div>
                       <div class="col-sm">
                         <div class="form-group">
-                          @php
-                              $avg = false;
-                              $latest = false;
-                              if( $settings ){
-                                if($settings->profit_clc == '1')
-                                {
-                                  $avg = true;
-                                }
-                                elseif($settings->profit_clc == '2')
-                                {
-                                  $latest = true;
-                                }
-                              }
-                          @endphp
                             <label for="profit_clc">Profit Calculation</label>
                             <select id="profit_clc" name="profit_clc" class="form-control custom-select">
                                 <option value="1" {{ $avg ? 'selected' : '' }}>Average Price</option>
@@ -129,6 +123,57 @@
                             </select>
                         </div>
                       </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-4">
+                          Show Product Stock in sales invoice?
+                        </div>
+                        <div class="form-check text-center mr-2">
+                            <input name="product_stock" class="form-check-input" type="radio" value="1" id="StockCheckbox1" {{ $product_stock == '1' ? 'checked' : '' }}>
+                            <label class="form-check-label font-weight-bold" for="StockCheckbox1">
+                              Yes
+                            </label>
+                        </div>
+                        <div class="form-check text-center">
+                            <input name="product_stock" class="form-check-input" type="radio" value="0" id="StockCheckbox2" {{ $product_stock != '1' ? 'checked' : '' }}>
+                            <label class="form-check-label font-weight-bold" for="StockCheckbox2">
+                              No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-4">
+                          Show Purchase Price of product in Sales invoice?
+                        </div>
+                        <div class="form-check text-center mr-2">
+                            <input name="purchase_price" class="form-check-input" type="radio" value="1" id="purchasePriceCheckbox1" {{ $purchase_price == '1' ? 'checked' : '' }}>
+                            <label class="form-check-label font-weight-bold" for="purchasePriceCheckbox1">
+                              Yes
+                            </label>
+                        </div>
+                        <div class="form-check text-center">
+                            <input name="purchase_price" class="form-check-input" type="radio" value="0" id="purchasePriceCheckbox2" {{ $purchase_price != '1' ? 'checked' : '' }}>
+                            <label class="form-check-label font-weight-bold" for="purchasePriceCheckbox2">
+                              No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-4">
+                          Prevent Sale in insufficient Stock?
+                        </div>
+                        <div class="form-check text-center mr-2">
+                            <input name="prevent_sale" class="form-check-input" type="radio" value="1" id="preventSaleCheckbox1" {{ $prevent_sale == '1' ? 'checked' : '' }}>
+                            <label class="form-check-label font-weight-bold" for="preventSaleCheckbox1">
+                              Yes
+                            </label>
+                        </div>
+                        <div class="form-check text-center">
+                            <input name="prevent_sale" class="form-check-input" type="radio" value="0" id="preventSaleCheckbox2" {{ $prevent_sale != '1' ? 'checked' : '' }}>
+                            <label class="form-check-label font-weight-bold" for="preventSaleCheckbox2">
+                              No
+                            </label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Favicon</label>

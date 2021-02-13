@@ -147,21 +147,28 @@ class PagesController extends Controller
         $print_opt    = $req['print_opt'];
         $profit_clc  = $req['profit_clc'];
 
+        $product_stock  = $req['product_stock'];
+        $purchase_price  = $req['purchase_price'];
+        $prevent_sale  = $req['prevent_sale'];
+
         $general_settings = GeneralSetting::firstWhere('client_id',auth()->user()->client_id);
 
         if ($general_settings ==null){
             $general_settings = new GeneralSetting();
         }
 
-        $general_settings->site_name    = $siteName;
-        $general_settings->site_tagline = $siteTagline;
-        $general_settings->site_address = $siteAddress;
-        $general_settings->phone        = $phone;
-        $general_settings->email        = $email;
-        $general_settings->vat          = $vat;
-        $general_settings->scharge      = $scharge;
-        $general_settings->print_opt    = $print_opt;
-        $general_settings->profit_clc   = $profit_clc;
+        $general_settings->site_name        = $siteName;
+        $general_settings->site_tagline     = $siteTagline;
+        $general_settings->site_address     = $siteAddress;
+        $general_settings->phone            = $phone;
+        $general_settings->email            = $email;
+        $general_settings->vat              = $vat;
+        $general_settings->scharge          = $scharge;
+        $general_settings->print_opt        = $print_opt;
+        $general_settings->profit_clc       = $profit_clc;
+        $general_settings->product_stock    = $product_stock;
+        $general_settings->purchase_price   = $purchase_price;
+        $general_settings->prevent_sale     = $prevent_sale;
 
         if($req->hasFile('favicon')){
             $prev_img = $general_settings->favicon;

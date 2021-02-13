@@ -22,7 +22,6 @@ class CreateBankTransferTable extends Migration
             $table->string('check_no', 155)->nullable();
             $table->decimal('amount', 12);
             $table->date('date');
-            $table->string('user', 155)->nullable();
             $table->string('lkey', 155)->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

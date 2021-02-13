@@ -344,6 +344,18 @@
                   <p>Bank Ledger</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{route('bank_transfer')}}" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Bank Transfer</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('bank_transfer_report')}}" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Bank Transfer Report</p>
+                </a>
+              </li>
             </ul>
           </li>
           <li class="nav-item">
@@ -360,6 +372,24 @@
                 <a href="{{route('set_customer')}}" class="nav-link">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Customers</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/customers/customer_ledger" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Customer Ledger</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/customers/due-report" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Due Report</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/customers/due-collection-report" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Due Collection Report</p>
                 </a>
               </li>
                <li class="nav-item">

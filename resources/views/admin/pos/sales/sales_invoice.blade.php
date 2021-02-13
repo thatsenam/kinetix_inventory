@@ -4,6 +4,29 @@
 
 @section('content')
 
+    @php
+        $ledger = 5;
+        $pos = 5;
+        $showStock = 0;
+        $purchasePrice = 0;
+        $preventSale = 0;
+        $settings = \App\GeneralSetting::where('client_id', auth()->user()->client_id)->first();
+        
+        if ($settings) {
+            $showStock = $settings->product_stock;
+            $purchasePrice = $settings->purchase_price;
+            $preventSale = $settings->prevent_sale;
+
+            if ($settings->print_opt == 1) {
+                $ledger = 1;
+            } else {
+                $pos = 1;
+            }
+            $vat = $settings->vat;
+            $scharge = $settings->scharge;
+        }
+    @endphp
+
     <?php $user_name = Auth::user()->name; ?>
 
     <div class="main-panel">
@@ -56,7 +79,7 @@
                                             </div>
                                             
                                             <div class="row">
-                                                <div class="col-12">
+                                                <div class="col-10">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" class="form-control" placeholder="Search Product"
                                                             id="search" autocomplete="off">
@@ -66,25 +89,17 @@
                                                         <input type="hidden" name="pid_hid" id="pid_hid">
                                                     </div>
                                                 </div>
+                                                @if($showStock == 1)
+                                                    <div class="col-2">
+                                                        <div class="bg-info text-center rounded h4" id="product_stock"></div>
+                                                    </div>
+                                                @endif
                                             </div>
 
 
                                             <!-------------------------------->
 
-                                            @php
-                                                $ledger = 5;
-                                                $pos = 5;
-                                                $settings = \App\GeneralSetting::where('client_id', auth()->user()->client_id)->first();
-                                                if ($settings) {
-                                                    if ($settings->print_opt == 1) {
-                                                        $ledger = 1;
-                                                    } else {
-                                                        $pos = 1;
-                                                    }
-                                                    $vat = $settings->vat;
-                                                    $scharge = $settings->scharge;
-                                                }
-                                            @endphp
+    
 
 
                                             <div id="printdiv" style="margin:0 auto; font-family:Franklin Gothic Medium; ">
@@ -659,6 +674,8 @@
         var serial_qty;
         var serial_array = {};
         var serial_unsold;
+        var warranty;
+        var product_stock;
         
         $(document).ready(function() {
 
@@ -798,7 +815,10 @@
                             var price = obj.price;
                             product_id = id;
                             product_serial = obj.serial;
+                            warranty = obj.warranty;
+                            product_stock = obj.stock;
 
+                            $('#product_stock').html(product_stock);
                             $('#search').val(name);
                             $('#pid_hid').val(id);
                             $('#price').val(price);
@@ -849,10 +869,18 @@
 
                             product_id = id;
                             product_serial = $(this).find(".active").attr("data-serial");
+                            warranty = $(this).find(".active").attr("data-warranty");
+                            product_stock = $(this).find(".active").attr("data-stock");
 
+                            $('#product_stock').html(product_stock);
                             $('#search').val(name);
                             $('#pid_hid').val(id);
-                            $('#price').val(price);
+                            
+                            var show = {!! json_encode($purchasePrice) !!};
+                            if(show == 1)
+                            {
+                                $('#price').val(price);
+                            }
 
                             $("#qnt").focus();
                             $("#products_div").hide();
@@ -1482,7 +1510,11 @@
                 serial_array[product_id] = val;
 
                 var result = val.join();
-                result = '<br>' + result;
+                result = '<br>Serial: ' + result;
+                if(warranty)
+                {
+                    result = result + '<br>Warranty: ' + warranty + ' Month';
+                }
 
                 var tdval = $(".price-table tr").find(`[data-prodid='${product_id}']`);
 
@@ -1505,6 +1537,17 @@
                     var qnt = Number($(this).val());
                     var price = Number($('#price').val());
                     var totalPrice = Number($('#hid_total').val());
+
+                    var show = {!! json_encode($preventSale) !!};
+                    if(show == 1)
+                    {
+                        if(qnt > product_stock)
+                        {
+                            alert('Insufficient Stock'); 
+                            return;
+                        }
+                    }
+
                     serial_qty = qnt;
 
                     if(product_serial == 1)
@@ -2355,15 +2398,24 @@
             $("#cust_div").hide();
         }
 
-        function selectProducts(id, name, price, serial) {
+        function selectProducts(id, name, price, serial, warranty, stock) {
 
             $('#search').val(name);
             $('#pid_hid').val(id);
-            $('#price').val(price);
+
+            var show = {!! json_encode($purchasePrice) !!};
+            
+            if(show == 1)
+            {
+                $('#price').val(price);
+            }
             
             product_id = id;
             product_serial = serial;
+            warranty = warranty;
+            product_stock = stock;
 
+            $('#product_stock').html(product_stock);
             $("#price").focus();
             $("#products_div").hide();
 

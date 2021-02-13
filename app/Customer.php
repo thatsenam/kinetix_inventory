@@ -25,4 +25,9 @@ class Customer extends Model
             $builder->where('client_id', auth()->user()->client_id ?? -1);
         });
     }
+
+    public function customer_due_collections()
+    {
+        return $this->hasMany(CustomerDueCollection::class);
+    }
 }

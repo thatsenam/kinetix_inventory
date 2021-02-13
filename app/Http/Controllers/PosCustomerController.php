@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\AccHead;
-use App\BankTransaction;
-use App\PaymentInvoice;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use App\Product;
-use App\ProductImage;
-use App\Company;
-use App\Manufacturer;
-use App\Category;
+use Auth;
+use Image;
+use App\Sales;
 use App\Filter;
 use App\Seller;
+use App\AccHead;
+use App\Company;
+use App\Product;
+use App\Category;
 use App\Customer;
-use App\Sales;
+use App\Manufacturer;
+use App\ProductImage;
+use App\SalesInvoice;
 use App\AccTransaction;
-use Image;
-use Auth;
+use App\PaymentInvoice;
+use App\BankTransaction;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\CustomerDueCollection;
+use Illuminate\Support\Facades\DB;
 // use Response;
 
 class PosCustomerController extends Controller
@@ -90,8 +92,10 @@ class PosCustomerController extends Controller
             ->select('customers.name','customers.phone','customers.address')->where('id', $id)->first();
         $get_head = DB::table('acc_heads')->where('cid',"cid ".$id)->first();
         $head = $get_head->head;
-        $debit = DB::table('acc_transactions')->where('head',$head)->sum('debit');
-        $credit = DB::table('acc_transactions')->where('head',$head)->sum('credit');
+        $debit = DB::table('acc_transactions')->where('client_id',auth()->user()->client_id)
+        ->where('head',$head)->sum('debit');
+        $credit = DB::table('acc_transactions')->where('client_id',auth()->user()->client_id)
+        ->where('head',$head)->sum('credit');
         $balance = $debit - $credit;
         $data = array(
             'id' => $id,
@@ -356,11 +360,12 @@ class PosCustomerController extends Controller
             'description' => $desc,
             'remarks' => $remarks,
             'date' => $date,
-            'user' => $user,
+            // 'user' => $user,
         ]);
 
         if($paytype == 'cash'){
-            $vno = (DB::table('acc_transactions')->max('id') + 1);
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = $cust_name." ".$cust_phone;
             $description = "Payment Invoice ".$invoice;
@@ -373,12 +378,12 @@ class PosCustomerController extends Controller
                 'vno' => $vno,
                 'head' => $head,
                 'sort_by' => "cid"." ".$cust_id,
-                'notes' => "Paid In Cash",
+                'note' => "Paid In Cash",
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                'user' => $user,
+                // 'user' => $user,
 
             ]);
 
@@ -400,12 +405,12 @@ class PosCustomerController extends Controller
                 'vno' => $vno,
                 'head' => $head,
                 'sort_by' => "cid"." ".$cust_id,
-                'notes' => "Recieved In Cash",
+                'note' => "Recieved In Cash",
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                'user' => $user,
+                // 'user' => $user,
 
             ]);
         }
@@ -428,13 +433,14 @@ class PosCustomerController extends Controller
                 'type' => 'card',
                 'status' => 'paid',
                 'remarks' => $remarks,
-                'user' => $user,
+                // 'user' => $user,
 
             ]);
 
             /////Insert into Accounts For Card Transaction
 
-            $vno = (DB::table('acc_transactions')->max('id') + 1);
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = $cust_name." ".$cust_phone;
             $description = "Payment Invoice ".$invoice;
@@ -450,7 +456,7 @@ class PosCustomerController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                'user' => $user,
+                // 'user' => $user,
 
             ]);
 
@@ -468,7 +474,7 @@ class PosCustomerController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                'user' => $user,
+                // 'user' => $user,
 
             ]);
         }
@@ -492,7 +498,7 @@ class PosCustomerController extends Controller
                 'type' => 'check',
                 'status' => 'pending',
                 'remarks' => $remarks,
-                'user' => $user,
+                // 'user' => $user,
 
             ]);
 
@@ -516,13 +522,14 @@ class PosCustomerController extends Controller
                 'status' => 'paid',
                 'tranxid' => $tranxid,
                 'remarks' => $remarks,
-                'user' => $user,
+                // 'user' => $user,
 
             ]);
 
             /////Insert into Accounts For Mobile Transaction
 
-            $vno = (DB::table('acc_transactions')->max('id') + 1);
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = $cust_name." ".$cust_phone;
             $description = "Payment Invoice ".$invoice;
@@ -538,7 +545,7 @@ class PosCustomerController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                'user' => $user,
+                // 'user' => $user,
 
             ]);
 
@@ -556,7 +563,7 @@ class PosCustomerController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                'user' => $user,
+                // 'user' => $user,
 
             ]);
         }
@@ -582,6 +589,233 @@ class PosCustomerController extends Controller
         ->join('products', 'sales_invoice_details.pid', 'products.id')->where('sales_invoice_details.invoice_no', $invoiceno)->get();
 
         return view('admin.pos.customer.saleinvoice')->with(compact('cust_details','get_customer','details'));
+    }
+
+
+    public function customers_due_report()
+    {
+        $customers = Customer::where('client_id', auth()->user()->client_id)->get();
+
+        $customers_due = [];
+
+        foreach($customers as $customer)
+        {
+            $debit = 0;
+            $credit = 0;
+            $cid = 'cid ' . $customer->id;
+            $head = $customer->name . ' ' . $customer->phone;
+            $debit = AccTransaction::where('client_id', auth()->user()->client_id)
+                ->where('sort_by', $cid)
+                ->where('head', $head)
+                ->sum('debit');
+            $credit = AccTransaction::where('client_id', auth()->user()->client_id)
+                ->where('sort_by', $cid)
+                ->where('head', $head)
+                ->sum('credit');
+            $due = $debit - $credit;
+            $customers_due [] = [
+                'name' => $customer->name,
+                'phone' => $customer->phone,
+                'due' => $due,
+            ];
+        }
+        
+        return view('admin.pos.customer.customers-due-report', compact('customers_due'));
+    }
+
+    public function get_customer_due($customer)
+    {
+        $customer = Customer::where('client_id', auth()->user()->client_id)->find($customer);
+
+        $cid = 'cid ' . $customer->id;
+        $head = $customer->name . ' ' . $customer->phone;
+        $debit = AccTransaction::where('client_id', auth()->user()->client_id)
+            ->where('sort_by', $cid)
+            ->where('head', $head)
+            ->sum('debit');
+        $credit = AccTransaction::where('client_id', auth()->user()->client_id)
+            ->where('sort_by', $cid)
+            ->where('head', $head)
+            ->sum('credit');
+        $due = $debit - $credit;
+
+        return $due;
+    }
+
+    // public function customers_due_collection()
+    // {
+    //     $customers = Customer::where('client_id', auth()->user()->client_id)->get();
+    //     return view('admin.pos.customer.customers-due-collection', compact('customers'));
+    // }
+
+    // public function store_customers_due_collection(Request $request)
+    // {
+    //     // $data = $request->validate([
+    //     //     'date' => 'required',
+    //     //     'customer_id' => 'required',
+    //     //     'payment_type' => '',
+    //     //     'total_due' => 'required',
+    //     //     'payment' => 'required',
+    //     //     'discount' => '',
+    //     // ]);
+
+    //     // CustomerDueCollection::create($data);
+
+    //     $cust_id = $request['customer_id'];
+    //     $customer = Customer::find($cust_id);
+    //     $date = $request['date'];
+    //     $cust_name = $customer->name;
+    //     $cust_phone = $customer->phone;
+    //     $amount = $request['payment'] + $request['discount'];
+
+    //     $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+    //     $vno = date('Ymd') . '-' . ($vno_counting + 1);
+
+    //     $head = $cust_name." ".$cust_phone;
+    //     $description = "Due Collect From ".$head;
+    //     $debit = 0;
+    //     $credit = $amount;
+
+    //     AccTransaction::create([
+    //         'vno' => $vno,
+    //         'head' => $head,
+    //         'sort_by' => "cid"." ".$cust_id,
+    //         'description' => $description,
+    //         'debit' => $debit,
+    //         'credit' => $credit,
+    //         'date' => $date,
+    //     ]);
+
+    //     $head = "Cash In Hand";
+    //     $description = "Due Collect From " . $cust_name." ".$cust_phone;
+    //     $debit = $amount;
+    //     $credit = 0;
+
+    //     AccTransaction::create([
+    //         'vno' => $vno,
+    //         'head' => $head,
+    //         'sort_by' => "cid"." ".$cust_id,
+    //         'description' => $description,
+    //         'debit' => $debit,
+    //         'credit' => $credit,
+    //         'date' => $date,
+    //     ]);
+        
+    //     return redirect()->back()->with('success', 'Customer Due Collection Successfully Inserted!');
+    // }
+
+    public function customers_due_collection_report()
+    {
+        return view('admin.pos.customer.customers-due-collection-report');
+    }
+
+    public function get_customers_due_collection_report(Request $req)
+    {
+        $customers = Customer::where('client_id', auth()->user()->client_id)->get();
+
+        $collections = [];
+
+        $stdate = $req['from_date'];
+        $enddate = $req['to_date'];
+
+        if(!$stdate){
+            $stdate = date('Y-m-d', strtotime('-1 day'));
+        }
+        if(!$enddate){
+            $enddate = date('Y-m-d', strtotime('+1 day'));
+        }
+
+        foreach($customers as $customer)
+        {
+            $cid = 'cid ' . $customer->id;
+            $head = $customer->name . ' ' . $customer->phone;
+            $name = $customer->name;
+            $phone = $customer->phone;
+
+            $collection = AccTransaction::where('client_id', auth()->user()->client_id)
+                ->where('sort_by', $cid)
+                ->where('head', $head)
+                ->where('credit', '>', 0)
+                ->whereDate('date', '>=', $stdate)
+                ->whereDate('date', '<=', $enddate)
+                ->get();
+            
+            foreach($collection as $collect)
+            {
+                $collections [] = [
+                    'date' => $collect->date,
+                    'name' => $name,
+                    'phone' => $phone,
+                    'due' => $collect->credit,
+                ];
+            }
+        }
+
+        // dd($collections);
+        
+        return DataTables()->of($collections)->make(true);
+    }
+
+    public function customer_ledger()
+    {
+        $customers = DB::table('customers')->where('client_id', auth()->user()->client_id)->get();
+        $setting = DB::table('general_settings')->where('client_id', auth()->user()->client_id)->first();
+
+        return view('admin.pos.customer.customer-ledger', compact('customers', 'setting'));
+    }
+
+    public function get_customer_ledger(Request $req){
+
+        $stdate = $req['stdate'];
+        $enddate = $req['enddate'];
+
+        $customer = Customer::find($req['customer_id']);
+
+        $cid = 'cid ' . $customer->id;
+        $head = $customer->name . ' ' . $customer->phone;
+
+        $previousBalance = AccTransaction::where('client_id', auth()->user()->client_id)
+            ->where('head', $head)
+            ->whereDate('date', '<', $stdate)
+            ->sum('debit') -
+            AccTransaction::where('client_id', auth()->user()->client_id)
+            ->where('head', $head)
+            ->whereDate('date', '<', $stdate)
+            ->sum('credit');
+
+        $accounts = AccTransaction::where('client_id', auth()->user()->client_id)
+            ->where('head', $head)
+            ->whereDate('date', '>=', $stdate)
+            ->whereDate('date', '<=', $enddate)
+            ->get();
+
+        $trow = "";
+        $debit = 0;
+        $credit = 0;
+
+        $Balance = 0;
+
+        $trow = "<tr><th>Previous Balance</th><th colspan='4'></th><th>". $previousBalance ."</th></tr>";
+
+        $trow .= "<tr>
+                    <th>Date</th>
+                    <th>Voucher No</th>
+                    <th>Description</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
+                    <th>Balance</th>
+                </tr>";
+        
+        foreach($accounts as $row)
+        {
+            $Balance = $Balance + $row->debit - $row->credit;
+
+            $date = date('d-M-Y', strtotime($row->date));
+
+            $trow .= "<tr><td>".$date."</td><td>".$row->vno."</td><td>".$row->description."</td><td>".$row->debit."</td><td>".$row->credit."</td><td>". $Balance ."</td></tr>";
+        }
+
+        return $trow;
     }
 
 }

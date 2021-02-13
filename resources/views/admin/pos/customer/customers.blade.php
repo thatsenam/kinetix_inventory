@@ -67,7 +67,7 @@
                                     Actions
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#paymodal" data-id="{{$customer->id}}" onClick="open_container3(this);"><i class="fa fa-money-bill-alt"></i> Pay</a>
+                                    <a class="dropdown-item" href="#" data-id="{{$customer->id}}" onClick="open_container3(this);"><i class="fa fa-money-bill-alt"></i> Pay</a>
                                     <a class="dropdown-item" href="{{url('/dashboard/customer/'.$customer->id)}}"><i class="fa fa-eye" aria-hidden="true"></i> View</a>
                                     <a class="dropdown-item" id="abc" data-toggle="modal" data-target="#editmodal" data-id="{{ $customer->id }}" onClick="open_container2(this);"><i class="fa fa-edit"></i> Edit</a>
                                     <a class="dropdown-item" onclick="deleteConfirmation({{$customer->id}})"><i class="fa fa-trash"></i> Delete</a>
@@ -589,7 +589,7 @@
                 $('#sdebit').val(data.debit);
                 $('#scredit').val(data.credit);
                 $('#sbalance').val(data.balance);
-                $('#spaymodal').modal('show');
+                $('#paymodal').modal('show');
           }
         });
       }

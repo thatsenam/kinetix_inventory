@@ -55,6 +55,7 @@ class ProductsController extends Controller
             $product->product_size = $data['inputSize'];
             $product->sku = $data['inputSKU'];
             $product->stock = $data['inputStock'];
+            $product->warranty = $data['inputWarranty'];
             $product->is_featured = $data['inputStatus'];
             $product->serial = $data['serial'];
 
@@ -150,6 +151,7 @@ class ProductsController extends Controller
                 'product_code'=>$data['inputCode'],
                 'sku'=>$data['inputSKU'],
                 'product_size'=>$data['inputSize'],
+                'warranty'=>$data['inputWarranty'],
                 'stock'=>$data['inputStock'],
                 'is_featured'=>$data['inputStatus'],
                 'serial' => $data['serial'],

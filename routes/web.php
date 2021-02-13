@@ -179,7 +179,15 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get','post'],'/payment/invoice/{id}','PosCustomerController@payinvoice');
     Route::match(['get','post'],'/dashboard/sales_invoice/{id}','PosCustomerController@saleinvoice');
 
-
+    Route::get('/dashboard/customers/due-report','PosCustomerController@customers_due_report');
+    // Route::get('/dashboard/customers/due-collection','PosCustomerController@customers_due_collection');
+    // Route::post('/dashboard/customers/store-due-collection','PosCustomerController@store_customers_due_collection');
+    Route::get('/get_customer_due/{customer}','PosCustomerController@get_customer_due');
+    Route::get('/dashboard/customers/due-collection-report','PosCustomerController@customers_due_collection_report');
+    Route::match(['get', 'post'], '/dashboard/customers/get-due-collection-report','PosCustomerController@get_customers_due_collection_report')->name('get_customers_due_collection_report');
+    Route::get('/dashboard/customers/customer_ledger', 'PosCustomerController@customer_ledger')->name('customer_ledger')->middleware('auth');
+    Route::post('/dashboard/customers/get_customer_ledger', 'PosCustomerController@get_customer_ledger')->name('get_customer_ledger')->middleware('auth');
+    
     //POS Suppliers Options
     Route::match(['get','post'],'/dashboard/suppliers','PosSupplierController@setSupplier')->name('set_supplier');
     Route::match(['get','post'],'/dashboard/update_supp','PosSupplierController@edit')->name('edit_supplier');
@@ -350,9 +358,18 @@ Route::get('/dashboard/bank_ledger', 'PosBankController@bank_ledger')->name('ban
 Route::post('/dashboard/get_bank_ledger', 'PosBankController@get_bank_ledger')->name('get_bank_ledger')->middleware('auth');
 
 Route::match(['get','post'],'/dashboard/add_bank', 'PosBankController@add_bank')->name('add_bank')->middleware('auth');
+
 Route::match(['get','post'],'/dashboard/edit_bank/{id}','PosBankController@edit_bank')->middleware('auth');
 
 Route::get('/dashboard/view_banks', 'PosBankController@view_banks')->middleware('auth');
+
+Route::get('/dashboard/bank_transfer', 'PosBankController@bank_transfer')->name('bank_transfer')->middleware('auth');
+
+Route::post('/dashboard/save_bank_transfer', 'PosBankController@save_bank_transfer')->name('save_bank_transfer')->middleware('auth');
+
+Route::match(['get', 'post'],'/dashboard/bank_transfer_report', 'PosBankController@bank_transfer_report')->name('bank_transfer_report')->middleware('auth');
+
+Route::match(['get', 'post'], '/dashboard/get_bank_transfer_report', 'PosBankController@get_bank_transfer_report')->name('get_bank_transfer_report')->middleware('auth');
 
 
 // Accounting Route

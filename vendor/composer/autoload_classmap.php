@@ -20,6 +20,7 @@ return array(
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Coupon' => $baseDir . '/app/Coupon.php',
     'App\\Customer' => $baseDir . '/app/Customer.php',
+    'App\\CustomerDueCollection' => $baseDir . '/app/CustomerDueCollection.php',
     'App\\DamageProduct' => $baseDir . '/app/DamageProduct.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\GeneralSetting' => $baseDir . '/app/GeneralSetting.php',

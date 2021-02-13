@@ -2,38 +2,39 @@
 
 namespace App\Providers;
 
-use App\AccHead;
-use App\AccTransaction;
-use App\BankAcc;
-use App\BankInfo;
-use App\BankTransaction;
-use App\BankTransfer;
+use App\Cart;
+use App\Order;
+use App\Sales;
 use App\Banner;
 use App\Brands;
-use App\Cart;
-use App\Category;
 use App\Coupon;
+use App\Serial;
+use App\AccHead;
+use App\BankAcc;
+use App\BankInfo;
+use App\Category;
 use App\Customer;
-use App\DamageProduct;
-use App\GeneralSetting;
-use App\Order;
-use App\Order_detail;
-use App\PaymentInvoice;
-use App\ProductAttributes;
-use App\ProductImages;
 use App\Products;
+use App\Settings;
+use App\Supplier;
+use App\SalesReturn;
+use App\BankTransfer;
+use App\Order_detail;
+use App\SalesInvoice;
+use App\UserProfiles;
+use App\DamageProduct;
+use App\ProductImages;
+use App\AccTransaction;
+use App\GeneralSetting;
+use App\PaymentInvoice;
 use App\ProductsImages;
+use App\BankTransaction;
 use App\PurchaseDetails;
 use App\PurchasePrimary;
 use App\PurchaseReturns;
-use App\Sales;
-use App\SalesInvoice;
+use App\ProductAttributes;
 use App\SalesInvoiceDetails;
-use App\SalesReturn;
-use App\Serial;
-use App\Settings;
-use App\Supplier;
-use App\UserProfiles;
+use App\CustomerDueCollection;
 use Illuminate\Support\ServiceProvider;
 
 class ClientIdProvider extends ServiceProvider
@@ -267,6 +268,11 @@ class ClientIdProvider extends ServiceProvider
         });
 
         DamageProduct::creating(function ($model) {
+            $model->client_id = auth()->user()->client_id;
+            $model->user_id = auth()->user()->id;
+        });
+
+        CustomerDueCollection::creating(function ($model) {
             $model->client_id = auth()->user()->client_id;
             $model->user_id = auth()->user()->id;
         });

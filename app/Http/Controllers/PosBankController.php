@@ -16,6 +16,8 @@ use App\Category;
 use App\Manufacturer;
 use App\ProductImage;
 use App\AccTransaction;
+use App\BankTransaction;
+use App\BankTransfer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -64,10 +66,10 @@ class PosBankController extends Controller
             }else{
                 $acc_head->sub_head = "General Bank";
             }
-            $acc_head->head = $name . ' ' . $acc_no;
+            $acc_head->head = $name." A/C: ".$acc_name;
             $acc_head->save();
 
-            return redirect('/dashboard/add_bank')->with('flash_message_success', 'ব্যাংক সফলভাবে যুক্ত হয়েছে!');
+            return redirect('/dashboard/add_bank')->with('flash_message_success', 'Bank has been created successfully!');
         }
 
         return view('admin.pos.banking.add_bank');
@@ -86,11 +88,11 @@ class PosBankController extends Controller
             $data = $req->all();
             $prev_cards=$req->card_name_prev ?? '';
             $new_cards=$req->card_name ?? '';
-
-            AccHead::where(['head'=>$bank->name . ' ' . $bank->account->acc_no])->update(['head'=>$data['bank_name'] . ' ' . $data['acc_no'],]);
-            $acc_transaction_head = AccTransaction::where('head', $bank->name . ' ' . $bank->account->acc_no)->get();
+            // $acc_head->head = $name." A/C: ".$acc_name;
+            AccHead::where(['head'=>$bank->name . ' A/C: ' . $bank->account->acc_name])->update(['head'=>$data['bank_name'] . ' A/C: ' . $data['acc_name'],]);
+            $acc_transaction_head = AccTransaction::where('head', $bank->name . ' A/C: ' . $bank->account->acc_no)->get();
             foreach($acc_transaction_head as $acc){
-                $acc->head = $data['bank_name'] . ' ' . $data['acc_no'];
+                $acc->head = $data['bank_name'] . ' A/C: ' . $data['acc_name'];
                 $acc->save();
             }
             BankInfo::where(['id'=>$id])->update(['name'=>$data['bank_name'],'address'=>$data['bank_address'],]);
@@ -112,7 +114,7 @@ class PosBankController extends Controller
             
            // Cost::where(['id'=>$id])->update(['category_id'=>$data['category'],'sub_category'=>$data['sub_category'],'reason'=>$data['reason'],'amount'=>$data['amount'],'details'=>$data['details'],'date'=>$data['date'],]);
             
-            return redirect('/dashboard/view_banks')->with('flash_message_success', ' ব্যাংক সফলভাবে আপডেট হয়েছে!');
+            return redirect('/dashboard/view_banks')->with('flash_message_success', 'Bank has been updated successfully!');
         }
         return view('admin.pos.banking.edit_bank')->with('bank', $bank)->with('cards', $cards)->with('id', $id);
 
@@ -120,7 +122,7 @@ class PosBankController extends Controller
 
     public function get_mobile_bank()
     {
-        $mobile_banks = BankInfo::where('type','mobile_bank');
+        $mobile_banks = BankInfo::where('type','mobile_bank')->where('client_id', auth()->user()->client_id);
         $bank_infos=array();
         foreach($mobile_banks as $bank){
             $bank_infos[$bank->name]=$bank->name;
@@ -157,7 +159,8 @@ class PosBankController extends Controller
 
         $s_text = $req['s_text'];
 
-        $get_bank = DB::table('bank_info')->where('name', 'like', '%'.$s_text.'%')->limit(9)->get(); ?>
+        $get_bank = DB::table('bank_info')->where('name', 'like', '%'.$s_text.'%')
+        ->where('client_id', auth()->user()->client_id)->limit(9)->get(); ?>
 
         <ul class='bank-list sugg-list'>
 
@@ -185,7 +188,9 @@ class PosBankController extends Controller
         $s_text = $req['s_text'];
         $bank_id = $req['bank_id'];
 
-        $get_bank_acc = DB::table('bank_acc')->where('acc_name', 'like', '%'.$s_text.'%')->where('bank_id', $bank_id)->limit(9)->get(); ?>
+        $get_bank_acc = DB::table('bank_acc')->where('acc_name', 'like', '%'.$s_text.'%')
+            ->where('client_id', auth()->user()->client_id)
+            ->where('bank_id', $bank_id)->limit(9)->get(); ?>
 
         <ul class='bank-acc-list sugg-list'>
 
@@ -278,14 +283,17 @@ class PosBankController extends Controller
             $cust_name = $get_customer->name;
             $cust_phone = $get_customer->phone;
 
-            $vno = (DB::table('acc_transactions')->max('id') + 1);
+            // $vno = (DB::table('acc_transactions')->max('id') + 1);
+
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = $debit_head;
             $description = "Check for Invoice ".$invoice;
             $debit = $transactions->deposit;
             $credit = 0;
 
-            DB::table('acc_transactions')->insert([
+            AccTransaction::create([
 
                 'vno' => $vno,
                 'head' => $head,
@@ -299,11 +307,11 @@ class PosBankController extends Controller
             ]);
 
             $head = $cust_name." ".$cust_phone;
-            $description = "Cehck Collection For Invoice ".$invoice;
+            $description = "Check Collection For Invoice ".$invoice;
             $debit = 0;
             $credit = $amount;
 
-            DB::table('acc_transactions')->insert([
+            AccTransaction::create([
 
                 'vno' => $vno,
                 'head' => $head,
@@ -374,7 +382,7 @@ class PosBankController extends Controller
         $remarks = $req['remarks'];
         $user = Auth::id();
 
-        DB::table('bank_transactions')->insert([
+        BankTransaction::create([
 
             'seller_bank_id' => $bank_id,
             'seller_bank_acc_id' => $account_id,
@@ -384,26 +392,29 @@ class PosBankController extends Controller
             'deposit' => $amount,
             'type' => 'cash',
             'remarks' => $remarks,
-            'user' => $user,
+            // 'user' => $user,
         ]);
 
-        $vno = (DB::table('acc_transactions')->max('id') + 1);
+        // $vno = (DB::table('acc_transactions')->max('id') + 1);
+        
+        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+        $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
         $head = $bank_name." A/C: ".$account_name;
         $description = "Cash Deposit";
         $debit = $amount;
         $credit = 0;
 
-        DB::table('acc_transactions')->insert([
+        AccTransaction::create([
 
             'vno' => $vno,
             'head' => $head,
             'description' => $description,
             'debit' => $debit,
             'credit' => $credit,
-            'notes' => $remarks,
+            'note' => $remarks,
             'date' => $date,
-            'user' => $user,
+            // 'user' => $user,
         ]);
 
         $head = "Cash in Hand";
@@ -411,16 +422,16 @@ class PosBankController extends Controller
         $debit = 0;
         $credit = $amount;
 
-        DB::table('acc_transactions')->insert([
+        AccTransaction::create([
 
             'vno' => $vno,
             'head' => $head,
             'description' => $description,
             'debit' => $debit,
             'credit' => $credit,
-            'notes' => $remarks,
+            'note' => $remarks,
             'date' => $date,
-            'user' => $user,
+            // 'user' => $user,
         ]);
     }
 
@@ -444,7 +455,7 @@ class PosBankController extends Controller
         $remarks = $req['remarks'];
         $user = Auth::id();
 
-        DB::table('bank_transactions')->insert([
+        BankTransaction::create([
 
             'seller_bank_id' => $bank_id,
             'seller_bank_acc_id' => $account_id,
@@ -454,26 +465,29 @@ class PosBankController extends Controller
             'withdraw' => $amount,
             'type' => 'cash',
             'remarks' => $remarks,
-            'user' => $user,
+            // 'user' => $user,
         ]);
 
-        $vno = (DB::table('acc_transactions')->max('id') + 1);
+        // $vno = (DB::table('acc_transactions')->max('id') + 1);
+
+        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+        $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
         $head = $bank_name." A/C: ".$account_name;
         $description = "Cash Withdrwan";
         $debit = 0;
         $credit = $amount;
 
-        DB::table('acc_transactions')->insert([
+        AccTransaction::create([
 
             'vno' => $vno,
             'head' => $head,
             'description' => $description,
             'debit' => $debit,
             'credit' => $credit,
-            'notes' => $remarks,
+            'note' => $remarks,
             'date' => $date,
-            'user' => $user,
+            // 'user' => $user,
         ]);
 
         $head = "Cash in Hand";
@@ -481,24 +495,25 @@ class PosBankController extends Controller
         $debit = $amount;
         $credit = 0;
 
-        DB::table('acc_transactions')->insert([
+        AccTransaction::create([
 
             'vno' => $vno,
             'head' => $head,
             'description' => $description,
             'debit' => $debit,
             'credit' => $credit,
-            'notes' => $remarks,
+            'note' => $remarks,
             'date' => $date,
-            'user' => $user,
+            // 'user' => $user,
         ]);
     }
 
     public function bank_ledger(){
 
-        $bank_info = DB::table('bank_info')->get();
+        $bank_info = DB::table('bank_info')->where('client_id', auth()->user()->client_id)->get();
+        $setting = DB::table('general_settings')->where('client_id', auth()->user()->client_id)->first();
 
-        return view('admin.pos.banking.bank_ledger')->with('bank_info', $bank_info);
+        return view('admin.pos.banking.bank_ledger', compact('bank_info', 'setting'));
     }
 
     public function get_bank_ledger(Request $req){
@@ -510,15 +525,198 @@ class PosBankController extends Controller
 
         $head = $bank_name." A/C: ".$account_name;
 
-        $accounts = DB::table('acc_transactions')->where('head', $head)->whereBetween('date', [$stdate, $enddate])->get();
+        $accounts = DB::table('acc_transactions')->where('client_id', auth()->user()->client_id)
+            ->where('head', $head)
+            ->whereDate('date', '>=', $stdate)
+            ->whereDate('date', '<=', $enddate)
+            ->get();
+
+        $previousBalance = AccTransaction::where('client_id', auth()->user()->client_id)
+            ->where('head', $head)
+            ->whereDate('date', '<', $stdate)
+            ->sum('debit') -
+            AccTransaction::where('client_id', auth()->user()->client_id)
+            ->where('head', $head)
+            ->whereDate('date', '<', $stdate)
+            ->sum('credit');
 
         $trow = "";
+        $debit = 0;
+        $credit = 0;
 
-        foreach($accounts as $row){
-            $trow .= "<tr><td>".$row->date."</td><td>".$row->description."</td><td>".$row->debit."</td><td>".$row->credit."</td><td>".$row->notes."</td><td>Delete</td></tr>";
+        $Balance = 0;
+
+        $trow = "<tr><th>Previous Balance</th><th colspan='4'></th><th>". $previousBalance ."</th></tr>";
+
+        $trow .= "<tr>
+                    <th>Date</th>
+                    <th>Voucher No</th>
+                    <th>Description</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
+                    <th>Balance</th>
+                </tr>";
+        
+        foreach($accounts as $row)
+        {
+            $Balance = $Balance + $row->debit - $row->credit;
+
+            $date = date('d-M-Y', strtotime($row->date));
+
+            $trow .= "<tr><td>".$date."</td><td>".$row->vno."</td><td>".$row->description."</td><td>".$row->debit."</td><td>".$row->credit."</td><td>". $Balance ."</td></tr>";
+            // $debit += $row->debit;
+            // $credit += $row->credit;
         }
+        // $trow .= "<tr><th colspan='2'>Total</th><th>".$debit."</th><th>".$credit."</th><th></th></tr>";
 
         return $trow;
+    }
+
+    public function bank_transfer(){
+
+        $bank_info = DB::table('bank_info')->get();
+
+        return view('admin.pos.banking.bank_transfer')->with('bank_info', $bank_info);
+    }
+
+    public function save_bank_transfer(Request $req)
+    {
+        $tf_bank = $req['tf_bank'];
+        $tf_bank_name = $req['tf_bank_name'];
+        $tf_acc = $req['tf_acc'];
+        $tf_account_name = $req['tf_account_name'];
+        $tt_bank = $req['tt_bank'];
+        $tt_bank_name = $req['tt_bank_name'];
+        $tt_acc = $req['tt_acc'];
+        $tt_account_name = $req['tt_account_name'];
+        $balance = $req['balance'];
+        $check_no = $req['check_no'];
+        $amount = $req['amount'];
+        $date = $req['date'];
+
+        BankTransfer::create([
+            'tf_bank' => $tf_bank,
+            'tf_acc' => $tf_acc,
+            'tt_bank' => $tt_bank,
+            'tt_acc' => $tt_acc,
+            'check_no' => $check_no,
+            'amount' => $amount,
+            'date' => $date,
+        ]);
+
+        BankTransaction::create([
+            'seller_bank_id' => $tf_bank,
+            'seller_bank_acc_id' => $tf_acc,
+            'check_no' => $check_no,
+            'check_date' => $date,
+            'date' => $date,
+            'withdraw' => $amount,
+            'type' => 'cash',
+            'remarks' => '',
+            // 'user' => $user,
+        ]);
+
+        BankTransaction::create([
+            'seller_bank_id' => $tt_bank,
+            'seller_bank_acc_id' => $tt_acc,
+            'check_no' => $check_no,
+            'check_date' => $date,
+            'date' => $date,
+            'deposit' => $amount,
+            'type' => 'cash',
+            'remarks' => '',
+            // 'user' => $user,
+        ]);
+
+        // // $vno = (DB::table('acc_transactions')->max('id') + 1);
+        
+        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+        $vno = date('Ymd') . '-' . ($vno_counting + 1);
+
+        
+        $head = $tf_bank_name." A/C: ".$tf_account_name;
+        $description = "Cash Withdrwan";
+        $debit = 0;
+        $credit = $amount;
+
+        AccTransaction::create([
+            'vno' => $vno,
+            'head' => $head,
+            'description' => $description,
+            'debit' => $debit,
+            'credit' => $credit,
+            'note' => '',
+            'date' => $date,
+            // 'user' => $user,
+        ]);
+
+        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+        $vno = date('Ymd') . '-' . ($vno_counting + 1);
+
+        $head = $tt_bank_name." A/C: ".$tt_account_name;
+        $description = "Cash Deposit";
+        $debit = $amount;
+        $credit = 0;
+
+        AccTransaction::create([
+            'vno' => $vno,
+            'head' => $head,
+            'description' => $description,
+            'debit' => $debit,
+            'credit' => $credit,
+            'note' => '',
+            'date' => $date,
+            // 'user' => $user,
+        ]);
+
+        // $head = "Cash in Hand";
+        // $description = "Deposited to ".$bank_name." A/C: ".$account_name;;
+        // $debit = 0;
+        // $credit = $amount;
+
+        // AccTransaction::create([
+
+        //     'vno' => $vno,
+        //     'head' => $head,
+        //     'description' => $description,
+        //     'debit' => $debit,
+        //     'credit' => $credit,
+        //     'note' => $remarks,
+        //     'date' => $date,
+        //     // 'user' => $user,
+        // ]);
+    }
+
+    public function bank_transfer_report()
+    {
+        return view('admin.pos.banking.bank_transfer_report');
+    }
+
+    public function get_bank_transfer_report(Request $req)
+    {
+        $stdate = $req['stdate'];
+
+        $enddate = $req['enddate'];
+
+        if(!$stdate){
+            $stdate = date('Y-m-d');
+        }
+        if(!$enddate){
+            $enddate = date('Y-m-d');
+        }
+
+        $bank_transfer = DB::table('bank_transfer')->where('bank_transfer.client_id',auth()->user()->client_id)
+            ->select('bank_transfer.id as bank_transfer_id', 'bank_transfer.date as date', 'bank_transfer.amount as amount',
+            'A.name as from_bank', 'B.name as to_bank', 'C.acc_name as from_acc', 'D.acc_name as to_acc')
+            ->leftJoin('bank_info as A', 'bank_transfer.tf_bank', 'A.id')
+            ->leftJoin('bank_info as B', 'bank_transfer.tt_bank', 'B.id')
+            ->leftJoin('bank_acc as C', 'bank_transfer.tf_acc', 'C.id')
+            ->leftJoin('bank_acc as D', 'bank_transfer.tt_acc', 'D.id')
+            ->whereDate('date', '>=', $stdate)
+            ->whereDate('date', '<=', $enddate)
+            ->get();
+
+        return DataTables()->of($bank_transfer)->make(true);
     }
 
 }

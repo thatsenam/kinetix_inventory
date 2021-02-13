@@ -47,16 +47,31 @@ class PosSalesController extends Controller
         $products = DB::table('products')->where('client_id',auth()->user()->client_id)
             ->where('product_name', 'like', '%'.$s_text.'%')->limit(9)->get(); ?>
 
+
         <ul class='products-list sugg-list' style='width:100%;'>
 
         <?php $i = 1;
 
-        foreach($products as $row){
+        foreach($products as $row)
+        {
+            $pid = $row->id;
+            $pPurchase = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+                        ->where('pid',$pid)->sum('qnt');
+            $psold = DB::table('sales_invoice_details')->where('client_id', auth()->user()->client_id)
+                        ->where('pid',$pid)->sum('qnt');
+            $returns = DB::table('purchase_returns')->where('client_id', auth()->user()->client_id)
+                        ->where('pid',$pid)->sum('qnt');
+            $sale_return = DB::table('sales_return')->where('client_id', auth()->user()->client_id)
+                        ->where('pid',$pid)->sum('qnt');
+            $damage = DB::table('damage_products')->where('client_id',auth()->user()->client_id)
+                        ->where('pid',$pid)->sum('qnt');
+            $stock = $pPurchase - $returns - $psold + $sale_return - $damage;
 
             $id = $row->id;
             $name = $row->product_name;
             $price = $row->after_pprice;
             $serial = $row->serial;
+            $warranty = $row->warranty;
 
             if(empty($price)){
                 $price = $row->before_price;
@@ -65,7 +80,7 @@ class PosSalesController extends Controller
 
             $url = config('global.url'); ?>
 
-            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>'>
+            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $warranty; ?>", "<?php echo $stock; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?>'>
             <img src= "<?php echo $url;?>/images/products/<?php echo $image;?>" style="width:60px; height:60px;"> &nbsp; <?php echo $name; ?> | <?php echo $price; ?>
             </li>
 
@@ -83,11 +98,27 @@ class PosSalesController extends Controller
         $s_text = $req['s_text'];
         $products = DB::table('products')->where('client_id', auth()->user()->client_id)
             ->where('barcode', '=', $s_text)->first();
+
+        $pid = $products->id;
+        $pPurchase = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+                    ->where('pid',$pid)->sum('qnt');
+        $psold = DB::table('sales_invoice_details')->where('client_id', auth()->user()->client_id)
+                    ->where('pid',$pid)->sum('qnt');
+        $returns = DB::table('purchase_returns')->where('client_id', auth()->user()->client_id)
+                    ->where('pid',$pid)->sum('qnt');
+        $sale_return = DB::table('sales_return')->where('client_id', auth()->user()->client_id)
+                    ->where('pid',$pid)->sum('qnt');
+        $damage = DB::table('damage_products')->where('client_id',auth()->user()->client_id)
+                    ->where('pid',$pid)->sum('qnt');
+        $stock = $pPurchase - $returns - $psold + $sale_return - $damage;
+
         $data = array(
             'id' => $products->id,
             'name' => $products->product_name,
             'price' => $products->after_pprice,
             'serial' => $products->serial,
+            'warranty' => $products->warranty,
+            'stock' => $products->stock,
         );
         return json_encode($data);
     }
@@ -134,15 +165,30 @@ class PosSalesController extends Controller
             $serials = Serial::where('client_id', auth()->user()->client_id)
                 ->where('sale_inv', $row->invoice_no)
                 ->where('product_id', $row->pid)->pluck('serial')->toArray();
-
+            $product_id = $row->pid;
+            $warranty = Products::find($product_id)->warranty;
             if($serials)
             {
                 $serials = implode (", ", $serials);
 
-                $trow .= "<tr><td>".$row->product_name ."<br>". $serials."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                if($warranty)
+                {
+                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                }
+                else
+                {
+                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                }
             }
             else{
-                $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                if($warranty)
+                {
+                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                }
+                else
+                {
+                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                }
             }
         }
 
@@ -619,7 +665,7 @@ class PosSalesController extends Controller
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
             $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
                                     ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-                $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = "Sales";
             $description = "Sale Invoice ".$invoice;
@@ -712,7 +758,7 @@ class PosSalesController extends Controller
                 $card_bank_id = $maxbankid;
 
                 $card_bank_acc_id = $maxcardid;
-            }
+            } 
 
 
             BankTransaction::Create([
@@ -1368,7 +1414,7 @@ class PosSalesController extends Controller
                                     ->where('pid', $sale_product->pid)->avg('price');
                 $profit = ($sale_product->price - $purchasePrice) * $sale_product->qnt;
                 $netProfit += $profit;
-            }  
+            }
             $sale->profit = round($netProfit, 2); 
              
         }

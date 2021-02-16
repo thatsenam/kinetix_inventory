@@ -79,6 +79,10 @@ class PagesController extends Controller
         return view('shop')->with(compact('categories','products','latests'));
     }
 
+    public function warehouse_manage(){
+        return view('admin.pos.warehouse.manage-warehouse');
+    }
+
     public function products($url = null){
 
         $countCat = Category::where(['url' => $url])->first();

@@ -18,13 +18,13 @@ use User;
 class ProductsController extends Controller
 {
     public function addProduct(Request $request){
-        $category = Category::orderBy('name', 'ASC')->get();
-        $brands = Brands::orderBy('name', 'ASC')->get();
+        $category = Category::orderBy('name', 'ASC')->where('client_id', auth()->user()->client_id)->get();
+        $brands = Brands::orderBy('name', 'ASC')->where('client_id', auth()->user()->client_id)->get();
         
         if($request->isMethod('post')){
 
             $slug = Str::slug($request->inputName);
-            $slug_count = Products::where('slug', $slug)->count();
+            $slug_count = Products::where('slug', $slug)->where('client_id', auth()->user()->client_id)->count();
             if($slug_count > 0){
                 $x = Date('ms')."-".rand(1000,10000);
                 $slug = $slug.$x;
@@ -46,17 +46,17 @@ class ProductsController extends Controller
             $product->product_name = $data['inputName'];
             $product->slug = $slug;
             $product->product_desc = $data['inputDescription'];
-            $product->product_specs = $data['inputSpecs'];
-            $product->main_feature = $data['inputFeature'];
+            // $product->product_specs = $data['inputSpecs'];
+            // $product->main_feature = $data['inputFeature'];
             $product->before_price = $data['inputPrice'];
-            $product->after_pprice = $data['DiscountPrice'];
+            // $product->after_pprice = $data['DiscountPrice'];
             $product->barcode = $barcode;
             $product->product_code = $product_code;
             $product->product_size = $data['inputSize'];
             $product->sku = $data['inputSKU'];
-            $product->stock = $data['inputStock'];
+            // $product->stock = $data['inputStock'];
             $product->warranty = $data['inputWarranty'];
-            $product->is_featured = $data['inputStatus'];
+            // $product->is_featured = $data['inputStatus'];
             $product->serial = $data['serial'];
 
             if($request->hasFile('inputImage')){
@@ -68,13 +68,13 @@ class ProductsController extends Controller
             }
             $product->save();
 
-            $DataProduct = Products::where('slug', $slug)->first();
+            $DataProduct = Products::where('slug', $slug)->where('client_id', auth()->user()->client_id)->first();
             $pro_id = $DataProduct['id'];
             $attribute = new ProductAttributes;
             $attribute->product_id = $pro_id;
             $attribute->sku = $data['inputSKU'];
             $attribute->weight = $data['inputSize'];
-            $attribute->price = $data['DiscountPrice'];
+            // $attribute->price = $data['DiscountPrice'];
             $attribute->stock = $data['inputStock'];
             $attribute->save();
 
@@ -87,7 +87,7 @@ class ProductsController extends Controller
                     $dataerr[] = $name;
                 }
             }
-            $get_product = Products::where('slug', $slug)->first();
+            $get_product = Products::where('slug', $slug)->where('client_id', auth()->user()->client_id)->first();
             $product_id = $get_product['id'];
             $form= new ProductImages;
             $form->product_id = $product_id;
@@ -108,8 +108,8 @@ class ProductsController extends Controller
     }
 
     public function editProduct(Request $req, $id = null){
-        $products = Products::where(['id'=>$id])->get();
-        $categories = Category::orderBy('name', 'ASC')->get();
+        $products = Products::where(['id'=>$id])->where('client_id', auth()->user()->client_id)->get();
+        $categories = Category::orderBy('name', 'ASC')->where('client_id', auth()->user()->client_id)->get();
         $catArray = [];
         if($categories != null){
             foreach($categories as $cat){
@@ -124,7 +124,7 @@ class ProductsController extends Controller
                 }
             }
         }
-        $brands = Brands::orderBy('name', 'ASC')->get();
+        $brands = Brands::orderBy('name', 'ASC')->where('client_id', auth()->user()->client_id)->get();
         $bransArray = [];
         if($brands != null){
             foreach($brands as $brand){
@@ -144,22 +144,22 @@ class ProductsController extends Controller
                 'brand_id'=>$data['inputBrand'],
                 'product_name'=>$data['inputName'],
                 'product_desc'=>$data['inputDescription'],
-                'product_specs'=>$data['inputSpecs'],
+                // 'product_specs'=>$data['inputSpecs'],
                 'before_price'=>$data['inputPrice'],
-                'after_pprice'=>$data['DiscountPrice'],
+                // 'after_pprice'=>$data['DiscountPrice'],
                 'barcode'=>$barcode,
                 'product_code'=>$data['inputCode'],
                 'sku'=>$data['inputSKU'],
                 'product_size'=>$data['inputSize'],
                 'warranty'=>$data['inputWarranty'],
                 'stock'=>$data['inputStock'],
-                'is_featured'=>$data['inputStatus'],
+                // 'is_featured'=>$data['inputStatus'],
                 'serial' => $data['serial'],
             ]);
 
             $DataProduct = Products::where('id', $id)->first();
             $getSKU = $DataProduct['sku'];
-            ProductAttributes::where(['sku'=>$getSKU])->update(['sku'=>$data['inputSKU'],'weight'=>$data['inputSize'],'stock'=>$data['inputStock'],'price'=>$data['DiscountPrice']]);
+            ProductAttributes::where(['sku'=>$getSKU])->update(['sku'=>$data['inputSKU'],'weight'=>$data['inputSize'],'stock'=>$data['inputStock']]);
             $product = Products::find($id);
             if($req->hasFile('inputImage')){
                 $prev_img = $product->product_img;
@@ -200,11 +200,11 @@ class ProductsController extends Controller
             $data = $request->all();
             foreach($data['sku'] as $key => $val){
                 if(!empty($val)){
-                    $attrCountSKU = ProductAttributes::where('sku',$val)->count();
+                    $attrCountSKU = ProductAttributes::where('sku',$val)->where('client_id', auth()->user()->client_id)->count();
                     if($attrCountSKU>0){
                         return redirect('/admin/create_attribute/'.$id)->with('flash_message_error', 'Attribute With This SKU Alraedy Exist!');
                     }
-                    $attrCountSizes = ProductAttributes::where(['product_id'=>$id,'weight'=>$data['weight'][$key]])->count();
+                    $attrCountSizes = ProductAttributes::where(['product_id'=>$id,'weight'=>$data['weight'][$key]])->where('client_id', auth()->user()->client_id)->count();
                     if($attrCountSizes>0){
                         return redirect('/admin/create_attribute/'.$id)->with('flash_message_error', ''.$data['weight'][$key].' Weight Already Exists! Please try different weight attribute!');
                     }

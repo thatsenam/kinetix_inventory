@@ -199,7 +199,8 @@ class PosCustomerController extends Controller
         $total_return = DB::table('sales_return')->where('cid',$id)->sum('tprice');
         $cash_return = DB::table('sales_return')->where('cid',$id)->sum('cash_return');
         $return_due = $total_return - $cash_return;
-        return view('admin.pos.customer.customer_details')->with(compact('customer','get_head','total_sale','total_sale_paid','sale_due','total_return','cash_return','return_due','ledgers','sales'));
+        $setting = DB::table('general_settings')->where('client_id', auth()->user()->client_id)->first();
+        return view('admin.pos.customer.customer_details')->with(compact('setting', 'customer','get_head','total_sale','total_sale_paid','sale_due','total_return','cash_return','return_due','ledgers','sales'));
 
         // $get_data = DB::table('acc_transactions')->get();
 

@@ -118,13 +118,13 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item menu-open">
-            <a href="/dashboard/pos/" class="nav-link active">
+          <li class="nav-item {{ (request()->is('dashboard/pos*')) ? 'active menu-open' : '' }}">
+            <a href="/dashboard/pos/" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>Dashboard</p>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {{ (request()->is('admin/add_product', 'admin/view_products', 'admin/print-labels')) ? 'active menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="fab fa-product-hunt nav-icon"></i>
               <p>
@@ -154,7 +154,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {{ (request()->is('admin/create_category', 'admin/view_categories')) ? 'active menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-sitemap"></i>
               <p>
@@ -178,7 +178,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {{ (request()->is('admin/create_brand', 'admin/view_brands')) ? 'active menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fab fa-bandcamp"></i>
               <p>
@@ -202,7 +202,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {{ (request()->is('dashboard/sales_invoice', 'dashboard/sales_return', 'dashboard/sales_report_date', 'dashboard/sales_return_report_date', 'dashboard/sales_report_brand')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-file-invoice-dollar"></i>
               <p>
@@ -244,7 +244,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {{ (request()->is('dashboard/purchase_products', 'dashboard/purchase_return', 'dashboard/damage_products', 'dashboard/purchase_report_date', 'dashboard/purchase_return_report_date', 'dashboard/purchase_report_brand', 'dashboard/damage_report_date')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-file-invoice"></i>
               <p>
@@ -298,7 +298,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {{ (request()->is('dashboard/add_bank', 'dashboard/view_banks', 'dashboard/check_clearance', 'dashboard/bank_deposit', 'dashboard/bank_withdraw', 'dashboard/bank_ledger', 'dashboard/bank_transfer', 'dashboard/bank_transfer_report')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-money-check-alt"></i>
               <p>
@@ -358,20 +358,20 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {{ (request()->is('dashboard/customers', 'dashboard/customers/customer_ledger', 'dashboard/customers/due-report', 'dashboard/customers/due-collection-report')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-user-shield"></i>
               <p>
-                Contacts
+                Customers
                 <i class="fas fa-angle-left right"></i>
                 <span class="badge badge-info right">5</span>
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
+              <li class="nav-item active">
                 <a href="{{route('set_customer')}}" class="nav-link">
                   <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Customers</p>
+                  <p>Customer List</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -392,16 +392,70 @@
                   <p>Due Collection Report</p>
                 </a>
               </li>
-               <li class="nav-item">
+            </ul>
+          </li>
+          <li class="nav-item {{ (request()->is('dashboard/suppliers')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-shield"></i>
+              <p>
+                Suppliers
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right">5</span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
                 <a href="{{route('set_supplier')}}" class="nav-link">
                   <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Suppliers</p>
+                  <p>Supplier List</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item {{ (request()->is('dashboard/warranty-management/receive-from-customer', 'dashboard/warranty-management/send-to-supplier', 'dashboard/warranty-management/receive-from-supplier', 'dashboard/warranty-management/delivery-to-customer', 'dashboard/warranty-management/warranty-report')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-shield"></i>
+              <p>
+                Manage Warranty
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right">5</span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/dashboard/warranty-management/receive-from-customer" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Receive From Customer</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/warranty-management/send-to-supplier" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Send To Supplier</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/warranty-management/receive-from-supplier" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Receive From Supplier</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/warranty-management/delivery-to-customer" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Delivery To Customer</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/warranty-management/warranty-report" class="nav-link">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Warranty Report</p>
                 </a>
               </li>
             </ul>
           </li>
           {{-- Accounting --}}
-          <li class="nav-item">
+          <li class="nav-item {{ (request()->is('accounting/acc-heads', 'accounting/voucher-entry', 'accounting/voucher-history', 'accounting/ledger', 'accounting/trial-balance', 'accounting/income-statement', 'accounting/cash-book', 'accounting/balance-sheet')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-calculator"></i>
               <p>
@@ -412,49 +466,49 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="/acc-heads" class="nav-link">
+                <a href="/accounting/acc-heads" class="nav-link">
                   <i class="fas fa-bahai nav-icon"></i>
                   <p>Account Head</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/voucher-entry" class="nav-link">
+                <a href="/accounting/voucher-entry" class="nav-link">
                   <i class="fas fa-door-open nav-icon"></i>
                   <p>Voucher Entry</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/voucher-history" class="nav-link">
+                <a href="/accounting/voucher-history" class="nav-link">
                   <i class="fas fa-history nav-icon"></i>
                   <p>Voucher History</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/ledger" class="nav-link">
+                <a href="/accounting/ledger" class="nav-link">
                   <i class="fas fa-chart-bar nav-icon"></i>
                   <p>Ledger Reports</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/trial-balance" class="nav-link">
+                <a href="/accounting/trial-balance" class="nav-link">
                   <i class="fas fa-comment-dollar nav-icon"></i>
                   <p>Trial Balance</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/income-statement" class="nav-link">
+                <a href="/accounting/income-statement" class="nav-link">
                   <i class="fas fa-info nav-icon"></i>
                   <p>Income Statement</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/cash-book" class="nav-link">
+                <a href="/accounting/cash-book" class="nav-link">
                   <i class="fas fa-money-bill nav-icon"></i>
                   <p>Cash Book</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/balance-sheet" class="nav-link">
+                <a href="/accounting/balance-sheet" class="nav-link">
                   <i class="fas fa-balance-scale nav-icon"></i>
                   <p>Balance Sheet</p>
                 </a>
@@ -498,7 +552,7 @@
               </li>
             </ul>
           </li> --}}
-          <li class="nav-item">
+          <li class="nav-item {{ (request()->is('dashboard/reports/stock-report', 'dashboard/reports/loss-profit-report', 'dashboard/sales-customer', 'dashboard/sales-product', 'dashboard/purchase-product', 'dashboard/purchase-supplier')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-sort-alpha-up"></i>
               <p>
@@ -546,7 +600,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item mb-5">
+          <li class="nav-item mb-5 {{ (request()->is('admin/settings')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon nav-icon fas fa-cogs"></i>
               <p>

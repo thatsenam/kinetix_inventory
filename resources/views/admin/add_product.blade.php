@@ -61,14 +61,14 @@
                             <label for="inputDescription">Product Description</label>
                             <textarea name="inputDescription" id="inputDescription" class="form-control" rows="8"></textarea>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="inputSpecs">Product Specification</label>
                             <textarea name="inputSpecs" id="inputSpecs" class="form-control" rows="8"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="inputFeature">Main Features</label>
                             <textarea name="inputFeature" id="inputFeature" class="form-control" rows="8"></textarea>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -78,10 +78,21 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
+                                    <label for="inputWarranty">Warranty</label>
+                                    <div class="input-group">
+                                        <input type="text" name="inputWarranty" id="inputWarranty" placeholder="Enter Warranty" class="form-control"/>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">Month</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- <div class="col-sm-6">
+                                <div class="form-group">
                                     <label>Discounted Price</label>
                                     <input type="text" name="DiscountPrice" class="form-control" placeholder="Enter ...">
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
@@ -111,29 +122,19 @@
                         </div>
                         
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="inputSKU">SKU</label>
                                     <input type="text" name="inputSKU" id="inputSKU" placeholder="Enter SKU" class="form-control"/>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="inputSize">Product Weight</label>
                                     <input type="text" name="inputSize" id="inputSize" placeholder="Enter Weight" class="form-control"/>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="inputWarranty">Warranty</label>
-                                    <div class="input-group">
-                                        <input type="text" name="inputWarranty" id="inputWarranty" placeholder="Enter Warranty" class="form-control"/>
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">Month</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div class="">
                                 <div class="">
                                     {{-- <label for="inputStock">Stock</label> --}}
@@ -142,29 +143,19 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Product Code</label>
                                     <input type="text" name="inputCode" class="form-control" placeholder="Enter ...">
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="inputImage">Product Image</label>
                                     <div class="custom-file">
                                         <input type="file" name="inputImage" class="custom-file-input" id="inputImage">
                                         <label class="custom-file-label" for="inputImage">Choose file</label>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="inputStatus">Product Type<span class="text-danger">*</span></label>
-                                    <select id="inputStatus" name="inputStatus" class="form-control custom-select">
-                                        {{-- <option selected disabled>Select one</option> --}}
-                                        <option value="0">Regular Product</option>
-                                        <option value="1">Featured Product</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -180,13 +171,13 @@
                         </div>
                   </div>
                   <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-                            <div class="form-group field_wrapper">
-                                <label for="addImage" class="">New Additional Image</label>
-                                <div class="row">
-                                    <input type="file" name="addImage[]" id="addImage" class="form-control col-md-9 m-1" placeholder="Add New Additional Image" required>
-                                    <a href="javascript:void(0);" class="add_button col-md-2 m-auto" title="Add field">Add New</a>
-                                </div>
+                        <div class="form-group field_wrapper">
+                            <label for="addImage" class="">New Additional Image</label>
+                            <div class="row">
+                                <input type="file" name="addImage[]" id="addImage" class="form-control col-md-9 m-1" placeholder="Add New Additional Image" required>
+                                <a href="javascript:void(0);" class="add_button col-md-2 m-auto" title="Add field">Add New</a>
                             </div>
+                        </div>
                     </div>
                 </div>
               </div>
@@ -240,9 +231,9 @@
                 inputDescription: {
                     required: true
                 },
-                inputSpecs: {
-                    required: true
-                },
+                // inputSpecs: {
+                //     required: true
+                // },
                 inputPrice: {
                     required: true
                 },
@@ -266,9 +257,9 @@
                 inputDescription: {
                     required: "Product Description Field Can't Be Empty!",
                 },
-                inputSpecs: {
-                    required: "Product Specification Field Can't Be Empty!",
-                },
+                // inputSpecs: {
+                //     required: "Product Specification Field Can't Be Empty!",
+                // },
                 inputPrice: {
                     required: "Product Price Field Can't Be Empty!",
                 },

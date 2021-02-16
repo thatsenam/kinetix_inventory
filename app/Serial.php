@@ -15,6 +15,6 @@ class Serial extends Model
 
     public function supplier()
     {
-        return $this->belongsTo(Products::class);
+        return $this->belongsTo(Supplier::class);
     }
 }

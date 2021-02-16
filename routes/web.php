@@ -371,14 +371,30 @@ Route::match(['get', 'post'],'/dashboard/bank_transfer_report', 'PosBankControll
 
 Route::match(['get', 'post'], '/dashboard/get_bank_transfer_report', 'PosBankController@get_bank_transfer_report')->name('get_bank_transfer_report')->middleware('auth');
 
+// Warranty Management
+
+Route::view('/dashboard/warranty-management/receive-from-customer', 'admin.pos.warranty-management.receive-from-customer');
+Route::view('/dashboard/warranty-management/send-to-supplier', 'admin.pos.warranty-management.send-to-supplier');
+Route::view('/dashboard/warranty-management/receive-from-supplier', 'admin.pos.warranty-management.receive-from-supplier');
+Route::view('/dashboard/warranty-management/delivery-to-customer', 'admin.pos.warranty-management.delivery-to-customer');
+Route::view('/dashboard/warranty-management/warranty-report', 'admin.pos.warranty-management.warranty-report');
+
 
 // Accounting Route
 
-Route::get('/acc-heads', 'AccountingPageController@acc_head_index');
-Route::get('/voucher-entry', 'AccountingPageController@voucher_entry_index');
-Route::get('/voucher-history','AccountingPageController@voucher_history_index');
-Route::get('/income-statement','AccountingPageController@income_statement_index');
-Route::get('/balance-sheet', 'AccountingPageController@balance_sheet_index');
-Route::get('/cash-book', 'AccountingPageController@cash_book_index');
-Route::get('/ledger', 'AccountingPageController@ledger_index');
-Route::get('/trial-balance','AccountingPageController@trial_balance_index');
+Route::get('/accounting/acc-heads', 'AccountingPageController@acc_head_index');
+Route::get('/accounting/voucher-entry', 'AccountingPageController@voucher_entry_index');
+Route::get('/accounting/voucher-history','AccountingPageController@voucher_history_index');
+Route::get('/accounting/income-statement','AccountingPageController@income_statement_index');
+Route::get('/accounting/balance-sheet', 'AccountingPageController@balance_sheet_index');
+Route::get('/accounting/cash-book', 'AccountingPageController@cash_book_index');
+Route::get('/accounting/ledger', 'AccountingPageController@ledger_index');
+Route::get('/accounting/trial-balance','AccountingPageController@trial_balance_index');
+
+// Warehouse
+
+//Warehouse Routes
+Route::match(['get','post'],'/admin/manage_warehouse', 'PagesController@warehouse_manage')->name('admin.pos.warehouse.manage');
+Route::match(['get','post'],'/admin/stock_transfer', 'PagesController@stock_transfer')->name('admin.pos.stock.transfer');
+Route::match(['get','post'],'/admin/stock-transfer-report', 'PagesController@stock_transfer_report')->name('admin.pos.stock-transfer-report');
+Route::match(['get','post'],'/admin/stock_transfer_report_date', 'PagesController@stock_transfer_report_date')->name('stock_transfer_report_date');

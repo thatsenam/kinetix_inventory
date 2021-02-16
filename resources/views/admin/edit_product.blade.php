@@ -29,14 +29,14 @@
             @php( $brand_id = $product->brand_id )
             @php( $name = $product->product_name )
             @php( $desc = $product->product_desc)
-            @php( $specs = $product->product_specs )
+            {{-- @php( $specs = $product->product_specs ) --}}
             @php( $price = $product->before_price )
-            @php( $dprice = $product->after_pprice )
+            {{-- @php( $dprice = $product->after_pprice ) --}}
             @php( $code = $product->product_code )
             @php( $sku = $product->sku )
             @php( $stock = $product->stock )
             @php( $weight = $product->product_size )
-            @php( $featured = $product->is_featured )
+            {{-- @php( $featured = $product->is_featured ) --}}
             @php( $image = $product->product_img )
             @php( $barcode = $product->barcode )
             @php( $serial = $product->serial )
@@ -71,10 +71,10 @@
                             <label for="inputDescription">Product Description</label>
                             <textarea name="inputDescription" id="inputDescription" class="form-control" rows="8">{{$desc}}</textarea>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="inputSpecs">Product Specification</label>
                             <textarea name="inputSpecs" id="inputSpecs" class="form-control" rows="8">{{$specs}}</textarea>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -84,10 +84,21 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
+                                    <label for="inputWarranty">Warranty</label>
+                                    <div class="input-group">
+                                        <input type="text" value="{{ $warranty }}" name="inputWarranty" id="inputWarranty" placeholder="Enter Warranty" class="form-control"/>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">Month</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- <div class="col-sm-6">
+                                <div class="form-group">
                                     <label>Discounted Price</label>
                                     <input type="text" name="DiscountPrice" class="form-control" value="{{$dprice}}">
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     <!-- /.card-body -->
@@ -129,29 +140,19 @@
                         </div>
                         
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="inputSKU">SKU</label>
                                     <input type="text" name="inputSKU" id="inputSKU" value="{{$sku}}" class="form-control"/>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="inputSize">Product Weight</label>
                                     <input type="text" name="inputSize" id="inputSize" class="form-control" value="{{$weight}}">
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="inputWarranty">Warranty</label>
-                                    <div class="input-group">
-                                        <input type="text" value="{{ $warranty }}" name="inputWarranty" id="inputWarranty" placeholder="Enter Warranty" class="form-control"/>
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">Month</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div class="">
                                 <div class="">
                                     {{-- <label for="inputStock">Stock</label> --}}
@@ -160,32 +161,25 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Product Code</label>
                                     <input type="text" name="inputCode" class="form-control" value="{{$code}}">
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="inputImage">Product Image</label> <br>
-                                    <img src="/images/products/{{$image}}" alt="" width="70px" style="border-radius: 100%;">
+                                    @if($image)
+                                        <img src="/images/products/{{$image}}" alt="" width="70px" style="border-radius: 100%;">
+                                    @endif
                                     <div class="custom-file">
                                         <input type="file" name="inputImage" class="custom-file-input" id="inputImage">
                                         <label class="custom-file-label" for="inputImage">Choose file</label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="inputStatus">Product Type</label>
-                                    <select id="inputStatus" name="inputStatus" class="form-control custom-select">
-                                        <option selected value="{{$featured}}"><?php if($featured == 0){ echo 'Regular Product';}elseif($featured == 1){ echo 'Featured Product';} ?></option>
-                                        <option value="0">Regular Product</option>
-                                        <option value="1">Featured Product</option>
-                                    </select>
-                                </div>
-                            </div>
+                            
                         </div>
                         
                         <div class="form-group">

@@ -12,7 +12,7 @@ class Warehouse extends Component
 
     public function render()
     {
-        $this->warehouses = ModelsWarehouse::all();
+        $this->warehouses = ModelsWarehouse::all()->where('client_id',auth()->user()->client_id);
         return view('livewire.warehouse');
     }
 
@@ -29,7 +29,9 @@ class Warehouse extends Component
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
-            'city' => 'nullable'
+            'city' => 'nullable',
+            'user_id' => auth()->user()->id,
+            'client_id' => auth()->user()->client_id
         ]);
 
         ModelsWarehouse::create($validatedDate);

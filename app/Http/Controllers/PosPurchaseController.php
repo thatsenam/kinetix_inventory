@@ -31,14 +31,19 @@ class PosPurchaseController extends Controller
     public function purchase_products()
     {
         $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+        if($warehouses->count()<2){
+            $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
+            $warehouse_id = $getW->id;
+        }else{
+            $warehouse_id = "";
+        }
 
-        return view('admin.pos.purchase.purchase_products', compact('warehouses'));
+        return view('admin.pos.purchase.purchase_products', compact('warehouses','warehouse_id'));
     }
 
     public function get_purchase_products(Request $req){
 
         $s_text = $req['s_text'];
-
         $products = DB::table('products')
             ->where('client_id',auth()->user()->client_id)
             ->where('product_name', 'like', '%'.$s_text.'%')
@@ -154,7 +159,6 @@ class PosPurchaseController extends Controller
 
     public function save_purchase_products(Request $req){
 
-        
         $fieldValues = json_decode($req['fieldValues'], true);
 
         $warehouse = $fieldValues['warehouse_id'];
@@ -172,22 +176,16 @@ class PosPurchaseController extends Controller
         if($payment == ''){$payment = "0.00";}
 
         if($supp_id == 0){
-
             $maxsupid = (DB::table('suppliers')->max('id') + 1);
-
-//            DB::table('suppliers')->insert([
             Supplier::create([
                 'name' => $supp_name
             ]);
-
             $supp_id = $maxsupid;
         }
 
         $maxid = (DB::table('purchase_primary')->max('id') + 1);
-
         $pur_inv = "PUR-".$maxid;
 
-//        DB::table('purchase_primary')->insert([
         PurchasePrimary::create([
             'pur_inv' => $pur_inv,
             'sid' => $supp_id,
@@ -215,9 +213,7 @@ class PosPurchaseController extends Controller
             }
         }
 
-
         $take_cart_items = json_decode($req['cartData'], true);
-
         $count = count($take_cart_items);
 
         for($i = 0; $i < $count;){
@@ -227,7 +223,6 @@ class PosPurchaseController extends Controller
             $j2 = $i+2;
             $j3 = $i+3;
             $j4 = $i+4;
-
 
             if($take_cart_items[$j] == 0){
 
@@ -254,7 +249,6 @@ class PosPurchaseController extends Controller
                 $pid = $take_cart_items[$j];
             }
 
-//            DB::table('purchase_details')->insert([
             PurchaseDetails::create([
                 'pur_inv' => $pur_inv,
                 'pid' => $pid,
@@ -283,21 +277,16 @@ class PosPurchaseController extends Controller
 
         $supplier = DB::table('suppliers')->where('id', $supp_id)->first();
 
-
-        if($payment > 0){
-
-            // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+        if($payment>0){
             
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = "Purchase";
             $description = "Purchase from Invoice ".$pur_inv;
             $credit = 0;
             $debit = $payment;
 
-//            DB::table('acc_transactions')->insert([
             AccTransaction::create([
                 'vno' => $vno,
                 'head' => $head,
@@ -306,10 +295,8 @@ class PosPurchaseController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                'user' => $user,
-
+                'user_id' => $user,
             ]);
-
 
             $head = "Cash In Hand";
             $description = "Purchase";
@@ -318,23 +305,20 @@ class PosPurchaseController extends Controller
 
             AccTransaction::create([
 
-                    'vno' => $vno,
-                    'head' => $head,
-                    'sort_by' => "sid"." ".$supp_id,
-                    'description' => $description,
-                    'debit' => $debit,
-                    'credit' => $credit,
-                    'date' => $date,
-                    'user' => $user,
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid"." ".$supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user,
 
             ]);
 
         }else{
-
-            // $vno = (DB::table('acc_transactions')->max('id') + 1);
             
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
             $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = "Purchase";
@@ -343,7 +327,6 @@ class PosPurchaseController extends Controller
             $debit = $total;
 
             AccTransaction::create([
-
                 'vno' => $vno,
                 'head' => $head,
                 'sort_by' => "sid"." ".$supp_id,
@@ -351,26 +334,23 @@ class PosPurchaseController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                'user' => $user,
-
+                'user_id' => $user
             ]);
 
-            $head = $supplier->name;
+            $head = $supplier->name." ".$supplier->phone;;
             $description = "Purchase";
             $credit = $total;
             $debit = 0;
 
             AccTransaction::create([
-
-                    'vno' => $vno,
-                    'head' => $head,
-                    'sort_by' => "sid"." ".$supp_id,
-                    'description' => $description,
-                    'debit' => $debit,
-                    'credit' => $credit,
-                    'date' => $date,
-                    'user' => $user,
-
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid"." ".$supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user
             ]);
         }
 
@@ -380,8 +360,14 @@ class PosPurchaseController extends Controller
     public function purchase_return()
     {
         $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+        if($warehouses->count()<2){
+            $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
+            $warehouse_id = $getW->id;
+        }else{
+            $warehouse_id = "";
+        }
 
-        return view('admin.pos.purchase.purchase_return', compact('warehouses'));
+        return view('admin.pos.purchase.purchase_return', compact('warehouses','warehouse_id'));
     }
 
     public function save_purchase_return (Request $req){
@@ -407,7 +393,6 @@ class PosPurchaseController extends Controller
             $j3 = $i+3;
             $j4 = $i+4;
 
-
             $product = DB::table('products')->where('client_id',auth()->user()->client_id)->where('id', $take_cart_items[$j])->first();
 
             $stock = $product->stock;;
@@ -420,7 +405,7 @@ class PosPurchaseController extends Controller
             $pid = $take_cart_items[$j];
 
 //            DB::table('purchase_returns')->insert([
-                PurchaseReturns::create([
+            PurchaseReturns::create([
 
                 'date' => $date,
                 'pur_inv' => $supp_memo,
@@ -470,12 +455,9 @@ class PosPurchaseController extends Controller
             ->where('id', $supp_id)->first();
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
             $vno = date('Ymd') . '-' . ($vno_counting + 1);
             
-            
-
             $head = "Purchase Return";
             $description = "Purchase Return from Supplier Memo ".$supp_memo;
             $credit = $total;
@@ -483,33 +465,33 @@ class PosPurchaseController extends Controller
 
             AccTransaction::create([
 
-                    'vno' => $vno,
-                    'head' => $head,
-                    'sort_by' => "sid"." ".$supp_id,
-                    'description' => $description,
-                    'debit' => $debit,
-                    'credit' => $credit,
-                    'date' => $date,
-                    'user' => $user,
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid"." ".$supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user' => $user,
 
             ]);
 
 
-            $head = $supplier->name;
+            $head = $supplier->name." ".$supplier->phone;;
             $description = "Purchase Return";
             $credit = 0;
             $debit = $total;
 
             AccTransaction::create([
 
-                    'vno' => $vno,
-                    'head' => $head,
-                    'sort_by' => "sid"." ".$supp_id,
-                    'description' => $description,
-                    'debit' => $debit,
-                    'credit' => $credit,
-                    'date' => $date,
-                    'user' => $user,
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid"." ".$supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user' => $user,
 
             ]);
 
@@ -520,9 +502,16 @@ class PosPurchaseController extends Controller
         $dmg_count = DamageProduct::whereDate('date', date('Y-m-d'))
                                 ->where('client_id', auth()->user()->client_id)->distinct()->count('dmg_inv');
         $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+        if($warehouses->count()<2){
+            $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
+            $warehouse_id = $getW->id;
+        }else{
+            $warehouse_id = "";
+        }
+
         $dmg_inv = 'DMG-' . ($dmg_count + 1);
 
-        return view('admin.pos.damage-products.damage_products', compact('dmg_inv', 'warehouses'));
+        return view('admin.pos.damage-products.damage_products', compact('dmg_inv','warehouses','warehouse_id'));
     }
 
     public function save_damage_products (Request $req)
@@ -598,56 +587,6 @@ class PosPurchaseController extends Controller
             }
         }
 
-        //////Save to Accounts//////
-
-        // $supplier = DB::table('suppliers')
-        //     ->where('client_id',auth()->user()->client_id)
-        //     ->where('id', $supp_id)->first();
-
-        //     // $vno = (DB::table('acc_transactions')->max('id') + 1);
-        //     $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-        //                             ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-        //     $vno = date('Ymd') . '-' . ($vno_counting + 1);
-            
-            
-
-        //     $head = "Purchase Return";
-        //     $description = "Purchase Return from Supplier Memo ".$supp_memo;
-        //     $credit = $total;
-        //     $debit = 0;
-
-        //     AccTransaction::create([
-
-        //         'vno' => $vno,
-        //         'head' => $head,
-        //         'sort_by' => "sid"." ".$supp_id,
-        //         'description' => $description,
-        //         'debit' => $debit,
-        //         'credit' => $credit,
-        //         'date' => $date,
-        //         'user' => $user,
-
-        //     ]);
-
-
-        //     $head = $supplier->name;
-        //     $description = "Purchase Return";
-        //     $credit = 0;
-        //     $debit = $total;
-
-        //     AccTransaction::create([
-
-        //             'vno' => $vno,
-        //             'head' => $head,
-        //             'sort_by' => "sid"." ".$supp_id,
-        //             'description' => $description,
-        //             'debit' => $debit,
-        //             'credit' => $credit,
-        //             'date' => $date,
-        //             'user' => $user,
-
-        //     ]);
-
     }
 
 
@@ -692,13 +631,6 @@ class PosPurchaseController extends Controller
         })
         ->rawColumns(['action'])
         ->make(true);
-
-        // foreach($purchase as $pur){
-        //     $trow .= "<tr><td>".$pur->date."</td><td class='purinv'>".$pur->pur_inv."</td><td>".$pur->name."</td><td class='supp_invoice'>".$pur->supp_inv."</td><td>".$pur->discount."</td>
-        //     <td>".$pur->amount."</td><td>".$pur->payment."</td><td>".$pur->total."</td>
-        //     <td><a title='Details' href='#' class='view mr-2'><span class='btn btn-xs btn-info'><i class='mdi mdi-eye'></i></span></a> <a title='Delete' href='#' class='delete'><span class='btn btn-xs btn-danger'><i class='mdi mdi-delete'></i></span></a></td>
-        //     </tr>";
-        // }
     }
 
     public function purchase_report_brand()
@@ -863,17 +795,6 @@ class PosPurchaseController extends Controller
             })
             ->rawColumns(['action'])
             ->make(true);
-
-    //     $trow = "";
-
-    //    foreach($purchase as $pur){
-    //         $trow .= "<tr><td class='retid'>".$pur->retid."</td><td>".$pur->date."</td><td class='invoice'>".$pur->pur_inv."</td>
-    //         <td>".$pur->sname."</td><td>".$pur->pname."</td><td>".$pur->qnt."</td><td>".$pur->price."</td><td>".$pur->total."</td>
-    //         <td><a title='Delete' href='#' class='delete'><span class='btn btn-xs btn-danger'><i class='mdi mdi-delete'></i></span></a></td>
-    //         </tr>";
-    //     }
-
-    //     return $trow;
     }
 
     public function delete_purchase_return(Request $req){
@@ -1004,19 +925,6 @@ class PosPurchaseController extends Controller
             ->where('id', $id)->delete();
 
         dd($abc);
-
-        // $get_accounts = DB::table('acc_transactions')
-        //     ->where('client_id',auth()->user()->client_id)
-        //     ->where('description', 'like', '%Memo '.$invoice)->get();
-
-        // foreach($get_accounts as $row){
-
-        //     $vno = $row->vno;
-
-        //     DB::table('acc_transactions')
-        //         ->where('client_id',auth()->user()->client_id)
-        //         ->where('vno', $vno)->delete();
-        // }
 
     }
 

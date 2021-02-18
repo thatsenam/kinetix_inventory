@@ -41,11 +41,11 @@
                         <form action="{{ route('sales_invoice_save') }}" method="POST">
                             @csrf
                             <div class="card" style="min-height: 500px;">
-
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-7">
                                             <div class="row">
+                                                @if($warehouses->count()>1)
                                                 <div class="col-5">
                                                     <select name="warehouse_id" id="warehouse_id" class="form-control">
                                                         <option value="" disabled selected>Select Warehouse</option>
@@ -77,17 +77,42 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            
-                                            <div class="row">
-                                                <div class="col-3">
+                                                @else
+                                                <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
+                                                <div class="col-6">
                                                     <div class="form-group" style="position: relative;">
-                                                        <input type="text" name="barcode" id="barcode" class="form-control"
-                                                            placeholder="Barcode" autocomplete="off">
+                                                        <input type="text" name="cust_phone" id="cust_phone"
+                                                            class="form-control" placeholder="Customer Phone"
+                                                            autocomplete="off">
+                                                        <div id="cust_div"
+                                                            style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
+                                                        </div>
+
+                                                        <input type="hidden" name="cust_id" id="cust_id" value="0"
+                                                            class="form-control">
 
                                                     </div>
                                                 </div>
-                                                <div class="col-7">
+                                                <div class="col-6">
+                                                    <div class="form-group" style="position: relative;">
+                                                        <input type="text" name="cust_name" id="cust_name"
+                                                            class="form-control" placeholder="Customer Name">
+                                                        <div id="memo_div"
+                                                            style="width: 100%; display: none; position: absolute; top: 45px; left: 0; z-index: 999;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="form-group" style="position: relative;">
+                                                        <input type="text" name="barcode" id="barcode" class="form-control"
+                                                            placeholder="Barcode" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="col-8">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" class="form-control" placeholder="Search Product"
                                                             id="search" autocomplete="off">

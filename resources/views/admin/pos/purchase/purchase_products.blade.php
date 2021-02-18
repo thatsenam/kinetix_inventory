@@ -3,23 +3,19 @@
 @section('content')
 
 
-<div class="content-wrapper">
-    
-    
-        
-                <h3 class="ml-3">Purchase Products</h3>
-                
+<div class="content-wrapper"> 
+    <h3 class="ml-3">Purchase Products</h3>
     <div class="box-body">
         <div class="row">
           <div class="col-12" style="position: relative;">
              <form action="{{route('save_purchase_products')}}" method="POST">
                  @csrf
                  <div class="card" style="min-height: 500px;">
-                    
                      <div class="card-body">
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="row">
+                                @if($warehouses->count()>1)
                                     <div class="col-5">
                                         <select name="warehouse_id" id="warehouse_id" class="form-control">
                                             <option value="" disabled selected>Select Warehouse</option>
@@ -42,15 +38,32 @@
                                             <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                         </div>
                                     </div>
+                                @else
+                                    <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
+                                    <div class="col-8">
+                                        <div class="form-group" style="position: relative;">
+                                            <input type="text" name="supp_name" id="supp_name" class="form-control" placeholder="Supplier Name" autocomplete="off">
+                                            <div id="supp_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
+                                                
+                                            <input type="hidden" name="supp_id" id="supp_id" value="0" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group"  style="position: relative;">
+                                            <input type="text" name="supp_memo" id="supp_memo" class="form-control" placeholder="Memo No" autocomplete="off">
+                                            <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
+                                        </div>
+                                    </div>
+                                @endif
                                 </div>
                                 
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <div class="form-group"  style="position: relative;">
                                             <input type="text" name="barcode" id="barcode" class="form-control" placeholder="Barcode" autocomplete="off">
                                         </div>
                                     </div>
-                                    <div class="col-8">
+                                    <div class="col-9">
                                         <div class="form-group" style="position: relative;">
                                             <input type="text" class="form-control" placeholder="Search Product" id="search" autocomplete="off">
                                             <div id="products_div" style="display: none; position: absolute; top: 30px; left: 0; width: 100%; z-index: 999;"></div>

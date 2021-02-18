@@ -16,6 +16,7 @@
                     <div class="row">
                         <div class="col-md-7">
                             <div class="row">
+                            @if($warehouses->count()>1)
                                 <div class="col-5">
                                     <select name="warehouse_id" id="warehouse_id" class="form-control">
                                         <option value="" disabled selected>Select Warehouse</option>
@@ -37,6 +38,22 @@
                                         <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                     </div>
                                 </div>
+                            @else
+                                <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
+                                <div class="col-8">
+                                    <div class="form-group" style="position: relative;">
+                                        <input type="text" name="supp_name" id="supp_name" class="form-control" placeholder="Supplier Name">
+                                        <div id="supp_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
+                                        <input type="hidden" name="supp_id" id="supp_id" value="0" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group"  style="position: relative;">
+                                        <input type="text" name="supp_memo" id="supp_memo" class="form-control" placeholder="Memo No">
+                                        <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
+                                    </div>
+                                </div>
+                            @endif
                             </div>
                             <div class="row">
                                 <div class="col">

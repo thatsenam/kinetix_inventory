@@ -3,6 +3,7 @@
 namespace Livewire;
 
 use Illuminate\View\View;
+use Illuminate\Testing\TestResponse;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -13,7 +14,6 @@ use Livewire\Controllers\HttpConnectionHandler;
 use Livewire\Controllers\LivewireJavaScriptAssets;
 use Illuminate\Support\Facades\Route as RouteFacade;
 use Illuminate\Foundation\Http\Middleware\TrimStrings;
-use Illuminate\Testing\TestResponse;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Livewire\Commands\{
     CpCommand,
@@ -50,6 +50,7 @@ class LivewireServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        $this->registerConfig();
         $this->registerTestMacros();
         $this->registerLivewireSingleton();
         $this->registerComponentAutoDiscovery();
@@ -100,10 +101,15 @@ class LivewireServiceProvider extends ServiceProvider
                 new Filesystem,
                 config('livewire.manifest_path') ?: $defaultManifestPath,
                 ComponentParser::generatePathFromNamespace(
-                    config('livewire.class_namespace', 'App\\Http\\Livewire')
+                    config('livewire.class_namespace')
                 )
             );
         });
+    }
+
+    protected function registerConfig()
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/livewire.php', 'livewire');
     }
 
     protected function registerViews()
@@ -111,34 +117,27 @@ class LivewireServiceProvider extends ServiceProvider
         // This is mainly for overriding Laravel's pagination views
         // when a user applies the WithPagination trait to a component.
         $this->loadViewsFrom(
-            __DIR__.DIRECTORY_SEPARATOR.'views',
+            __DIR__.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'pagination',
             'livewire'
         );
     }
 
     protected function registerRoutes()
     {
-        if ($this->app->runningUnitTests()) {
-            RouteFacade::get('/livewire-dusk/{component}', function ($component) {
-                $class = urldecode($component);
+        RouteFacade::post('/livewire/message/{name}', HttpConnectionHandler::class)
+            ->name('livewire.message')
+            ->middleware(config('livewire.middleware_group', ''));
 
-                return app()->call(new $class);
-            })->middleware('web');
-        }
+        RouteFacade::post('/livewire/upload-file', [FileUploadHandler::class, 'handle'])
+            ->name('livewire.upload-file')
+            ->middleware(config('livewire.middleware_group', ''));
+
+        RouteFacade::get('/livewire/preview-file/{filename}', [FilePreviewHandler::class, 'handle'])
+            ->name('livewire.preview-file')
+            ->middleware(config('livewire.middleware_group', ''));
 
         RouteFacade::get('/livewire/livewire.js', [LivewireJavaScriptAssets::class, 'source']);
         RouteFacade::get('/livewire/livewire.js.map', [LivewireJavaScriptAssets::class, 'maps']);
-
-        RouteFacade::post('/livewire/message/{name}', HttpConnectionHandler::class)
-            ->middleware(config('livewire.middleware_group', 'web'));
-
-        RouteFacade::post('/livewire/upload-file', [FileUploadHandler::class, 'handle'])
-            ->middleware(config('livewire.middleware_group', 'web'))
-            ->name('livewire.upload-file');
-
-        RouteFacade::get('/livewire/preview-file/{filename}', [FilePreviewHandler::class, 'handle'])
-            ->middleware(config('livewire.middleware_group', 'web'))
-            ->name('livewire.preview-file');
     }
 
     protected function registerCommands()
@@ -226,6 +225,10 @@ class LivewireServiceProvider extends ServiceProvider
         $this->publishesToGroups([
             __DIR__.'/../config/livewire.php' => base_path('config/livewire.php'),
         ], ['livewire', 'livewire:config']);
+
+        $this->publishesToGroups([
+            __DIR__.'/views/pagination' => $this->app->resourcePath('views/vendor/livewire'),
+        ], ['livewire', 'livewire:pagination']);
     }
 
     protected function registerBladeDirectives()
@@ -243,6 +246,14 @@ class LivewireServiceProvider extends ServiceProvider
         // Livewire views. Things like letting certain exceptions bubble
         // to the handler, and registering custom directives like: "@this".
         $this->app->make('view.engine.resolver')->register('blade', function () {
+
+            // If the application is using Ignition, make sure Livewire's view compiler
+            // uses a version that extends Ignition's so it can continue to report errors
+            // correctly. Don't change this class without first submitting a PR to Ignition.
+            if (class_exists(\Facade\Ignition\IgnitionServiceProvider::class)) {
+                return new CompilerEngineForIgnition($this->app['blade.compiler']);
+            }
+
             return new LivewireViewCompilerEngine($this->app['blade.compiler']);
         });
     }
@@ -315,7 +326,7 @@ class LivewireServiceProvider extends ServiceProvider
 
     protected function bypassTheseMiddlewaresDuringLivewireRequests(array $middlewareToExclude)
     {
-        if (! $this->app['livewire']->isLivewireRequest()) return;
+        if (! Livewire::isProbablyLivewireRequest()) return;
 
         $kernel = $this->app->make(\Illuminate\Contracts\Http\Kernel::class);
 

@@ -4,7 +4,6 @@ namespace Livewire\Testing;
 
 use Mockery;
 use Livewire\Livewire;
-use Illuminate\Support\Str;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\View;
 use Livewire\GenerateSignedUploadUrl;
@@ -12,6 +11,9 @@ use Illuminate\Routing\RouteCollection;
 use Illuminate\Support\Traits\Macroable;
 use Facades\Livewire\GenerateSignedUploadUrl as GenerateSignedUploadUrlFacade;
 use Livewire\Exceptions\PropertyNotFoundException;
+use Livewire\LivewireManager;
+
+use function Livewire\str;
 
 class TestableLivewire
 {
@@ -32,7 +34,7 @@ class TestableLivewire
         Concerns\MakesCallsToComponent,
         Concerns\HasFunLittleUtilities;
 
-    public function __construct($name, $params = [])
+    public function __construct($name, $params = [], $queryParams = [])
     {
         Livewire::listen('view:render', function ($view) {
             $this->lastRenderedView = $view;
@@ -68,12 +70,12 @@ class TestableLivewire
         // and not have to register an alias.
         if (class_exists($name)) {
             $componentClass = $name;
-            app('livewire')->component($name = Str::random(20), $componentClass);
+            app('livewire')->component($name = str()->random(20), $componentClass);
         }
 
         $this->componentName = $name;
 
-        $this->lastResponse = $this->pretendWereMountingAComponentOnAPage($name, $params);
+        $this->lastResponse = $this->pretendWereMountingAComponentOnAPage($name, $params, $queryParams);
 
         if (! $this->lastResponse->exception) {
             $this->updateComponent([
@@ -120,9 +122,9 @@ class TestableLivewire
         $this->payload['effects'] = $output['effects'];
     }
 
-    public function pretendWereMountingAComponentOnAPage($name, $params)
+    public function pretendWereMountingAComponentOnAPage($name, $params, $queryParams)
     {
-        $randomRoutePath = '/testing-livewire/'.Str::random(20);
+        $randomRoutePath = '/testing-livewire/'.str()->random(20);
 
         $this->registerRouteBeforeExistingRoutes($randomRoutePath, function () use ($name, $params) {
             return View::file(__DIR__.'/../views/mount-component.blade.php', [
@@ -135,8 +137,8 @@ class TestableLivewire
 
         $response = null;
 
-        $laravelTestingWrapper->temporarilyDisableExceptionHandlingAndMiddleware(function ($wrapper) use ($randomRoutePath, &$response) {
-            $response = $wrapper->call('GET', $randomRoutePath);
+        $laravelTestingWrapper->temporarilyDisableExceptionHandlingAndMiddleware(function ($wrapper) use ($randomRoutePath, &$response, $queryParams) {
+            $response = $wrapper->call('GET', $randomRoutePath, $queryParams);
         });
 
         return $response;
@@ -167,11 +169,15 @@ class TestableLivewire
 
     public function pretendWereSendingAComponentUpdateRequest($message, $payload)
     {
-        return $this->callEndpoint('POST', '/livewire/message/'.$this->componentName, [
+        $result = $this->callEndpoint('POST', '/livewire/message/'.$this->componentName, [
             'fingerprint' => $this->payload['fingerprint'],
             'serverMemo' => $this->payload['serverMemo'],
             'updates' => [['type' => $message, 'payload' => $payload]],
         ]);
+
+        LivewireManager::$isLivewireRequestTestingOverride = true;
+
+        return $result;
     }
 
     public function callEndpoint($method, $url, $payload)
@@ -216,7 +222,7 @@ class TestableLivewire
                 } catch (\Throwable $e) {
                     if ($e instanceof PropertyNotFoundException) {
                         $value = null;
-                    } else if (Str::of($e->getMessage())->contains('must not be accessed before initialization')) {
+                    } else if (str($e->getMessage())->contains('must not be accessed before initialization')) {
                         $value = null;
                     } else {
                         throw $e;

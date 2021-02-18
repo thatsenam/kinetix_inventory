@@ -9,7 +9,7 @@ use App\Category;
 class CategoryController extends Controller
 {
     public function CreateCategory(Request $request){
-        $category = Category::orderBy('name', 'ASC')->get();
+        $category = Category::orderBy('name', 'ASC')->where('client_id',auth()->user()->client_id)->get();
         if($request->isMethod('post')){
             $slug = Str::slug($request->cat_name);
             $slug_count = Category::where('url', $slug)->count();

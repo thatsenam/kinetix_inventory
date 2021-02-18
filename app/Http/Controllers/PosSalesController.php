@@ -41,8 +41,13 @@ class PosSalesController extends Controller
     public function sales_invoice()
     {
         $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
-
-        return view('admin.pos.sales.sales_invoice', compact('warehouses'));
+        if($warehouses->count()<2){
+            $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
+            $warehouse_id = $getW->id;
+        }else{
+            $warehouse_id = "";
+        }
+        return view('admin.pos.sales.sales_invoice', compact('warehouses','warehouse_id'));
     }
 
     public function get_products(Request $req){
@@ -479,8 +484,7 @@ class PosSalesController extends Controller
             if($due > 0 && $payment == 0){
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
                 $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
                 $head = "Sales";
@@ -497,7 +501,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -515,7 +519,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -524,8 +528,7 @@ class PosSalesController extends Controller
             if($payment > 0 && $due == 0){
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
                 $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
                 $head = "Sales";
@@ -542,7 +545,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -560,7 +563,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -569,8 +572,7 @@ class PosSalesController extends Controller
             if($payment > 0 && $due > 0){
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
                 $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
                 $head = "Sales";
@@ -587,7 +589,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user
 
                 ]);
 
@@ -605,7 +607,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -623,7 +625,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -680,8 +682,7 @@ class PosSalesController extends Controller
             ///// into Accounts For Mobile Transaction
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
             $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = "Sales";
@@ -689,8 +690,7 @@ class PosSalesController extends Controller
             $debit = 0;
             $credit = $gtotal;
 
-//            DB::table('acc_transactions')->([
-                AccTransaction::Create([
+            AccTransaction::Create([
                 'vno' => $vno,
                 'head' => $head,
                 'sort_by' => "cid"." ".$cust_id,
@@ -799,8 +799,7 @@ class PosSalesController extends Controller
             if($payment > 0 && $due > 0 && $card_cash == 0){
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
                 $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
                 $head = "Sales";
@@ -808,7 +807,6 @@ class PosSalesController extends Controller
                 $debit = 0;
                 $credit = $gtotal;
 
-//                DB::table('acc_transactions')->
                 AccTransaction::Create([
 
                     'vno' => $vno,
@@ -1096,7 +1094,6 @@ class PosSalesController extends Controller
 
         }
 
-
         return $invoice;
 
     }
@@ -1104,7 +1101,6 @@ class PosSalesController extends Controller
     public function delete_sales_invoice(Request $req){
 
         $invoice = $req['invoice'];
-
         DB::table('sales_invoice')->where('invoice_no', $invoice)->delete();
 
         $get_sales_details = DB::table('sales_invoice_details')->where('invoice_no', $invoice)->get();
@@ -1142,8 +1138,14 @@ class PosSalesController extends Controller
     public function sales_return()
     {
         $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+        if($warehouses->count()<2){
+            $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
+            $warehouse_id = $getW->id;
+        }else{
+            $warehouse_id = "";
+        }
 
-        return view("admin.pos.sales.sales_return", compact('warehouses'));
+        return view("admin.pos.sales.sales_return", compact('warehouses','warehouse_id'));
     }
 
 

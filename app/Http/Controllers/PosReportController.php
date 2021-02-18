@@ -370,12 +370,11 @@ class PosReportController extends Controller
         }
         $beforeTime = date('Y-m-d', strtotime("$newtime -1 month"));
 
-        $getSKU = DB::table('purchase_details')
-            ->where('purchase_details.client_id',auth()->user()->client_id)
-            ->select('purchase_details.pid','purchase_details.price','products.product_name')
-            ->join('products','purchase_details.pid', 'products.id')
-            ->groupBy('products.id')->get();
-
+        $getSKU = DB::table('stocks')
+        ->select('stocks.product_id as pid','products.product_name')
+        ->where('stocks.client_id',auth()->user()->client_id)
+        ->join('products','stocks.product_id', 'products.id')
+        ->groupBy('products.id')->get();
         
         $TotalSold = DB::table('sales_invoice_details')->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($newtime, $lastTime))->sum('qnt');
 
@@ -389,43 +388,83 @@ class PosReportController extends Controller
         $pur_return = 0;
         $sale_return = 0;
 
+        $getPriceType = DB::table('general_settings')->select('profit_clc')->first();
+        $priceType = $getPriceType->profit_clc;
         foreach($getSKU as $index=>$sku){
             // dd($sku);
             $pid = $sku->pid;
-            $sku->psold = DB::table('sales_invoice_details')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at', array($newtime, $lastTime))->sum('qnt');
 
-            $sku->returns = DB::table('purchase_returns')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at',[$newtime, $lastTime])->sum('qnt');
-            $sku->sale_return = DB::table('sales_return')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at',[$newtime, $lastTime])->sum('qnt');
+            if($priceType = "1"){
+                $sku->price = DB::table('purchase_details')->where('pid', $pid)->avg('price');
+                $sku->price = round($sku->price, 2);
+            }else{
+                $getsprice = DB::table('purchase_details')->select('price')->where('pid', $pid)->latest('created_at')->first();
+                $sku->price = $getsprice->price;
+                $sku->price = round($sku->price, 2);
+            }
 
-            $sku->damage = DB::table('damage_products')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at',[$newtime, $lastTime])->sum('qnt');
+            $sku->psold = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->whereBetween('date', array($newtime, $lastTime))->where('particulars', "sales")
+            ->where('client_id',auth()->user()->client_id)->sum('out_qnt');
 
-            $sku->Oldsold = DB::table('sales_invoice_details')
-            ->where('pid',$pid)
-            ->whereBetween('created_at', array($beforeTime, $newtime))
-            ->sum('qnt');
+            $sku->returns = DB::table('stocks')
+            ->where('client_id',auth()->user()->client_id)
+            ->where('product_id',$pid)
+            ->where('particulars', "Purchase Return")
+            ->whereBetween('date',[$newtime, $lastTime])
+            ->sum('out_qnt');
 
-            $sku->OldSaleReturn = DB::table('sales_return')
-            ->where('pid',$pid)
-            ->whereBetween('created_at', array($beforeTime, $newtime))
-            ->sum('qnt');
+            $sku->sale_return = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Sales Return")
+            ->whereBetween('date',[$newtime, $lastTime])
+            ->where('client_id',auth()->user()->client_id)->sum('in_qnt');
 
-            $sku->oldPurchase = DB::table('purchase_details')
-            ->where('pid',$pid)
-            ->whereBetween('created_at', array($beforeTime, $newtime))
-            ->sum('qnt');
+            $sku->damage = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Damage")
+            ->whereBetween('date',[$newtime, $lastTime])
+            ->where('client_id',auth()->user()->client_id)
+            ->sum('out_qnt');
 
-            $sku->oldPurchaseReturn = DB::table('purchase_returns')
-            ->where('pid',$pid)
-            ->whereBetween('created_at', array($beforeTime, $newtime))
-            ->sum('qnt');
+            $sku->Oldsold = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Sales")
+            ->whereBetween('date', array($beforeTime, $newtime))
+            ->sum('out_qnt');
 
-            $sku->oldDamage = DB::table('damage_products')
-            ->where('client_id',auth()->user()->client_id)->where('pid',$pid)
-            ->whereBetween('created_at',[$beforeTime, $newtime])
-            ->sum('qnt');
+            $sku->OldSaleReturn = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Sales Return")
+            ->whereBetween('date', array($beforeTime, $newtime))
+            ->sum('in_qnt');
 
+            $sku->oldPurchase = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Purchase")
+            ->whereBetween('date', array($beforeTime, $newtime))
+            ->sum('in_qnt');
 
-            $sku->pPurchase = DB::table('purchase_details')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at', array($newtime, $lastTime))->sum('qnt');
+            $sku->oldPurchaseReturn = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Purchase Return")
+            ->whereBetween('date', array($beforeTime, $newtime))
+            ->sum('out_qnt');
+
+            $sku->oldDamage = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Damage")
+            ->whereBetween('date',[$beforeTime, $newtime])
+            ->where('client_id',auth()->user()->client_id)
+            ->sum('out_qnt');
+
+            $sku->pPurchase = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "purchase")
+            ->whereBetween('date', array($newtime, $lastTime))
+            ->where('client_id',auth()->user()->client_id)
+            ->sum('in_qnt');
 
             $oldDetails = Order_detail::where('product_id',$pid)->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($beforeTime, $newtime))->get();
 
@@ -465,6 +504,7 @@ class PosReportController extends Controller
             
             $sku->currenTstock = $sku->OpenngS + ($sku->pPurchase - $sku->psold - $sku->returns + $sku->sale_return - $sku->damage);
 
+            $sku->stocValue = $sku->currenTstock*$sku->price;
         }
 
         return datatables()->of($getSKU)->make(true);

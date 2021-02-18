@@ -26,6 +26,14 @@
                             <div class="row">
                                 <div class="col-md-7">
                                     <div class="row">
+                                        <div class="col-5">
+                                            <select name="warehouse_id" id="warehouse_id" class="form-control">
+                                                <option value="" disabled selected>Select Warehouse</option>
+                                                @foreach($warehouses as $warehouse)
+                                                    <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <div class="col-4">
                                             <div class="form-group" style="position: relative;">
                                                 <input type="text" name="cust_phone" id="cust_phone" class="form-control" placeholder="Customer Phone">
@@ -42,15 +50,16 @@
                                                 <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                             </div>
                                         </div>
+                                        
+                                    </div>
+                                    <div class="row">
                                         <div class="col-5">
                                             <div class="form-group"  style="position: relative;">
                                                 <input type="text" name="barcode" id="barcode" class="form-control" placeholder="Barcode">
                                                 
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-7">
                                             <div class="form-group" style="position: relative;">
                                                 <input type="text" class="form-control" placeholder="Search Product" id="search">
                                                 <div id="products_div" style="display: none; position: absolute; top: 30px; left: 0; width: 100%; z-index: 999;"></div>
@@ -577,6 +586,12 @@
 
                         serial_qty = qnt;
 
+                        var warehouse_id = $('#warehouse_id').val();
+                        if(warehouse_id == null){
+                            alert('Please Select Warehouse');
+                            return ;
+                        }
+
                         if(product_serial == 1)
                         {
                             $("#serial_input").empty();
@@ -686,10 +701,17 @@
          });
         
         $('#save').click(function(e){
+
            
             var i = 0;
             
             var cartData = [];
+
+            var warehouse_id = $('#warehouse_id').val();
+            if(warehouse_id == null){
+                alert('Please Select Warehouse');
+                return ;
+            }
     
             $(this).attr('disabled', true);
             
@@ -714,9 +736,12 @@
                alert("Please Choose A Product.");
                return false;
            }
+
+
            
             var fieldValues = {};
             
+            fieldValues.warehouse_id = $('#warehouse_id').val();
             fieldValues.cust_id = $('#cust_id').val();
             fieldValues.cust_name = $('#cust_name').val();
             fieldValues.cust_phone = $('#cust_phone').val();
@@ -730,13 +755,21 @@
             if(cust_id<=0){
                alert("Please select a customer!");
                return false;
-           }
+            }
            
             var formData = new FormData();
            
             formData.append('fieldValues', JSON.stringify(fieldValues)); 
             formData.append('cartData', JSON.stringify(cartData)); 
             formData.append('serialArray', JSON.stringify(serial_array));
+
+            product_id = '';
+            product_serial = '';
+            serial_qty = '';
+            serial_array = {};
+            serial_unsold = '';
+            warranty = '';
+            product_stock = '';
            		
             $.ajaxSetup({
                 headers: {

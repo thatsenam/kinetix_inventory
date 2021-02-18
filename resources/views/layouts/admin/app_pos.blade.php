@@ -135,19 +135,19 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{url('/admin/add_product')}}" class="nav-link">
+                <a href="{{url('/admin/add_product')}}" class="nav-link {{ (request()->is('admin/add_product')) ? 'active' : '' }}">
                   <i class="fas fa-plus-square nav-icon"></i>
                   <p>Add New Product</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{url('/admin/view_products')}}" class="nav-link">
+                <a href="{{url('/admin/view_products')}}" class="nav-link {{ (request()->is('admin/view_products')) ? 'active' : '' }}">
                   <i class="fas fa-clipboard-list nav-icon"></i>
                   <p>View All Products</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('labels.print')}}" class="nav-link">
+                <a href="{{route('labels.print')}}" class="nav-link {{ Route::currentRouteName() == 'labels.print' ? 'active' : '' }}">
                   <i class="fas fa-print nav-icon"></i>
                   <p>Print Labels</p>
                 </a>
@@ -165,13 +165,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{url('/admin/create_category')}}" class="nav-link">
+                <a href="{{url('/admin/create_category')}}" class="nav-link {{ (request()->is('admin/create_category')) ? 'active' : '' }}">
                   <i class="fas fa-plus-square nav-icon"></i>
                   <p>Add New Category</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{url('/admin/view_categories')}}" class="nav-link">
+                <a href="{{url('/admin/view_categories')}}" class="nav-link {{ (request()->is('admin/view_categories')) ? 'active' : '' }}">
                   <i class="fas fa-clipboard-list nav-icon"></i>
                   <p>View All Categories</p>
                 </a>
@@ -189,13 +189,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{url('/admin/create_brand')}}" class="nav-link">
+                <a href="{{url('/admin/create_brand')}}" class="nav-link {{ (request()->is('admin/create_brand')) ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add New Brand</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{url('/admin/view_brands')}}" class="nav-link">
+                <a href="{{url('/admin/view_brands')}}" class="nav-link {{ (request()->is('admin/view_brands')) ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>View All Brands</p>
                 </a>
@@ -208,36 +208,36 @@
               <p>
                 Sales
                 <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">3</span>
+                <span class="badge badge-info right">5</span>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{route('sales_invoice')}}" class="nav-link">
+                <a href="{{route('sales_invoice')}}" class="nav-link {{ Route::currentRouteName() == 'sales_invoice' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Sales Invoice</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('sales_return')}}" class="nav-link">
+                <a href="{{route('sales_return')}}" class="nav-link {{ Route::currentRouteName() == 'sales_return' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Sales Return</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('sales_report_date')}}" class="nav-link">
+                <a href="{{route('sales_report_date')}}" class="nav-link {{ Route::currentRouteName() == 'sales_report_date' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Sales Report Date</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('sales_return_report_date')}}" class="nav-link">
+                <a href="{{route('sales_return_report_date')}}" class="nav-link {{ Route::currentRouteName() == 'sales_return_report_date' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Sales Return Report</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('sales_report_brand')}}" class="nav-link">
+                <a href="{{route('sales_report_brand')}}" class="nav-link {{ Route::currentRouteName() == 'sales_report_brand' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Sales Report By Brand</p>
                 </a>
@@ -250,48 +250,48 @@
               <p>
                 Purchase
                 <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">2</span>
+                <span class="badge badge-info right">7</span>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{route('purchase_products')}}" class="nav-link">
+                <a href="{{route('purchase_products')}}" class="nav-link {{ Route::currentRouteName() == 'purchase_products' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Purchase Products</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('purchase_return')}}" class="nav-link">
+                <a href="{{route('purchase_return')}}" class="nav-link {{ Route::currentRouteName() == 'purchase_return' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Purchase Return</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/dashboard/damage_products" class="nav-link">
+                <a href="/dashboard/damage_products" class="nav-link {{ (request()->is('dashboard/damage_products')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Damage Products</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('purchase_report_date')}}" class="nav-link">
+                <a href="{{route('purchase_report_date')}}" class="nav-link {{ Route::currentRouteName() == 'purchase_report_date' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Purchase Report</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('purchase_return_report_date')}}" class="nav-link">
+                <a href="{{route('purchase_return_report_date')}}" class="nav-link {{ Route::currentRouteName() == 'purchase_return_report_date' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Purchase Return Report</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('purchase_report_brand')}}" class="nav-link">
+                <a href="{{route('purchase_report_brand')}}" class="nav-link {{ Route::currentRouteName() == 'purchase_report_brand' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Purchase Report By Brand</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('damage_report_date')}}" class="nav-link">
+                <a href="{{route('damage_report_date')}}" class="nav-link {{ Route::currentRouteName() == 'damage_report_date' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Damage Report</p>
                 </a>
@@ -309,49 +309,49 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{url('/dashboard/add_bank')}}" class="nav-link">
+                <a href="{{url('/dashboard/add_bank')}}" class="nav-link {{ (request()->is('dashboard/add_bank')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Add New Bank</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{url('/dashboard/view_banks')}}" class="nav-link">
+                <a href="{{url('/dashboard/view_banks')}}" class="nav-link {{ (request()->is('dashboard/view_banks')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>View Bank Info</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('check_clearance')}}" class="nav-link">
+                <a href="{{route('check_clearance')}}" class="nav-link {{ Route::currentRouteName() == 'check_clearance' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Check Clearance</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('bank_deposit')}}" class="nav-link">
+                <a href="{{route('bank_deposit')}}" class="nav-link {{ Route::currentRouteName() == 'bank_deposit' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Bank Deposit</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('bank_withdraw')}}" class="nav-link">
+                <a href="{{route('bank_withdraw')}}" class="nav-link {{ Route::currentRouteName() == 'bank_withdraw' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Bank Withdraw</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('bank_ledger')}}" class="nav-link">
+                <a href="{{route('bank_ledger')}}" class="nav-link {{ Route::currentRouteName() == 'bank_ledger' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Bank Ledger</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('bank_transfer')}}" class="nav-link">
+                <a href="{{route('bank_transfer')}}" class="nav-link {{ Route::currentRouteName() == 'bank_transfer' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Bank Transfer</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('bank_transfer_report')}}" class="nav-link">
+                <a href="{{route('bank_transfer_report')}}" class="nav-link  {{ Route::currentRouteName() == 'bank_transfer_report' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Bank Transfer Report</p>
                 </a>
@@ -364,30 +364,30 @@
               <p>
                 Customers
                 <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">5</span>
+                <span class="badge badge-info right">4</span>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item active">
-                <a href="{{route('set_customer')}}" class="nav-link">
+                <a href="{{route('set_customer')}}" class="nav-link {{ (request()->is('dashboard/customers')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Customer List</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/dashboard/customers/customer_ledger" class="nav-link">
+                <a href="/dashboard/customers/customer_ledger" class="nav-link {{ (request()->is('dashboard/customers/customer_ledger')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Customer Ledger</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/dashboard/customers/due-report" class="nav-link">
+                <a href="/dashboard/customers/due-report" class="nav-link {{ (request()->is('dashboard/customers/due-report')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Due Report</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/dashboard/customers/due-collection-report" class="nav-link">
+                <a href="/dashboard/customers/due-collection-report" class="nav-link {{ (request()->is('dashboard/customers/due-collection-report')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Due Collection Report</p>
                 </a>
@@ -405,7 +405,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{route('set_supplier')}}" class="nav-link">
+                <a href="{{route('set_supplier')}}" class="nav-link {{ Route::currentRouteName() == 'set_supplier' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Supplier List</p>
                 </a>
@@ -423,31 +423,31 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="/dashboard/warranty-management/receive-from-customer" class="nav-link">
+                <a href="/dashboard/warranty-management/receive-from-customer" class="nav-link {{ (request()->is('dashboard/warranty-management/receive-from-customer')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Receive From Customer</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/dashboard/warranty-management/send-to-supplier" class="nav-link">
+                <a href="/dashboard/warranty-management/send-to-supplier" class="nav-link {{ (request()->is('dashboard/warranty-management/send-to-supplier')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Send To Supplier</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/dashboard/warranty-management/receive-from-supplier" class="nav-link">
+                <a href="/dashboard/warranty-management/receive-from-supplier" class="nav-link {{ (request()->is('dashboard/warranty-management/receive-from-supplier')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Receive From Supplier</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/dashboard/warranty-management/delivery-to-customer" class="nav-link">
+                <a href="/dashboard/warranty-management/delivery-to-customer" class="nav-link {{ (request()->is('dashboard/warranty-management/delivery-to-customer')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Delivery To Customer</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/dashboard/warranty-management/warranty-report" class="nav-link">
+                <a href="/dashboard/warranty-management/warranty-report" class="nav-link {{ (request()->is('dashboard/warranty-management/warranty-report')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Warranty Report</p>
                 </a>
@@ -466,49 +466,49 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="/accounting/acc-heads" class="nav-link">
+                <a href="/accounting/acc-heads" class="nav-link {{ (request()->is('accounting/acc-heads')) ? 'active' : '' }}">
                   <i class="fas fa-bahai nav-icon"></i>
                   <p>Account Head</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/accounting/voucher-entry" class="nav-link">
+                <a href="/accounting/voucher-entry" class="nav-link {{ (request()->is('accounting/voucher-entry')) ? 'active' : '' }}">
                   <i class="fas fa-door-open nav-icon"></i>
                   <p>Voucher Entry</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/accounting/voucher-history" class="nav-link">
+                <a href="/accounting/voucher-history" class="nav-link {{ (request()->is('accounting/voucher-history')) ? 'active' : '' }}">
                   <i class="fas fa-history nav-icon"></i>
                   <p>Voucher History</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/accounting/ledger" class="nav-link">
+                <a href="/accounting/ledger" class="nav-link {{ (request()->is('accounting/ledger')) ? 'active' : '' }}">
                   <i class="fas fa-chart-bar nav-icon"></i>
                   <p>Ledger Reports</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/accounting/trial-balance" class="nav-link">
+                <a href="/accounting/trial-balance" class="nav-link {{ (request()->is('accounting/trial-balance')) ? 'active' : '' }}">
                   <i class="fas fa-comment-dollar nav-icon"></i>
                   <p>Trial Balance</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/accounting/income-statement" class="nav-link">
+                <a href="/accounting/income-statement" class="nav-link {{ (request()->is('accounting/income-statement')) ? 'active' : '' }}">
                   <i class="fas fa-info nav-icon"></i>
                   <p>Income Statement</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/accounting/cash-book" class="nav-link">
+                <a href="/accounting/cash-book" class="nav-link {{ (request()->is('accounting/cash-book')) ? 'active' : '' }}">
                   <i class="fas fa-money-bill nav-icon"></i>
                   <p>Cash Book</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/accounting/balance-sheet" class="nav-link">
+                <a href="/accounting/balance-sheet" class="nav-link {{ (request()->is('accounting/balance-sheet')) ? 'active' : '' }}">
                   <i class="fas fa-balance-scale nav-icon"></i>
                   <p>Balance Sheet</p>
                 </a>
@@ -552,7 +552,48 @@
               </li>
             </ul>
           </li> --}}
-          <li class="nav-item {{ (request()->is('dashboard/reports/stock-report', 'dashboard/reports/loss-profit-report', 'dashboard/sales-customer', 'dashboard/sales-product', 'dashboard/purchase-product', 'dashboard/purchase-supplier')) ? 'menu-open' : '' }}">
+          <li class="nav-item {{ (request()->is('admin/manage_warehouse', 'admin/warehouse_report', 'dashboard/reports/stock-report', 'admin/stock_transfer', 'admin/stock-transfer-report')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-sort-alpha-up"></i>
+              <p>Stock
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right">5</span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{route('admin.pos.warehouse.manage')}}" class="nav-link {{ Route::currentRouteName() == 'admin.pos.warehouse.manage' ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Warehouse Management</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('admin.pos.warehouse_report')}}" class="nav-link {{ Route::currentRouteName() == 'admin.pos.warehouse_report' ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Stock Report By Warehouse</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('reports.stock-report')}}" class="nav-link {{ Route::currentRouteName() == 'reports.stock-report' ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Stock Report</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('admin.pos.stock.transfer')}}" class="nav-link {{ Route::currentRouteName() == 'admin.pos.stock.transfer' ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Stock Transfer</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('admin.pos.stock-transfer-report')}}" class="nav-link {{ Route::currentRouteName() == 'admin.pos.stock-transfer-report' ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Stock Transfer Report</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item {{ (request()->is('dashboard/reports/loss-profit-report', 'dashboard/sales-customer', 'dashboard/sales-product', 'dashboard/purchase-product', 'dashboard/purchase-supplier')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-sort-alpha-up"></i>
               <p>
@@ -562,38 +603,38 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="{{route('reports.stock-report')}}" class="nav-link">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Stock Reports</p>
                 </a>
-              </li>
+              </li> --}}
               <li class="nav-item">
-                <a href="/dashboard/reports/loss-profit-report" class="nav-link">
+                <a href="/dashboard/reports/loss-profit-report" class="nav-link {{ (request()->is('dashboard/reports/loss-profit-report')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Loss Profit Reports</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('salesby.customer')}}" class="nav-link">
+                <a href="{{route('salesby.customer')}}" class="nav-link {{ Route::currentRouteName() == 'salesby.customer' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Sales By Customer</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('salesby.product')}}" class="nav-link">
+                <a href="{{route('salesby.product')}}" class="nav-link {{ Route::currentRouteName() == 'salesby.product' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Sales By Product</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('purchaseby.product')}}" class="nav-link">
+                <a href="{{route('purchaseby.product')}}" class="nav-link {{ Route::currentRouteName() == 'purchaseby.product' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Purchase By Product</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('purchaseby.supplier')}}" class="nav-link">
+                <a href="{{route('purchaseby.supplier')}}" class="nav-link {{ Route::currentRouteName() == 'purchaseby.supplier' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Purchas By Supplier</p>
                 </a>
@@ -611,7 +652,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{url('/admin/settings')}}" class="nav-link">
+                <a href="{{url('/admin/settings')}}" class="nav-link {{ (request()->is('admin/settings')) ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Site Settings</p>
                 </a>

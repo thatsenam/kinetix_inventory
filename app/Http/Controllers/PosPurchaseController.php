@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Image;
+use App\Stock;
 use App\Filter;
 use App\Seller;
 use App\Serial;
@@ -11,6 +12,7 @@ use App\Company;
 use App\Category;
 use App\Products;
 use App\Supplier;
+use App\Warehouse;
 use App\Manufacturer;
 use App\ProductImage;
 use App\DamageProduct;
@@ -26,8 +28,11 @@ class PosPurchaseController extends Controller
 {
 
 
-    public function purchase_products(){
-        return view('admin.pos.purchase.purchase_products');
+    public function purchase_products()
+    {
+        $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+
+        return view('admin.pos.purchase.purchase_products', compact('warehouses'));
     }
 
     public function get_purchase_products(Request $req){
@@ -152,6 +157,7 @@ class PosPurchaseController extends Controller
         
         $fieldValues = json_decode($req['fieldValues'], true);
 
+        $warehouse = $fieldValues['warehouse_id'];
         $supp_name = $fieldValues['supp_name'];
         $supp_id = $fieldValues['supp_id'];
         $supp_memo = $fieldValues['supp_memo'];
@@ -258,6 +264,17 @@ class PosPurchaseController extends Controller
                 'user' => $user
             ]);
 
+            Stock::create ([
+                'date' => $date,
+                'warehouse_id' => $warehouse,
+                'product_id' => $pid,
+                'in_qnt' => $take_cart_items[$j3],
+                'particulars' => 'Purchase',
+                'remarks' => 'Purchase Invoice No-'.$pur_inv,
+                'user_id' => $user,
+                'client_id' => auth()->user()->client_id,
+            ]);
+
 
             $i = $i + 5;
         }
@@ -360,16 +377,18 @@ class PosPurchaseController extends Controller
     }
 
 
-    public function purchase_return(){
+    public function purchase_return()
+    {
+        $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
 
-
-        return view('admin.pos.purchase.purchase_return');
+        return view('admin.pos.purchase.purchase_return', compact('warehouses'));
     }
 
     public function save_purchase_return (Request $req){
 
         $fieldValues = json_decode($req['fieldValues'], true);
 
+        $warehouse = $fieldValues['warehouse_id'];
         $supp_id = $fieldValues['supp_id'];
         $supp_memo = $fieldValues['supp_memo'];
         $total = $fieldValues['total'];
@@ -411,6 +430,17 @@ class PosPurchaseController extends Controller
                 'total' => $take_cart_items[$j4],
                 'sid' => $supp_id,
                 'user' => $user
+            ]);
+
+            Stock::create ([
+                'date' => $date,
+                'warehouse_id' => $warehouse,
+                'product_id' => $pid,
+                'out_qnt' => $take_cart_items[$j3],
+                'particulars' => 'Purchase Return',
+                'remarks' => 'Purchase Return Invoice No-'.$supp_memo,
+                'user_id' => auth()->user()->id,
+                'client_id' => auth()->user()->client_id,
             ]);
 
 
@@ -489,9 +519,10 @@ class PosPurchaseController extends Controller
     {
         $dmg_count = DamageProduct::whereDate('date', date('Y-m-d'))
                                 ->where('client_id', auth()->user()->client_id)->distinct()->count('dmg_inv');
+        $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
         $dmg_inv = 'DMG-' . ($dmg_count + 1);
 
-        return view('admin.pos.damage-products.damage_products', compact('dmg_inv'));
+        return view('admin.pos.damage-products.damage_products', compact('dmg_inv', 'warehouses'));
     }
 
     public function save_damage_products (Request $req)
@@ -503,6 +534,7 @@ class PosPurchaseController extends Controller
         $total = $fieldValues['total'];
         $date = $fieldValues['date'];
         $dmg_inv = $fieldValues['dmg_inv'];
+        $warehouse = $fieldValues['warehouse_id'];
 
         $take_cart_items = json_decode($req['cartData'], true);
 
@@ -535,6 +567,17 @@ class PosPurchaseController extends Controller
                 'qnt' => $take_cart_items[$j3],
                 'price' => $take_cart_items[$j2],
                 'total' => $take_cart_items[$j4],
+            ]);
+
+            Stock::create ([
+                'date' => $date,
+                'warehouse_id' => $warehouse,
+                'product_id' => $pid,
+                'out_qnt' => $take_cart_items[$j3],
+                'particulars' => 'Damage',
+                'remarks' => 'Damage Invoice No-'.$dmg_inv,
+                'user_id' => auth()->user()->id,
+                'client_id' => auth()->user()->client_id,
             ]);
 
             $i = $i + 5;

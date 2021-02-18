@@ -76,6 +76,7 @@
                                 <th>Sold Return</th>
                                 <th>Damage</th>
                                 <th>Current Stock</th>
+                                <th>Stock Price</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -83,7 +84,9 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="3" ></th>
+                                <th colspan="2">Total</th>
+                                <th></th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -132,6 +135,12 @@
                     };
         
                     // computing column Total of the complete result 
+                    var opening = api
+                        .column( 2 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
                     var pur = api
                         .column( 3 )
                         .data()
@@ -191,15 +200,24 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    
+                    var stockV = api
+                    .column( 9 )
+                    .data()
+                    .reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );
                         
                     // Update footer by showing the total with the reference of the column index 
-                    $( api.column( 0 ).footer() ).html('Total');
+                    // $( api.column( 0 ).footer() ).html('Total');
+                    $( api.column( 2 ).footer() ).html(opening);
                     $( api.column( 3 ).footer() ).html(pur);
                     $( api.column( 4 ).footer() ).html(pur_ret);
                     $( api.column( 5 ).footer() ).html(sold);
                     $( api.column( 6 ).footer() ).html(sale_ret);
                     $( api.column( 7 ).footer() ).html(damage);
                     $( api.column( 8 ).footer() ).html(current_stock);
+                    $( api.column( 9 ).footer() ).html(stockV);
                 },
                 "columnDefs": [
                     { "orderable": false, "targets": 0 }
@@ -222,6 +240,7 @@
                     {data:'sale_return',},
                     {data:'damage',},
                     {data:'currenTstock',},
+                    {data:'stocValue',},
                 ]
             });
         }

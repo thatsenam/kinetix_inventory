@@ -35,6 +35,9 @@ use App\PurchaseReturns;
 use App\ProductAttributes;
 use App\SalesInvoiceDetails;
 use App\CustomerDueCollection;
+use App\Stock;
+use App\Warehouse;
+use App\WarrantyManagement;
 use Illuminate\Support\ServiceProvider;
 
 class ClientIdProvider extends ServiceProvider
@@ -273,6 +276,18 @@ class ClientIdProvider extends ServiceProvider
         });
 
         CustomerDueCollection::creating(function ($model) {
+            $model->client_id = auth()->user()->client_id;
+            $model->user_id = auth()->user()->id;
+        });
+        Warehouse::creating(function ($model) {
+            $model->client_id = auth()->user()->client_id;
+            $model->user_id = auth()->user()->id;
+        });
+        WarrantyManagement::creating(function ($model) {
+            $model->client_id = auth()->user()->client_id;
+            $model->user_id = auth()->user()->id;
+        });
+        Stock::creating(function ($model) {
             $model->client_id = auth()->user()->client_id;
             $model->user_id = auth()->user()->id;
         });

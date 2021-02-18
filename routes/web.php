@@ -398,3 +398,10 @@ Route::match(['get','post'],'/admin/manage_warehouse', 'PagesController@warehous
 Route::match(['get','post'],'/admin/stock_transfer', 'PagesController@stock_transfer')->name('admin.pos.stock.transfer');
 Route::match(['get','post'],'/admin/stock-transfer-report', 'PagesController@stock_transfer_report')->name('admin.pos.stock-transfer-report');
 Route::match(['get','post'],'/admin/stock_transfer_report_date', 'PagesController@stock_transfer_report_date')->name('stock_transfer_report_date');
+Route::match(['get','post'],'/admin/warehouse_report', 'PagesController@warehouse_report')->name('admin.pos.warehouse_report');
+
+//Warehouse Routes
+// Route::match(['get','post'],'/admin/manage_warehouse',[PagesController::class,'warehouse_manage'])->name('admin.pos.warehouse.manage');
+// Route::match(['get','post'],'/admin/stock_transfer',[PagesController::class,'stock_transfer'])->name('admin.pos.stock.transfer');
+// Route::match(['get','post'],'/admin/stock-transfer-report', [PagesController::class,'stock_transfer_report'])->name('admin.pos.stock-transfer-report');
+// Route::match(['get','post'],'/admin/stock_transfer_report_date', [PagesController::class,'stock_transfer_report_date'])->name('stock_transfer_report_date');

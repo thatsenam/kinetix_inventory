@@ -1,5 +1,5 @@
 @extends('admin.pos.master')
-@section('title', 'স্টক স্থানান্তর')
+@section('title', 'Stock Transfer')
 @section('content')
 
 <div class="content-wrapper" style="min-height: 1662.75px;">
@@ -8,12 +8,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>স্টক স্থানান্তর</h1>
+            <h1>Stock Transfer</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">মূলপাতা</a></li>
-              <li class="breadcrumb-item active">স্টক স্থানান্তর</li>
+              <li class="breadcrumb-item"><a href="#">Main Page</a></li>
+              <li class="breadcrumb-item active">Stock Transfer</li>
             </ol>
           </div>
         </div>
@@ -47,7 +47,7 @@
                 <div class="col-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                        <h3 class="card-title">স্টক স্থানান্তর</h3>
+                        <h3 class="card-title">Stock Transfer</h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
@@ -59,9 +59,9 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="inputFromWareHouse">গুদাম থেকে</label>
+                                        <label for="inputFromWareHouse">From Warehouse</label>
                                         <select name="inputFromWareHouse" id="inputFromWareHouse" class="custom-select">
-                                            <option selected="" disabled="" value="">গুদাম নির্বাচন করুন</option>
+                                            <option selected="" disabled="" value="">Select Warehouse</option>
                                             @foreach($warehouses as $item)
                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
@@ -70,23 +70,23 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="inputProduct">পণ্য</label>
-                                        <input type="text" class="form-control" placeholder="পণ্য খোঁজ করুন" id="search" autocomplete="off">
+                                        <label for="inputProduct">Product</label>
+                                        <input type="text" class="form-control" placeholder="Search Product" id="search" autocomplete="off">
                                         <div id="products_div" style="display: none; position: absolute; top: 70px; left: 0; width: 100%; z-index: 999;"></div>
                                         <input type="hidden" name="pid_hid" id="pid_hid">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label for="inputQty">পরিমাণ</label>
-                                        <input type="text" name="inputQty2" id="inputQty2" class="form-control" placeholder="পরিমাণ লিখুন..." required>
+                                        <label for="inputQty">Quantity</label>
+                                        <input type="text" name="inputQty2" id="inputQty2" class="form-control" placeholder="Quantity" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="inputToWareHouse">গুদাম প্রতি</label>
+                                        <label for="inputToWareHouse">Warehouse To</label>
                                         <select name="inputToWareHouse" id="inputToWareHouse" class="custom-select">
-                                            <option selected="" disabled="" value="">গুদাম নির্বাচন করুন</option>
+                                            <option selected="" disabled="" value="">Select Warehouse</option>
                                             @foreach($warehouses as $item)
                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
@@ -100,7 +100,7 @@
                             <div id="prodlistDiv" class="col-12" style="height:auto; overflow-y: auto; ">
                                 <div style="padding-right: 0 !important;">
                                     <table id="prodlist" class="price-table custom-table">
-                                        <tr><th>#</th><th style="width: 100px;">পণ্য</th><th>থেকে</th><th>সাব একক</th><th>কেজি/পিস</th><th>প্রতি</th><th>ডিলিট</th></tr>
+                                        <tr><th>#</th><th style="width: 100px;">Product<th>From</th><th>Qty.</th><th>To</th><th>Delete</th></tr>
                                     </table>
                                 </div>
                             </div>
@@ -109,14 +109,14 @@
                         <div class="row mt-5">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="inputDate">তারিখ</label>
-                                    <input type="text" value="{{ \App\Helpers\AppHelper::instance()->btoe(date('Y-m-d')) }}" id="inputDate" name="inputDate" class="form-control" placeholder="স্থানান্তরের তারিখ" required>
+                                    <label for="inputDate">Date</label>
+                                    <input type="text" value="{{ date('Y-m-d') }}" id="inputDate" name="inputDate" class="form-control" placeholder="Transfer Date" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="inputRemarks">মন্তব্য</label>
-                                    <input type="text" id="inputRemarks" name="inputRemarks" class="form-control" placeholder="মন্তব্য.....">
+                                    <label for="inputRemarks">Remarks</label>
+                                    <input type="text" id="inputRemarks" name="inputRemarks" class="form-control" placeholder="Remarks">
                                 </div>
                             </div>
                         </div>
@@ -128,39 +128,13 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                <a href="" class="btn btn-secondary">বাতিল</a>
-                <input value="সম্পন্ন করুন" class="btn btn-success float-right save">
+                <a href="" class="btn btn-secondary">Cancel</a>
+                <input value="Submit" class="btn btn-success float-right save">
                 </div>
             </div>
         </form>
     </section>
     <!-- /.content -->
-</div>
-
-<div class="modal fade" id="square_foot_modal2" tabindex="-1" role="dialog" aria-labelledby="square_foot_modalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title float-center" id="square_foot_modalLabel">পরিমান</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group row">
-                <label for="quantity2" class="col-sm-4 col-form-label">পরিমান</label>
-                <div class="col-sm-8">
-                  <input type="text" class="form-control" id="quantity2">
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-danger" data-dismiss="modal">বাদ</button>
-          {{-- <button type="button" class="btn btn-primary">OK</button> --}}
-        </div>
-      </div>
-    </div>
-  </div>   
 </div>
 
 <style>
@@ -208,7 +182,6 @@
 
 @endsection
 @section('page-js-script')
-<script src="/js/conversion.js"></script>
 <script>
     //Initialize Select2 Elements
     $(function () {
@@ -219,6 +192,9 @@
             dateFormat: 'yy-mm-dd'
         });
 
+        $('body').on('click', function(){
+            $('#products_div').hide();
+        });
         //Search Product
         $("#search").keyup(function(e){
             if(e.which == 40 || e.which == 38){
@@ -240,37 +216,26 @@
                         return false;
                     }
                 });
-                $('.products-list').on('keyup', function(e){
-                    if(e.which == 13){    
-                        var id = $(this).find(".active").attr("data-id");    
+                $('.products-list').on('keyup', function(e) {
+                    if (e.which == 13) {
+
+                        var id = $(this).find(".active").attr("data-id");
                         var name = $(this).find(".active").attr("data-name");
-                        var pbq = $(this).find(".active").attr("data-pbq");
-                        unit = $(this).find(".active").attr("data-unit");
-                        sub_unit = $(this).find(".active").attr("data-sub_unit");  
-                        rem_qnt = $(this).find(".active").attr("data-rem_qnt");
-                        if(pbq){
-                            $('#search').val(name);
-                            $('#square_foot_modal2').modal('toggle');
-                            per_box_qty = pbq;
-                            box=0;
-                            $('#square_foot_modal2').on('shown.bs.modal', function () {
-                                $('#quantity2').trigger('focus')
-                            });
-                        }else{
-                            $('#search').val(name);
-                            per_box_qty=0;
-                            box=0;
-                            $('#inputQty2').val('');
-                        }
-                                
+                        var price = $(this).find(".active").attr("data-price");
+
+                        product_id = id;
+                        product_serial = $(this).find(".active").attr("data-serial");
+                        warranty = $(this).find(".active").attr("data-warranty");
+                        product_stock = $(this).find(".active").attr("data-stock");
+
+                        $('#product_stock').html(product_stock);
                         $('#search').val(name);
                         $('#pid_hid').val(id);
-                                            
-                        $("#inputQty2").focus();
+                        
                         $("#products_div").hide();
-                                            
-                        //window.location.replace("{{Request::root()}}/admin/editcat/"+val);
-                                            
+
+                        //window.location.replace("{{ Request::root() }}/admin/editcat/"+val);
+
                     }
                 });
                 return false;
@@ -309,19 +274,19 @@
             });  
         });
 
-        $('#quantity2').on("keyup", function (e) {
-            if (e.which == 13) {
-                var qty_box = Number(btoe( $('#quantity2').val()));
-                var total_kg = per_box_qty*qty_box;
-                box=qty_box;
-                fraction=0;
-                $('#inputQty2').val(etob(total_kg));
-                $('#quantity2').val('');
+        // $('#quantity2').on("keyup", function (e) {
+        //     if (e.which == 13) {
+        //         var qty_box = Number(btoe( $('#quantity2').val()));
+        //         var total_kg = per_box_qty*qty_box;
+        //         box=qty_box;
+        //         fraction=0;
+        //         $('#inputQty2').val(etob(total_kg));
+        //         $('#quantity2').val('');
     
-                $('#square_foot_modal2').modal('hide');
-                $('#inputQty').focus();
-            }
-        });
+        //         $('#square_foot_modal2').modal('hide');
+        //         $('#inputQty').focus();
+        //     }
+        // });
 
         ///After Press Enter on Qty
         $('#inputQty2').on('keyup', function(e){
@@ -331,24 +296,24 @@
                 
                 var id = $('#pid_hid').val();
                 var name = $('#search').val();
-                var qnt = Number(btoe($('#inputQty2').val()));
+                var qnt = Number( $('#inputQty2').val());
                 var fromWareHouse = $('#inputFromWareHouse').val();
                 var fromWareHouseT = $("#inputFromWareHouse option:selected" ).text();
                 var toWareHouse = $('#inputToWareHouse').val();
                 var toWareHouseT = $("#inputToWareHouse option:selected" ).text();
 
                 if(fromWareHouse == null || toWareHouse == null){
-                    alert('গুদাম সিলেক্ট করুন');
+                    alert('Warehouse To করুন');
                     return ;
                 }
 
                 if(fromWareHouse == toWareHouse){
-                    alert('একই গুদামে পণ্য স্থানান্তর সম্ভব না!');
+                    alert('একই WarehouseেTo Product না!');
                     return ;
                 }
 
                 if(id == 0){
-                    alert("কোন পণ্য সিলেক্ট করা হয় নি!!");
+                    alert("কোন Search Product হয় নি!!");
                     return false;
                 }
 
@@ -356,35 +321,22 @@
                     alert("সকল ফিল্ড গুলো পূর্ণ করুন");
                     return false;
                 }
-
-                if(sub_unit){
-                    var box_qty=parseInt(qnt/per_box_qty);
-                    var fraction=qnt-( box_qty *per_box_qty);
-                    if(fraction!=0){ 
-                        var box_value= etob(box_qty)+" "+sub_unit+" "+etob(fraction)+unit;
-                    }else{
-                        var box_value= etob(box_qty)+" "+sub_unit;
-                    }
-                        
-                }else{
-                    var box_value= etob(qnt)+" "+unit;
-                }
                 
-                add_product_to_table(id, name, qnt, box_value, fromWareHouse, fromWareHouseT, toWareHouse, toWareHouseT);
+                add_product_to_table(id, name, qnt, fromWareHouse, fromWareHouseT, toWareHouse, toWareHouseT);
                 $('#search').focus();
             }
         
         });
 
         var sl = 1;
-        function add_product_to_table(id, name, qnt, box, fromWareHouse, fromWareHouseT, toWareHouse, toWareHouseT){
+        function add_product_to_table(id, name, qnt, fromWareHouse, fromWareHouseT, toWareHouse, toWareHouseT){
                 
             var id = id;
             var name = name;
             
             $('.price-table').show();
             
-            $('.price-table').append("<tr><td>"+etob(sl)+"</td><td data-prodid='"+id+"' style='width:150px;' class='name'>"+name+"</td><td data-fromid='"+fromWareHouse+"' class='from'>"+fromWareHouseT+"</td><td class='box'>"+box+"</td><td class='qnt'>"+etob(qnt)+"</td><td data-toid='"+toWareHouse+"' class='to'>"+toWareHouseT+"</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
+            $('.price-table').append("<tr><td>"+sl+"</td><td data-prodid='"+id+"' style='width:150px;' class='name'>"+name+"</td><td data-fromid='"+fromWareHouse+"' class='from'>"+fromWareHouseT+"</td><td class='qnt'>"+qnt+"</td><td data-toid='"+toWareHouse+"' class='to'>"+toWareHouseT+"</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
 
             $('#pid_hid').val("0");
             $('#search').val("");
@@ -399,33 +351,6 @@
         $('body').on('click', '.delete', function(e){
             $(this).closest('tr').remove();
         });
-
-        function selectProducts(id, name, pbq, su,u,qnt){
-
-            sub_unit=su;
-            unit=u;
-            rem_qnt=qnt;
-            if(pbq){
-                $('#search').val(name);
-                $('#square_foot_modal2').modal('toggle');
-
-                per_box_qty = pbq;
-                box=0;
-
-                $('#square_foot_modal2').on('shown.bs.modal', function () {
-                    $('#quantity2').trigger('focus')
-                });
-            }else{
-                $('#search').val(name);
-                per_box_qty=0;
-                box=0;
-                $('#inputQty2').val('');
-            }
-
-            $('#pid_hid').val(id);
-            $("#inputQty2").focus();
-            $("#products_div").hide();
-        }
 
         //Save Data
         $('input[name="inputQty2"]').focus(function() {
@@ -449,8 +374,6 @@
               if($(this).attr('data-toid') != ''){toid = $(this).attr('data-toid'); cartData.push(toid);}
             
               if($(this).attr("class") == 'qnt'){quantity =$(this).html(); cartData.push(quantity);}
-            
-              if($(this).attr("class") == 'box'){var box_item = $(this).html(); cartData.push(box_item);}
 
               i = i +1;
           });
@@ -465,7 +388,6 @@
           
            var fieldValues = {};
            
-           fieldValues.inputRemarks = $('#inputRemarks').val();
            fieldValues.date = $('#inputDate').val();
            fieldValues.remarks = $('#inputRemarks').val();
            
@@ -501,7 +423,7 @@
                     $('.price-table td').remove();
                     $('.save').attr('disabled', false);
                     $("#wait").hide();
-                    location.reload();
+                    // location.reload();stock
                 },
                 success: function(data){
                     $('#inputFromWareHouse').val("");
@@ -518,5 +440,11 @@
         });
         
     });
+    function selectProducts(id,name){
+        $('#pid_hid').val(id);
+        $('#search').val(name);
+        $("#inputQty2").focus();
+        $("#products_div").hide();
+    }
 </script>
 @stop

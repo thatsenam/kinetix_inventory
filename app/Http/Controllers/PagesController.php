@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Stock;
+use App\Brands;
+use App\Category;
+use App\Products;
+use App\Warehouse;
+use App\GeneralSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Category;
-use App\Brands;
-use App\Products;
-use App\GeneralSetting;
 
 class PagesController extends Controller
 {
@@ -81,6 +83,136 @@ class PagesController extends Controller
 
     public function warehouse_manage(){
         return view('admin.pos.warehouse.manage-warehouse');
+    }
+
+    public function stock_transfer(Request $request){
+        $warehouses = Warehouse::get();
+        $products = Products::get();
+
+        if($request->isMethod('post')){
+            $fieldValues = json_decode($request['fieldValues'], true);
+            $inputDate = $fieldValues['date'];
+            $inputRemarks = $fieldValues['remarks'];
+
+            $take_cart_items = json_decode($request['cartData'], true);
+            
+            $count = count($take_cart_items);
+            for($i = 0; $i < $count;){
+                $j = $i;
+                $j1 = $i+1;
+                $j2 = $i+2;
+                $j3 = $i+3;
+
+                $getWnameFrom = DB::table('warehouses')->where('id',$take_cart_items[$j1])->first();
+                $wnameFrom = $getWnameFrom->name;
+                $getWnameTo = DB::table('warehouses')->where('id',$take_cart_items[$j3])->first();
+                $wnameTo = $getWnameTo->name;
+
+                Stock::create([
+                    'date' => $inputDate,
+                    'warehouse_id' => $take_cart_items[$j3],
+                    'product_id' => $take_cart_items[$j],
+                    'in_qnt' => $take_cart_items[$j2],
+                    'out_qnt' => 0,
+                    'particulars' => "stock transfer",
+                    'remarks' => $inputRemarks." ".$wnameFrom." To ".$wnameTo,
+                    'client_id' => auth()->user()->client_id,
+                    'user_id' => auth()->user()->id
+                ]);
+
+                Stock::create([
+                    'date' => $inputDate,
+                    'warehouse_id' => $take_cart_items[$j1],
+                    'product_id' => $take_cart_items[$j],
+                    'in_qnt' => 0,
+                    'out_qnt' => $take_cart_items[$j2],
+                    'particulars' => "stock transfer",
+                    'remarks' => $inputRemarks." ".$wnameFrom." To ".$wnameTo,
+                    'client_id' => auth()->user()->client_id,
+                    'user_id' => auth()->user()->id
+                ]);
+
+                $i = $i + 4;
+            }
+
+            return 'Stock Transfer Completed Successfully!';
+        }
+
+        return view('admin.pos.warehouse.stock-transfer')->with(compact('warehouses','products'));
+    }
+
+    public function stock_transfer_report(){
+        return view('admin.pos.warehouse.stock-transfer-report');
+    }
+
+    public function stock_transfer_report_date(Request $req){
+        $stdate = $req['from_date'];
+        $enddate = $req['to_date'];
+
+        if(!$stdate){
+            $stdate = date('Y-m-d');
+        }
+        if(!$enddate){
+            $enddate = date('Y-m-d');
+        }
+
+        $stocks = DB::table('stocks')->select('stocks.id','stocks.warehouse_id','stocks.product_id','stocks.in_qnt','stocks.out_qnt','stocks.particulars','stocks.remarks','stocks.date','stocks.client_id','products.product_name','warehouses.name')
+        ->join('products', 'stocks.product_id', 'products.id')
+        ->join('warehouses', 'stocks.warehouse_id', 'warehouses.id')
+        ->whereBetween('stocks.date', [$stdate, $enddate])
+        ->where('stocks.particulars', "stock transfer")
+        ->where('stocks.client_id',auth()->user()->client_id)
+        ->get();
+
+        return datatables()->of($stocks)->make(true);
+    }
+
+    public function warehouse_report(){
+        $stocks = DB::table('stocks')->select('warehouse_id')->groupBy('warehouse_id')->get();
+        $trow = array();
+        foreach($stocks as $key=>$value){
+            $wid = $value->warehouse_id;
+            $getWname = Warehouse::where('id',$wid)->first();
+            $wname = $getWname->name;
+            $getStocks = DB::table('stocks')
+            ->select('stocks.product_id as pid','products.product_name')
+            ->where('stocks.warehouse_id',$wid)
+            ->where('stocks.client_id',auth()->user()->client_id)
+            ->join('products','stocks.product_id', 'products.id')
+            ->groupBy('products.id')->get();
+
+            $getPriceType = DB::table('general_settings')->select('profit_clc')->first();
+            $priceType = $getPriceType->profit_clc;
+
+            $trowDiv = '<h4>'.$wname.'</h4>';
+            $trowDiv .= '<div class="mb-4" style="overflow-x:auto;"><table><tr><th>#</th><th>Product</th><th>Price</th><th>Current Stock</th><th>Price</th></tr>';
+                $TotalstockValue = 0;
+            $i = 1;
+            foreach($getStocks as $index=>$row){
+                $pid = $row->pid;
+                if($priceType = "1"){
+                    $row->price = DB::table('purchase_details')->where('pid', $pid)->avg('price');
+                    $row->price = round($row->price, 2);
+                }else{
+                    $getsprice = DB::table('purchase_details')->select('price')->where('pid', $pid)->latest('created_at')->first();
+                    $row->price = $getsprice->price;
+                    $row->price = round($row->price, 2);
+                }
+                $instock = DB::table('stocks')->where('warehouse_id',$wid)->where('product_id',$pid)->sum('in_qnt');
+                $outstock = DB::table('stocks')->where('warehouse_id',$wid)->where('product_id',$pid)->sum('out_qnt');
+                $row->stock = $instock - $outstock;
+                $row->stockValue = ($row->price)*($row->stock);
+
+                $TotalstockValue +=$row->stockValue;
+
+                $trowDiv .= '<tr><td>'.$i++.'</td><td>'.$row->product_name.'</td><td>'.$row->price.'</td><td>'.$row->stock.'</td><td>'.$row->stockValue.'</td></tr>';
+            }
+            $trowDiv .= '<tr><td colspan="4" class="text-right">All Total =</td><td>'.$TotalstockValue.'</td></tr></table></div>';
+
+            $trow[] = $trowDiv;
+
+        }
+        return view('admin.pos.warehouse.report')->with(compact('trow'));
     }
 
     public function products($url = null){

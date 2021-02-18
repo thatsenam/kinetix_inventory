@@ -16,6 +16,14 @@
                     <div class="row">
                         <div class="col-md-7">
                             <div class="row">
+                                <div class="col-5">
+                                    <select name="warehouse_id" id="warehouse_id" class="form-control">
+                                        <option value="" disabled selected>Select Warehouse</option>
+                                        @foreach($warehouses as $warehouse)
+                                            <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-4">
                                     <div class="form-group" style="position: relative;">
                                         <input type="text" name="supp_name" id="supp_name" class="form-control" placeholder="Supplier Name">
@@ -29,7 +37,9 @@
                                         <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                     </div>
                                 </div>
-                                <div class="col-5">
+                            </div>
+                            <div class="row">
+                                <div class="col">
                                     <div class="form-group" style="position: relative;">
                                         <input type="text" class="form-control" placeholder="Search Product" id="search">
                                         <div id="products_div" style="display: none; position: absolute; top: 30px; left: 0; width: 100%; z-index: 999;"></div>
@@ -455,6 +465,12 @@
 
                 serial_qty = qnt;
 
+                var warehouse_id = $('#warehouse_id').val();
+                if(warehouse_id == null){
+                    alert('Please Select Warehouse');
+                    return ;
+                }
+
                 if(product_serial == 1)
                 {
                     $("#serial_input").empty();
@@ -561,9 +577,15 @@
                alert("Please Make A List.");
                return false;
            }
+           var warehouse_id = $('#warehouse_id').val();
+            if(warehouse_id == null){
+                alert('Please Select Warehouse');
+                return ;
+            }
            
             var fieldValues = {};
             
+            fieldValues.warehouse_id = $('#warehouse_id').val();
             fieldValues.supp_id = $('#supp_id').val();
             fieldValues.supp_memo = $('#supp_memo').val();
             fieldValues.date = $('#date').val();
@@ -578,6 +600,14 @@
             formData.append('fieldValues', JSON.stringify(fieldValues)); 
             formData.append('cartData', JSON.stringify(cartData)); 
             formData.append('serialArray', JSON.stringify(serial_array));
+
+            product_id = '';
+            product_serial = '';
+            serial_qty = '';
+            serial_array = {};
+            serial_unsold = '';
+            warranty = '';
+            product_stock = '';
            		
             $.ajaxSetup({
                 headers: {

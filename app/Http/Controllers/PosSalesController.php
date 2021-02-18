@@ -15,16 +15,18 @@ use App\Product;
 use App\BankInfo;
 use App\Category;
 use App\Customer;
+use App\Products;
+use App\Warehouse;
 use App\SalesReturn;
 use App\Manufacturer;
 use App\ProductImage;
 use App\SalesInvoice;
 use App\AccTransaction;
 use App\BankTransaction;
-use App\Products;
 use App\PurchaseDetails;
 use Illuminate\Support\Str;
 use App\SalesInvoiceDetails;
+use App\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Contracts\DataTable;
@@ -36,8 +38,11 @@ class PosSalesController extends Controller
         return view('admin.pos.index');
     }
 
-    public function sales_invoice(){
-        return view('admin.pos.sales.sales_invoice');
+    public function sales_invoice()
+    {
+        $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+
+        return view('admin.pos.sales.sales_invoice', compact('warehouses'));
     }
 
     public function get_products(Request $req){
@@ -293,6 +298,7 @@ class PosSalesController extends Controller
 
         $fieldValues = json_decode($req['fieldValues'], true);
 
+        $warehouse = $fieldValues['warehouse_id'];
         $cust_id = $fieldValues['cust_id'];
         $cust_name = $fieldValues['cust_name'];
         $cust_phone = $fieldValues['cust_phone'];
@@ -449,6 +455,17 @@ class PosSalesController extends Controller
                 'price' => $take_cart_items[$j1],
                 'total' => $take_cart_items[$j3],
                 // 'user' => $user,
+            ]);
+
+            Stock::create ([
+                'date' => $date,
+                'warehouse_id' => $warehouse,
+                'product_id' => $take_cart_items[$j],
+                'out_qnt' => $take_cart_items[$j2],
+                'particulars' => 'Sales',
+                'remarks' => 'Sales Invoice No-'.$invoice,
+                'user_id' => $user,
+                'client_id' => auth()->user()->client_id,
             ]);
 
             $i = $i + 4;
@@ -1122,8 +1139,11 @@ class PosSalesController extends Controller
         }
     }
 
-    public function sales_return(){
-        return view("admin.pos.sales.sales_return");
+    public function sales_return()
+    {
+        $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+
+        return view("admin.pos.sales.sales_return", compact('warehouses'));
     }
 
 
@@ -1131,6 +1151,7 @@ class PosSalesController extends Controller
 
         $fieldValues = json_decode($req['fieldValues'], true);
 
+        $warehouse = $fieldValues['warehoue_id'];
         $cust_id = $fieldValues['cust_id'];
         $cust_name = $fieldValues['cust_name'];
         $cust_phone = $fieldValues['cust_phone'];
@@ -1180,6 +1201,17 @@ class PosSalesController extends Controller
                 'remarks' => $remarks,
                 'date' => $date,
                 // 'user' => $user,
+            ]);
+
+            Stock::create ([
+                'date' => $date,
+                'warehouse_id' => $warehouse,
+                'product_id' => $take_cart_items[$j],
+                'in_qnt' => $take_cart_items[$j2],
+                'particulars' => 'Sales Return',
+                'remarks' => 'Sales Return Invoice No-'.$rinvoice,
+                'user_id' => $user,
+                'client_id' => auth()->user()->client_id,
             ]);
 
             $i = $i + 4;

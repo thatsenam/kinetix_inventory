@@ -33,7 +33,7 @@ class Warehouse extends Component
         ]);
 
         ModelsWarehouse::create($validatedDate);
-        session()->flash('message', 'গুদাম তৈরি প্রক্রিয়াটি সঠিকভাবে সম্পন্ন হয়েছে');
+        session()->flash('message', 'Warehouse Information Successfully Inserted!');
         $this->resetInputFields();
     }
 
@@ -73,7 +73,7 @@ class Warehouse extends Component
                 'city' => $this->city
             ]);
             $this->updateMode = false;
-            session()->flash('message', 'গুদাম আপডেট প্রক্রিয়াটি সম্পন্ন হয়েছে!');
+            session()->flash('message', 'Warehouse Information Successfully Updated!');
             $this->resetInputFields();
         }
     }
@@ -82,7 +82,7 @@ class Warehouse extends Component
     {
         if($id){
             ModelsWarehouse::where('id',$id)->delete();
-            session()->flash('message', 'গুদাম সফল্ভাবে ডিলেট করা হয়েছে!');
+            session()->flash('message', 'Warehouse Information Successfully Deleted!');
         }
     }
 }

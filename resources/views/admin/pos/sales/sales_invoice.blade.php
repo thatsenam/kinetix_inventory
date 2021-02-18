@@ -33,7 +33,7 @@
         <div class="content-wrapper">
             <!-- Page Title Header Starts-->
 
-            <h3>Sales Invocie</h3>
+            <h3 class="ml-3">Sales Invocie</h3>
 
             <div class="box-body">
                 <div class="row">
@@ -46,6 +46,14 @@
                                     <div class="row">
                                         <div class="col-md-7">
                                             <div class="row">
+                                                <div class="col-5">
+                                                    <select name="warehouse_id" id="warehouse_id" class="form-control">
+                                                        <option value="" disabled selected>Select Warehouse</option>
+                                                        @foreach($warehouses as $warehouse)
+                                                            <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                                 <div class="col-4">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" name="cust_phone" id="cust_phone"
@@ -69,17 +77,17 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-5">
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-3">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" name="barcode" id="barcode" class="form-control"
                                                             placeholder="Barcode" autocomplete="off">
 
                                                     </div>
                                                 </div>
-                                            </div>
-                                            
-                                            <div class="row">
-                                                <div class="col-10">
+                                                <div class="col-7">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" class="form-control" placeholder="Search Product"
                                                             id="search" autocomplete="off">
@@ -882,7 +890,7 @@
                                 $('#price').val(price);
                             }
 
-                            $("#qnt").focus();
+                            $("#price").focus();
                             $("#products_div").hide();
 
                             //window.location.replace("{{ Request::root() }}/admin/editcat/"+val);
@@ -1538,6 +1546,12 @@
                     var price = Number($('#price').val());
                     var totalPrice = Number($('#hid_total').val());
 
+                    var warehouse_id = $('#warehouse_id').val();
+                    if(warehouse_id == null){
+                        alert('Please Select Warehouse');
+                        return ;
+                    }
+
                     var show = {!! json_encode($preventSale) !!};
                     if(show == 1)
                     {
@@ -1963,6 +1977,12 @@
                 var payment = $('#payment').val();
                 cust_name = $('#cust_name').val();
                 cust_phone = $('#cust_phone').val();
+                var warehouse_id = $('#warehouse_id').val();
+
+                if(warehouse_id == null){
+                    alert('Please Select Warehouse');
+                    return ;
+                }
 
                 if (payment < show_grand_total) {
                     if (cust_name == '' || cust_phone == '') {
@@ -2014,6 +2034,7 @@
 
                 var fieldValues = {};
 
+                fieldValues.warehouse_id = $('#warehouse_id').val();
                 fieldValues.cust_id = $('#cust_id').val();
                 fieldValues.cust_name = $('#cust_name').val();
                 fieldValues.cust_phone = $('#cust_phone').val();
@@ -2065,6 +2086,14 @@
                 formData.append('fieldValues', JSON.stringify(fieldValues));
                 formData.append('cartData', JSON.stringify(cartData));
                 formData.append('serialArray', JSON.stringify(serial_array));
+
+                product_id = '';
+                product_serial = '';
+                serial_qty = '';
+                serial_array = {};
+                serial_unsold = '';
+                warranty = '';
+                product_stock = '';
 
                 $.ajaxSetup({
                     headers: {

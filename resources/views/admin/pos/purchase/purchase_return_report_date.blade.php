@@ -20,13 +20,13 @@
                             <label>Date From</label>
                         </div>
                         <div class="col-2">
-                            <input type="text" class="form-control" name="stdate" id="stdate" value="date('d-m-Y')" autocomplete="off">
+                            <input type="text" class="form-control" name="stdate" id="stdate" value="{{ date('Y-m-01') }}" autocomplete="off">
                         </div>
                         <div class="col-2">
                             <label>Date To</label>
                         </div>
                         <div class="col-2">
-                            <input type="text" class="form-control" name="enddate" id="enddate" value="date('d-m-Y')" autocomplete="off">
+                            <input type="text" class="form-control" name="enddate" id="enddate" value="{{ date('Y-m-d') }}" autocomplete="off">
                         </div>
                         <div class="col-2">
                             <input type="submit" class="btn btn-success btn-lg" id="search" value="Search">

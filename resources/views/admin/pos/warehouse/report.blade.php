@@ -1,5 +1,5 @@
 @extends('admin.pos.master')
-@section('title', 'Stock Transfer Report')
+@section('title', 'Stock Report By Warehouse')
 @section('content')
 
 <div class="content-wrapper" style="min-height: 1662.75px;">
@@ -8,12 +8,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Stock Transfer Report</h1>
+            <h1>Stock Report By Warehouse</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Main Page</a></li>
-              <li class="breadcrumb-item active">Stock Transfer Report</li>
+              <li class="breadcrumb-item active">Stock Report By Warehouse</li>
             </ol>
           </div>
         </div>
@@ -24,55 +24,33 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row input-daterange mb-3">
-            <div class="col-md-3">
-                <input type="text" name="from_date" id="from_date" class="form-control" placeholder="Start Date">
-              </div>
-              <div class="col-md-3">
-                <input type="text" name="to_date" id="to_date" class="form-control" placeholder="End Date">
-              </div>
-              <div class="col-md-3">
-                <button type="button" name="filter" id="filter" class="btn btn-primary">Filter</button>
-                <button type="button" name="refresh" id="refresh" class="btn btn-default">Refresh</button>
-              </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">All Reports</h3>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Reports</h3>
+                    </div>
+                <!-- /.card-header -->
+                    <div class="card-body">
+                        <?php
+                            $length = count($trow);
+                            for($i=0; $i< $length; $i++){
+                                echo $trow[$i];
+                            }
+                        ?>
+                    </div>
+                <!-- /.card-body -->
                 </div>
-              <!-- /.card-header -->
-                <div class="card-body">
-                    <table id="reports" class="table table-sm table-bordered table-hover">
-                        <thead>
-                            <tr style="font-size: 13px;">
-                                <th>Date</th>
-                                <th>Warehouse</th>
-                                <th>Product</th>
-                                <th>Stock In</th>
-                                <th>Stock Out</th>
-                                <th>Remark</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                        
-                        </tbody>
-                        <tfoot>
-                            <tr style="font-size: 13px;">
-                                <th colspan="3">Total</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-              <!-- /.card-body -->
+                <!-- /.card -->
             </div>
-            <!-- /.card -->
         </div>
     </section>
     <!-- /.content -->
 </div>
-
+<style>
+    table {border-collapse: collapse;border-spacing: 0;width: 100%;border: 1px solid #ddd;}
+    th, td {text-align: left;padding: 8px;}
+    tr:nth-child(even){background-color: #f2f2f2}
+</style>
 @endsection
 @section('page-js-script')
 <script src="{{ asset('js/conversion.js')}}"></script>
@@ -86,11 +64,11 @@
         });
         $('#from_date').on('change',function(){
             $val=$('#from_date').val();
-            $('#from_date').val($val);
+            $('#from_date').val(etob($val));
         })
         $('#to_date').on('change',function(){
             $val=$('#to_date').val();
-            $('#to_date').val($val);
+            $('#to_date').val(etob($val));
         })
         load_data ();
         function load_data(from_date = '', to_date = ''){
@@ -126,8 +104,8 @@
                    
                     // Update footer by showing the total with the reference of the column index 
                     $( api.column( 2 ).footer() ).html('Total');
-                    $( api.column( 3 ).footer() ).html(inTotal);
-                    $( api.column( 4 ).footer() ).html(outTotal);
+                    $( api.column( 3 ).footer() ).html( etob(inTotal) );
+                    $( api.column( 4 ).footer() ).html( etob(outTotal) );
                 },
                 "precessing": true,
                 "serverSide": true,
@@ -139,8 +117,8 @@
                 // },
                 // "language": {
                 //     "paginate": {
-                //         "previous": "পূর্বের Page",
-                //         "next": "পরবর্তী Page",
+                //         "previous": "পূর্বের পাতা",
+                //         "next": "পরবর্তী পাতা",
                 //     },
                 //     "info": "মোট _TOTAL_ রেকর্ড থেকে _START_ থেকে _END_ পর্যন্ত দেখানো হচ্ছে",
                 //     "infoEmpty": "মোট 0 রেকর্ড থেকে 0 থেকে 0 পর্যন্ত দেখানো হচ্ছে",
@@ -161,7 +139,7 @@
                     {
                         "data": 'date',
                         "render": function (data) {
-                            return data;
+                            return etob(data);
                         }
                     },
                     {
@@ -179,13 +157,13 @@
                     {
                         "data": 'in_qnt',
                         "render": function (data) {
-                            return data;
+                            return etob(data);
                         }
                     },
                     {
                         "data": 'out_qnt',
                         "render": function (data) {
-                            return data;
+                            return etob(data);
                         }
                     },
                     {

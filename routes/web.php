@@ -236,6 +236,12 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('/admin/accounting/voucher', 'PosController@savevoucher')->name('admin.accounting.pages.savevoucher');
     Route::post('/admin/accounting/savehead', 'PosController@savehead')->name('admin.accounting.pages.savehead');
 
+    //User Role Management
+    Route::match(['get','post'],'/admin/users', 'UsersController@users')->name('all.users');
+    Route::get('/dashboard/edit_user/{user}','UsersController@editUser')->name('users.edit');
+    Route::post('/dashboard/users/update', 'UsersController@updateUser')->name('users.update');
+
+    Route::post('/dashboard/update_user_info','UsersController@update_user_info')->name('update_user_info');
 
 });
 

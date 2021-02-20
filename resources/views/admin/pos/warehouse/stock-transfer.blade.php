@@ -1,7 +1,19 @@
 @extends('admin.pos.master')
 @section('title', 'Stock Transfer')
 @section('content')
-
+@if($AccHeads <= 0 || $GenSettings ==null)
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
+                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+@else
 <div class="content-wrapper" style="min-height: 1662.75px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -180,6 +192,7 @@
         }
 </style>
 
+@endif
 @endsection
 @section('page-js-script')
 <script>

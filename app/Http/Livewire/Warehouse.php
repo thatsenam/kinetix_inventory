@@ -29,9 +29,7 @@ class Warehouse extends Component
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
-            'city' => 'nullable',
-            'user_id' => auth()->user()->id,
-            'client_id' => auth()->user()->client_id
+            'city' => 'nullable'
         ]);
 
         ModelsWarehouse::create($validatedDate);

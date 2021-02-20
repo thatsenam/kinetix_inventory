@@ -375,13 +375,12 @@ class PosSalesController extends Controller
             ]);
 
             AccHead::create([
-                // 'cid' => $cust_id,
+                'cid' => $cust_id,
+                'parent_head' => "Asset",
+                'sub_head' => "Customers Receivable",
                 'head' => $cust_name." ".$cust_phone,
-                // 'user' => $user,
-
             ]);
         }
-
 
         if($due < 0){
             $payment = ($payment + $due);

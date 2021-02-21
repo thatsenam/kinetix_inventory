@@ -29,6 +29,7 @@ class CategoryController extends Controller
             $category->url = $slug;
             $category->featured = $type;
             $category->status = $data['cat_status'];
+            $category->vat = $data['inputVat'];
 
             if($request->hasFile('inputImage')){
                 $file = $request->file('inputImage');
@@ -73,7 +74,7 @@ class CategoryController extends Controller
             if($slug == ''){
                 $slug = Str::slug($req->cat_name);
             }
-            Category::where(['id'=>$id])->update(['name'=>$data['cat_name'],'description'=>$data['cat_desc'],'parent_id'=>$data['parent_cat'],'featured'=>$data['cat_type'],'status'=>$data['cat_status'],'url'=>$slug,]);
+            Category::where(['id'=>$id])->update(['name'=>$data['cat_name'],'description'=>$data['cat_desc'],'parent_id'=>$data['parent_cat'],'featured'=>$data['cat_type'],'status'=>$data['cat_status'],'vat'=>$data['vat'],'url'=>$slug,]);
             $Ucat = Category::find($id);
             // dd($Ucat);
             if($req->hasFile('inputImage')){

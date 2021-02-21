@@ -40,6 +40,7 @@
                     @php( $type = $cat->featured )
                     @php( $url = $cat->url )
                     @php( $image = $cat->image )
+                    @php( $vat = $cat->vat ?? '' )
                                         
                 @endforeach
                 <div class="card card-primary">
@@ -71,6 +72,10 @@
                                         {{ $i = $i + 2 }}
                                     @endfor
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="vat">Category I.V.A</label>
+                                <input type="text" name="vat" class="form-control" id="vat" value="{{$vat}}">
                             </div>
                             <div class="form-group">
                                 @if($image)

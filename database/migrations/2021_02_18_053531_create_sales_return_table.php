@@ -24,6 +24,7 @@ class CreateSalesReturnTable extends Migration
             $table->decimal('tprice', 12);
             $table->decimal('total', 12);
             $table->decimal('cash_return', 12)->nullable();
+            $table->decimal('vat_amount',12)->nullable();
             $table->date('date');
             $table->string('remarks')->nullable();
             $table->string('user', 191)->nullable();

@@ -88,7 +88,7 @@
                                 <div class="row" style="height:350px; overflow-y: auto; ">
                                     <div class="col-12" style=" padding-right: 0 !important;">
                                         <table class="price-table custom-table" style="">
-                                            <tr><th>SL</th><th style="width: 100px;">Item</th><th>price</th><th>Qty</th><th>Total</th><th>Delete</th></tr>
+                                            <tr><th>SL</th><th style="width: 100px;">Item</th><th>price</th><th>Qty</th><th>I.V.A</th><th>Total</th><th>Delete</th></tr>
                                             
                                         </table>
                                     </div>
@@ -138,8 +138,8 @@
                                 <div class="row">
                                     <div class="col-6">
                                       <div class="form-group">
-                                         <label>Payment</label>
-                                         <input type="text" name="payment" id="payment" class="form-control" placeholder ="">
+                                         <label>Total I.V.A</label>
+                                         <input type="text" name="total_vat" id="total_vat" class="form-control" readonly="true" value="0">
                                       </div>
                                     </div>
                                     <div class="col-6">
@@ -153,7 +153,13 @@
                                 </div>
                                 
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-6">
+                                      <div class="form-group">
+                                         <label>Payment</label>
+                                         <input type="text" name="payment" id="payment" class="form-control" placeholder ="">
+                                      </div>
+                                    </div>
+                                    <div class="col-6">
                                         <div style="width: 120px; margin: 50px auto;">
                                             <input type="button" class="btn btn-success" id="pur_save" value="Save">
                                         </div>
@@ -205,6 +211,7 @@
 
     var product_id;
     var product_serial;
+    var product_vat;
     var serial_qty;
     var serial_array = {};
 
@@ -225,22 +232,25 @@
         $("#discount").on("change keyup paste", function(){
                 
             var amount = Number($('#amount').val());
+            var total_vat = Number($('#total_vat').val());
                     
             var discount = Number($(this).val());
                     
-            $('#total').val(amount - discount); 
+            $('#total').val(amount +total_vat - discount); 
                     
         });
         
         $("#payment").on("change keyup paste", function(){
                 
             var amount = Number($('#amount').val());
+
+            var total_vat = Number($('#total_vat').val());
                     
             var payment = Number($(this).val());
             
             var discount = Number($('#discount').val());
                     
-            $('#total').val(amount - payment - discount); 
+            $('#total').val(amount +total_vat - payment - discount); 
                     
         });
         
@@ -281,6 +291,7 @@
 
                         product_id = id;
                         product_serial = $(this).find(".active").attr("data-serial");
+                        product_vat = $(this).find(".active").attr("data-vat");
 
                         $('#search').val(name);
                         $('#pid_hid').val(id);
@@ -660,8 +671,9 @@
                 }
                 
                 totalPrice = (qnt * price); 
+                var total_vat= totalPrice*product_vat/100;
                 
-                add_product_to_table(id, name, qnt, price, totalPrice);
+                add_product_to_table(id, name, qnt, price, totalPrice, total_vat);
                 
                 $('#search').focus();
             }
@@ -702,6 +714,7 @@
                if($(this).attr("class") == 'price'){price = $(this).html(); cartData.push(price);}
               
                if($(this).attr("class") == 'totalPriceTd'){totalPriceTd = $(this).html(); cartData.push(totalPriceTd);} 
+               if($(this).attr("class") == 'totalVatTd'){totalVatTd = $(this).html(); cartData.push(totalVatTd);} 
                
                i = i +1;
            });
@@ -726,6 +739,7 @@
             fieldValues.discount = $('#discount').val();
             fieldValues.payment = $('#payment').val();
             fieldValues.total = $('#total').val();
+            fieldValues.total_vat = $('#total_vat').val();
             
             
            
@@ -777,6 +791,7 @@
                         $('#discount').val("0");
                         $('#total').val("0");
                         $('#payment').val("0");
+                        $('#total_vat').val("0");
                        
                         $('#hid_total').val("0");
                         
@@ -798,7 +813,7 @@
                         $('#payment').val("0");
                        
                         $('#hid_total').val("0");
-                        
+                        $('#total_vat').val("0");
                         $('.price-table td').remove();
                         
                         $('#pur_save').attr('disabled', false);
@@ -829,19 +844,24 @@
             var totalPriceTd = Number($(this).closest('tr').find('.totalPriceTd').html());
         
             var productID = Number($(this).closest('tr').find(".name").attr('data-prodid'));
+            var totalVatTd = Number($(this).closest('tr').find(".totalVatTd").html());
 
             delete serial_array[productID];
             
             var grandTotal = Number($('#total').val());
         
             var totalPrice = $('#hid_total').val();
+            var totalVatField = $('#total_vat').val();
             
             
             totalPrice = Number(totalPrice - totalPriceTd);
+            var totalVat = Number(totalVatField - totalVatTd);
             
             grandTotalPrice = Number(grandTotal - totalPriceTd);
             
             $('#hid_total').val(totalPrice);
+            
+            $('#total_vat').val(totalVat);
             
             $('#total').val(grandTotalPrice);
 
@@ -854,10 +874,11 @@
         $('#discount').on('blur', function(e){
             
             var total = Number($('#hid_total').val());
+            var total_vat = Number($('#total_vat').val());
     
             var discount = Number($(this).val());
             
-            var total = Number(total - discount);
+            var total = Number(total - discount +total_vat);
             
             $('#total').val(total);
             
@@ -867,12 +888,13 @@
         $('#payment').on('blur', function(e){
             
             var total = Number($('#hid_total').val());
+            var total_vat = Number($('#total_vat').val());
             
             var discount = Number($('#discount').val());
     
             var payment = Number($(this).val());
             
-            var total = Number((total - payment) - discount);
+            var total = Number((total +total_vat - payment) - discount);
             
             $('#total').val(total);
             
@@ -931,7 +953,7 @@
       
     });
     
-    function selectProducts(id, name, price, serial){
+    function selectProducts(id, name, price, serial, vat){
 
         $('#search').val(name);
         $('#pid_hid').val(id);
@@ -939,6 +961,7 @@
         
         product_id = id;
         product_serial = serial;                                    
+        product_vat = vat;                                    
 
         $("#price").focus();
         $("#products_div").hide();
@@ -956,27 +979,30 @@
     
     var sl = 1;
     
-    function add_product_to_table(id, name, qnt, price, total){
+    function add_product_to_table(id, name, qnt, price, total, totalVat){
         
             var id = id;
             var name = name;
             var price = Number(price);
             var total = Number(total);
+            var totalVat = Number(totalVat);
         
             
             $('.price-table').show();
             
-            $('.price-table').append("<tr><td>"+sl+"</td><td data-prodid='"+id+"' style='width:200px;' class='name'>"+name+"</td><td class='price'>"+price+"</td><td class='qnt'>"+qnt+"</td><td class='totalPriceTd'>"+total+"</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
+            $('.price-table').append("<tr><td>"+sl+"</td><td data-prodid='"+id+"' style='width:200px;' class='name'>"+name+"</td><td class='price'>"+price+"</td><td class='qnt'>"+qnt+"</td><td class='totalVatTd'>"+totalVat+"</td><td class='totalPriceTd'>"+total+"</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
             
             var totalPrice = Number($('#hid_total').val());
+            var totalVatField = Number($('#total_vat').val());
             
             totalPrice = Number(totalPrice + total);
+            totalVatField = Number(totalVatField + totalVat);
         
             $('#hid_total').val(totalPrice);
-            
+            $('#total_vat').val(totalVatField);
             $('#amount').val(totalPrice);
             
-            $('#total').val(totalPrice);
+            $('#total').val(totalPrice+totalVatField);
             
             $('#pid_hid').val("0");
             $('#search').val("");

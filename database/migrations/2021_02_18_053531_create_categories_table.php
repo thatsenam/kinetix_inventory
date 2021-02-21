@@ -22,6 +22,7 @@ class CreateCategoriesTable extends Migration
             $table->integer('featured')->nullable();
             $table->tinyInteger('status');
             $table->string('image')->nullable();
+            $table->decimal('vat',12)->default(0.00);
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('client_id')->nullable();

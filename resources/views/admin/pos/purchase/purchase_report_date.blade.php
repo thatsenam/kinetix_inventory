@@ -57,6 +57,7 @@
                                         <th>Supplier</th>
                                         <th>Supp Invocie</th>
                                         <th>Discount</th>
+                                        <th>Vat</th>
                                         <th>Amount</th>
                                         <th>Total</th>
                                         <th>Payment</th>
@@ -68,7 +69,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="6">Total</th>
+                                        <th colspan="7">Total</th>
                                         <th></th>
                                         <th></th>
                                         <th colspan="2"></th>
@@ -228,33 +229,33 @@
         
                     // Total over all pages
                     amount = api
-                        .column( 6 )
+                        .column( 7 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
                     total = api
-                        .column( 7 )
+                        .column( 8 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
                     // Payment Total
                     payTotal = api
-                        .column( 8 )
+                        .column( 9 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
         
                     // Update footer
-                    $( api.column( 6 ).footer() ).html(
+                    $( api.column( 7 ).footer() ).html(
                         amount
                     );
-                    $( api.column( 7 ).footer() ).html(
+                    $( api.column( 8 ).footer() ).html(
                         total
                     );
-                    $( api.column( 8 ).footer() ).html(
+                    $( api.column( 9 ).footer() ).html(
                         payTotal
                     );
                 },
@@ -269,6 +270,7 @@
                     {data:'name',},
                     {data:'supp_inv',},
                     {data:'discount',},
+                    {data:'vat_amount',},
                     {data:'amount',},
                     {data:'total',},
                     {data:'payment',},

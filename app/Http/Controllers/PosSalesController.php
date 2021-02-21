@@ -54,8 +54,8 @@ class PosSalesController extends Controller
 
         $s_text = $req['s_text'];
 
-        $products = DB::table('products')->where('client_id',auth()->user()->client_id)
-            ->where('product_name', 'like', '%'.$s_text.'%')->limit(9)->get(); ?>
+        $products = DB::table('products')->where('products.client_id',auth()->user()->client_id)
+            ->where('product_name', 'like', '%'.$s_text.'%')->join('categories','categories.id','products.cat_id')->limit(9)->get(); ?>
 
 
         <ul class='products-list sugg-list' style='width:100%;'>
@@ -82,6 +82,7 @@ class PosSalesController extends Controller
             $price = $row->after_pprice;
             $serial = $row->serial;
             $warranty = $row->warranty;
+            $vat = $row->vat;
 
             if(empty($price)){
                 $price = $row->before_price;
@@ -90,7 +91,7 @@ class PosSalesController extends Controller
 
             $url = config('global.url'); ?>
 
-            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $warranty; ?>", "<?php echo $stock; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?>'>
+            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $warranty; ?>", "<?php echo $stock; ?>", "<?php echo $vat; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?>' data-vat='<?php echo $vat; ?>'>
             <img src= "<?php echo $url;?>/images/products/<?php echo $image;?>" style="width:60px; height:60px;"> &nbsp; <?php echo $name; ?> | <?php echo $price; ?>
             </li>
 
@@ -183,21 +184,21 @@ class PosSalesController extends Controller
 
                 if($warranty)
                 {
-                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
                 else
                 {
-                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
             }
             else{
                 if($warranty)
                 {
-                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
                 else
                 {
-                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
             }
         }
@@ -412,6 +413,7 @@ class PosSalesController extends Controller
             'amount' => $amount,
             'gtotal' => $gtotal,
             'payment' => $payment,
+            'vat_amount' => $vat,
             'due' => $due,
             'remarks' => $remarks,
             'date' => $date,
@@ -443,6 +445,7 @@ class PosSalesController extends Controller
             $j1 = $i+1;
             $j2 = $i+2;
             $j3 = $i+3;
+            $j4 = $i+4;
 
              ///////Adjust Stock/////////
 
@@ -457,7 +460,8 @@ class PosSalesController extends Controller
                 'pid' => $take_cart_items[$j],
                 'qnt' => $take_cart_items[$j2],
                 'price' => $take_cart_items[$j1],
-                'total' => $take_cart_items[$j3],
+                'vat' => $take_cart_items[$j3],
+                'total' => $take_cart_items[$j4],
                 // 'user' => $user,
             ]);
 
@@ -472,7 +476,7 @@ class PosSalesController extends Controller
                 'client_id' => auth()->user()->client_id,
             ]);
 
-            $i = $i + 4;
+            $i = $i + 5;
         }
 
 

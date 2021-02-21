@@ -176,6 +176,7 @@
     var product_serial;
     var serial_qty;
     var serial_array = {};
+    var product_vat;
 
     $(document).ready(function(){
         
@@ -216,6 +217,7 @@
 
                         product_id = id;
                         product_serial = $(this).find(".active").attr("data-serial");
+                        product_vat = $(this).find(".active").attr("data-vat");
                         
                         $('#search').val(name);
                         $('#pid_hid').val(id);
@@ -562,8 +564,10 @@
                 }
                 
                 totalPrice = (qnt * price); 
-                
-                add_product_to_table(id, name, qnt, price, totalPrice);
+                var total_vat= totalPrice*product_vat/100;
+                totalPrice=totalPrice+total_vat;
+
+                add_product_to_table(id, name, qnt, price, totalPrice, total_vat);
                 
                 $('#search').focus();
             }
@@ -791,13 +795,14 @@
       
     });
     
-    function selectProducts(id, name, price, serial){
+    function selectProducts(id, name, price, serial, vat){
 
         $('#search').val(name);
         $('#pid_hid').val(id);
         $('#price').val(price);
         product_id = id;
         product_serial = serial;  
+        product_vat = vat;  
 
         $("#price").focus();
         $("#products_div").hide();

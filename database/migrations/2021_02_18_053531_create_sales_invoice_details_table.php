@@ -20,6 +20,7 @@ class CreateSalesInvoiceDetailsTable extends Migration
             $table->integer('qnt');
             $table->decimal('price', 12);
             $table->decimal('total', 12);
+            $table->decimal('vat',12)->nullable();
             $table->string('user');
             $table->string('lkey')->nullable();
             $table->timestamp('created_at')->useCurrent();

@@ -21,6 +21,7 @@ class CreatePurchaseReturnsTable extends Migration
             $table->integer('qnt');
             $table->integer('price');
             $table->decimal('total', 12);
+            $table->decimal('vat_amount',12)->nullable();
             $table->integer('sid');
             $table->string('user', 191)->nullable()->default('0');
             $table->string('lkey', 191)->nullable()->default('0');

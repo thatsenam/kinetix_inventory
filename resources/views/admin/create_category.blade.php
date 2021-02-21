@@ -78,6 +78,10 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="inputVat">Category I.V.A</label>
+                                <input type="text" name="inputVat" class="form-control" id="inputVat">
+                            </div>
+                            <div class="form-group">
                                 <label for="inputImage">Category Image</label>
                                 <div class="custom-file">
                                     <input type="file" name="inputImage" class="custom-file-input" id="inputImage">

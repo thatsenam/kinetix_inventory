@@ -24,6 +24,7 @@ class CreateSalesInvoiceTable extends Migration
             $table->decimal('gtotal', 12);
             $table->decimal('payment', 12)->nullable()->default(0.00);
             $table->decimal('due', 12)->default(0.00);
+            $table->decimal('vat_amount',12)->nullable();
             $table->string('remarks');
             $table->date('date');
             $table->string('user', 191)->nullable();

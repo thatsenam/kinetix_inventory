@@ -21,6 +21,7 @@ class CreatePurchasePrimaryTable extends Migration
             $table->decimal('discount', 11);
             $table->decimal('amount', 12);
             $table->decimal('total', 12);
+            $table->decimal('vat_amount',12)->nullable();
             $table->decimal('payment', 12);
             $table->date('date');
             $table->string('user', 155)->nullable();

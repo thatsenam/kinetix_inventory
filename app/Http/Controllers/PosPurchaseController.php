@@ -45,12 +45,13 @@ class PosPurchaseController extends Controller
 
         $s_text = $req['s_text'];
         $products = DB::table('products')
-            ->where('client_id',auth()->user()->client_id)
+            ->where('products.client_id',auth()->user()->client_id)
             ->where('product_name', 'like', '%'.$s_text.'%')
         ->orWhere('product_name', $s_text)
         ->where('product_name', '!=', '')
 
         ->orderByRaw("(product_name = '{$s_text}') desc, length(product_name)")
+        ->join('categories','categories.id','products.cat_id')
         ->limit(9)->get(); ?>
 
         <ul class='products-list sugg-list'>
@@ -62,6 +63,7 @@ class PosPurchaseController extends Controller
             $id = $row->id;
             $name = $row->product_name;
             $serial = $row->serial;
+            $vat = $row->vat;
 
             $products_price = DB::table('purchase_details')
                 ->where('client_id',auth()->user()->client_id)
@@ -77,7 +79,7 @@ class PosPurchaseController extends Controller
 
             $url = config('global.url'); ?>
 
-            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>'><?php echo $name; ?> </li>
+            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $vat; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' data-vat='<?php echo $vat; ?>'><?php echo $name; ?> </li>
 
             <?php
 
@@ -169,6 +171,7 @@ class PosPurchaseController extends Controller
         $amount = $fieldValues['amount'];
         $payment = $fieldValues['payment'];
         $total = $fieldValues['total'];
+        $total_vat = $fieldValues['total_vat'];
         $date = $fieldValues['date'];
         $user = Auth::id();
 
@@ -192,7 +195,8 @@ class PosPurchaseController extends Controller
             'supp_inv' => $supp_memo,
             'discount' => $discount,
             'amount' => $amount,
-            'total' => $total,
+            'total' => $amount+$total_vat-$discount,
+            'vat_amount' => $total_vat,
             'payment' => $payment,
             'date' => $date,
             'user' => $user
@@ -223,6 +227,7 @@ class PosPurchaseController extends Controller
             $j2 = $i+2;
             $j3 = $i+3;
             $j4 = $i+4;
+            $j5 = $i+5;
 
             if($take_cart_items[$j] == 0){
 
@@ -254,7 +259,8 @@ class PosPurchaseController extends Controller
                 'pid' => $pid,
                 'qnt' => $take_cart_items[$j3],
                 'price' => $take_cart_items[$j2],
-                'total' => $take_cart_items[$j4],
+                'vat' => $take_cart_items[$j4],
+                'total' => $take_cart_items[$j5],
                 'user' => $user
             ]);
 
@@ -270,7 +276,7 @@ class PosPurchaseController extends Controller
             ]);
 
 
-            $i = $i + 5;
+            $i = $i + 6;
         }
 
         //////Save to Accounts//////

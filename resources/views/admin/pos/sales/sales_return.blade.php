@@ -5,6 +5,20 @@
 
 @section('content')
 
+@if($AccHeads <= 0 || $GenSettings ==null)
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
+                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+@else
+
 <div class="main-panel">
     <div class="content-wrapper">
     <!-- Page Title Header Starts-->
@@ -26,6 +40,7 @@
                             <div class="row">
                                 <div class="col-md-7">
                                     <div class="row">
+                                    @if($warehouses->count()>1)
                                         <div class="col-5">
                                             <select name="warehouse_id" id="warehouse_id" class="form-control">
                                                 <option value="" disabled selected>Select Warehouse</option>
@@ -50,16 +65,33 @@
                                                 <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                             </div>
                                         </div>
-                                        
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-5">
-                                            <div class="form-group"  style="position: relative;">
-                                                <input type="text" name="barcode" id="barcode" class="form-control" placeholder="Barcode">
+                                    @else
+                                        <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
+                                        <div class="col-6">
+                                            <div class="form-group" style="position: relative;">
+                                                <input type="text" name="cust_phone" id="cust_phone" class="form-control" placeholder="Customer Phone">
+                                                <div id="cust_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
+                                            
+                                                <input type="hidden" name="cust_id" id="cust_id" value="0" class="form-control">
+                                                <input type="hidden" name="cust_name" id="cust_name" value="" class="form-control">
                                                 
                                             </div>
                                         </div>
-                                        <div class="col-7">
+                                        <div class="col-6">
+                                            <div class="form-group"  style="position: relative;">
+                                                <input type="text" name="invoice" id="invoice" class="form-control" placeholder="Invoice">
+                                                <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="form-group"  style="position: relative;">
+                                                <input type="text" name="barcode" id="barcode" class="form-control" placeholder="Barcode">
+                                            </div>
+                                        </div>
+                                        <div class="col-9">
                                             <div class="form-group" style="position: relative;">
                                                 <input type="text" class="form-control" placeholder="Search Product" id="search">
                                                 <div id="products_div" style="display: none; position: absolute; top: 30px; left: 0; width: 100%; z-index: 999;"></div>
@@ -187,7 +219,9 @@
           <!-- content-wrapper ends -->
           
 </div>
-        <!-- main-panel ends -->
+<!-- main-panel ends -->
+
+@endif
     
 @endsection
 

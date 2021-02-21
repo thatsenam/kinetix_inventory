@@ -1,7 +1,19 @@
 @extends('admin.pos.master')
         
 @section('content')
-
+@if($AccHeads <= 0 || $GenSettings ==null)
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
+                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+@else
 
 <div class="content-wrapper">
     <div class="row">
@@ -16,6 +28,7 @@
                     <div class="row">
                         <div class="col-md-7">
                             <div class="row">
+                            @if($warehouses->count()>1)
                                 <div class="col-5">
                                     <select name="warehouse_id" id="warehouse_id" class="form-control">
                                         <option value="" disabled selected>Select Warehouse</option>
@@ -37,6 +50,22 @@
                                         <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                     </div>
                                 </div>
+                            @else
+                                <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
+                                <div class="col-8">
+                                    <div class="form-group" style="position: relative;">
+                                        <input type="text" name="supp_name" id="supp_name" class="form-control" placeholder="Supplier Name">
+                                        <div id="supp_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
+                                        <input type="hidden" name="supp_id" id="supp_id" value="0" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group"  style="position: relative;">
+                                        <input type="text" name="supp_memo" id="supp_memo" class="form-control" placeholder="Memo No">
+                                        <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
+                                    </div>
+                                </div>
+                            @endif
                             </div>
                             <div class="row">
                                 <div class="col">
@@ -135,6 +164,8 @@
       </div>
     </div>
 </div>
+@endif
+
 @endsection
 
 @section('page-js-script')
@@ -145,6 +176,7 @@
     var product_serial;
     var serial_qty;
     var serial_array = {};
+    var product_vat;
 
     $(document).ready(function(){
         
@@ -185,6 +217,7 @@
 
                         product_id = id;
                         product_serial = $(this).find(".active").attr("data-serial");
+                        product_vat = $(this).find(".active").attr("data-vat");
                         
                         $('#search').val(name);
                         $('#pid_hid').val(id);
@@ -531,8 +564,10 @@
                 }
                 
                 totalPrice = (qnt * price); 
-                
-                add_product_to_table(id, name, qnt, price, totalPrice);
+                var total_vat= totalPrice*product_vat/100;
+                totalPrice=totalPrice+total_vat;
+
+                add_product_to_table(id, name, qnt, price, totalPrice, total_vat);
                 
                 $('#search').focus();
             }
@@ -760,13 +795,14 @@
       
     });
     
-    function selectProducts(id, name, price, serial){
+    function selectProducts(id, name, price, serial, vat){
 
         $('#search').val(name);
         $('#pid_hid').val(id);
         $('#price').val(price);
         product_id = id;
         product_serial = serial;  
+        product_vat = vat;  
 
         $("#price").focus();
         $("#products_div").hide();

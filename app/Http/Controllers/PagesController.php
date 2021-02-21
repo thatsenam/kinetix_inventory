@@ -82,6 +82,19 @@ class PagesController extends Controller
     }
 
     public function warehouse_manage(){
+        $countWarehouse = DB::table('warehouses')->where('client_id',auth()->user()->client_id)->count();
+
+        if($countWarehouse<1){
+            $getAddress = DB::table('general_settings')->select('site_address','phone')->where('client_id',auth()->user()->client_id)->first();
+            Warehouse::create([
+                'name' => "Sales Center",
+                'address' => $getAddress->site_address,
+                'phone' => $getAddress->phone,
+                'city' => $getAddress->site_address,
+                'user_id' => auth()->user()->id,
+                'client_id' => auth()->user()->client_id
+            ]);
+        }
         return view('admin.pos.warehouse.manage-warehouse');
     }
 
@@ -168,8 +181,23 @@ class PagesController extends Controller
     }
 
     public function warehouse_report(){
-        $stocks = DB::table('stocks')->select('warehouse_id')->groupBy('warehouse_id')->get();
+        $countWarehouse = DB::table('warehouses')->where('client_id',auth()->user()->client_id)->count();
+
+        if($countWarehouse<1){
+            $getAddress = DB::table('general_settings')->select('site_address','phone')->where('client_id',auth()->user()->client_id)->first();
+            Warehouse::create([
+                'name' => "Sales Center",
+                'address' => $getAddress->site_address,
+                'phone' => $getAddress->phone,
+                'city' => $getAddress->site_address,
+                'user_id' => auth()->user()->id,
+                'client_id' => auth()->user()->client_id
+            ]);
+        }
+
+        $stocks = DB::table('stocks')->select('warehouse_id')->groupBy('warehouse_id')->where('client_id',auth()->user()->client_id)->get();
         $trow = array();
+        $tid = 1;
         foreach($stocks as $key=>$value){
             $wid = $value->warehouse_id;
             $getWname = Warehouse::where('id',$wid)->first();
@@ -185,18 +213,17 @@ class PagesController extends Controller
             $priceType = $getPriceType->profit_clc;
 
             $trowDiv = '<h4>'.$wname.'</h4>';
-            $trowDiv .= '<div class="mb-4" style="overflow-x:auto;"><table><tr><th>#</th><th>Product</th><th>Price</th><th>Current Stock</th><th>Price</th></tr>';
-                $TotalstockValue = 0;
+            $trowDiv .= '<div class="mb-4"><table id="'.$tid++.'" class="display table-bordered table-hover"><thead><tr><th>নং</th><th>পণ্য</th><th>একক মূল্য</th><th>বর্তমান স্টক</th><th>মূল্য</th></tr></thead>';
+            $TotalstockValue = 0;
             $i = 1;
             foreach($getStocks as $index=>$row){
                 $pid = $row->pid;
-                if($priceType = "1"){
+                if($priceType = "average price"){
                     $row->price = DB::table('purchase_details')->where('pid', $pid)->avg('price');
-                    $row->price = round($row->price, 2);
+                    $row->price = round($row->price,2);
                 }else{
                     $getsprice = DB::table('purchase_details')->select('price')->where('pid', $pid)->latest('created_at')->first();
-                    $row->price = $getsprice->price;
-                    $row->price = round($row->price, 2);
+                    $row->price = round($getsprice->price,2);
                 }
                 $instock = DB::table('stocks')->where('warehouse_id',$wid)->where('product_id',$pid)->sum('in_qnt');
                 $outstock = DB::table('stocks')->where('warehouse_id',$wid)->where('product_id',$pid)->sum('out_qnt');
@@ -205,9 +232,9 @@ class PagesController extends Controller
 
                 $TotalstockValue +=$row->stockValue;
 
-                $trowDiv .= '<tr><td>'.$i++.'</td><td>'.$row->product_name.'</td><td>'.$row->price.'</td><td>'.$row->stock.'</td><td>'.$row->stockValue.'</td></tr>';
+                $trowDiv .= '<tbody><tr><td>'.$i++.'</td><td>'.$row->product_name.'</td><td>'.$row->price.'</td><td>'.$row->stock.'</td><td>'.$row->stockValue.'</td></tr>';
             }
-            $trowDiv .= '<tr><td colspan="4" class="text-right">All Total =</td><td>'.$TotalstockValue.'</td></tr></table></div>';
+            $trowDiv .= '<tr><td colspan="4" class="text-right">সর্বমোট মূল্য =</td><td>'.$TotalstockValue.'</td></tr></tbody></table></div>';
 
             $trow[] = $trowDiv;
 

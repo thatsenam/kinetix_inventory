@@ -1,6 +1,18 @@
 @extends('layouts.admin.app_pos')
 @section('content')
-
+@if($AccHeads <= 0 || $GenSettings ==null)
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
+                        <h1>অনুগ্রহপূর্বক সাধারণ সেটিংস্‌ এবং হিসাবরক্ষণ খাত থেকে ডেমো খাত যুক্ত করুন!</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+@else
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -64,6 +76,10 @@
                                         @endif
                                     <?php } }?>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputVat">Category I.V.A</label>
+                                <input type="text" name="inputVat" class="form-control" id="inputVat">
                             </div>
                             <div class="form-group">
                                 <label for="inputImage">Category Image</label>
@@ -160,4 +176,5 @@
     })
 </script>
 
+@endif
 @endsection

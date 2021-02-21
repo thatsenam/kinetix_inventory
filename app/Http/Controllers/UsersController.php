@@ -10,6 +10,8 @@ use App\UserProfile;
 
 Use Session;
 Use App\Order;
+use App\UserProfiles;
+use Spatie\Permission\Models\Permission;
 
 class UsersController extends Controller
 {
@@ -226,10 +228,51 @@ class UsersController extends Controller
         $shipAddress = $request['shipAddress'];
         if(Auth::check()) {
             $user_id = Auth::id();
-            UserProfile::where('user_id',$user_id)->update(['shipping_name' => $ShipName, 'shipping_address' => $shipAddress, 'shipping_phone' => $shipPhone]);
+            UserProfiles::where('user_id',$user_id)->update(['shipping_name' => $ShipName, 'shipping_address' => $shipAddress, 'shipping_phone' => $shipPhone]);
 
             echo 'Shipping Info Updated Successfully!';
         }
+    }
+
+    public function users(){
+        $title = 'User Management';
+        $users = User::where('client_id', auth()->user()->client_id)->paginate(10);
+        return view('admin.users.users', compact(['users', 'title']));
+    }
+
+    public function editUser(User $user){
+        $title = 'Edit User';
+        $access = \PermissionAccess::getAccessList();
+
+        return view('admin.users.users_edit', compact(['user', 'title', 'access']));
+    }
+
+    public function updateUser(Request $request)
+    {
+        $user = User::findOrFail($request->id);
+        $user->access = $request->access;
+
+        $permissions = $request->access ?? [];
+
+        $user->revokePermissionTo(\PermissionAccess::getAccessList());
+
+        foreach ($permissions as $p) {
+            try {
+                $p = Permission::create(['name' => $p]);
+            } catch (\Exception $e) {
+                //dd('bal',$e);
+            }
+            $user->givePermissionTo($p);
+        }
+
+        $user->name = $request->name;
+        $user->type = $request->userType;
+        $user->email = $request->email;
+        $user->save();
+
+//      dd($request->all());
+        return redirect()->route('all.users')->with('message', 'User edited successfully!');
+
     }
 
 }

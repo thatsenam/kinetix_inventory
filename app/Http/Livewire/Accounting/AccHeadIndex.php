@@ -126,180 +126,118 @@ class AccHeadIndex extends Component
             'sub_head' => 'Current Asset',
             'head' => 'Cash In Hand',
         ];
+
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Asset',
+            'sub_head' => 'Current Asset',
+            'head' => "Temporary Investment",
+        ];
+
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Asset',
+            'sub_head' => 'Fixed Asset',
+            'head' => "Furniture",
+        ];
+
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Asset',
+            'sub_head' => 'Fixed Asset',
+            'head' => "Investment",
+        ];
+
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => "Owner's Equity",
+            'sub_head' => "Capital",
+            'head' => "Capital A/C Chairman",
+        ];
         
         $items[] = [
             'user_id' => $user_id,
             'client_id' => $client_id,
-            'parent_head' => 'Income',
-            'sub_head' => 'Direct Income',
-            'head' => 'Sales',
+            'parent_head' => 'Expense',
+            'sub_head' => "Office Expense",
+            'head' => "Electricity Bill",
         ];
 
         $items[] = [
             'user_id' => $user_id,
             'client_id' => $client_id,
             'parent_head' => 'Expense',
-            'sub_head' => 'Indirect Expense',
-            'head' => 'Sales Return',
+            'sub_head' => "Office Expense",
+            'head' => "House Rent",
         ];
-        
+
         $items[] = [
             'user_id' => $user_id,
             'client_id' => $client_id,
             'parent_head' => 'Expense',
-            'sub_head' => 'Direct Expense',
-            'head' => 'Purchase',
+            'sub_head' => "Office Expense",
+            'head' => "Entertainment",
         ];
-        
+
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Expense',
+            'sub_head' => "Operational Expense",
+            'head' => "Transport Cost",
+        ];
+
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Expense',
+            'sub_head' => "Operational Expense",
+            'head' => "Labour Cost",
+        ];
+
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Expense',
+            'sub_head' => "Operational Expense",
+            'head' => "Other Cost",
+        ];
+
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Expense',
+            'sub_head' => "Purchase",
+            'head' => "Purchase",
+        ];
+
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Expense',
+            'sub_head' => "Purchase",
+            'head' => "Purchase Return",
+        ];
+
         $items[] = [
             'user_id' => $user_id,
             'client_id' => $client_id,
             'parent_head' => 'Income',
-            'sub_head' => 'Indirect Income',
-            'head' => 'Purchase Return',
+            'sub_head' => "Sales",
+            'head' => "Sales",
         ];
 
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Asset',
-        //     'sub_head' => 'Current Asset',
-        //     'head' => 'Cash',
-        // ];
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Asset',
-        //     'sub_head' => 'Current Asset',
-        //     'head' => "Temporary Investment",
-        // ];
-
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Asset',
-        //     'sub_head' => 'Current Asset',
-        //     'head' => 'Insurance',
-        // ];
-
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Income',
-        //     'sub_head' => 'Revenue',
-        //     'head' => 'Loan Insurance',
-        // ];
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Income',
-        //     'sub_head' => 'Revenue',
-        //     'head' => 'Service Charge',
-        // ];
-
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Income',
-        //     'sub_head' => 'Revenue',
-        //     'head' => 'Loan Interest',
-        // ];
-
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Income',
-        //     'sub_head' => 'Revenue',
-        //     'head' => 'Loan Form',
-        // ];
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Expense',
-        //     'sub_head' => 'Expense',
-        //     'head' => 'DPS Interest',
-        // ];
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Expense',
-        //     'sub_head' => 'Expense',
-        //     'head' => 'FDR Interest',
-        // ];
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Asset',
-        //     'sub_head' => 'FixedAsset',
-        //     'head' => "Furniture",
-        // ];
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Asset',
-        //     'sub_head' => 'FixedAsset',
-        //     'head' => "Investment",
-        // ];
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Asset',
-        //     'sub_head' => 'Accounts Receivable',
-        //     'head' => "Member Loan",
-        // ];
-
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Liabilities',
-        //     'sub_head' => 'Accounts Payable',
-        //     'head' => "FDR",
-        // ];
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Liabilities',
-        //     'sub_head' => 'Accounts Payable',
-        //     'head' => "Savings",
-        // ];
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Liabilities',
-        //     'sub_head' => 'Accounts Payable',
-        //     'head' => "DPS",
-        // ];
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Owner Equity',
-        //     'sub_head' => "Capital",
-        //     'head' => "Capital A/C CEO",
-        // ];
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Owner Equity',
-        //     'sub_head' => "Capital",
-        //     'head' => "Capital A/C BONY",
-        // ];
-        // $items[] = [
-        //     'user_id' => $user_id,
-        //     'client_id' => $client_id,
-        //     'parent_head' => 'Owner Equity',
-        //     'sub_head' => "Withdrawn",
-        //     'head' => "Withdrawn",
-        // ];
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Income',
+            'sub_head' => "Sales",
+            'head' => "Sales Return",
+        ];
 
         // AccHead::where('client_id', auth()->user()->client_id)->delete();
 

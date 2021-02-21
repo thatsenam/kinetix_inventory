@@ -6,10 +6,10 @@ use Livewire\Livewire;
 use Livewire\Response;
 use Livewire\Component;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use function Livewire\str;
 
 class SupportBrowserHistory
 {
@@ -19,8 +19,6 @@ class SupportBrowserHistory
 
     function __construct()
     {
-        $this->mergedQueryParamsFromDehydratedComponents = collect($this->getExistingQueryParams());
-
         Livewire::listen('component.hydrate.initial', function ($component) {
             if (! $properties = $this->getQueryParamsFromComponentProperties($component)->keys()) return;
 
@@ -73,7 +71,7 @@ class SupportBrowserHistory
         try {
             // See if we can get the route from the referer.
             return app('router')->getRoutes()->match(
-                Request::create($referer, 'GET')
+                Request::create($referer, Livewire::originalMethod())
             );
         } catch (NotFoundHttpException $e) {
             // If not, use the current route.
@@ -92,7 +90,7 @@ class SupportBrowserHistory
             $route
             && is_string($action = $route->getActionName())
             // If the component is registered using `Route::get()`.
-            && Str::of($action)->contains(get_class($component))
+            && str($action)->contains(get_class($component))
             // AND, the component is tracking route params as its public properties
             && count(array_intersect_key($component->getPublicPropertiesDefinedBySubClass(), $route->parametersWithoutNulls()))
         ) {
@@ -104,7 +102,7 @@ class SupportBrowserHistory
 
     protected function getExistingQueryParams()
     {
-        return Livewire::isLivewireRequest()
+        return Livewire::isDefinitelyLivewireRequest()
             ? $this->getQueryParamsFromRefererHeader()
             : request()->query();
     }
@@ -118,9 +116,9 @@ class SupportBrowserHistory
         return $refererQueryString;
     }
 
-    protected function buildPathFromReferer($referer, $queryParams)
+    protected function buildPathFromReferer($referer, $queryParams) : string
     {
-        return Str::before($referer, '?').$this->stringifyQueryParams($queryParams);
+        return str($referer)->before('?').$this->stringifyQueryParams($queryParams);
     }
 
     protected function buildPathFromRoute($component, $route, $queryString)
@@ -138,6 +136,10 @@ class SupportBrowserHistory
 
     protected function mergeComponentPropertiesWithExistingQueryParamsFromOtherComponentsAndTheRequest($component)
     {
+        if (! $this->mergedQueryParamsFromDehydratedComponents) {
+            $this->mergedQueryParamsFromDehydratedComponents = collect($this->getExistingQueryParams());
+        }
+
         $excepts = $this->getExceptsFromComponent($component);
 
         $this->mergedQueryParamsFromDehydratedComponents = collect(request()->query())
@@ -176,6 +178,6 @@ class SupportBrowserHistory
 
     protected function stringifyQueryParams($queryParams)
     {
-        return $queryParams->isEmpty() ? '' : '?'.http_build_query($queryParams->toArray());
+        return $queryParams->isEmpty() ? '' : '?'.Arr::query($queryParams->toArray());
     }
 }

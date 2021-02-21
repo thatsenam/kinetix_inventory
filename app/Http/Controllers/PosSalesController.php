@@ -41,16 +41,21 @@ class PosSalesController extends Controller
     public function sales_invoice()
     {
         $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
-
-        return view('admin.pos.sales.sales_invoice', compact('warehouses'));
+        if($warehouses->count()<2){
+            $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
+            $warehouse_id = $getW->id;
+        }else{
+            $warehouse_id = "";
+        }
+        return view('admin.pos.sales.sales_invoice', compact('warehouses','warehouse_id'));
     }
 
     public function get_products(Request $req){
 
         $s_text = $req['s_text'];
 
-        $products = DB::table('products')->where('client_id',auth()->user()->client_id)
-            ->where('product_name', 'like', '%'.$s_text.'%')->limit(9)->get(); ?>
+        $products = DB::table('products')->where('products.client_id',auth()->user()->client_id)
+            ->where('product_name', 'like', '%'.$s_text.'%')->join('categories','categories.id','products.cat_id')->limit(9)->get(); ?>
 
 
         <ul class='products-list sugg-list' style='width:100%;'>
@@ -77,6 +82,7 @@ class PosSalesController extends Controller
             $price = $row->after_pprice;
             $serial = $row->serial;
             $warranty = $row->warranty;
+            $vat = $row->vat;
 
             if(empty($price)){
                 $price = $row->before_price;
@@ -85,7 +91,7 @@ class PosSalesController extends Controller
 
             $url = config('global.url'); ?>
 
-            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $warranty; ?>", "<?php echo $stock; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?>'>
+            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $warranty; ?>", "<?php echo $stock; ?>", "<?php echo $vat; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?>' data-vat='<?php echo $vat; ?>'>
             <img src= "<?php echo $url;?>/images/products/<?php echo $image;?>" style="width:60px; height:60px;"> &nbsp; <?php echo $name; ?> | <?php echo $price; ?>
             </li>
 
@@ -178,21 +184,21 @@ class PosSalesController extends Controller
 
                 if($warranty)
                 {
-                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
                 else
                 {
-                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
             }
             else{
                 if($warranty)
                 {
-                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
                 else
                 {
-                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
             }
         }
@@ -370,13 +376,12 @@ class PosSalesController extends Controller
             ]);
 
             AccHead::create([
-                // 'cid' => $cust_id,
+                'cid' => $cust_id,
+                'parent_head' => "Asset",
+                'sub_head' => "Customers Receivable",
                 'head' => $cust_name." ".$cust_phone,
-                // 'user' => $user,
-
             ]);
         }
-
 
         if($due < 0){
             $payment = ($payment + $due);
@@ -408,6 +413,7 @@ class PosSalesController extends Controller
             'amount' => $amount,
             'gtotal' => $gtotal,
             'payment' => $payment,
+            'vat_amount' => $vat,
             'due' => $due,
             'remarks' => $remarks,
             'date' => $date,
@@ -439,6 +445,7 @@ class PosSalesController extends Controller
             $j1 = $i+1;
             $j2 = $i+2;
             $j3 = $i+3;
+            $j4 = $i+4;
 
              ///////Adjust Stock/////////
 
@@ -453,7 +460,8 @@ class PosSalesController extends Controller
                 'pid' => $take_cart_items[$j],
                 'qnt' => $take_cart_items[$j2],
                 'price' => $take_cart_items[$j1],
-                'total' => $take_cart_items[$j3],
+                'vat' => $take_cart_items[$j3],
+                'total' => $take_cart_items[$j4],
                 // 'user' => $user,
             ]);
 
@@ -468,7 +476,7 @@ class PosSalesController extends Controller
                 'client_id' => auth()->user()->client_id,
             ]);
 
-            $i = $i + 4;
+            $i = $i + 5;
         }
 
 
@@ -479,8 +487,7 @@ class PosSalesController extends Controller
             if($due > 0 && $payment == 0){
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
                 $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
                 $head = "Sales";
@@ -497,7 +504,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -515,7 +522,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -524,8 +531,7 @@ class PosSalesController extends Controller
             if($payment > 0 && $due == 0){
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
                 $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
                 $head = "Sales";
@@ -542,7 +548,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -560,7 +566,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -569,8 +575,7 @@ class PosSalesController extends Controller
             if($payment > 0 && $due > 0){
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
                 $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
                 $head = "Sales";
@@ -587,7 +592,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user
 
                 ]);
 
@@ -605,7 +610,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -623,7 +628,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -680,8 +685,7 @@ class PosSalesController extends Controller
             ///// into Accounts For Mobile Transaction
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
             $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = "Sales";
@@ -689,8 +693,7 @@ class PosSalesController extends Controller
             $debit = 0;
             $credit = $gtotal;
 
-//            DB::table('acc_transactions')->([
-                AccTransaction::Create([
+            AccTransaction::Create([
                 'vno' => $vno,
                 'head' => $head,
                 'sort_by' => "cid"." ".$cust_id,
@@ -799,8 +802,7 @@ class PosSalesController extends Controller
             if($payment > 0 && $due > 0 && $card_cash == 0){
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
                 $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
                 $head = "Sales";
@@ -808,7 +810,6 @@ class PosSalesController extends Controller
                 $debit = 0;
                 $credit = $gtotal;
 
-//                DB::table('acc_transactions')->
                 AccTransaction::Create([
 
                     'vno' => $vno,
@@ -1096,7 +1097,6 @@ class PosSalesController extends Controller
 
         }
 
-
         return $invoice;
 
     }
@@ -1104,7 +1104,6 @@ class PosSalesController extends Controller
     public function delete_sales_invoice(Request $req){
 
         $invoice = $req['invoice'];
-
         DB::table('sales_invoice')->where('invoice_no', $invoice)->delete();
 
         $get_sales_details = DB::table('sales_invoice_details')->where('invoice_no', $invoice)->get();
@@ -1142,8 +1141,14 @@ class PosSalesController extends Controller
     public function sales_return()
     {
         $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+        if($warehouses->count()<2){
+            $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
+            $warehouse_id = $getW->id;
+        }else{
+            $warehouse_id = "";
+        }
 
-        return view("admin.pos.sales.sales_return", compact('warehouses'));
+        return view("admin.pos.sales.sales_return", compact('warehouses','warehouse_id'));
     }
 
 

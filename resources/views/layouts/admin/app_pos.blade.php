@@ -685,6 +685,14 @@
               </li>
             </ul>
           </li>
+          {{-- @can(PermissionAccess::$ViewUser)
+          <li class="nav-item {{ (request()->is('admin/users')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon nav-icon fas fa-users"></i>
+              Users
+            </a>
+          </li>
+          @endcan --}}
           <li class="nav-item mb-5 {{ (request()->is('admin/settings')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon nav-icon fas fa-cogs"></i>
@@ -703,8 +711,6 @@
               </li>
             </ul>
           </li>
-
-          
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

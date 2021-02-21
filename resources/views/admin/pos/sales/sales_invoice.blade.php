@@ -1,6 +1,19 @@
 @extends('admin.pos.master')
 
 @section('title', 'Sales Invoice')
+@if($AccHeads <= 0 || $GenSettings ==null)
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
+                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+@else
 
 @section('content')
 
@@ -41,11 +54,11 @@
                         <form action="{{ route('sales_invoice_save') }}" method="POST">
                             @csrf
                             <div class="card" style="min-height: 500px;">
-
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-7">
                                             <div class="row">
+                                                @if($warehouses->count()>1)
                                                 <div class="col-5">
                                                     <select name="warehouse_id" id="warehouse_id" class="form-control">
                                                         <option value="" disabled selected>Select Warehouse</option>
@@ -77,17 +90,42 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            
-                                            <div class="row">
-                                                <div class="col-3">
+                                                @else
+                                                <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
+                                                <div class="col-6">
                                                     <div class="form-group" style="position: relative;">
-                                                        <input type="text" name="barcode" id="barcode" class="form-control"
-                                                            placeholder="Barcode" autocomplete="off">
+                                                        <input type="text" name="cust_phone" id="cust_phone"
+                                                            class="form-control" placeholder="Customer Phone"
+                                                            autocomplete="off">
+                                                        <div id="cust_div"
+                                                            style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
+                                                        </div>
+
+                                                        <input type="hidden" name="cust_id" id="cust_id" value="0"
+                                                            class="form-control">
 
                                                     </div>
                                                 </div>
-                                                <div class="col-7">
+                                                <div class="col-6">
+                                                    <div class="form-group" style="position: relative;">
+                                                        <input type="text" name="cust_name" id="cust_name"
+                                                            class="form-control" placeholder="Customer Name">
+                                                        <div id="memo_div"
+                                                            style="width: 100%; display: none; position: absolute; top: 45px; left: 0; z-index: 999;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="form-group" style="position: relative;">
+                                                        <input type="text" name="barcode" id="barcode" class="form-control"
+                                                            placeholder="Barcode" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="col-8">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" class="form-control" placeholder="Search Product"
                                                             id="search" autocomplete="off">
@@ -165,6 +203,7 @@
                                                                 <th style="width: 30%">Item</th>
                                                                 <th style="width: 20%">price</th>
                                                                 <th style="width: 20%">Qty</th>
+                                                                <th style="width: 20%">I.V.A</th>
                                                                 <th style="width: 20%">Total</th>
                                                                 <th style="width: 10%">Delete</th>
                                                             </tr>
@@ -294,21 +333,11 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="form-group">
-                                                        <label>Vat (%)</label>
-                                                        <input type="text" name="vat_percent" id="vat_percent"
-                                                            value="{{ $vat ?? 0 }}" class="form-control" placeholder="">
+                                                        <label>Total I.V.A</label>
+                                                        <input type="text" name="total_vat" id="total_vat"
+                                                            class="form-control" value="0">
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
-                                                    <div class="form-group">
-                                                        <label>Vat (in Amount)</label>
-                                                        <input type="text" name="vat_amount" id="vat_amount"
-                                                            class="form-control" placeholder="">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
                                                 <div class="col-6">
                                                     <div class="form-group">
                                                         <label>Payment</label>
@@ -316,6 +345,10 @@
                                                             placeholder="" value="0">
                                                     </div>
                                                 </div>
+                                            </div>
+
+                                            <div class="row">
+                                                
                                                 <div class="col-6">
                                                     <div class="form-group">
                                                         <label>Payment Type</label>
@@ -328,9 +361,6 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            <div class="row">
                                                 <div class="col-6">
                                                     <div class="form-group">
                                                         <label>Sale By</label>
@@ -339,7 +369,11 @@
                                                             value="<?php echo $user_name; ?>">
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                            </div>
+
+                                            <div class="row">
+                                                
+                                                <div class="col-12">
                                                     <div class="form-group">
                                                         <label>Remarks</label>
                                                         <input type="text" name="remarks" id="remarks" class="form-control"
@@ -670,6 +704,8 @@
 
     </div>
 
+@endif
+
 @endsection
 
 @section('page-js-script')
@@ -684,6 +720,7 @@
         var serial_unsold;
         var warranty;
         var product_stock;
+        var product_vat;
         
         $(document).ready(function() {
 
@@ -879,6 +916,8 @@
                             product_serial = $(this).find(".active").attr("data-serial");
                             warranty = $(this).find(".active").attr("data-warranty");
                             product_stock = $(this).find(".active").attr("data-stock");
+                            product_vat = $(this).find(".active").attr("data-vat");
+
 
                             $('#product_stock').html(product_stock);
                             $('#search').val(name);
@@ -1640,6 +1679,7 @@
                 // var hid_total = Number($('#hid_total').val());
 
                 var discount = Number($("#discount").val());
+                var vat = Number($("#total_vat").val());
 
                 var scharge = Number($(this).val());
 
@@ -1647,11 +1687,11 @@
 
                 var amount = Number($('#amount').val());
 
-                var vat_percent = Number($('#vat_percent').val());
-                var vat_amount = Number($('#vat_amount').val());
+                //var vat_percent = Number($('#vat_percent').val());
+                //var vat_amount = Number($('#total_vat').val());
 
-                var total_vat = amount * (vat_percent / 100);
-                $('#show_grand_total').val(amount + total_vat + scharge - discount);
+                //var total_vat = amount * (vat_percent / 100);
+                $('#show_grand_total').val(amount  + vat + scharge - discount);
 
             });
 
@@ -1691,15 +1731,16 @@
                 var discount = Number($(this).val());
 
                 var scharge = Number($('#scharge').val());
+                var vat = Number($('#total_vat').val());
 
                 // $('#total').val(hid_total + scharge - discount); 
 
-                var vat_percent = Number($('#vat_percent').val());
-                var vat_amount = Number($('#vat_amount').val());
+                // var vat_percent = Number($('#vat_percent').val());
+                // var vat_amount = Number($('#vat_amount').val());
                 var amount = Number($('#amount').val());
 
-                var total_vat = amount * (vat_percent / 100);
-                $('#show_grand_total').val(amount + total_vat + scharge - discount);
+                //var total_vat = amount * (vat_percent / 100);
+                $('#show_grand_total').val(amount + vat + scharge - discount);
 
             });
 
@@ -1827,6 +1868,7 @@
                 $('#payment').val("0");
                 $('#paytype').val("cash");
                 $('#hid_total').val("0");
+                $('#total_vat').val("0");
 
                 $('#card_bank').val("");
                 $('#card_bank_id').val("");
@@ -2020,6 +2062,11 @@
                         totalPriceTd = $(this).html();
                         cartData.push(totalPriceTd);
                     }
+                    
+                    if ($(this).attr("class") == 'prod_vat') {
+                        prod_vat = $(this).html();
+                        cartData.push(prod_vat);
+                    }
 
                     i = i + 1;
                 });
@@ -2038,7 +2085,7 @@
                 fieldValues.cust_id = $('#cust_id').val();
                 fieldValues.cust_name = $('#cust_name').val();
                 fieldValues.cust_phone = $('#cust_phone').val();
-                fieldValues.vat = $('#vat_amount').val();
+                fieldValues.vat = $('#total_vat').val();
                 fieldValues.scharge = $('#scharge').val();
                 fieldValues.discount = $('#discount').val();
                 fieldValues.amount = $('#amount').val();
@@ -2133,6 +2180,7 @@
                         $('#payment').val("0");
                         $('#paytype').val("cash");
                         $('#hid_total').val("0");
+                        $('#total_vat').val("0");
 
                         $('#card_bank').val("");
                         $('#card_bank_id').val("");
@@ -2193,7 +2241,7 @@
 
                 var totalPriceTd = Number($(this).closest('tr').find('.totalPriceTd').html());
                 var productID = Number($(this).closest('tr').find("td").attr('data-prodid'));
-
+                var prod_vat = Number($(this).closest('tr').find('.prod_vat').html());
                 // var pvat = Number($(this).closest('tr').attr('data-vat'));
 
                 // var totalPrice = $('#hid_total').val();
@@ -2203,14 +2251,17 @@
                 delete serial_array[productID];
 
                 var amount = $('#amount').val();
-                var vat_percent = Number($('#vat_percent').val());
-                var vat_amount = Number($('#vat_amount').val());
+                var total_vat = Number($('#total_vat').val());
+                var scharge = Number($('#scharge').val());
+                var discount = Number($('#discount').val());
+                // var vat_percent = Number($('#vat_percent').val());
+                // var vat_amount = Number($('#vat_amount').val());
                 var scharge = Number($('#scharge').val());
 
                 grandTotalPrice = Number(amount - totalPriceTd);
-                var total_vat = grandTotalPrice * (vat_percent/100);
-                $('#vat_amount').val(total_vat);
-                $('#show_grand_total').val(grandTotalPrice + total_vat + scharge);
+                //var total_vat = grandTotalPrice * (vat_percent/100);
+                $('#total_vat').val(Number(total_vat-prod_vat));
+                $('#show_grand_total').val(grandTotalPrice  + scharge -discount);
 
                 // totalPrice = Number(totalPrice - totalPriceTd);
 
@@ -2427,7 +2478,7 @@
             $("#cust_div").hide();
         }
 
-        function selectProducts(id, name, price, serial, warranty, stock) {
+        function selectProducts(id, name, price, serial, warranty, stock, vat) {
 
             $('#search').val(name);
             $('#pid_hid').val(id);
@@ -2443,6 +2494,7 @@
             product_serial = serial;
             warranty = warranty;
             product_stock = stock;
+            product_vat = vat;
 
             $('#product_stock').html(product_stock);
             $("#price").focus();
@@ -2492,7 +2544,7 @@
             var vat = Number(vat);
             var totalPrice = Number(totalPrice);
 
-            calculate_vat = ((price * pvat) / 100);
+            calculate_vat = ((price * product_vat) / 100)*qnt;
 
             vat = (vat + calculate_vat);
 
@@ -2501,28 +2553,31 @@
             $('.price-table').show();
 
             $('.price-table').append("<tr data-vat='" + calculate_vat + "'><td data-prodid='" + id +
-                "' style='width:200px;'>" + name + "</td><td class='uprice'>" + price + "</td><td class='qnty'>" + qnt +
+                "' style='width:200px;'>" + name + "</td><td class='uprice'>" + price + "</td><td class='qnty'>" + qnt +"</td><td class='prod_vat'>" + calculate_vat +
                 "</td><td class='totalPriceTd'>" + total + "</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
 
             totalPrice = Number(totalPrice + total);
 
-            grandTotalPrice = Number(totalPrice + vat);
-
+            var vatField=Number($('#total_vat').val());
+            vatField=Number(vatField+calculate_vat);
+            $('#total_vat').val(vatField)
+            grandTotalPrice = Number(totalPrice + vatField);
             var scharge = $('#scharge').val();
+            var discount = Number($('#discount').val());
             scharge = Number(scharge);
 
-            var vat_percent = Number($('#vat_percent').val());
-            var vat_amount = Number($('#vat_amount').val());
+            // var vat_percent = Number($('#vat_percent').val());
+            // var vat_amount = Number($('#vat_amount').val());
 
-            var total_vat = grandTotalPrice * (vat_percent / 100);
-            $('#vat_amount').val(total_vat);
-            $('#show_grand_total').val(grandTotalPrice + total_vat + scharge);
+            // var total_vat = grandTotalPrice * (vat_percent / 100);
+            // $('#vat_amount').val(total_vat);
+            $('#show_grand_total').val(grandTotalPrice + scharge - discount);
 
             $('#hid_total').val(totalPrice);
 
-            $('#amount').val(grandTotalPrice);
+            $('#amount').val(totalPrice);
 
-            $('#total').val(grandTotalPrice);
+            $('#total').val(totalPrice);
 
             $('#vat').val(vat);
 
@@ -2567,8 +2622,8 @@
 
             $("#prodlist tbody tr").each(function() {
 
-                $(this).find("th:eq(4)").remove();
-                $(this).find("td:eq(4)").remove();
+                $(this).find("th:eq(5)").remove();
+                $(this).find("td:eq(5)").remove();
 
             });
 
@@ -2580,7 +2635,7 @@
 
 
             var amount = $('#amount').val();
-            var vat = $('#vat_amount').val();
+            var vat = $('#total_vat').val();
             var scharge = $('#scharge').val();
             var discount = $('#discount').val();
             var show_grand_total = $('#show_grand_total').val();
@@ -2667,7 +2722,7 @@
 
             $("#prodlist tbody tr").each(function() {
 
-                $(this).find("th:eq(4)").remove();
+                $(this).find("th:eq(5)").remove();
             });
 
             $("#prodlist").append(trow);
@@ -2685,8 +2740,8 @@
                 "<table id='printRest' style='width:332px; border-collapse: collapse;'><tr><td>Total Tk: </td><td>" +
                 amount + "</td><td> Discount: </td><td>" + discount + "</td></tr><tr><td>Vat: </td><td>" + vat +
                 "</td><td> SCharge: </td><td>" + scharge + "</td></tr><tr><td>All Total: </td><td>" + gtotal +
-                "</td><td>Recieved: </td><td>" + discount + "</td></tr><tr><td> Due: </td><td>" + payment +
-                "</td><td> payment: </td><td>" + due + "</td></tr><tr><td> Date: </td><td>" + date +
+                "</td><td>Recieved: </td><td>" + discount + "</td></tr><tr><td> Due: </td><td>" + due +
+                "</td><td> payment: </td><td>" + payment + "</td></tr><tr><td> Date: </td><td>" + date +
                 "</td><td> &nbsp; </td><td>&nbsp;</td></tr></table>");
 
             $("#printRest tr td").css('font-size', '12px').css('border', '1px solid #000').css('border-collapse',

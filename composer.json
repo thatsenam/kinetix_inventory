@@ -19,6 +19,7 @@
         "livewire/livewire": "^2.2",
         "milon/barcode": "^7.0",
         "paypal/rest-api-sdk-php": "*",
+        "spatie/laravel-permission": "^4.0",
         "yajra/laravel-datatables-oracle": "^9.10"
     },
     "require-dev": {

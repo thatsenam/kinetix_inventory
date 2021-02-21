@@ -1,7 +1,19 @@
 @extends('layouts.admin.app_pos')
 @section('title','Add Bank')
 @section('content')
-
+@if($AccHeads <= 0 || $GenSettings ==null)
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
+                        <h1>অনুগ্রহপূর্বক সাধারণ সেটিংস্‌ এবং হিসাবরক্ষণ খাত থেকে ডেমো খাত যুক্ত করুন!</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+@else
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -250,5 +262,5 @@
         );
     }
 </script>
-
+@endif
 @endsection

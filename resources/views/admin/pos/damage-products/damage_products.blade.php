@@ -2,7 +2,6 @@
         
 @section('content')
 
-
 <div class="content-wrapper">
     <div class="row">
       <div class="col-12" style="position: relative;">
@@ -29,7 +28,7 @@
                                         <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                     </div>
                                 </div> --}}
-
+                                @if($warehouses->count()>1)
                                 <div class="col-7">
                                     <select name="warehouse_id" id="warehouse_id" class="form-control">
                                         <option value="" disabled selected>Select Warehouse</option>
@@ -38,14 +37,20 @@
                                         @endforeach
                                     </select>
                                 </div>
-
                                 <div class="col-5">
                                     <div class="form-group">
                                         <input value="{{ $dmg_inv }}" readonly type="text" name="dmg_inv" id="dmg_inv" class="form-control bg-light">
                                     </div>
                                 </div>
+                                @else
+                                <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
 
-                                
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input value="{{ $dmg_inv }}" readonly type="text" name="dmg_inv" id="dmg_inv" class="form-control bg-light">
+                                    </div>
+                                </div>
+                                @endif
                             </div>
                             <div class="row">
                                 <div class="col">
@@ -67,18 +72,15 @@
                             
                         </div>
                         <div class="col-md-5">
-                            
                             <div class="row">
                                 <div class="col-4">
                                   <div class="form-group">
                                     <input type="text" name="price" id="price" class="form-control" placeholder ="Price">
-                                    
                                   </div>
                                 </div>
                                 <div class="col-4">
                                   <div class="form-group">
                                     <input type="text" name="qnt" id="qnt" class="form-control" placeholder ="Quantity">
-                                    
                                   </div>
                                 </div>
                                 <div class="col-4">
@@ -155,6 +157,9 @@
     var serial_array = {};
 
     $(document).ready(function(){
+        $('#date').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
         
         $("#search").keyup(function(e){
                     
@@ -275,7 +280,7 @@
             {
                 var ser = $('#serial-'+i).val();
                 
-                val[i] = ser;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                val[i] = ser;                                     
             }
             serial_array[product_id] = val;
 

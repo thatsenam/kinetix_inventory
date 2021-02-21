@@ -487,4 +487,34 @@ class ProductsController extends Controller
         }
     }
 
+    public function searchProducts(Request $request)
+    {
+        $search = $request->search;
+
+        if($search == '')
+        {
+           $products = Products::where('client_id', auth()->user()->client_id)
+                        ->orderby('product_name', 'asc')
+                        ->select('id','product_name')->limit(5)->get();
+        }
+        else
+        {
+           $products = Products::where('client_id', auth()->user()->client_id)
+                        ->orderby('product_name', 'asc')->select('id','product_name')
+                        ->where('product_name', 'like', '%' . $search . '%')->limit(5)->get();
+        }
+
+        $response = array();
+
+        foreach($products as $product)
+        {
+           $response[] = array(
+                'id' => $product->id,
+                'product_name' => $product->product_name,
+            );
+        }
+  
+        return response()->json($response);
+    }
+
 }

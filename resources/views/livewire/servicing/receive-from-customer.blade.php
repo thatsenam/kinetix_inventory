@@ -56,6 +56,10 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                                <div class="custom-control custom-checkbox">
+                                    <input wire:model="isNewCustomer" type="checkbox" class="custom-control-input" id="customCheck">
+                                    <label class="custom-control-label" for="customCheck">New Customer ?</label>
+                                </div>
                             </div>
                         </div>
 
@@ -76,36 +80,70 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group col-md row">
-                            <label for="SelectSupplier" class="col-sm-4 font-weight-bold text-dark text-uppercase">Supplier Name</label>
-                            <div class="col-sm-8">
-                                <select wire:model="supplier_id" id="SelectSupplier" class="custom-select @error('supplier_id') is-invalid @enderror">
-                                    <option></option>
-                                    @foreach($suppliers as $supplier)
-                                        <option value="{{ $supplier->id }}">{{ $supplier->name }} {{ $supplier->phone }}</option>
-                                    @endforeach
-                                </select>
+                    @if($showNewCustomer)
+                        <div class="row">
+                            <div class="form-group col-md row">
+                                <label for="new_customer_name" class="col-sm-4 col-form-label font-weight-bold text-dark text-uppercase">New Customer Name</label>
+                                <div class="col-sm-8">
+                                    <input wire:model.defer="new_customer_name" type="text" class="form-control" id="new_customer_name" placeholder="">
+                                    @error('new_customer_name')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-group col-md row">
+                                <label for="new_customer_phone" class="col-sm-4 col-form-label font-weight-bold text-dark text-uppercase">Customer Phone</label>
+                                <div class="col-sm-8">
+                                    <input wire:model.defer="new_customer_phone" type="text" class="form-control" id="new_customer_phone" placeholder="">
+                                    @error('new_customer_phone')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
+                    @endif
+                    <div class="row">
                         <div class="form-group col-md row">
-                            <label for="SelectProduct" class="col-sm-4 font-weight-bold text-dark text-uppercase">Product</label>
+                            <label for="searchProductName" class="col-sm-4 col-form-label font-weight-bold text-dark text-uppercase">Product</label>
                             <div class="col-sm-8">
-                                <select wire:model="product_id" id="SelectProduct" class="custom-select @error('product_id') is-invalid @enderror">
-                                    <option></option>
-                                    @foreach($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->product_name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('product_id')
+                                <input wire:model.debounce.500ms="product" id="searchProductName" class="form-control @error('product') is-invalid @enderror" autocomplete="off">
+                                @error('product')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
                         </div>
+
+                        <div class="form-group col-md row">
+                            <label for="delivery_date" class="col-sm-4 col-form-label font-weight-bold text-dark text-uppercase">Delivery Date</label>
+                            <div class="col-sm-8">
+                                <input wire:model="delivery_date" type="date" class="form-control" id="delivery_date" placeholder="">
+                                @error('delivery_date')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
+                        <div class="form-group col-md row">
+                            <label for="problems" class="col-sm-4 col-form-label font-weight-bold text-dark text-uppercase">Problems</label>
+                            <div class="col-sm-8">
+                                <textarea wire:model.defer="problems" type="text" class="form-control @error('problems') is-invalid @enderror" id="problems" placeholder="Problems"></textarea>
+                                @error('problems')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="form-group col-md row">
                             <label for="remarks" class="col-sm-4 col-form-label font-weight-bold text-dark text-uppercase">Remarks</label>
                             <div class="col-sm-8">
@@ -117,19 +155,20 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="form-group col-md">
-                            <div class="text-center">
-                                <button wire:click.prevent="addProductList" class="btn btn-primary">Add To List</button>
-                            </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2 ml-auto">
+                            <button wire:click.prevent="addProductList" class="btn btn-primary">Add To List</button>
                         </div>
                     </div>
+
                     <table class="table table-sm table-bordered my-3">
                         <thead>
                             <tr>
                                 <th>Product</th>
                                 <th>Serial Number</th>
-                                <th>Supplier</th>
-                                <th>Remarks</th>
+                                <th>Problems</th>
                                 <th>Delete</th>
                             </tr>
                         </thead>
@@ -138,8 +177,7 @@
                                 <tr>
                                     <td>{{ $list['product'] }}</td>
                                     <td>{{ $list['serial'] }}</td>
-                                    <td>{{ $list['supplier'] }}</td>
-                                    <td>{{ $list['remarks'] }}</td>
+                                    <td>{{ $list['problems'] }}</td>
                                     <td>
                                         <button wire:click.prevent="removeProductList({{ $i }})" class="btn btn-xs btn-danger">Delete</button>
                                     </td>
@@ -149,18 +187,14 @@
                             @endforelse
                         </tbody>
                     </table>
-                    {{-- @if($error)
-                        <div class="row">
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $error }}</strong>
-                            </span>
-                        </div>
-                    @endif --}}
                     
                     <div class="text-center mt-3">
                         <button type="submit" wire:click.prevent="store" class="btn btn-success rounded-0">SUBMIT</button>
                     </div>
+
                 </form>
+
+                
 
                 <div class="form-group">
                     <div class="custom-control custom-checkbox">
@@ -190,19 +224,19 @@
                     <div class="text-center mb-2" id="heading" style="display: none">
                         <h1>{{ $setting->site_name ?? ''  }}</h1>
                         <h3 class="mb-4">{{ $setting->site_address ?? ''  }}, {{ $setting->phone ?? ''  }}, {{ $setting->email ?? ''  }}</h3>
-                        <h4>Faulty Item Receipt</h4>
+                        <h4>Service Receipt</h4>
 
                         <table class="table table-bordered mb-2">
                             <tbody>
                                 <tr>
-                                    <th>Complain No</th>
+                                    <th>Receipt No</th>
                                     <td>{{ $printVNO }}</td>
                                     <th>Customer Name</th>
                                     <td>{{ $printCustomerName }}</td>
                                 </tr>
                                 <tr>
                                     <th>Receipt Date</th>
-                                    <td>{{ $printDate }}</td>
+                                    <td>{{ date('d-M-Y', strtotime( $printDate )) }}</td>
                                     <th>Customer Phone</th>
                                     <td>{{ $printCustomerPhone }}</td>
                                 </tr>
@@ -213,20 +247,21 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Sales Invoice & Date</th>
-                                    <th>Faulty Item Received</th>
-                                    <th>Warranty Remain</th>
-                                    <th>Remarks / Problem</th>
+                                    <th>Product</th>
+                                    <th>Serial</th>
+                                    <th>Problem</th>
+                                    <th>Delivery Date</th>
+                                    <th>Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($printArray as $i => $array)
                                     <tr>
                                         <td>{{ $i + 1 }}</td>
-                                        {{-- <td>{{ date('d-M-Y', strtotime($array['date'])) }}</td> --}}
-                                        <td>{{ $array['sales_invoice'] }} {{ $array['sales_date'] }}</td>
                                         <td>{{ $array['product'] }}</td>
-                                        <td>{{ $array['tillwarranty'] }}</td>
+                                        <td>{{ $array['serial'] }}</td>
+                                        <td>{{ $array['problems'] }}</td>
+                                        <td>{{ date('d-M-Y', strtotime($array['delivery_date'])) }}</td>
                                         <td>{{ $array['remarks'] }}</td>
                                     </tr>
                                 @empty
@@ -255,25 +290,12 @@
         $(document).on('change', '#SelectCustomer', function (e) {
             @this.set('customer_id', e.target.value);
         });
-        $('#SelectSupplier').select2({
-            placeholder: 'Select Supplier',
-        });
-        $(document).on('change', '#SelectSupplier', function (e) {
-            @this.set('supplier_id', e.target.value);
-        });
 
         $('#SelectSerial').select2({
             placeholder: 'Select Serial',
         });
         $(document).on('change', '#SelectSerial', function (e) {
             @this.set('serial_id', e.target.value);
-        });
-
-        $('#SelectProduct').select2({
-            placeholder: 'Select Product',
-        });
-        $(document).on('change', '#SelectProduct', function (e) {
-            @this.set('product_id', e.target.value);
         });
         
         $('#SelectReceipt').select2({
@@ -283,13 +305,13 @@
             @this.set('receipt', e.target.value);
         });
 
-        if( ! @this.customer_id )
-        {
-            $('#SelectCustomer').select2('focus');
-        }
-        else if( ! @this.serial_id ){
-            $('#SelectSerial').select2('focus');
-        }
+        // if( ! @this.customer_id )
+        // {
+        //     $('#SelectCustomer').select2('focus');
+        // }
+        // else if( ! @this.serial_id ){
+        //     $('#SelectSerial').select2('focus');
+        // }
     });
 
 </script>
@@ -307,6 +329,30 @@
         window.print();
         document.body.innerHTML = originalContents;
         location.reload();
+
+    });
+</script>
+
+<script>
+    window.addEventListener("SearchProductLoad", function (event) {
+
+        $("#searchProductName").autocomplete({
+
+            source: @this.response,
+
+            select: function (event, ui) {
+                // Set selection
+                @this.product_id = ui.item.value; // save selected id to input
+                @this.product = ui.item.label; // display the selected text
+
+                return false;
+            },
+            focus: function (event, ui) {
+                $("#searchProductName").val( ui.item.label );
+                return false;
+            }
+
+        });
 
     });
 </script>

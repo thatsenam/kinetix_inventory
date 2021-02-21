@@ -15,6 +15,10 @@ class AccountingPageController extends Controller
     {
         return view('accounting-pages.voucher-entry-index');
     }
+    public function cost_entry_index()
+    {
+        return view('accounting-pages.cost-entry-index');
+    }
     public function voucher_history_index()
     {
         return view('accounting-pages.voucher-history-index');

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{$GenSettings->site_name ??  " "}} - @yield('title') | POS Dashboard</title>
+  
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/x-icon" href="/images/theme/{{$GenSettings->favicon ?? " "}}">
 
@@ -304,7 +305,7 @@
               <p>
                 Banking
                 <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">2</span>
+                <span class="badge badge-info right">8</span>
               </p>
             </a>
             <ul class="nav nav-treeview">
@@ -400,7 +401,7 @@
               <p>
                 Suppliers
                 <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">5</span>
+                <span class="badge badge-info right">1</span>
               </p>
             </a>
             <ul class="nav nav-treeview">
@@ -412,50 +413,9 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item {{ (request()->is('dashboard/warranty-management/receive-from-customer', 'dashboard/warranty-management/send-to-supplier', 'dashboard/warranty-management/receive-from-supplier', 'dashboard/warranty-management/delivery-to-customer', 'dashboard/warranty-management/warranty-report')) ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-user-shield"></i>
-              <p>
-                Manage Warranty
-                <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">5</span>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="/dashboard/warranty-management/receive-from-customer" class="nav-link {{ (request()->is('dashboard/warranty-management/receive-from-customer')) ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Receive From Customer</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/dashboard/warranty-management/send-to-supplier" class="nav-link {{ (request()->is('dashboard/warranty-management/send-to-supplier')) ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Send To Supplier</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/dashboard/warranty-management/receive-from-supplier" class="nav-link {{ (request()->is('dashboard/warranty-management/receive-from-supplier')) ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Receive From Supplier</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/dashboard/warranty-management/delivery-to-customer" class="nav-link {{ (request()->is('dashboard/warranty-management/delivery-to-customer')) ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Delivery To Customer</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/dashboard/warranty-management/warranty-report" class="nav-link {{ (request()->is('dashboard/warranty-management/warranty-report')) ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Warranty Report</p>
-                </a>
-              </li>
-            </ul>
-          </li>
+          
           {{-- Accounting --}}
-          <li class="nav-item {{ (request()->is('accounting/acc-heads', 'accounting/voucher-entry', 'accounting/voucher-history', 'accounting/ledger', 'accounting/trial-balance', 'accounting/income-statement', 'accounting/cash-book', 'accounting/balance-sheet')) ? 'menu-open' : '' }}">
+          <li class="nav-item {{ (request()->is('accounting/acc-heads', 'accounting/voucher-entry', 'accounting/voucher-history', 'accounting/ledger', 'accounting/trial-balance', 'accounting/income-statement', 'accounting/cash-book', 'accounting/balance-sheet', 'add_cost', 'admin/cost_reports')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-calculator"></i>
               <p>
@@ -511,6 +471,18 @@
                 <a href="/accounting/balance-sheet" class="nav-link {{ (request()->is('accounting/balance-sheet')) ? 'active' : '' }}">
                   <i class="fas fa-balance-scale nav-icon"></i>
                   <p>Balance Sheet</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('cost-entry')}}" class="nav-link {{ Route::currentRouteName() == 'cost-entry' ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>নতুন ব্যয় যুক্ত করুন</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('admin.cost_reports')}}" class="nav-link {{ Route::currentRouteName() == 'admin.cost_reports' ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>ব্যয়ের তালিকা</p>
                 </a>
               </li>
             </ul>
@@ -641,13 +613,85 @@
               </li>
             </ul>
           </li>
+          <li class="nav-item {{ (request()->is('dashboard/warranty-management/receive-from-customer', 'dashboard/warranty-management/send-to-supplier', 'dashboard/warranty-management/receive-from-supplier', 'dashboard/warranty-management/delivery-to-customer', 'dashboard/warranty-management/warranty-report')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-shield"></i>
+              <p>
+                Manage Warranty
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right">5</span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/dashboard/warranty-management/receive-from-customer" class="nav-link {{ (request()->is('dashboard/warranty-management/receive-from-customer')) ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Receive From Customer</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/warranty-management/send-to-supplier" class="nav-link {{ (request()->is('dashboard/warranty-management/send-to-supplier')) ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Send To Supplier</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/warranty-management/receive-from-supplier" class="nav-link {{ (request()->is('dashboard/warranty-management/receive-from-supplier')) ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Receive From Supplier</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/warranty-management/delivery-to-customer" class="nav-link {{ (request()->is('dashboard/warranty-management/delivery-to-customer')) ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Delivery To Customer</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/warranty-management/warranty-report" class="nav-link {{ (request()->is('dashboard/warranty-management/warranty-report')) ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Warranty Report</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item {{ (request()->is('dashboard/servicing/receive-from-customer', 'dashboard/servicing/delivery-to-customer', 'dashboard/servicing/servicing-report')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-shield"></i>
+              <p>
+                Servicing
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right">5</span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/dashboard/servicing/receive-from-customer" class="nav-link {{ (request()->is('dashboard/servicing/receive-from-customer')) ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Receive From Customer</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/servicing/delivery-to-customer" class="nav-link {{ (request()->is('dashboard/servicing/delivery-to-customer')) ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Delivery To Customer</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard/servicing/servicing-report" class="nav-link {{ (request()->is('dashboard/servicing/servicing-report')) ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Servicing Report</p>
+                </a>
+              </li>
+            </ul>
+          </li>
           <li class="nav-item mb-5 {{ (request()->is('admin/settings')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon nav-icon fas fa-cogs"></i>
               <p>
                 General Settings
                 <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">2</span>
+                <span class="badge badge-info right">1</span>
               </p>
             </a>
             <ul class="nav nav-treeview">

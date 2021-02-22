@@ -536,7 +536,7 @@ class PosPurchaseController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                'user' => $user,
+                'user_id' => $user,
 
             ]);
             

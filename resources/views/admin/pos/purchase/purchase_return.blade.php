@@ -686,6 +686,8 @@
                         $('.price-table td').remove();
                         
                         $('#pur_save').attr('disabled', false); 
+
+                        location.reload();
                     
                     }else{
                         //alert(ts.responseText);
@@ -702,13 +704,14 @@
                         $('.price-table td').remove();
                         
                         $('#pur_save').attr('disabled', false);
+                        location.reload();
                     }
             
                 },
                 success: function(data){
                     
-                    alert(data);
-                        
+                    alert('Purchase Return Successfull!');
+                    location.reload();   
                 
                          //$('.cart-table tr').remove();
                     

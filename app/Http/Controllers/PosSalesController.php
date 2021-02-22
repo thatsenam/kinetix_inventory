@@ -1334,13 +1334,14 @@ class PosSalesController extends Controller
         $cust_name = $fieldValues['cust_name'];
         $cust_phone = $fieldValues['cust_phone'];
         $sinvoice = $fieldValues['invoice'];
-        $due = $fieldValues['total'];
+        //$due = $fieldValues['total'];
         $hid_total = $fieldValues['hid_total'];
         $payment = $fieldValues['payment'];
         $total_vat = $fieldValues['total_vat'];
         $remarks = $fieldValues['remarks'];
         $date = $fieldValues['date'];
         $user = Auth::id();
+        $due=$hid_total+$total_vat-$payment;
 
 
         $maxid = (DB::table('sales_return')->max('id') + 1);
@@ -1443,8 +1444,8 @@ class PosSalesController extends Controller
 
                 $head = "Sales I.V.A";
                 $description = "Sales Return I.V.A from Invoice ".$rinvoice;
-                $credit = $total_vat;
-                $debit = 0;
+                $debit = $total_vat;
+                $credit = 0;
 
                 AccTransaction::create([
                     'vno' => $vno,
@@ -1460,7 +1461,7 @@ class PosSalesController extends Controller
             $head = $cust_name." ".$cust_phone;
             $description = "Sales Return Invoice ".$rinvoice;
             $debit = 0;
-            $credit = $hid_total;
+            $credit = $hid_total+$total_vat;
 
             AccTransaction::Create([
 
@@ -1504,8 +1505,8 @@ class PosSalesController extends Controller
 
             $head = "Sales I.V.A";
                 $description = "Sales Return I.V.A from Invoice ".$rinvoice;
-                $credit = $total_vat;
-                $debit = 0;
+                $debit = $total_vat;
+                $credit = 0;
 
                 AccTransaction::create([
                     'vno' => $vno,
@@ -1516,7 +1517,7 @@ class PosSalesController extends Controller
                     'credit' => $credit,
                     'date' => $date,
                     'user_id' => $user
-                ]);
+                ]);   
 
             $head = "Cash In Hand";
             $description = "Sale Return Invoice ".$rinvoice;
@@ -1565,8 +1566,8 @@ class PosSalesController extends Controller
 
             $head = "Sales I.V.A";
                 $description = "Sales Return I.V.A from Invoice ".$rinvoice;
-                $credit = $total_vat;
-                $debit = 0;
+                $debit = $total_vat;
+                $credit = 0;
 
                 AccTransaction::create([
                     'vno' => $vno,
@@ -1577,7 +1578,7 @@ class PosSalesController extends Controller
                     'credit' => $credit,
                     'date' => $date,
                     'user_id' => $user
-                ]);
+                ]);   
 
             $head = "Cash In Hand";
             $description = "Sale Return Invoice ".$rinvoice;

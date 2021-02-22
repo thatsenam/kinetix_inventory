@@ -177,6 +177,7 @@ class PosSalesController extends Controller
                 ->where('sale_inv', $row->invoice_no)
                 ->where('product_id', $row->pid)->pluck('serial')->toArray();
             $product_id = $row->pid;
+            $product_gtotal=$row->total+$row->vat;
             $warranty = Products::find($product_id)->warranty;
             if($serials)
             {
@@ -184,21 +185,21 @@ class PosSalesController extends Controller
 
                 if($warranty)
                 {
-                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
                 }
                 else
                 {
-                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
                 }
             }
             else{
                 if($warranty)
                 {
-                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
                 }
                 else
                 {
-                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
                 }
             }
         }
@@ -313,6 +314,7 @@ class PosSalesController extends Controller
         $discount = $fieldValues['discount'];
         $amount = $fieldValues['amount'];
         $gtotal = (($amount + $vat + $scharge) - $discount);
+        $sales_amount = (($amount + $scharge) - $discount);
         $paytype = $fieldValues['paytype'];
         $payment = $fieldValues['payment'];
         // $due = $fieldValues['total'];
@@ -372,7 +374,7 @@ class PosSalesController extends Controller
                 'id' => $cust_id,
                 'name' => $cust_name,
                 'phone' => $cust_phone,
-                // 'user' => $user,
+                'user_id' => $user,
             ]);
 
             AccHead::create([
@@ -417,7 +419,7 @@ class PosSalesController extends Controller
             'due' => $due,
             'remarks' => $remarks,
             'date' => $date,
-            // 'user' => $user,
+            'user_id' => $user,
         ]);
 
         $serials = json_decode($req['serialArray'], true);
@@ -462,7 +464,7 @@ class PosSalesController extends Controller
                 'price' => $take_cart_items[$j1],
                 'vat' => $take_cart_items[$j3],
                 'total' => $take_cart_items[$j4],
-                // 'user' => $user,
+                'user_id' => $user,
             ]);
 
             Stock::create ([
@@ -493,7 +495,7 @@ class PosSalesController extends Controller
                 $head = "Sales";
                 $description = "Due Sale Invoice ".$invoice;
                 $debit = 0;
-                $credit = $gtotal;
+                $credit = $sales_amount;
 
                 AccTransaction::Create([
 
@@ -506,6 +508,22 @@ class PosSalesController extends Controller
                     'date' => $date,
                     'user_id' => $user,
 
+                ]);
+
+                $head = "Sales I.V.A";
+                $description = "Due Sales I.V.A from Invoice ".$invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
                 ]);
 
                 $head = $cust_name." ".$cust_phone;
@@ -537,7 +555,7 @@ class PosSalesController extends Controller
                 $head = "Sales";
                 $description = "Sale Invoice ".$invoice;
                 $debit = 0;
-                $credit = $payment;
+                $credit = $sales_amount;
 
                 AccTransaction::Create([
 
@@ -550,6 +568,22 @@ class PosSalesController extends Controller
                     'date' => $date,
                     'user_id' => $user,
 
+                ]);
+
+                $head = "Sales I.V.A";
+                $description = "Sales I.V.A from Invoice ".$invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
                 ]);
 
                 $head = "Cash In Hand";
@@ -581,7 +615,7 @@ class PosSalesController extends Controller
                 $head = "Sales";
                 $description = "Due Sale Invoice ".$invoice;
                 $debit = 0;
-                $credit = $gtotal;
+                $credit = $sales_amount;
 
                 AccTransaction::Create([
 
@@ -594,6 +628,22 @@ class PosSalesController extends Controller
                     'date' => $date,
                     'user_id' => $user
 
+                ]);
+
+                $head = "Sales I.V.A";
+                $description = "Sales I.V.A from Invoice ".$invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
                 ]);
 
                 $head = "Cash In Hand";
@@ -678,7 +728,7 @@ class PosSalesController extends Controller
                 'status' => 'paid',
                 'tranxid' => $tranxid,
                 'remarks' => $mobile_remarks,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
 
@@ -691,7 +741,7 @@ class PosSalesController extends Controller
             $head = "Sales";
             $description = "Sale Invoice ".$invoice;
             $debit = 0;
-            $credit = $gtotal;
+            $credit = $sales_amount;
 
             AccTransaction::Create([
                 'vno' => $vno,
@@ -701,10 +751,26 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
+            
+                $head = "Sales I.V.A";
+                $description = "Sales I.V.A from Invoice ".$invoice;
+                $credit = $vat;
+                $debit = 0;
 
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
+                ]);
+            
             $head = $mobile_bank." ".$mobile_bank_account;
             $description = "Sale Invoice ".$invoice;
             $debit = $mobile_amount;
@@ -720,7 +786,7 @@ class PosSalesController extends Controller
                 'credit' => $credit,
                 'notes' => "Mobile",
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
 
@@ -740,7 +806,28 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
+
+                ]);
+
+            }
+            $due=$gtotal-$mobile_amount-$mobile_cash;
+            if($due > 0){
+                $head = $cust_name." ".$cust_phone;
+                $description = "Due Sale from Invoice ".$invoice;
+                $debit = $due;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
 
                 ]);
 
@@ -793,7 +880,7 @@ class PosSalesController extends Controller
                 'type' => 'card',
                 'status' => 'paid',
                 'remarks' => $card_remarks,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
 
@@ -808,7 +895,7 @@ class PosSalesController extends Controller
                 $head = "Sales";
                 $description = "Sale Invoice ".$invoice;
                 $debit = 0;
-                $credit = $gtotal;
+                $credit = $sales_amount;
 
                 AccTransaction::Create([
 
@@ -819,8 +906,24 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
+                ]);
+                
+                $head = "Sales I.V.A";
+                $description = "Sales I.V.A from Invoice ".$invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
                 ]);
 
                 $head = $card_bank_account;
@@ -838,7 +941,7 @@ class PosSalesController extends Controller
                     'credit' => $credit,
                     'date' => $date,
                     'notes' => "Card",
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -857,7 +960,7 @@ class PosSalesController extends Controller
                     'credit' => $credit,
                     'date' => $date,
                     'notes' => "Card",
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -872,7 +975,7 @@ class PosSalesController extends Controller
                 $head = "Sales";
                 $description = "Sale Invoice ".$invoice;
                 $debit = 0;
-                $credit = $gtotal;
+                $credit = $sales_amount;
 
                 AccTransaction::Create([
 
@@ -883,8 +986,24 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
+                ]);
+
+                $head = "Sales I.V.A";
+                $description = "Sales I.V.A from Invoice ".$invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
                 ]);
 
                 $head = $card_bank_account;
@@ -902,7 +1021,7 @@ class PosSalesController extends Controller
                     'credit' => $credit,
                     'date' => $date,
                     'notes' => "Card",
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -928,8 +1047,24 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
+                ]);
+
+                $head = "Sales I.V.A";
+                $description = "Sales I.V.A from Invoice ".$invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
                 ]);
 
                 $head = $card_bank_account;
@@ -947,7 +1082,7 @@ class PosSalesController extends Controller
                     'credit' => $credit,
                     'date' => $date,
                     'notes' => "Card",
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
 
@@ -965,7 +1100,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
 
                 ]);
             }
@@ -1022,7 +1157,7 @@ class PosSalesController extends Controller
                 'status' => 'pending',
                 'check_date' => $check_date,
                 'remarks' => $check_remarks,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
 
@@ -1036,7 +1171,7 @@ class PosSalesController extends Controller
             $head = "Sales";
             $description = "Sale Invoice ".$invoice;
             $debit = 0;
-            $credit = $gtotal;
+            $credit = $sales_amount;
 
 //            AccTransaction::Create
 
@@ -1049,9 +1184,25 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
+
+            $head = "Sales I.V.A";
+                $description = "Sales I.V.A from Invoice ".$invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
+                ]);
 
             $head = $cust_name." ".$cust_phone;
             $description = "Sale Invoice ".$invoice;
@@ -1068,7 +1219,7 @@ class PosSalesController extends Controller
                 'credit' => $credit,
                 'notes' => "Check",
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
 
@@ -1089,7 +1240,29 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    // 'user' => $user,
+                    'user_id' => $user,
+
+                ]);
+
+            }
+
+            $due=$gtotal-$check_amount-$check_cash;
+            if($due > 0){
+                $head = $cust_name." ".$cust_phone;
+                $description = "Due Sale from Invoice ".$invoice;
+                $debit = $due;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
 
                 ]);
 
@@ -1156,7 +1329,7 @@ class PosSalesController extends Controller
 
         $fieldValues = json_decode($req['fieldValues'], true);
 
-        $warehouse = $fieldValues['warehoue_id'];
+        $warehouse = $fieldValues['warehouse_id'];
         $cust_id = $fieldValues['cust_id'];
         $cust_name = $fieldValues['cust_name'];
         $cust_phone = $fieldValues['cust_phone'];
@@ -1164,6 +1337,7 @@ class PosSalesController extends Controller
         $due = $fieldValues['total'];
         $hid_total = $fieldValues['hid_total'];
         $payment = $fieldValues['payment'];
+        $total_vat = $fieldValues['total_vat'];
         $remarks = $fieldValues['remarks'];
         $date = $fieldValues['date'];
         $user = Auth::id();
@@ -1183,6 +1357,7 @@ class PosSalesController extends Controller
             $j1 = $i+1;
             $j2 = $i+2;
             $j3 = $i+3;
+            $j4 = $i+4;
 
              ///////Adjust Stock/////////
 
@@ -1200,12 +1375,13 @@ class PosSalesController extends Controller
                 'pid' => $take_cart_items[$j],
                 'qnt' => $take_cart_items[$j2],
                 'uprice' => $take_cart_items[$j1],
-                'tprice' => $take_cart_items[$j3],
-                'total' => $hid_total,
+                'vat_amount' => $take_cart_items[$j3],
+                'tprice' => $take_cart_items[$j4],
+                'total' => $hid_total + $total_vat,
                 'cash_return' => $payment,
                 'remarks' => $remarks,
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
             ]);
 
             Stock::create ([
@@ -1219,7 +1395,7 @@ class PosSalesController extends Controller
                 'client_id' => auth()->user()->client_id,
             ]);
 
-            $i = $i + 4;
+            $i = $i + 5;
         }
 
         $serials = json_decode($req['serialArray'], true);
@@ -1261,9 +1437,25 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
+
+                $head = "Sales I.V.A";
+                $description = "Sales Return I.V.A from Invoice ".$rinvoice;
+                $credit = $total_vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
+                ]);    
 
             $head = $cust_name." ".$cust_phone;
             $description = "Sales Return Invoice ".$rinvoice;
@@ -1279,7 +1471,7 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
 
@@ -1294,7 +1486,7 @@ class PosSalesController extends Controller
 
             $head = "Sales Return";
             $description = "Sale Invoice ".$rinvoice;
-            $debit = $payment;
+            $debit = $hid_total;
             $credit = 0;
 
             AccTransaction::Create([
@@ -1306,9 +1498,25 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
+
+            $head = "Sales I.V.A";
+                $description = "Sales Return I.V.A from Invoice ".$rinvoice;
+                $credit = $total_vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
+                ]);
 
             $head = "Cash In Hand";
             $description = "Sale Return Invoice ".$rinvoice;
@@ -1324,7 +1532,7 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
 
@@ -1351,9 +1559,25 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
+
+            $head = "Sales I.V.A";
+                $description = "Sales Return I.V.A from Invoice ".$rinvoice;
+                $credit = $total_vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid"." ".$cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user
+                ]);
 
             $head = "Cash In Hand";
             $description = "Sale Return Invoice ".$rinvoice;
@@ -1369,7 +1593,7 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
 
@@ -1387,7 +1611,7 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'user_id' => $user,
 
             ]);
 
@@ -1561,7 +1785,7 @@ class PosSalesController extends Controller
 
         $sales = DB::table('sales_return')->where('sales_return.client_id', auth()->user()->client_id)
            ->select('sales_return.id as retid', 'sales_return.date as date','sales_return.rinvoice as rinvoice','sales_return.sinvoice as sinvoice','products.product_name as pname',
-            'customers.name as cname', 'sales_return.qnt as qnt', 'sales_return.uprice as uprice', 'sales_return.tprice as tprice',
+            'customers.name as cname', 'sales_return.qnt as qnt', 'sales_return.uprice as uprice', 'sales_return.tprice as tprice','sales_return.vat_amount as vat_amount',
             'sales_return.total as total', 'sales_return.cash_return as cash_return', 'sales_return.remarks as remarks')
             ->join('customers', 'sales_return.cid', 'customers.id')
             ->join('products', 'sales_return.pid', 'products.id')

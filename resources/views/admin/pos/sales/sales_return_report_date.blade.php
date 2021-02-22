@@ -62,6 +62,7 @@
                                 <th>Qty</th>
                                 <th>U.Price</th>
                                 <th>T.Price</th>
+                                <th>I.V.A</th>
                                 <th>Total</th>
                                 <th>Cash Return</th>
                                 <th>Remarks</th>
@@ -73,7 +74,9 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="6">Total</th>
+                                <th colspan="5">Total</th>
+                                <th></th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -153,16 +156,23 @@
                             return intVal(a) + intVal(b);
                         }, 0 );
 
-
-                    // Payment Total
-                    total = api
+                    tvat = api
                         .column( 9 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
-                    cash_return = api
+
+
+                    // Payment Total
+                    total = api
                         .column( 10 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    cash_return = api
+                        .column( 11 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
@@ -180,9 +190,12 @@
                         tprice
                     );
                     $( api.column( 9 ).footer() ).html(
-                        total
+                        tvat
                     );
                     $( api.column( 10 ).footer() ).html(
+                        total
+                    );
+                    $( api.column( 11 ).footer() ).html(
                         cash_return
                     );
                 },
@@ -200,6 +213,7 @@
                     {data:'qnt',},
                     {data:'uprice',},
                     {data:'tprice',},
+                    {data:'vat_amount',},
                     {data:'total',},
                     {data:'cash_return',},
                     {data:'remarks',},

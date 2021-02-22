@@ -125,7 +125,7 @@
                         <div id="prodlistDiv" class="row" style="margin: 10px 0;">
                             <div class="col-12" style="padding-right: 0 !important; padding-left: 0 !important;">
                                 <table id="prodlist" class="price-table custom-table" style="">
-                                    <tr><th style="width: 30%;">Item</th><th style="width: 20%;">Price</th><th style="width: 20%;">Qty</th><th style="width: 20%;">Total</th><th style="width: 10%;">Delete</th></tr>
+                                    <tr><th style="width: 40%;">Item</th><th style="width: 10%;">Price</th><th style="width: 10%;">Qty</th><th style="width: 10%;">I.V.A</th><th style="width: 0%;">Total</th><th style="width: 30%;">Grand Total</th></tr>
                                 </table>
                             </div>
                         </div>
@@ -386,6 +386,7 @@
                                   var amount = obj.amount;
                                   var discount = obj.discount;
                                   var total = obj.total;
+                                  var vat_amount = obj.vat_amount;
                                   var payment = obj.payment;
                                   var date = obj.date;
                                   
@@ -416,10 +417,10 @@
                                   
                                   $("#prodlist").css('border-collapse','collapse');
                              
-                                  $("#prodlist tbody tr").each(function() {
+                                //   $("#prodlist tbody tr").each(function() {
                                        
-                                        $(this).find("th:eq(4)").remove();
-                                  });
+                                //         $(this).find("th:eq(4)").remove();
+                                //   });
                                  
                                   $("#prodlist").append(trow);
                                   
@@ -430,7 +431,7 @@
                                   $('#prodlistDiv').css("height","").css("clear","float").css("background","#FFF").css("overflow","");
                                   
                                  
-                                  $('#printdiv').append("<table class='footer-table' style='border-collapse: collapse; width:100%;' border='1'><tr><td>Total Tk: </td><td>"+amount+"</td><td> Discount: </td><td>"+discount+"</td></tr><tr></tr><tr><td>All Total: </td><td>"+total+"</td><td>Recieved: </td><td>"+discount+"</td></tr><tr><td> Payment: </td><td>"+payment+"</td><td> Date: </td><td>"+date+"</td></tr></table>");
+                                  $('#printdiv').append("<table class='footer-table' style='border-collapse: collapse; width:100%;' border='1'><tr><td>Total Tk: </td><td>"+amount+"</td><td> Discount: </td><td>"+discount+"</td></tr><tr></tr><tr><td>I.V.A: </td><td>"+vat_amount+"</td><td>All Total: </td><td>"+total+"</td></tr><tr><td> Payment: </td><td>"+payment+"</td><td> Date: </td><td>"+date+"</td></tr></table>");
                                  
                      
                                   $("#printRest tr td").css('font-size','12px').css('border', '1px solid #000').css('border-collapse', 'collapse');

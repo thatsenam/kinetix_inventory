@@ -57,6 +57,7 @@
                                 <th>Product</th>
                                 <th>Qnt</th>
                                 <th>Price</th>
+                                <th>I.V.A</th>
                                 <th>Total</th>
                                 <th>Action</th>
                             </tr>
@@ -66,7 +67,12 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="5">Total Amount</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -137,9 +143,17 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+
+                    // Payment Total
+                    vat = api
+                        .column( 7 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
                     // Grand Total
                     gTotal = api
-                        .column( 7 )
+                        .column( 8 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
@@ -153,6 +167,9 @@
                         price
                     );
                     $( api.column( 7 ).footer() ).html(
+                        vat
+                    );
+                    $( api.column( 8 ).footer() ).html(
                         gTotal
                     );
                 },
@@ -168,6 +185,7 @@
                     {data:'pname',},
                     {data:'qnt',},
                     {data:'price',},
+                    {data:'vat',},
                     {data:'total',},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]

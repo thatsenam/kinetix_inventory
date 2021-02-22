@@ -175,6 +175,8 @@ class PosPurchaseController extends Controller
         $date = $fieldValues['date'];
         $user = Auth::id();
 
+        $gtotal=$amount+$total_vat-$discount;
+        $purchase_total=$amount-$discount;
         if($discount == ''){$discount = "0.00";}
         if($payment == ''){$payment = "0.00";}
 
@@ -195,7 +197,7 @@ class PosPurchaseController extends Controller
             'supp_inv' => $supp_memo,
             'discount' => $discount,
             'amount' => $amount,
-            'total' => $amount+$total_vat-$discount,
+            'total' => $gtotal,
             'vat_amount' => $total_vat,
             'payment' => $payment,
             'date' => $date,
@@ -291,7 +293,7 @@ class PosPurchaseController extends Controller
             $head = "Purchase";
             $description = "Purchase from Invoice ".$pur_inv;
             $credit = 0;
-            $debit = $payment;
+            $debit = $purchase_total;
 
             AccTransaction::create([
                 'vno' => $vno,
@@ -302,6 +304,22 @@ class PosPurchaseController extends Controller
                 'credit' => $credit,
                 'date' => $date,
                 'user_id' => $user,
+            ]);
+
+            $head = "Purchase I.V.A";
+            $description = "Purchase I.V.A from Invoice ".$pur_inv;
+            $credit = 0;
+            $debit = $total_vat;
+
+            AccTransaction::create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid"." ".$supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user
             ]);
 
             $head = "Cash In Hand";
@@ -322,15 +340,36 @@ class PosPurchaseController extends Controller
 
             ]);
 
+            $due=$gtotal-$payment;
+            if($due > 0){
+                $head = $supplier->name." ".$supplier->phone;
+                $description = "Purchase Due From Invoice  ".$pur_inv;
+                $credit = $due;
+                $debit = 0;
+
+                AccTransaction::create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "sid"." ".$supp_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+
+                ]);
+            }
+
         }else{
             
             $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
             $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = "Purchase";
-            $description = "Purchase from Invoice ".$pur_inv;
+            $description = "Due Purchase from Invoice ".$pur_inv;
             $credit = 0;
-            $debit = $total;
+            $debit = $purchase_total;
 
             AccTransaction::create([
                 'vno' => $vno,
@@ -343,9 +382,25 @@ class PosPurchaseController extends Controller
                 'user_id' => $user
             ]);
 
-            $head = $supplier->name." ".$supplier->phone;;
+            $head = "Due Purchase I.V.A";
+            $description = "Purchase I.V.A from Invoice ".$pur_inv;
+            $credit = 0;
+            $debit = $total_vat;
+
+            AccTransaction::create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid"." ".$supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user
+            ]);
+
+            $head = $supplier->name." ".$supplier->phone;
             $description = "Purchase";
-            $credit = $total;
+            $credit = $gtotal;
             $debit = 0;
 
             AccTransaction::create([
@@ -384,6 +439,7 @@ class PosPurchaseController extends Controller
         $supp_id = $fieldValues['supp_id'];
         $supp_memo = $fieldValues['supp_memo'];
         $total = $fieldValues['total'];
+        $total_vat = $fieldValues['total_vat'];
         $date = $fieldValues['date'];
         $user = Auth::id();
 
@@ -398,6 +454,7 @@ class PosPurchaseController extends Controller
             $j2 = $i+2;
             $j3 = $i+3;
             $j4 = $i+4;
+            $j5 = $i+5;
 
             $product = DB::table('products')->where('client_id',auth()->user()->client_id)->where('id', $take_cart_items[$j])->first();
 
@@ -418,7 +475,8 @@ class PosPurchaseController extends Controller
                 'pid' => $pid,
                 'qnt' => $take_cart_items[$j3],
                 'price' => $take_cart_items[$j2],
-                'total' => $take_cart_items[$j4],
+                'vat_amount' => $take_cart_items[$j4],
+                'total' => $take_cart_items[$j5],
                 'sid' => $supp_id,
                 'user' => $user
             ]);
@@ -435,7 +493,7 @@ class PosPurchaseController extends Controller
             ]);
 
 
-            $i = $i + 5;
+            $i = $i + 6;
         }
 
         $serials = json_decode($req['serialArray'], true);
@@ -481,12 +539,27 @@ class PosPurchaseController extends Controller
                 'user' => $user,
 
             ]);
+            
+            $head = "Purchase I.V.A";
+            $description = "Purchase Return I.V.A from Invoice ".$supp_memo;
+            $credit = $total_vat;
+            $debit = 0;
 
+            AccTransaction::create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid"." ".$supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user
+            ]);
 
             $head = $supplier->name." ".$supplier->phone;;
             $description = "Purchase Return";
             $credit = 0;
-            $debit = $total;
+            $debit = $total+$total_vat;
 
             AccTransaction::create([
 
@@ -497,7 +570,7 @@ class PosPurchaseController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                'user' => $user,
+                'user_id' => $user,
 
             ]);
 
@@ -776,7 +849,7 @@ class PosPurchaseController extends Controller
 
         $purchase = DB::table('purchase_returns')->where('purchase_returns.client_id',auth()->user()->client_id)
             ->select('purchase_returns.id as retid', 'purchase_returns.date as date','purchase_returns.pur_inv as pur_inv','products.product_name as pname',
-            'suppliers.name as sname', 'purchase_returns.qnt as qnt', 'purchase_returns.price as price','purchase_returns.total as total')
+            'suppliers.name as sname', 'purchase_returns.qnt as qnt', 'purchase_returns.vat_amount as vat', 'purchase_returns.price as price','purchase_returns.total as total')
             ->join('suppliers', 'purchase_returns.sid', 'suppliers.id')
             ->join('products', 'purchase_returns.pid', 'products.id')
             ->whereBetween('date', [$stdate, $enddate])->get();
@@ -944,15 +1017,16 @@ class PosPurchaseController extends Controller
         $trow = "";
 
         foreach($get_invoice as $row){
+            $gtotal=$row->total+$row->vat;
             $serials = Serial::where('client_id', auth()->user()->client_id)
                 ->where('pur_inv', $row->pur_inv)
                 ->where('product_id', $row->pid)->pluck('serial')->toArray();
             if($serials)
             {
                 $serials = implode (", ", $serials);
-                $trow .= "<tr><td>".$row->product_name ."<br>". $serials."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                $trow .= "<tr><td>".$row->product_name ."<br>". $serials."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$gtotal."</td></tr>";
             }else{
-                $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->total."</td></tr>";
+                $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$gtotal."</td></tr>";
             }
         }
 
@@ -978,6 +1052,7 @@ class PosPurchaseController extends Controller
         $discount = $get_invoice->discount;
         $amount = $get_invoice->amount;
         $total = $get_invoice->total;
+        $vat_amount = $get_invoice->vat_amount;
         $payment = $get_invoice->payment;
         $date = $get_invoice->date;
 
@@ -998,6 +1073,7 @@ class PosPurchaseController extends Controller
             "discount" => $discount,
             "amount" => $amount,
             "total" => $total,
+            "vat_amount" => $vat_amount,
             "payment" => $payment,
             "date" => $date,
             "supp_name" => $supp_name,

@@ -239,6 +239,22 @@ class AccHeadIndex extends Component
             'head' => "Sales Return",
         ];
 
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Expense',
+            'sub_head' => "Purchase",
+            'head' => "Purchase I.V.A",
+        ];
+
+        $items[] = [
+            'user_id' => $user_id,
+            'client_id' => $client_id,
+            'parent_head' => 'Liabilities',
+            'sub_head' => "Accounts Payable",
+            'head' => "Sales I.V.A",
+        ];
+
         // AccHead::where('client_id', auth()->user()->client_id)->delete();
 
         foreach ($items as $item) 

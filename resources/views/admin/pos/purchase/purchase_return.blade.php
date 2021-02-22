@@ -79,7 +79,7 @@
                             <div class="row" style="height:350px; overflow-y: auto;">
                                 <div class="col-12" style="padding-right: 0 !important; margin-top:20px;">
                                     <table class="price-table custom-table">
-                                        <tr><th>SL</th><th style="width: 100px;">Item</th><th>price</th><th>Qty</th><th>Total</th><th>Delete</th></tr>
+                                        <tr><th>SL</th><th style="width: 100px;">Item</th><th>price</th><th>Qty</th><th>I.V.A</th><th>Total</th><th>Delete</th></tr>
                                         
                                     </table>
                                 </div>
@@ -118,7 +118,12 @@
                                      
                                   </div>
                                 </div>
-                                
+                                <div class="col-6">
+                                      <div class="form-group">
+                                         <label>Total I.V.A</label>
+                                         <input type="text" name="total_vat" id="total_vat" class="form-control" readonly="true" value="0">
+                                      </div>
+                                </div>
                                 <div class="col-6">
                                     <div class="form-group">
                                         <div style="width: 120px; margin: 23px auto;">
@@ -218,7 +223,6 @@
                         product_id = id;
                         product_serial = $(this).find(".active").attr("data-serial");
                         product_vat = $(this).find(".active").attr("data-vat");
-                        
                         $('#search').val(name);
                         $('#pid_hid').val(id);
                         $('#price').val(price);
@@ -565,7 +569,6 @@
                 
                 totalPrice = (qnt * price); 
                 var total_vat= totalPrice*product_vat/100;
-                totalPrice=totalPrice+total_vat;
 
                 add_product_to_table(id, name, qnt, price, totalPrice, total_vat);
                 
@@ -601,7 +604,8 @@
                if($(this).attr("class") == 'price'){price = $(this).html(); cartData.push(price);}
               
                if($(this).attr("class") == 'totalPriceTd'){totalPriceTd = $(this).html(); cartData.push(totalPriceTd);} 
-               
+               if($(this).attr("class") == 'totalVatTd'){totalVatTd = $(this).html(); cartData.push(totalVatTd);} 
+
                i = i +1;
            });
            
@@ -627,7 +631,8 @@
             
         
             fieldValues.total = $('#total').val();
-            
+            fieldValues.total_vat = $('#total_vat').val();
+
             
            
             var formData = new FormData();
@@ -721,20 +726,27 @@
             var totalPriceTd = Number($(this).closest('tr').find('.totalPriceTd').html());
 
             var productID = Number($(this).closest('tr').find(".name").attr('data-prodid'));
+            var totalVatTd = Number($(this).closest('tr').find(".totalVatTd").html());
+
 
             delete serial_array[productID];
 
             var grandTotal = Number($('#total').val());
         
             var totalPrice = $('#hid_total').val();
+            var totalVatField = $('#total_vat').val();
             
+            
+            totalPrice = Number(totalPrice - totalPriceTd);
+            var totalVat = Number(totalVatField - totalVatTd);
             
             totalPrice = Number(totalPrice - totalPriceTd);
             
             grandTotalPrice = Number(grandTotal - totalPriceTd);
             
             $('#hid_total').val(totalPrice);
-            
+            $('#total_vat').val(totalVat);
+
             $('#total').val(grandTotalPrice);
             
             $(this).closest('tr').remove();
@@ -795,7 +807,7 @@
       
     });
     
-    function selectProducts(id, name, price, serial, vat){
+    function selectProducts(id, name, price, serial,warrenty,stock, vat){
 
         $('#search').val(name);
         $('#pid_hid').val(id);
@@ -803,7 +815,6 @@
         product_id = id;
         product_serial = serial;  
         product_vat = vat;  
-
         $("#price").focus();
         $("#products_div").hide();
         
@@ -831,7 +842,7 @@
                         
     var sl = 1;
     
-    function add_product_to_table(id, name, qnt, price, total){
+    function add_product_to_table(id, name, qnt, price, total, vat){
         
             var id = id;
             var name = name;
@@ -841,14 +852,18 @@
             
             $('.price-table').show();
             
-            $('.price-table').append("<tr><td>"+sl+"</td><td data-prodid='"+id+"' style='width:200px;' class='name'>"+name+"</td><td class='price'>"+price+"</td><td class='qnt'>"+qnt+"</td><td class='totalPriceTd'>"+total+"</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
+            $('.price-table').append("<tr><td>"+sl+"</td><td data-prodid='"+id+"' style='width:200px;' class='name'>"+name+"</td><td class='price'>"+price+"</td><td class='qnt'>"+qnt+"</td><td class='totalVatTd'>"+vat+"</td><td class='totalPriceTd'>"+total+"</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
             
             var totalPrice = Number($('#hid_total').val());
             
             totalPrice = Number(totalPrice + total);
+            var totalVatField = Number($('#total_vat').val());
+            
+            totalVatField = Number(totalVatField + vat);
         
             $('#hid_total').val(totalPrice);
-            
+            $('#total_vat').val(totalVatField);
+
             $('#total').val(totalPrice);
             
             $('#pid_hid').val("0");

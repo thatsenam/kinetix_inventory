@@ -139,11 +139,12 @@
                             <div class="col-12" style="padding-right: 0 !important; padding-left: 0 !important;">
                                 <table id="prodlist" class="price-table custom-table" style="">
                                     <tr>
-                                        <th style="width: 30%;">Item</th>
-                                        <th style="width: 20%;">Price</th>
-                                        <th style="width: 20%;">Qty</th>
+                                        <th style="width: 40%;">Item</th>
+                                        <th style="width: 0%;">Price</th>
+                                        <th style="width: 10%;">Qty</th>
+                                        <th style="width: 10%;">I.V.A</th>
                                         <th style="width: 20%;">Total</th>
-                                        <th style="width: 10%;">Delete</th>
+                                        <th style="width: 20%;">Grand Total</th>
                                     </tr>
                                 </table>
                             </div>
@@ -452,10 +453,10 @@
                     		     
                     		     $("#prodlist").css('border-collapse','collapse');
                     		
-                    		     $("#prodlist tbody tr").each(function() {
+                    		    //  $("#prodlist tbody tr").each(function() {
                     		          
-                    		           $(this).find("th:eq(4)").remove();
-                                 });
+                    		    //        $(this).find("th:eq(4)").remove();
+                                //  });
                                 
                                  $("#prodlist").append(trow);
                                  

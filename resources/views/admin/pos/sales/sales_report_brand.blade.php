@@ -73,6 +73,7 @@
                                             <th>Product Name</th>
                                             <th>Qnt</th>
                                             <th>Price</th>
+                                            <th>I.V.A</th>
                                             <th>Total</th>
                                         </tr>
                                     </thead>
@@ -82,6 +83,7 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="3">Total</th>
+                                            <th></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
@@ -145,15 +147,15 @@
                                 return intVal(a) + intVal(b);
                             }, 0);
 
-                        price = api
-                            .column(4)
+                        vat = api
+                            .column(5)
                             .data()
                             .reduce(function(a, b) {
                                 return intVal(a) + intVal(b);
                             }, 0);
 
                         total = api
-                            .column(5)
+                            .column(6)
                             .data()
                             .reduce(function(a, b) {
                                 return intVal(a) + intVal(b);
@@ -163,10 +165,10 @@
                         $(api.column(3).footer()).html(
                             qnt
                         );
-                        $(api.column(4).footer()).html(
-                            price
-                        );
                         $(api.column(5).footer()).html(
+                            vat
+                        );
+                        $(api.column(6).footer()).html(
                             total
                         );
                     },
@@ -192,6 +194,9 @@
                         },
                         {
                             data: 'price',
+                        },
+                        {
+                            data: 'vat',
                         },
                         {
                             data: 'total',

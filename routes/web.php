@@ -22,6 +22,7 @@ Route::get('/loadmore', 'IndexController@products_loadmore')->name('loadmore');
 Route::get('/get_product', 'PagesController@get_product')->name('get_product');
 Route::post('/get_product', 'PagesController@send_product')->name('send_product');
 Route::get('/test_loadmore', 'IndexController@test_loadmore')->name('test_loadmore');
+Route::post('/products/searchProducts','ProductsController@searchProducts')->name('products.searchProducts');
 
 Route::get('/products/{id}', 'ProductsController@singleProduct')->name('singleProduct');
 Route::get('/shop/{key}', 'PagesController@index')->name('shop');
@@ -390,14 +391,13 @@ Route::view('/dashboard/warranty-management/warranty-report', 'admin.pos.warrant
 
 Route::get('/accounting/acc-heads', 'AccountingPageController@acc_head_index');
 Route::get('/accounting/voucher-entry', 'AccountingPageController@voucher_entry_index');
+Route::get('/cost-entry', 'AccountingPageController@cost_entry_index')->name('cost-entry');
 Route::get('/accounting/voucher-history','AccountingPageController@voucher_history_index');
 Route::get('/accounting/income-statement','AccountingPageController@income_statement_index');
 Route::get('/accounting/balance-sheet', 'AccountingPageController@balance_sheet_index');
 Route::get('/accounting/cash-book', 'AccountingPageController@cash_book_index');
 Route::get('/accounting/ledger', 'AccountingPageController@ledger_index');
 Route::get('/accounting/trial-balance','AccountingPageController@trial_balance_index');
-
-// Warehouse
 
 //Warehouse Routes
 Route::match(['get','post'],'/admin/manage_warehouse', 'PagesController@warehouse_manage')->name('admin.pos.warehouse.manage');
@@ -406,8 +406,16 @@ Route::match(['get','post'],'/admin/stock-transfer-report', 'PagesController@sto
 Route::match(['get','post'],'/admin/stock_transfer_report_date', 'PagesController@stock_transfer_report_date')->name('stock_transfer_report_date');
 Route::match(['get','post'],'/admin/warehouse_report', 'PagesController@warehouse_report')->name('admin.pos.warehouse_report');
 
-//Warehouse Routes
-// Route::match(['get','post'],'/admin/manage_warehouse',[PagesController::class,'warehouse_manage'])->name('admin.pos.warehouse.manage');
-// Route::match(['get','post'],'/admin/stock_transfer',[PagesController::class,'stock_transfer'])->name('admin.pos.stock.transfer');
-// Route::match(['get','post'],'/admin/stock-transfer-report', [PagesController::class,'stock_transfer_report'])->name('admin.pos.stock-transfer-report');
-// Route::match(['get','post'],'/admin/stock_transfer_report_date', [PagesController::class,'stock_transfer_report_date'])->name('stock_transfer_report_date');
+// Servicing
+
+Route::view('/dashboard/servicing/receive-from-customer', 'admin.pos.servicing.receive-from-customer');
+Route::view('/dashboard/servicing/delivery-to-customer', 'admin.pos.servicing.delivery-to-customer');
+Route::view('/dashboard/servicing/servicing-report', 'admin.pos.servicing.servicing-report');
+
+//Categories Routes (Admin Panel)
+Route::match(['get','post'],'/admin/create_cost','CostController@CreateCost');
+Route::post('/admin/add_cost','CostController@add_cost')->name('add_cost');
+Route::match(['get','post'],'/admin/edit_cost/{id}','CostController@editCost');
+Route::match(['get','post'],'/admin/delete_cost/{id}','CostController@deleteCost');
+Route::get('/admin/cost_reports', 'CostController@cost_reports')->name('admin.cost_reports');
+

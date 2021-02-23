@@ -29,7 +29,7 @@ class CategoryController extends Controller
             $category->url = $slug;
             $category->featured = $type;
             $category->status = $data['cat_status'];
-            $category->vat = $data['inputVat'];
+            $category->vat = $data['inputVat'] ?? 0.00;
 
             if($request->hasFile('inputImage')){
                 $file = $request->file('inputImage');

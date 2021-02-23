@@ -1302,6 +1302,7 @@ class PosSalesController extends Controller
 
 
         $get_accounts = DB::table('acc_transactions')->where('description', 'like', '%'.$invoice)->get();
+        $get_stocks = DB::table('stocks')->where('remarks', 'like', '%'.$invoice)->delete();
 
         foreach($get_accounts as $row){
 
@@ -1756,6 +1757,7 @@ class PosSalesController extends Controller
         DB::table('sales_return')->where('rinvoice', $invoice)->delete();
 
         $get_accounts = DB::table('acc_transactions')->where('description', 'like', '%'.$invoice)->get();
+        $get_stocks = DB::table('stocks')->where('remarks', 'like', '%'.$invoice)->delete();
 
         foreach($get_accounts as $row){
 

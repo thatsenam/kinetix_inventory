@@ -250,6 +250,7 @@
                                                 </table>
 
                                             </div>
+                                            
 
 
                                             <!--------------------------------->
@@ -2167,7 +2168,6 @@
                         var invoice = ts.responseText;
 
                         printPos(invoice);
-
                         $('#cust_phone').val("");
                         $('#cust_name').val("");
                         $('#cust_id').val("0");
@@ -2222,7 +2222,7 @@
 
                         $('#save').attr('disabled', false);
 
-                        location.reload();
+                        //location.reload();
 
 
                     },
@@ -2676,7 +2676,32 @@
             var ledger = {{ $ledger }};
 
             if (ledger == 1) {
-                ledgerPrint();
+                ledgerPrint(invoice);
+            } else {
+                var prtContent = document.getElementById("printdiv");
+                var WinPrint = window.open('', '', 'left=0,top=0, toolbar=0,scrollbars=0,status=0');
+                WinPrint.document.write(prtContent.innerHTML);
+                WinPrint.document.close();
+                WinPrint.focus();
+                WinPrint.print();
+                WinPrint.close();
+            }
+        }
+        function printPosDriver(invoice) {
+
+            
+            $('#printRest').hide()
+
+            $('#printdiv').append(
+                '<table style="width:332px; margin: 10px auto;"><tr><td style="text-align:center;">Have a Safe Journey</td></tr></table>'
+                );
+
+            //////////////printReceipt///////////
+
+            var ledger = {{ $ledger }};
+
+            if (ledger == 1) {
+                ledgerPrint(invoice);
             } else {
                 var prtContent = document.getElementById("printdiv");
                 var WinPrint = window.open('', '', 'left=0,top=0, toolbar=0,scrollbars=0,status=0');
@@ -2756,7 +2781,8 @@
             var ledger = {{ $ledger }};
 
             if (ledger == 1) {
-                ledgerPrint();
+                
+                ledgerPrint(invoice);
             } else {
                 var prtContent = document.getElementById("printdiv");
                 var WinPrint = window.open('', '', 'left=0,top=0, toolbar=0,scrollbars=0,status=0');
@@ -2767,8 +2793,8 @@
                 WinPrint.close();
             }
         }
-
-        function ledgerPrint() {
+        var flag=1;
+        function ledgerPrint(invoice) {
 
             document.getElementById("printdiv").style.width = "100%";
             document.getElementById("printdiv").style.color = "black";
@@ -2786,8 +2812,13 @@
             document.body.innerHTML = printContents;
             window.print();
             document.body.innerHTML = originalContents;
+            if(flag==1){
+                flag=0;
+                printPosDriver(invoice);
+            }
             location.reload();
         }
+
 
     </script>
 @stop

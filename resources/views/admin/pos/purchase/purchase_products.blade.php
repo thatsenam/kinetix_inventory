@@ -827,7 +827,7 @@
                     // alert(data);
                         
                         alert("Your Purchase Has Been Completed!!!");
-                        
+                        location.reload()
                          //$('.cart-table tr').remove();
                     
                 }

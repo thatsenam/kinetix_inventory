@@ -274,7 +274,7 @@
                     {data:'amount',},
                     {data:'total',},
                     {data:'payment',},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'action', name: 'action', class:'purinv', orderable: false, searchable: false},
                 ]
             });
         }
@@ -298,7 +298,7 @@
             
             if(confirm("Are you Sure to Delete?")){
                 
-                var purinv = $(this).closest('tr').find('.purinv').html();
+                var purinv = $(this).data("id");
                 
                 var formData = new FormData();
         	        formData.append('purinv', purinv);

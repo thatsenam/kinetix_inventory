@@ -819,6 +819,10 @@ class PosPurchaseController extends Controller
         $get_accounts = DB::table('acc_transactions')
             ->where('client_id',auth()->user()->client_id)
             ->where('description', 'like', '%'.$purinv)->get();
+        
+        $get_stocks = DB::table('stocks')
+            ->where('client_id',auth()->user()->client_id)
+            ->where('remarks', 'like', '%'.$purinv)->delete();
 
         foreach($get_accounts as $row){
 
@@ -906,6 +910,9 @@ class PosPurchaseController extends Controller
         DB::table('purchase_returns')
             ->where('client_id',auth()->user()->client_id)
             ->where('id', $id)->delete();
+        $get_stocks = DB::table('stocks')
+            ->where('client_id',auth()->user()->client_id)
+            ->where('remarks', 'like', '%Invoice No-%'.$invoice)->delete();
 
         $get_accounts = DB::table('acc_transactions')
             ->where('client_id',auth()->user()->client_id)

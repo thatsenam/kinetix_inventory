@@ -669,8 +669,8 @@
                 },
                 error: function(ts) {
                     
-                    alert(ts.responseText);
-                    
+                    alert('Purchase return successfull!');
+                    location.reload();
                     if(ts.responseText == '')  {
     
                         //alert(ts.responseText);

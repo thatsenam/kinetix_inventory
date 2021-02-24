@@ -82,19 +82,7 @@ class PagesController extends Controller
     }
 
     public function warehouse_manage(){
-        $countWarehouse = DB::table('warehouses')->where('client_id',auth()->user()->client_id)->count();
-
-        if($countWarehouse<1){
-            $getAddress = DB::table('general_settings')->select('site_address','phone')->where('client_id',auth()->user()->client_id)->first();
-            Warehouse::create([
-                'name' => "Sales Center",
-                'address' => $getAddress->site_address,
-                'phone' => $getAddress->phone,
-                'city' => $getAddress->site_address,
-                'user_id' => auth()->user()->id,
-                'client_id' => auth()->user()->client_id
-            ]);
-        }
+        
         return view('admin.pos.warehouse.manage-warehouse');
     }
 
@@ -372,6 +360,20 @@ class PagesController extends Controller
         }
 
         $general_settings->save();
+
+        $countWarehouse = DB::table('warehouses')->where('client_id',auth()->user()->client_id)->count();
+
+        if($countWarehouse<1){
+            $getAddress = DB::table('general_settings')->select('site_address','phone')->where('client_id',auth()->user()->client_id)->first();
+            Warehouse::create([
+                'name' => "Sales Center",
+                'address' => $getAddress->site_address,
+                'phone' => $getAddress->phone,
+                'city' => $getAddress->site_address,
+                'user_id' => auth()->user()->id,
+                'client_id' => auth()->user()->client_id
+            ]);
+        }
 
         return back();
     }

@@ -16,6 +16,7 @@ use App\Category;
 use App\Filter;
 use App\Seller;
 use App\Helpers\Functions;
+use App\Warehouse;
 use Image;
 use Auth;
 

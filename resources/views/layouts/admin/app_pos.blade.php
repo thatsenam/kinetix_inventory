@@ -693,7 +693,7 @@
             </a>
           </li>
           @endcan --}}
-          <li class="nav-item mb-5 {{ (request()->is('admin/settings')) ? 'menu-open' : '' }}">
+          <li class="nav-item {{ (request()->is('admin/settings')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon nav-icon fas fa-cogs"></i>
               <p>
@@ -710,6 +710,16 @@
                 </a>
               </li>
             </ul>
+          </li>
+          <li class="nav-item mb-5">
+              <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>Logout</p>
+              </a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                  @csrf
+              </form>
           </li>
         </ul>
       </nav>

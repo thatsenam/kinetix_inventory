@@ -59,7 +59,7 @@
                                         <div class="col-md-7">
                                             <div class="row">
                                                 @if($warehouses->count()>1)
-                                                <div class="col-5">
+                                                <div class="col-3">
                                                     <select name="warehouse_id" id="warehouse_id" class="form-control">
                                                         <option value="" disabled selected>Select Warehouse</option>
                                                         @foreach($warehouses as $warehouse)
@@ -67,7 +67,7 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div class="col-4">
+                                                <div class="col-3">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" name="cust_phone" id="cust_phone"
                                                             class="form-control" placeholder="Customer Phone"
@@ -90,9 +90,15 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-3">
+                                                    <div class="form-group" style="position: relative;">
+                                                        <input type="text" name="cust_address" id="cust_address"
+                                                            class="form-control" placeholder="Customer Address">
+                                                    </div>
+                                                </div>
                                                 @else
                                                 <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
-                                                <div class="col-6">
+                                                <div class="col-4">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" name="cust_phone" id="cust_phone"
                                                             class="form-control" placeholder="Customer Phone"
@@ -106,13 +112,19 @@
 
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-4">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" name="cust_name" id="cust_name"
                                                             class="form-control" placeholder="Customer Name">
                                                         <div id="memo_div"
                                                             style="width: 100%; display: none; position: absolute; top: 45px; left: 0; z-index: 999;">
                                                         </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group" style="position: relative;">
+                                                        <input type="text" name="cust_address" id="cust_address"
+                                                            class="form-control" placeholder="Customer Address">
                                                     </div>
                                                 </div>
                                                 @endif
@@ -287,7 +299,7 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top:-10px;">
                                                     <div class="form-group">
                                                         <label>Amount</label>
                                                         <input type="text" name="amount" id="amount"
@@ -295,7 +307,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <div class="form-group">
+                                                    <div class="form-group" style="margin-top:-10px;">
                                                         <label>Grand Total</label>
                                                         <input type="text" name="show_grand_total" id="show_grand_total"
                                                             class="form-control bg-white" placeholder="" disabled>
@@ -314,7 +326,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top:-10px;">
                                                     <div class="form-group">
                                                         <label>Discount</label>
                                                         <input type="text" name="discount" id="discount"
@@ -323,7 +335,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <div class="form-group">
+                                                    <div class="form-group" style="margin-top:-10px;">
                                                         <label>S. Charge</label>
                                                         <input type="text" name="scharge" id="scharge" class="form-control"
                                                             placeholder="" value="{{ $scharge ?? 0 }}">
@@ -332,14 +344,14 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top:-10px;">
                                                     <div class="form-group">
                                                         <label>Total I.V.A</label>
                                                         <input type="text" name="total_vat" id="total_vat"
                                                             class="form-control" value="0">
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top:-10px;">
                                                     <div class="form-group">
                                                         <label>Payment</label>
                                                         <input type="text" name="payment" id="payment" class="form-control"
@@ -350,7 +362,7 @@
 
                                             <div class="row">
                                                 
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top:-10px;">
                                                     <div class="form-group">
                                                         <label>Payment Type</label>
                                                         <select name="paytype" id="paytype" class="form-control"
@@ -362,7 +374,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top:-10px;">
                                                     <div class="form-group">
                                                         <label>Sale By</label>
                                                         <input type="text" name="sby" id="sby" class="form-control"
@@ -374,7 +386,7 @@
 
                                             <div class="row">
                                                 
-                                                <div class="col-12">
+                                                <div class="col-12" style="margin-top:-10px;">
                                                     <div class="form-group">
                                                         <label>Remarks</label>
                                                         <input type="text" name="remarks" id="remarks" class="form-control"
@@ -383,13 +395,13 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top:-10px;">
                                                     <div style="width: 80px; margin: 20px auto;">
                                                         <input type="button" class="btn btn-danger btn-lg" id="cancel"
                                                             value="Cancel">
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top:-10px;">
                                                     <div style="width: 80px; margin: 20px auto;">
                                                         <input type="button" class="btn btn-success btn-lg" id="save"
                                                             value="Save">
@@ -399,7 +411,7 @@
 
                                             <div class="row">
 
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top:-10px;">
                                                     <div class="form-group">
                                                         <div style="width: 50px; margin: 0 auto;">
                                                             <input type="button" class="btn btn-primary btn-md" id="reprint"
@@ -408,7 +420,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-6">
+                                                <div class="col-6" style="margin-top:-10px;">
                                                     <div class="form-group" style="position: relative;">
 
                                                         <input type="text" name="rep_invoice" id="rep_invoice"
@@ -773,10 +785,12 @@
 
                             var phone = $(this).find(".active").attr("data-phone");
                             var name = $(this).find(".active").attr("data-name");
+                            var address = $(this).find(".active").attr("data-address");
                             var id = $(this).find(".active").attr("data-id");
 
                             $('#cust_phone').val(phone);
                             $('#cust_name').val(name);
+                            $('#cust_address').val(address);
                             $('#cust_id').val(id);
 
                             $("#search").focus();
@@ -1859,6 +1873,7 @@
 
                 $('#cust_phone').val("");
                 $('#cust_name').val("");
+                $('#cust_address').val("");
                 $('#cust_id').val("0");
                 $('#vat').val("0");
                 $('#disc').val("0");
@@ -2086,6 +2101,7 @@
                 fieldValues.cust_id = $('#cust_id').val();
                 fieldValues.cust_name = $('#cust_name').val();
                 fieldValues.cust_phone = $('#cust_phone').val();
+                fieldValues.cust_address = $('#cust_address').val();
                 fieldValues.vat = $('#total_vat').val();
                 fieldValues.scharge = $('#scharge').val();
                 fieldValues.discount = $('#discount').val();
@@ -2419,6 +2435,7 @@
                             var company_add = obj.company_add;
                             var tcname = obj.cust_name;
                             var tcphone = obj.cust_phone;
+                            var tcaddress = obj.cust_address;
                             var amount = obj.amount;
                             var vat = obj.vat;
                             var scharge = obj.scharge;
@@ -2428,7 +2445,7 @@
                             var due = obj.due;
                             var date = obj.date;
 
-                            rePrintPos(invoice, company, company_add, tcname, tcphone, trow,
+                            rePrintPos(invoice, company, company_add, tcname, tcphone, tcaddress, trow,
                                 amount, vat, scharge, discount, gtotal, payment, due, date);
 
                             location.reload();
@@ -2468,10 +2485,11 @@
 
         });
 
-        function selectCustomer(id, phone, name) {
+        function selectCustomer(id, phone, name, address) {
 
             $('#cust_phone').val(phone);
             $('#cust_name').val(name);
+            $('#cust_address').val(address);
             $('#cust_id').val(id);
 
             $("#search").focus();
@@ -2604,6 +2622,7 @@
             $("#mid_section").show();
 
             var tcname = $('#cust_name').val();
+            var tcaddress = $('#cust_address').val();
 
             //var tcadd = $('#add_tcaddress').val();
 
@@ -2614,6 +2633,7 @@
             $("#cust_add").append("Customer: " + tcname + "<br>");
             //$("#cust_add").append("Address: "+tcadd+"<br>");
             $("#cust_add").append("Phone: " + tcphone + "<br>");
+            $("#cust_add").append("Address: " + tcaddress + "<br>");
             $("#cust_add").append("Invoice: " + invoice);
             $("#cust_add").append(" &nbsp; ");
 
@@ -2624,6 +2644,8 @@
 
                 $(this).find("th:eq(5)").remove();
                 $(this).find("td:eq(5)").remove();
+                $(this).find("th:eq(6)").remove();
+                $(this).find("td:eq(6)").remove();
 
             });
 
@@ -2691,6 +2713,20 @@
 
             
             $('#printRest').hide()
+            $("#prodlist tbody tr").each(function() {
+                // $(this).find("th:eq(1)").remove();
+                $(this).find("th:eq(1)").hide();
+                $(this).find("th:eq(3)").hide();
+                $(this).find("th:eq(4)").hide();
+                $(this).find("th:eq(5)").hide();
+                
+                // $(this).find("td:eq(1)").hide();
+                $(this).find("td:eq(1)").hide();
+                $(this).find("td:eq(3)").hide();
+                $(this).find("td:eq(4)").hide();
+                $(this).find("td:eq(5)").hide();
+                
+            });
 
             $('#printdiv').append(
                 '<table style="width:332px; margin: 10px auto;"><tr><td style="text-align:center;">Have a Safe Journey</td></tr></table>'
@@ -2713,7 +2749,7 @@
             }
         }
 
-        function rePrintPos(invoice, company, company_add, tcname, tcphone, trow, amount, vat, scharge, discount, gtotal,
+        function rePrintPos(invoice, company, company_add, tcname, tcphone, tcaddress, trow, amount, vat, scharge, discount, gtotal,
             payment, due, date) {
 
             $('#printdiv').css('width', '332px');
@@ -2740,6 +2776,7 @@
 
             $("#cust_add").append("Customer: " + tcname + "<br>");
             $("#cust_add").append("Phone: " + tcphone + "<br>");
+            $("#cust_add").append("Address: " + tcaddress + "<br>");
             $("#cust_add").append("Invoice: " + invoice);
             $("#cust_add").append(" &nbsp; ");
 
@@ -2748,6 +2785,7 @@
             $("#prodlist tbody tr").each(function() {
 
                 $(this).find("th:eq(5)").remove();
+                $(this).find("th:eq(6)").remove();
             });
 
             $("#prodlist").append(trow);

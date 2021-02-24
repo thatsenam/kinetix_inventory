@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                             
-                            <div class="row">
+                            <div class="row" style="margin-top:-10px;">
                                 <div class="col-6">
                                   <div class="form-group">
                                      <label>Total</label>

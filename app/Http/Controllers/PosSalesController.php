@@ -185,21 +185,21 @@ class PosSalesController extends Controller
 
                 if($warranty)
                 {
-                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
                 else
                 {
-                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name ."<br>Serial: ". $serials. "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
             }
             else{
                 if($warranty)
                 {
-                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
                 else
                 {
-                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td></tr>";
                 }
             }
         }
@@ -212,6 +212,7 @@ class PosSalesController extends Controller
 
             $cust_name = $get_cname->name;
             $cust_phone = $get_cname->phone;
+            $cust_address = $get_cname->address ?? '';
 
         }else{
 
@@ -252,6 +253,7 @@ class PosSalesController extends Controller
             "date" => $date,
             "cust_name" => $cust_name,
             "cust_phone" => $cust_phone,
+            "cust_address" => $cust_address,
         );
 
         return json_encode($data);
@@ -309,6 +311,7 @@ class PosSalesController extends Controller
         $cust_id = $fieldValues['cust_id'];
         $cust_name = $fieldValues['cust_name'];
         $cust_phone = $fieldValues['cust_phone'];
+        $cust_address = $fieldValues['cust_address'] ?? '';
         $vat = $fieldValues['vat'];
         $scharge = $fieldValues['scharge'];
         $discount = $fieldValues['discount'];
@@ -374,6 +377,7 @@ class PosSalesController extends Controller
                 'id' => $cust_id,
                 'name' => $cust_name,
                 'phone' => $cust_phone,
+                'address' => $cust_address,
                 'user_id' => $user,
             ]);
 

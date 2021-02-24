@@ -44,10 +44,11 @@ class PosCustomerController extends Controller
             $id = $row->id;
             $name = $row->name;
             $phone = $row->phone;
+            $address = $row->address ?? '';
 
             $i = $i + 1; ?>
 
-            <li tabindex='<?php echo $i; ?>' onclick='selectCustomer("<?php echo $id; ?>", "<?php echo $phone; ?>", "<?php echo $name; ?>");' data-id='<?php echo $id; ?>' data-phone='<?php echo $phone; ?>' data-name='<?php echo $name; ?>' ><?php echo $phone; ?> | <?php echo $name; ?></li>
+            <li tabindex='<?php echo $i; ?>' onclick='selectCustomer("<?php echo $id; ?>", "<?php echo $phone; ?>", "<?php echo $name; ?>", "<?php echo $address; ?>");' data-id='<?php echo $id; ?>' data-phone='<?php echo $phone; ?>' data-name='<?php echo $name; ?>' data-address='<?php echo $address; ?>'><?php echo $phone; ?> | <?php echo $name; ?></li>
 
         <?php } ?>
 

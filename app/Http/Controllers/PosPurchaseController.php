@@ -52,6 +52,7 @@ class PosPurchaseController extends Controller
 
         ->orderByRaw("(product_name = '{$s_text}') desc, length(product_name)")
         ->join('categories','categories.id','products.cat_id')
+        ->select('products.id as id','products.product_name as product_name','products.serial as serial','categories.vat as vat')
         ->limit(9)->get(); ?>
 
         <ul class='products-list sugg-list'>
@@ -167,9 +168,9 @@ class PosPurchaseController extends Controller
         $supp_name = $fieldValues['supp_name'];
         $supp_id = $fieldValues['supp_id'];
         $supp_memo = $fieldValues['supp_memo'];
-        $discount = $fieldValues['discount'];
-        $amount = $fieldValues['amount'];
-        $payment = $fieldValues['payment'];
+        $discount = (double)$fieldValues['discount'];
+        $amount = (double)$fieldValues['amount'];
+        $payment = (double)$fieldValues['payment'];
         $total = $fieldValues['total'];
         $total_vat = $fieldValues['total_vat'];
         $date = $fieldValues['date'];

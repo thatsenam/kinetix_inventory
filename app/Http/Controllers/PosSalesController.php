@@ -55,7 +55,8 @@ class PosSalesController extends Controller
         $s_text = $req['s_text'];
 
         $products = DB::table('products')->where('products.client_id',auth()->user()->client_id)
-            ->where('product_name', 'like', '%'.$s_text.'%')->join('categories','categories.id','products.cat_id')->limit(9)->get(); ?>
+            ->where('product_name', 'like', '%'.$s_text.'%')->join('categories','categories.id','products.cat_id')
+            ->select('products.id as id','products.product_name as product_name','products.after_pprice as after_pprice','products.before_price as before_price','products.serial as serial','products.warranty as warranty','products.product_img as product_img','categories.vat as vat')->limit(9)->get(); ?>
 
 
         <ul class='products-list sugg-list' style='width:100%;'>

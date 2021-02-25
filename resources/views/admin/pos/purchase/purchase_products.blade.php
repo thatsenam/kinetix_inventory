@@ -129,7 +129,7 @@
                                     <div class="col-6">
                                       <div class="form-group">
                                          <label>Discount</label>
-                                         <input type="text" name="discount" id="discount" class="form-control" placeholder ="">
+                                         <input type="text" name="discount" id="discount" class="form-control" placeholder ="" value="0">
                                         
                                       </div>
                                     </div>
@@ -156,7 +156,7 @@
                                     <div class="col-6">
                                       <div class="form-group">
                                          <label>Payment</label>
-                                         <input type="text" name="payment" id="payment" class="form-control" placeholder ="">
+                                         <input type="text" name="payment" id="payment" class="form-control" placeholder ="" value="0"> 
                                       </div>
                                     </div>
                                     <div class="col-6">
@@ -736,8 +736,8 @@
             fieldValues.supp_memo = $('#supp_memo').val();
             fieldValues.date = $('#date').val();
             fieldValues.amount = $('#amount').val();
-            fieldValues.discount = $('#discount').val();
-            fieldValues.payment = $('#payment').val();
+            fieldValues.discount = $('#discount').val() ?? 0;
+            fieldValues.payment = $('#payment').val() ?? 0;
             fieldValues.total = $('#total').val();
             fieldValues.total_vat = $('#total_vat').val();
             

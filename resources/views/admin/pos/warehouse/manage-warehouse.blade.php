@@ -1,5 +1,5 @@
 @extends('admin.pos.master')
-@section('title', 'গুদাম')
+@section('title', 'Warehouse')
 @section('content')
 @if($AccHeads <= 0 || $GenSettings ==null)
     <div class="content-wrapper">
@@ -20,12 +20,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>গুদাম ব্যবস্থাপনা</h1>
+            <h1>Wirehouse Management</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">মূলপাতা</a></li>
-              <li class="breadcrumb-item active">গুদাম ব্যবস্থাপনা</li>
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Wirehouse Management</li>
             </ol>
           </div>
         </div>
@@ -39,7 +39,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">একনজরে সকল রিপোর্টস</h3>
+                        <h3 class="card-title">Add Warehouse</h3>
                     </div>
                     <!-- /.card-header -->
                         <div class="card-body">

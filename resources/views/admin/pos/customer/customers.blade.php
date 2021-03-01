@@ -402,7 +402,7 @@
                 <input class="form-control" name="phone" type="text" id="phone">
               </div>
               <div class="form-group">
-                <label for="address">Address:</label>
+                <label for="address">Address:*</label>
                 <input class="form-control" name="address" type="text" id="address">
               </div>
             </div>
@@ -429,6 +429,9 @@
                 },
                 inputPhone: {
                     required: true
+                },
+                inputAddress: {
+                    required: true
                 }
             },
             messages: {
@@ -437,6 +440,9 @@
                 },
                 inputPhone: {
                     required: "Customer Phone Field Can't Be Empty!",
+                },
+                inputAddress: {
+                    required: "Customer Address Field Can't Be Empty!",
                 }
             },
             errorElement: 'span',

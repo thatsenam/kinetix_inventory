@@ -1,18 +1,6 @@
 @extends('layouts.admin.app_pos')
 @section('content')
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>অনুগ্রহপূর্বক সাধারণ সেটিংস্‌ এবং হিসাবরক্ষণ খাত থেকে ডেমো খাত যুক্ত করুন!</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
+
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -56,7 +44,7 @@
                         <form action="{{ url('/admin/create_category') }}" id="addCaategory" method="POST" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group">
-                                <label for="inputName">Category Name</label>
+                                <label for="inputName">Category Name <span class="text-danger">*</span></label>
                                 <input type="text" name="cat_name" id="inputName" class="form-control" placeholder="Type Category Name Here...">
                             </div>
                             <div class="form-group">
@@ -97,7 +85,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="inputStatus">Status</label>
+                                <label for="inputStatus">Status <span class="text-danger">*</span></label>
                                 <select id="inputStatus" name="cat_status" class="form-control custom-select">
                                     <option selected disabled>Select one</option>
                                     <option value="1">Active</option>
@@ -176,5 +164,4 @@
     })
 </script>
 
-@endif
 @endsection

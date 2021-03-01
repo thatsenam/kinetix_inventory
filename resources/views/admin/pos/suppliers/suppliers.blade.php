@@ -133,7 +133,7 @@
                 <div class="row">
                   <div class="col-12">
                       <div class="form-group">
-                        <label for="inputAddress">Address:*</label>
+                        <label for="inputAddress">Address:</label>
                         <input class="form-control" placeholder="Enter Address..." name="inputAddress" type="text" id="inputAddress">
                       </div>
                   </div>

@@ -1,19 +1,6 @@
 @extends('admin.pos.master')
 @section('content')
 
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -139,8 +126,8 @@
                             <div class="col-12" style="padding-right: 0 !important; padding-left: 0 !important;">
                                 <table id="prodlist" class="price-table custom-table" style="">
                                     <tr>
-                                        <th style="width: 40%;">Item</th>
-                                        <th style="width: 0%;">Price</th>
+                                        <th style="width: 30%;">Item</th>
+                                        <th style="width: 10%;">Price</th>
                                         <th style="width: 10%;">Qty</th>
                                         <th style="width: 10%;">I.V.A</th>
                                         <th style="width: 20%;">Total</th>
@@ -207,7 +194,6 @@
   </div>
   <!-- /.content-wrapper -->
 
-@endif
 <script type="text/javascript">
     $(document).ready(function(){
         $( "#from_date").datepicker({
@@ -467,7 +453,7 @@
                     			 $('#prodlistDiv').css("height","").css("clear","float").css("background","#FFF").css("overflow","");
                     			 
                     			
-                    			 $('#printdiv').append("<table class='footer-table' style='border-collapse: collapse; width:100%;' border='1'><tr><td>Total Tk: </td><td>"+amount+"</td><td> Discount: </td><td>"+discount+"</td></tr><tr><td>Vat: </td><td>"+vat+"</td><td> SCharge: </td><td>"+scharge+"</td></tr><tr><td>All Total: </td><td>"+gtotal+"</td><td>Recieved: </td><td>"+discount+"</td></tr><tr><td> Due: </td><td>"+due+"</td><td> Pyment: </td><td>"+payment+"</td></tr><tr><td> Date: </td><td>"+date+"</td><td> &nbsp; </td><td>&nbsp;</td></tr></table>");
+                    			 $('#printdiv').append("<table class='footer-table' style='border-collapse: collapse; width:100%;' border='1'><tr><td>Total Tk: </td><td>"+amount+"</td><td> Discount: </td><td>"+discount+"</td></tr><tr><td>Vat: </td><td>"+vat+"</td><td> SCharge: </td><td>"+scharge+"</td></tr><tr><td>All Total: </td><td>"+gtotal+"</td><td>Recieved: </td><td>"+payment+"</td></tr><tr><td> Due: </td><td>"+due+"</td><td> Date: </td><td>"+date+"</td></tr></table>");
                     			
                     
                     			 $("#printRest tr td").css('font-size','12px').css('border', '1px solid #000').css('border-collapse', 'collapse');

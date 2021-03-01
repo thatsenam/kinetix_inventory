@@ -95,7 +95,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/barcode/{id}', 'PagesController@barcode')->name('barcode');
     Route::get('/admin/print-labels', 'PagesController@printLabels')->name('labels.print');
 
-    Route::get('/admin/settings', 'PagesController@general_settings');
+    Route::get('/admin/settings', 'PagesController@general_settings')->name('general_settings');
     Route::post('/dashboard/general_settings/', 'PagesController@general_settings_save')->name('general_settings_save');
 
     //Categories Routes (Admin Panel)
@@ -389,7 +389,7 @@ Route::view('/dashboard/warranty-management/warranty-report', 'admin.pos.warrant
 
 // Accounting Route
 
-Route::get('/accounting/acc-heads', 'AccountingPageController@acc_head_index');
+Route::get('/accounting/acc-heads', 'AccountingPageController@acc_head_index')->name('acc.heads');
 Route::get('/accounting/voucher-entry', 'AccountingPageController@voucher_entry_index');
 Route::get('/cost-entry', 'AccountingPageController@cost_entry_index')->name('cost-entry');
 Route::get('/accounting/voucher-history','AccountingPageController@voucher_history_index');

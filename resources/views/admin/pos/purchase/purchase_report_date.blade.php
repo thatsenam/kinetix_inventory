@@ -1,19 +1,7 @@
 @extends('admin.pos.master')
         
 @section('content')
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
+
 <div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
@@ -61,6 +49,7 @@
                                         <th>Amount</th>
                                         <th>Total</th>
                                         <th>Payment</th>
+                                        <th>Due</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -70,6 +59,7 @@
                                 <tfoot>
                                     <tr>
                                         <th colspan="7">Total</th>
+                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th colspan="2"></th>
@@ -125,7 +115,14 @@
                         <div id="prodlistDiv" class="row" style="margin: 10px 0;">
                             <div class="col-12" style="padding-right: 0 !important; padding-left: 0 !important;">
                                 <table id="prodlist" class="price-table custom-table" style="">
-                                    <tr><th style="width: 40%;">Item</th><th style="width: 10%;">Price</th><th style="width: 10%;">Qty</th><th style="width: 10%;">I.V.A</th><th style="width: 0%;">Total</th><th style="width: 30%;">Grand Total</th></tr>
+                                    <tr>
+                                        <th style="width: 40%;">Item</th>
+                                        <th style="width: 10%;">Price</th>
+                                        <th style="width: 10%;">Qty</th>
+                                        <th style="width: 10%;">I.V.A</th>
+                                        <th style="width: 10%;">Total</th>
+                                        <th style="width: 20%;">Grand Total</th>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -186,7 +183,6 @@
     </div>
     
 </div>
-@endif
 @endsection
 
 @section('page-js-script')
@@ -247,6 +243,12 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    due = api
+                        .column( 10 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
         
                     // Update footer
                     $( api.column( 7 ).footer() ).html(
@@ -257,6 +259,9 @@
                     );
                     $( api.column( 9 ).footer() ).html(
                         payTotal
+                    );
+                    $( api.column( 10 ).footer() ).html(
+                        due
                     );
                 },
                 ajax: {
@@ -274,6 +279,7 @@
                     {data:'amount',},
                     {data:'total',},
                     {data:'payment',},
+                    {data:'due',},
                     {data: 'action', name: 'action', class:'purinv', orderable: false, searchable: false},
                 ]
             });
@@ -389,6 +395,8 @@
                                   var vat_amount = obj.vat_amount;
                                   var payment = obj.payment;
                                   var date = obj.date;
+
+                                  var due = total - payment;
                                   
                                   ////////////////////////////////////////
                                   
@@ -431,7 +439,7 @@
                                   $('#prodlistDiv').css("height","").css("clear","float").css("background","#FFF").css("overflow","");
                                   
                                  
-                                  $('#printdiv').append("<table class='footer-table' style='border-collapse: collapse; width:100%;' border='1'><tr><td>Total Tk: </td><td>"+amount+"</td><td> Discount: </td><td>"+discount+"</td></tr><tr></tr><tr><td>I.V.A: </td><td>"+vat_amount+"</td><td>All Total: </td><td>"+total+"</td></tr><tr><td> Payment: </td><td>"+payment+"</td><td> Date: </td><td>"+date+"</td></tr></table>");
+                                  $('#printdiv').append("<table class='footer-table' style='border-collapse: collapse; width:100%;' border='1'><tr><td>Total Tk: </td><td>"+amount+"</td><td> Discount: </td><td>"+discount+"</td></tr><tr></tr><tr><td>I.V.A: </td><td>"+vat_amount+"</td><td>All Total: </td><td>"+total+"</td></tr><tr><td> Payment: </td><td>"+payment+"</td><td> Due: </td><td>"+due+"</td></tr><tr><td> Date: </td><td>"+date+"</td><td></td><td></td></tr></table>");
                                  
                      
                                   $("#printRest tr td").css('font-size','12px').css('border', '1px solid #000').css('border-collapse', 'collapse');

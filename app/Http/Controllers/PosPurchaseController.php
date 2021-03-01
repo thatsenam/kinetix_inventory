@@ -699,6 +699,9 @@ class PosPurchaseController extends Controller
             }else{
                 $purchase->serial = '';
             }
+
+            $due = $purchase->total - $purchase->payment;
+            $purchase->due = $due;
             return $purchase;
         });
 

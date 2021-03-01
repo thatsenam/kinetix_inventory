@@ -191,13 +191,13 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{url('/admin/create_brand')}}" class="nav-link {{ (request()->is('admin/create_brand')) ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="fas fa-plus-square nav-icon"></i>
                   <p>Add New Brand</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{{url('/admin/view_brands')}}" class="nav-link {{ (request()->is('admin/view_brands')) ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="fas fa-clipboard-list nav-icon"></i>
                   <p>View All Brands</p>
                 </a>
               </li>
@@ -247,7 +247,7 @@
           </li>
           <li class="nav-item {{ (request()->is('dashboard/purchase_products', 'dashboard/purchase_return', 'dashboard/damage_products', 'dashboard/purchase_report_date', 'dashboard/purchase_return_report_date', 'dashboard/purchase_report_brand', 'dashboard/damage_report_date')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-file-invoice"></i>
+              <i class="nav-icon fas fa-shopping-cart"></i>
               <p>
                 Purchase
                 <i class="fas fa-angle-left right"></i>
@@ -361,7 +361,7 @@
           </li>
           <li class="nav-item {{ (request()->is('dashboard/customers', 'dashboard/customers/customer_ledger', 'dashboard/customers/due-report', 'dashboard/customers/due-collection-report')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-user-shield"></i>
+              <i class="nav-icon fas fa-users"></i>
               <p>
                 Customers
                 <i class="fas fa-angle-left right"></i>
@@ -427,53 +427,53 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="/accounting/acc-heads" class="nav-link {{ (request()->is('accounting/acc-heads')) ? 'active' : '' }}">
-                  <i class="fas fa-bahai nav-icon"></i>
+                  <i class="fas fa-angle-right nav-icon"></i>
                   <p>Account Head</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="/accounting/voucher-entry" class="nav-link {{ (request()->is('accounting/voucher-entry')) ? 'active' : '' }}">
-                  <i class="fas fa-door-open nav-icon"></i>
+                  <i class="fas fa-angle-right nav-icon"></i>
                   <p>Voucher Entry</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="/accounting/voucher-history" class="nav-link {{ (request()->is('accounting/voucher-history')) ? 'active' : '' }}">
-                  <i class="fas fa-history nav-icon"></i>
+                  <i class="fas fa-angle-right nav-icon"></i>
                   <p>Voucher History</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="/accounting/ledger" class="nav-link {{ (request()->is('accounting/ledger')) ? 'active' : '' }}">
-                  <i class="fas fa-chart-bar nav-icon"></i>
+                  <i class="fas fa-angle-right nav-icon"></i>
                   <p>Ledger Reports</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="/accounting/trial-balance" class="nav-link {{ (request()->is('accounting/trial-balance')) ? 'active' : '' }}">
-                  <i class="fas fa-comment-dollar nav-icon"></i>
+                  <i class="fas fa-angle-right nav-icon"></i>
                   <p>Trial Balance</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="/accounting/income-statement" class="nav-link {{ (request()->is('accounting/income-statement')) ? 'active' : '' }}">
-                  <i class="fas fa-info nav-icon"></i>
+                  <i class="fas fa-angle-right nav-icon"></i>
                   <p>Income Statement</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="/accounting/cash-book" class="nav-link {{ (request()->is('accounting/cash-book')) ? 'active' : '' }}">
-                  <i class="fas fa-money-bill nav-icon"></i>
+                  <i class="fas fa-angle-right nav-icon"></i>
                   <p>Cash Book</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="/accounting/balance-sheet" class="nav-link {{ (request()->is('accounting/balance-sheet')) ? 'active' : '' }}">
-                  <i class="fas fa-balance-scale nav-icon"></i>
+                  <i class="fas fa-angle-right nav-icon"></i>
                   <p>Balance Sheet</p>
                 </a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="{{route('cost-entry')}}" class="nav-link {{ Route::currentRouteName() == 'cost-entry' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>নতুন ব্যয় যুক্ত করুন</p>
@@ -484,7 +484,7 @@
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>ব্যয়ের তালিকা</p>
                 </a>
-              </li>
+              </li> -->
             </ul>
           </li>
           {{-- Accounting --}}
@@ -526,7 +526,7 @@
           </li> --}}
           <li class="nav-item {{ (request()->is('admin/manage_warehouse', 'admin/warehouse_report', 'dashboard/reports/stock-report', 'admin/stock_transfer', 'admin/stock-transfer-report')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-sort-alpha-up"></i>
+              <i class="nav-icon fas fa-hourglass-end"></i>
               <p>Stock
                 <i class="fas fa-angle-left right"></i>
                 <span class="badge badge-info right">5</span>
@@ -615,7 +615,7 @@
           </li>
           <li class="nav-item {{ (request()->is('dashboard/warranty-management/receive-from-customer', 'dashboard/warranty-management/send-to-supplier', 'dashboard/warranty-management/receive-from-supplier', 'dashboard/warranty-management/delivery-to-customer', 'dashboard/warranty-management/warranty-report')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-user-shield"></i>
+              <i class="nav-icon fas fa-history"></i>
               <p>
                 Manage Warranty
                 <i class="fas fa-angle-left right"></i>
@@ -657,7 +657,7 @@
           </li>
           <li class="nav-item {{ (request()->is('dashboard/servicing/receive-from-customer', 'dashboard/servicing/delivery-to-customer', 'dashboard/servicing/servicing-report')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-user-shield"></i>
+              <i class="nav-icon fas fa-cogs"></i>
               <p>
                 Servicing
                 <i class="fas fa-angle-left right"></i>
@@ -695,7 +695,7 @@
           @endcan --}}
           <li class="nav-item {{ (request()->is('admin/settings')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
-              <i class="nav-icon nav-icon fas fa-cogs"></i>
+              <i class="nav-icon nav-icon fas fa-cog"></i>
               <p>
                 General Settings
                 <i class="fas fa-angle-left right"></i>
@@ -728,7 +728,27 @@
     <!-- /.sidebar -->
   </aside>
 
-@yield('content')
+  @if ( Route::current()->uri == 'admin/settings' || Route::current()->uri == 'accounting/acc-heads' )
+
+      @yield('content')
+
+    @elseif($AccHeads <= 0 || $GenSettings == null)
+
+      <div class="content-wrapper">
+          <div class="card">
+            <div class="card-body text-center text-danger">
+              <h5>Please, Configure <a class="text-primary" href="{{ route('general_settings') }}">General Settings</a>
+                and Create <a href="{{ route('acc.heads') }}">Accounting Heads</a> Before Proceed!</h5>
+            </div>
+          </div>
+      </div>
+
+    @else
+
+      @yield('content')
+      
+    @endif
+
 @yield('page-js-files')
 @yield('page-js-script')
 

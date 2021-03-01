@@ -1,19 +1,6 @@
 @extends('admin.pos.master')
         
 @section('content')
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
 
 <div class="content-wrapper">
     <div class="row">
@@ -79,7 +66,7 @@
                             <div class="row" style="height:350px; overflow-y: auto;">
                                 <div class="col-12" style="padding-right: 0 !important; margin-top:20px;">
                                     <table class="price-table custom-table">
-                                        <tr><th>SL</th><th style="width: 100px;">Item</th><th>price</th><th>Qty</th><th>I.V.A</th><th>Total</th><th>Delete</th></tr>
+                                        <tr><th>SL</th><th style="width: 100px;">Item</th><th>Price</th><th>Qty</th><th>I.V.A</th><th>Total</th><th>Delete</th></tr>
                                         
                                     </table>
                                 </div>
@@ -169,7 +156,6 @@
       </div>
     </div>
 </div>
-@endif
 
 @endsection
 
@@ -250,7 +236,7 @@
                     });
         			
             	$.ajax({
-            		  url: "{{ URL::route('get_products') }}",
+            		  url: "{{ URL::route('get_purchase_products') }}",
                       method: 'post',
                       data: formData,
                       contentType: false,

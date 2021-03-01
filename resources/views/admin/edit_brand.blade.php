@@ -54,7 +54,7 @@
                         <form action="{{ url('/admin/edit_brand/'.$id) }}" id="addBrand" method="POST" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group">
-                                <label for="inputName">Brand Name</label>
+                                <label for="inputName">Brand Name <span class="text-danger">*</span></label>
                                 <input type="text" name="inputName" value="{{$name}}" id="inputName" class="form-control">
                             </div>
                             <div class="form-group">

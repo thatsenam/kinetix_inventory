@@ -44,7 +44,7 @@
                         <form action="{{ url('/admin/create_brand') }}" id="addBrand" method="POST" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group">
-                                <label for="inputName">Brand Name</label>
+                                <label for="inputName">Brand Name <span class="text-danger">*</span></label>
                                 <input type="text" name="inputName" id="inputName" class="form-control" placeholder="Type Brand Name Here...">
                             </div>
                             <div class="form-group">

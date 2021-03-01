@@ -1,17 +1,17 @@
 <form>
     <div class="form-group">
         <input type="hidden" wire:model="id">
-        <label for="exampleFormControlInput1">Name</label>
+        <label for="exampleFormControlInput1">Name <span class="text-danger">*</span></label>
         <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Name" wire:model="name">
         @error('name') <span class="text-danger">{{ $message }}</span>@enderror
     </div>
     <div class="form-group">
-        <label for="exampleFormControlInput2">Address</label>
+        <label for="exampleFormControlInput2">Address <span class="text-danger">*</span></label>
         <input type="text" class="form-control" id="exampleFormControlInput2" wire:model="address" placeholder="Address">
         @error('address') <span class="text-danger">{{ $message }}</span>@enderror
     </div>
     <div class="form-group">
-        <label for="exampleFormControlInput3">Phone</label>
+        <label for="exampleFormControlInput3">Phone <span class="text-danger">*</span></label>
         <input type="phone" class="form-control" id="exampleFormControlInput3" wire:model="phone" placeholder="Phone">
         @error('phone') <span class="text-danger">{{ $message }}</span>@enderror
     </div>

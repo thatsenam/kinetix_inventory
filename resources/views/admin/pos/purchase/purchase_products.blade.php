@@ -2,19 +2,6 @@
         
 @section('content')
 
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
 
 <div class="content-wrapper"> 
     <h3 class="ml-3">Purchase Products</h3>
@@ -88,7 +75,7 @@
                                 <div class="row" style="height:350px; overflow-y: auto; ">
                                     <div class="col-12" style=" padding-right: 0 !important;">
                                         <table class="price-table custom-table" style="">
-                                            <tr><th>SL</th><th style="width: 100px;">Item</th><th>price</th><th>Qty</th><th>I.V.A</th><th>Total</th><th>Delete</th></tr>
+                                            <tr><th>SL</th><th style="width: 100px;">Item</th><th>Price</th><th>Qty</th><th>I.V.A</th><th>Total</th><th>Delete</th></tr>
                                             
                                         </table>
                                     </div>
@@ -202,7 +189,6 @@
     </div>
 </div>
 
-@endif
 @endsection
 
 @section('page-js-script')

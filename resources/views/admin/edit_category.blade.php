@@ -56,7 +56,7 @@
                         <form action="{{ url('/admin/edit_category/'.$id) }}" id="addCaategory" method="POST" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group">
-                                <label for="inputName">Category Name</label>
+                                <label for="inputName">Category Name <span class="text-danger">*</span></label>
                                 <input type="text" name="cat_name" value="{{$name}}" id="inputName" class="form-control">
                             </div>
                             <div class="form-group">
@@ -102,7 +102,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="inputStatus">Status</label>
+                                <label for="inputStatus">Status <span class="text-danger">*</span></label>
                                 <select id="inputStatus" name="cat_status" class="form-control custom-select">
                                     <option selected value="{{$status}}"><?php 
                                     if($status == 0){

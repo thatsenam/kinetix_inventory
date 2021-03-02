@@ -384,18 +384,18 @@
           <form method="POST" action="" accept-charset="UTF-8" id="cust_edit" novalidate="novalidate">
             @csrf
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Edit Customer</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit Supplier</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
               <div class="form-group">
-                <label for="name">Name:</label>
+                <label for="name">Name:*</label>
                 <input class="form-control" name="name" type="text" id="name">
               </div>
               <div class="form-group">
-                <label for="phone">Phone:</label>
+                <label for="phone">Phone:*</label>
                 <input class="form-control" name="phone" type="text" id="phone">
               </div>
               <div class="form-group">
@@ -654,7 +654,7 @@
       $("#suppliers").DataTable({
         "responsive": true,
         "autoWidth": false,
-        "order": [[ 0, "desc" ]]
+        // "order": [[ 0, "desc" ]]
       });
     });
     $(document).ready(function(){

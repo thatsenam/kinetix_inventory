@@ -9,7 +9,7 @@
                 <div class="card-header">
                     <h3>Bank Ledger</h3>
                 </div>
-                <div class="card-body custom-table">
+                <div class="card-body">
                     <form action="get_sales_report_date" method="POST">
                         @csrf
                         <div class="row">
@@ -288,31 +288,3 @@
 
 @stop
 
-<style>
-
-.custom-table{
-
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.custom-table tr th{
-    padding: 5px;
-    text-align: center;
-    border: 1px solid #e6e6e6;
-}
-
-.custom-table tr td{
-    padding: 5px;
-    border: 1px solid #e6e6e6;
-    text-align: center;
-    font-size: 14px;
-}
-
-.col-2{
-    padding-left:10px !important;
-    padding-right:10px !important;
-    text-align: center;
-}
-
-</style>

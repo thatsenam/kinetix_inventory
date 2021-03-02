@@ -21,6 +21,7 @@ use App\BankTransaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\CustomerDueCollection;
+use App\GeneralSetting;
 use Illuminate\Support\Facades\DB;
 // use Response;
 
@@ -587,10 +588,15 @@ class PosCustomerController extends Controller
         $custid = $get_customer->cid;
         $cust_details = Customer::where(['id'=>$custid])->get();
 
-        $details = DB::table('sales_invoice_details')->select('products.product_name as name', 'products.product_img as image', 'sales_invoice_details.qnt as qnt', 'sales_invoice_details.price as price')
-        ->join('products', 'sales_invoice_details.pid', 'products.id')->where('sales_invoice_details.invoice_no', $invoiceno)->get();
+        $details = DB::table('sales_invoice_details')
+        ->select('products.product_name as name', 'products.product_img as image', 'sales_invoice_details.qnt as qnt',
+        'sales_invoice_details.price as price')
+        ->join('products', 'sales_invoice_details.pid', 'products.id')
+        ->where('sales_invoice_details.invoice_no', $invoiceno)->get();
 
-        return view('admin.pos.customer.saleinvoice')->with(compact('cust_details','get_customer','details'));
+        $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
+
+        return view('admin.pos.customer.saleinvoice')->with(compact('cust_details','get_customer','details', 'settings'));
     }
 
 

@@ -54,6 +54,8 @@ class PosBankController extends Controller
                     $bank_card->bank_id = $bank_info->id;
                     $bank_card->acc_no = $bank_acc->id;
                     $bank_card->card_name = $card;
+                    $bank_card->user_id = auth()->user()->id;
+                    $bank_card->client_id = auth()->user()->client_id;
                     $bank_card->save();
                 }
             }
@@ -77,7 +79,8 @@ class PosBankController extends Controller
 
     public function view_banks()
     {
-        $banks = BankInfo::orderBy('name')->get();
+        $banks = BankInfo::orderBy('name')->where('client_id', auth()->user()->client_id)->get();
+        
         return view('admin.pos.banking.view_bank', compact('banks'));
     }
 

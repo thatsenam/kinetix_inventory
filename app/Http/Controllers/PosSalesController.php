@@ -314,11 +314,17 @@ class PosSalesController extends Controller
         $cust_phone = $fieldValues['cust_phone'];
         $cust_address = $fieldValues['cust_address'] ?? '';
         $vat = $fieldValues['vat'];
+        $vat = round($vat, 2);
         $scharge = $fieldValues['scharge'];
+        $scharge = round($scharge, 2);
         $discount = $fieldValues['discount'];
+        $discount = round($discount, 2);
         $amount = $fieldValues['amount'];
+        $amount = round($amount, 2);
         $gtotal = (($amount + $vat + $scharge) - $discount);
+        $gtotal = round($gtotal, 2);
         $sales_amount = (($amount + $scharge) - $discount);
+        $sales_amount = round($sales_amount, 2);
         $paytype = $fieldValues['paytype'];
         $payment = $fieldValues['payment'];
         // $due = $fieldValues['total'];
@@ -330,7 +336,9 @@ class PosSalesController extends Controller
         $clients_bank = $fieldValues['clients_bank'];
         $clients_bank_acc = $fieldValues['clients_bank_acc'];
         $check_amount = $fieldValues['check_amount'];
+        $check_amount = round($check_amount, 2);
         $check_cash = $fieldValues['check_cash'];
+        $check_cash = round($check_cash, 2);
         $check_date = $fieldValues['check_date'];
         $check_type = $fieldValues['check_type'];
         $shops_bank = $fieldValues['shops_bank'];
@@ -345,7 +353,9 @@ class PosSalesController extends Controller
         $mobile_bank_account = $fieldValues['mobile_bank_account'];
         $mobile_bank_acc_id = $fieldValues['mobile_bank_acc_id'];
         $mobile_amount = $fieldValues['mobile_amount'];
+        $mobile_amount = round($mobile_amount, 2);
         $mobile_cash = $fieldValues['mobile_cash'];
+        $mobile_cash = round($mobile_cash, 2);
         $tranxid = $fieldValues['tranxid'];
         $mobile_remarks = $fieldValues['mobile_remarks'];
 
@@ -355,7 +365,9 @@ class PosSalesController extends Controller
         $card_bank_account = $fieldValues['card_bank_account'];
         $card_bank_acc_id = $fieldValues['card_bank_acc_id'];
         $card_amount = $fieldValues['card_amount'];
+        $card_amount = round($card_amount, 2);
         $card_cash = $fieldValues['card_cash'];
+        $card_cash = round($card_cash, 2);
         $card_remarks = $fieldValues['card_remarks'];
 
         if($card_type == 'visa'){
@@ -1342,8 +1354,11 @@ class PosSalesController extends Controller
         $sinvoice = $fieldValues['invoice'];
         //$due = $fieldValues['total'];
         $hid_total = $fieldValues['hid_total'];
+        $hid_total = round($hid_total, 2);
         $payment = $fieldValues['payment'];
+        $payment = round($payment, 2);
         $total_vat = $fieldValues['total_vat'];
+        $total_vat = round($total_vat, 2);
         $remarks = $fieldValues['remarks'];
         $date = $fieldValues['date'];
         $user = Auth::id();

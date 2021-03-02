@@ -169,10 +169,15 @@ class PosPurchaseController extends Controller
         $supp_id = $fieldValues['supp_id'];
         $supp_memo = $fieldValues['supp_memo'];
         $discount = (double)$fieldValues['discount'];
+        $discount = round($discount, 2);
         $amount = (double)$fieldValues['amount'];
+        $amount = round($amount, 2);
         $payment = (double)$fieldValues['payment'];
+        $payment = round($payment, 2);
         $total = $fieldValues['total'];
+        $total = round($total, 2);
         $total_vat = $fieldValues['total_vat'];
+        $total_vat = round($total_vat, 2);
         $date = $fieldValues['date'];
         $user = Auth::id();
 
@@ -440,7 +445,9 @@ class PosPurchaseController extends Controller
         $supp_id = $fieldValues['supp_id'];
         $supp_memo = $fieldValues['supp_memo'];
         $total = $fieldValues['total'];
+        $total = round($total, 2);
         $total_vat = $fieldValues['total_vat'];
+        $total_vat = round($total_vat, 2);
         $date = $fieldValues['date'];
         $user = Auth::id();
 
@@ -601,6 +608,7 @@ class PosPurchaseController extends Controller
         // $supp_id = $fieldValues['supp_id'];
         // $supp_memo = $fieldValues['supp_memo'];
         $total = $fieldValues['total'];
+        $total = round($total, 2);
         $date = $fieldValues['date'];
         $dmg_inv = $fieldValues['dmg_inv'];
         $warehouse = $fieldValues['warehouse_id'];
@@ -871,6 +879,10 @@ class PosPurchaseController extends Controller
             }else{
                 $purchase->serial = '';
             }
+
+            $gtotal = $purchase->total + $purchase->vat;
+            $purchase->gtotal = $gtotal;
+
             return $purchase;
         });
 

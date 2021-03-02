@@ -394,11 +394,11 @@
             </div>
             <div class="modal-body">
               <div class="form-group">
-                <label for="name">Name:</label>
+                <label for="name">Name:*</label>
                 <input class="form-control" name="name" type="text" id="name">
               </div>
               <div class="form-group">
-                <label for="phone">Phone:</label>
+                <label for="phone">Phone:*</label>
                 <input class="form-control" name="phone" type="text" id="phone">
               </div>
               <div class="form-group">
@@ -544,7 +544,7 @@
       $("#customers").DataTable({
         "responsive": true,
         "autoWidth": false,
-        "order": [[ 0, "desc" ]]
+        // "order": [[ 0, "desc" ]]
       });
     });
     $('select[name=paymethod]').change(function () {

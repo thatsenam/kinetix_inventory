@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                             <div class="row" style="height:350px; overflow-y: auto;">
-                                <div class="col-12" style="padding-right: 0 !important; margin-top:20px;">
+                                <div class="col-12" style="padding-right: 0 !important;">
                                     <table class="price-table custom-table">
                                         <tr><th>SL</th><th style="width: 100px;">Item</th><th>Price</th><th>Qty</th><th>I.V.A</th><th>Total</th><th>Delete</th></tr>
                                         
@@ -352,6 +352,10 @@
             	}); 
                    
             });
+
+        $("#supp_memo").focusout(function() {
+            $('#memo_div').hide();
+        });
         
         
         $("#supp_memo").keyup(function(e){

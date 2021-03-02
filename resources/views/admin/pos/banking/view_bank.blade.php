@@ -45,6 +45,7 @@
                     <th>Address</th>
                     <th>Bank Account Name</th>
                     <th>Bank Account No</th>
+                    <th>Cards</th>
                     <th>Option</th>
                   </tr>
                   </thead>
@@ -55,10 +56,16 @@
                     @foreach($banks as $bank)
                     <tr>
                         <td>{{$i++}}</td>
-                        <td style="width: 30%;">{{$bank->name}}</td>
+                        <td style="width: 30%;">{{ $bank->name }}</td>
                         <td>{{ $bank->address ?? ''}}</td>
                         <td>{{ $bank->account->acc_name ?? ''}}</td>
                         <td>{{ $bank->account->acc_no ?? ''}}</td>
+                        <td>
+                          @foreach($bank->cards as $card)
+                            {{ $card->card_name }} <br>
+                          @endforeach
+                        </td>
+                        <!-- <td>{{ $bank->cards ?? ''}}</td> -->
                         <td class="project-actions text-center">
                           <a class="btn btn-info btn-sm mb-1" href="{{url('/dashboard/edit_bank/'.$bank->id)}}" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                           <button class="btn btn-danger btn-sm" onclick="deleteConfirmation({{$bank->id}})" title="Delete"><i class="fas fa-trash"></i></button>

@@ -235,6 +235,7 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    amount = amount.toFixed(2);
 
                     total = api
                         .column( 8 )
@@ -242,6 +243,7 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    total = total.toFixed(2);
 
                     profit = api
                         .column( 9 )
@@ -257,8 +259,10 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    payTotal = payTotal.toFixed(2);
 
                     due = total - payTotal;
+                    due = due.toFixed(2);
         
                     // Update footer
                     $( api.column( 7 ).footer() ).html(

@@ -36,7 +36,7 @@
               <div class="row">
                 <div class="col-12">
                   <h4>
-                    <i class="fas fa-globe"></i> RR World Vision, Basundhara.
+                    <i class="fas fa-globe"></i> {{  $settings->site_name }}
                     <small class="float-right">Date: <?php echo date('Y-m-d'); ?></small>
                   </h4>
                 </div>
@@ -47,11 +47,10 @@
                 <div class="col-sm-4 invoice-col">
                   From
                   <address>
-                    <strong>RR World Vision, Basundhara.</strong><br>
-                    Bashundhara City Shopping Complex <br>
-                    Panthapath, Dhaka 1215 <br>
-                    Phone: +88 01612 222 030<br>
-                    Email: info@basundhara.rrworldvision.com
+                    <strong>{{  $settings->site_name }}</strong><br>
+                    {{  $settings->site_address }}<br>
+                    Phone: {{  $settings->phone }}<br>
+                    Email: {{  $settings->email }}
                   </address>
                 </div>
                 <!-- /.col -->
@@ -97,13 +96,10 @@
                         <td>{{$d->name}}</td>
                         <td>{{$d->qnt}}</td>
                         <td>{{$d->price}}</td>
-                        <td>{{$d->price * $d->qnt}}</td>
+                        <td>{{$d->total}}</td>
                       </tr>
                       @endforeach
-                      <tr>
-                        <td colspan="3" class="text-right"><strong>Sub-total</strong></td>
-                        <td colspan="2" class="text-right">{{$get_supplier->amount}}</td>
-                      </tr>
+                      
                     </tbody>
                   </table>
                 </div>
@@ -114,23 +110,44 @@
               <div class="row">
                 <!-- accepted payments column -->
                 <div class="col-6">
-                  <!-- <p class="lead">Payment Methods:</p>-->
-
-                  <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                    Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
-                    plugg
-                    dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                  </p>
+                  <p class="lead">Payment Methods:</p>
+                  <img src="../../dist/img/credit/visa.png" alt="Visa">
+                  <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
+                  <img src="../../dist/img/credit/american-express.png" alt="American Express">
+                  <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
                 </div>
                 <!-- /.col -->
                 <div class="col-6">
 
                   <div class="table-responsive">
                     <table class="table">
+                    <table class="table">
                       <tr>
-                        <th style="width:50%">Total:</th>
-                        <td>{{$get_supplier->amount}}</td>
+                        <th style="width:50%">Subtotal:</th>
+                        <td>{{ $get_supplier->amount }}</td>
                       </tr>
+                      
+                      <tr>
+                        <th>I.V.A</th>
+                        <td>{{ $get_supplier->vat_amount }}</td>
+                      </tr>
+                      <tr>
+                        <th>Discount:</th>
+                        <td>{{ $get_supplier->discount }}</td>
+                      </tr>
+                      <tr>
+                        <th>Total:</th>
+                        <td>{{ $get_supplier->total }}</td>
+                      </tr>
+                      <tr>
+                        <th>Payment:</th>
+                        <td>{{ $get_supplier->payment }}</td>
+                      </tr>
+                      <tr>
+                        <th>Due:</th>
+                        <td>{{ $get_supplier->total - $get_supplier->payment }}</td>
+                      </tr>
+                    </table>
                     </table>
                   </div>
                 </div>

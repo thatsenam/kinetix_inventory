@@ -369,7 +369,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item active">
+              <li class="nav-item">
                 <a href="{{route('set_customer')}}" class="nav-link {{ (request()->is('dashboard/customers')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Customer List</p>

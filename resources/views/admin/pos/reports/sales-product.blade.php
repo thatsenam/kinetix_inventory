@@ -54,13 +54,13 @@
                   <thead>
                     <tr>
                         <th>Product Name</th>
-                        <th>Invoice No.</th>
+                        <th>View Invoice</th>
                         <th>Quantity</th>
                         <th>Unit Price</th>
                         <th>Total</th>
                     </tr>
                   </thead>
-                  <tfoot align="right">
+                  <tfoot>
                     <tr>
                       <th></th>
                       <th></th>

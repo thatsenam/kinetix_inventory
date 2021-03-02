@@ -5,19 +5,6 @@
 
 @section('content')
 
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
 
 <div class="main-panel">
     <div class="content-wrapper">
@@ -41,7 +28,7 @@
                                 <div class="col-md-7">
                                     <div class="row">
                                     @if($warehouses->count()>1)
-                                        <div class="col-5">
+                                        <div class="col-4">
                                             <select name="warehouse_id" id="warehouse_id" class="form-control">
                                                 <option value="" disabled selected>Select Warehouse</option>
                                                 @foreach($warehouses as $warehouse)
@@ -49,17 +36,21 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <div class="form-group" style="position: relative;">
                                                 <input type="text" name="cust_phone" id="cust_phone" class="form-control" placeholder="Customer Phone">
                                                 <div id="cust_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                             
                                                 <input type="hidden" name="cust_id" id="cust_id" value="0" class="form-control">
-                                                <input type="hidden" name="cust_name" id="cust_name" value="" class="form-control">
                                                 
                                             </div>
                                         </div>
                                         <div class="col-3">
+                                            <div class="form-group"  style="position: relative;">
+                                                <input type="text" name="cust_name" id="cust_name" class="form-control" placeholder="Customer Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
                                             <div class="form-group"  style="position: relative;">
                                                 <input type="text" name="invoice" id="invoice" class="form-control" placeholder="Invoice">
                                                 <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
@@ -67,17 +58,21 @@
                                         </div>
                                     @else
                                         <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <div class="form-group" style="position: relative;">
                                                 <input type="text" name="cust_phone" id="cust_phone" class="form-control" placeholder="Customer Phone">
                                                 <div id="cust_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                             
                                                 <input type="hidden" name="cust_id" id="cust_id" value="0" class="form-control">
-                                                <input type="hidden" name="cust_name" id="cust_name" value="" class="form-control">
                                                 
                                             </div>
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-4">
+                                            <div class="form-group"  style="position: relative;">
+                                                <input type="text" name="cust_name" id="cust_name" class="form-control" placeholder="Customer Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
                                             <div class="form-group"  style="position: relative;">
                                                 <input type="text" name="invoice" id="invoice" class="form-control" placeholder="Invoice">
                                                 <div id="memo_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
@@ -102,7 +97,7 @@
                                     <div class="row" style="height:350px; overflow-y: auto; ">
                                         <div class="col-12" style="padding-right: 0 !important;">
                                             <table class="price-table custom-table" style="">
-                                                <tr><th style="width: 100px;">Item</th><th>price</th><th>Qty</th><th>Total</th><th>Delete</th></tr>
+                                                <tr><th style="width: 100px;">Item</th><th>Price</th><th>Qty</th><th>I.V.A</th><th>Total</th><th>Delete</th></tr>
                                                 
                                             </table>
                                         </div>
@@ -232,8 +227,6 @@
 </div>
 <!-- main-panel ends -->
 
-@endif
-    
 @endsection
 
 @section('page-js-script')

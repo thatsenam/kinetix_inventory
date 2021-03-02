@@ -12,6 +12,7 @@ use App\Product;
 use App\Supplier;
 use App\ProductImage;
 use App\AccTransaction;
+use App\GeneralSetting;
 use Image;
 use Auth;
 
@@ -487,9 +488,11 @@ class PosSupplierController extends Controller
         $sid = $get_supplier->sid;
         $supp_details = Supplier::where(['id'=>$sid])->get();
 
-        $details = DB::table('purchase_details')->select('products.product_name as name', 'products.product_img as image', 'purchase_details.qnt as qnt', 'purchase_details.price as price')
+        $details = DB::table('purchase_details')->select('products.product_name as name', 'products.product_img as image', 'purchase_details.qnt as qnt', 'purchase_details.price as price', 'purchase_details.total as total')
         ->join('products', 'purchase_details.pid', 'products.id')->where('purchase_details.pur_inv', $invoiceno)->get();
 
-        return view('admin.pos.suppliers.payinvoice')->with(compact('supp_details','get_supplier','details'));
+        $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
+
+        return view('admin.pos.suppliers.payinvoice')->with(compact('supp_details','get_supplier','details', 'settings'));
     }
 }

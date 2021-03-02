@@ -119,6 +119,7 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    price = price.toFixed(2);
                     // Grand Total
                     gTotal = api
                         .column( 6 )
@@ -126,6 +127,7 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    gTotal = gTotal.toFixed(2);
         
                     // Update footer
                     $( api.column( 4 ).footer() ).html(

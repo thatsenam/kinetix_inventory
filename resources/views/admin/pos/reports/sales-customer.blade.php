@@ -54,7 +54,7 @@
                   <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Invoice No.</th>
+                        <th>View Invoice</th>
                         <th>Name</th>
                         <th>Total</th>
                         <th>Payment</th>
@@ -64,7 +64,7 @@
                   <tfoot>
                     <tr>
                         <th>Date</th>
-                        <th>Invoice No.</th>
+                        <th>View Invoice</th>
                         <th>Name</th>
                         <th>Total</th>
                         <th>Payment</th>

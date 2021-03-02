@@ -58,7 +58,7 @@
                                 echo '<span class="badge badge-success">Active</span>';
                             }elseif($cat->status == 0){echo '<span class="badge badge-danger">Inactive</span>';}
                         ?></td>
-                        <td class="project-actions text-right">
+                        <td class="project-actions">
                           <a class="btn btn-info btn-sm" href="{{url('/category/'.$cat->url)}}" target="_blank">
                               <i class="fas fa-eye">
                               </i>

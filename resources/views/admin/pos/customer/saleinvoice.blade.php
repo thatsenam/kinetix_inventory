@@ -36,7 +36,7 @@
               <div class="row">
                 <div class="col-12">
                   <h4>
-                    <i class="fas fa-globe"></i> Beautyshop, Inc.
+                    <i class="fas fa-globe"></i> {{  $settings->site_name }}
                     <small class="float-right">Date: <?php echo date('Y-m-d'); ?></small>
                   </h4>
                 </div>
@@ -47,11 +47,10 @@
                 <div class="col-sm-4 invoice-col">
                   From
                   <address>
-                    <strong>Beautyshop, Inc.</strong><br>
-                    795 Folsom Ave, Suite 600<br>
-                    San Francisco, CA 94107<br>
-                    Phone: (804) 123-5432<br>
-                    Email: info@beautyshop.com
+                    <strong>{{  $settings->site_name }}</strong><br>
+                    {{  $settings->site_address }}<br>
+                    Phone: {{  $settings->phone }}<br>
+                    Email: {{  $settings->email }}
                   </address>
                 </div>
                 <!-- /.col -->
@@ -126,28 +125,32 @@
                     <table class="table">
                       <tr>
                         <th style="width:50%">Subtotal:</th>
-                        <td><?php $total_amount = 0;
-								foreach($details as $item){
-									$total_amount = $total_amount + ($item->price * $item->qnt);
-								}
-								echo number_format((float)$total_amount, 2, '.', '');
-                            ?>
-                        </td>
+                        <td>{{ $get_customer->amount }}</td>
                       </tr>
-                      <?php 
-                        $total = ($total_amount + $ship) - $paid;
-                      ?>
+                      
                       <tr>
-                        <th>Paid</th>
-                        <td><?= number_format((float)$paid, 2, '.', ''); ?></td>
+                        <th>I.V.A</th>
+                        <td>{{ $get_customer->vat }}</td>
                       </tr>
                       <tr>
-                        <th>Shipping:</th>
-                        <td><?= number_format((float)$ship, 2, '.', ''); ?></td>
+                        <th>SCharge:</th>
+                        <td>{{ $get_customer->scharge }}</td>
+                      </tr>
+                      <tr>
+                        <th>Discount:</th>
+                        <td>{{ $get_customer->discount }}</td>
                       </tr>
                       <tr>
                         <th>Total:</th>
-                        <td><?= number_format((float)$total, 2, '.', ''); ?></td>
+                        <td>{{ $get_customer->gtotal }}</td>
+                      </tr>
+                      <tr>
+                        <th>Payment:</th>
+                        <td>{{ $get_customer->payment }}</td>
+                      </tr>
+                      <tr>
+                        <th>Due:</th>
+                        <td>{{ $get_customer->due }}</td>
                       </tr>
                     </table>
                   </div>

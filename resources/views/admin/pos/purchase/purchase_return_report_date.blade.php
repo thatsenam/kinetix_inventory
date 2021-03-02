@@ -47,6 +47,7 @@
                                 <th>Price</th>
                                 <th>I.V.A</th>
                                 <th>Total</th>
+                                <th>GTotal</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -55,6 +56,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -122,6 +124,7 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    qty = qty.toFixed(2);
 
                     // Payment Total
                     price = api
@@ -130,6 +133,7 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    price = price.toFixed(2);
 
                     // Payment Total
                     vat = api
@@ -138,13 +142,22 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    vat = vat.toFixed(2);
                     // Grand Total
-                    gTotal = api
+                    total = api
                         .column( 8 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    total = total.toFixed(2);
+                    gTotal = api
+                        .column( 9 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    gTotal = gTotal.toFixed(2);
         
                     // Update footer
                     $( api.column( 5 ).footer() ).html(
@@ -157,6 +170,9 @@
                         vat
                     );
                     $( api.column( 8 ).footer() ).html(
+                        total
+                    );
+                    $( api.column( 9 ).footer() ).html(
                         gTotal
                     );
                 },
@@ -174,6 +190,7 @@
                     {data:'price',},
                     {data:'vat',},
                     {data:'total',},
+                    {data:'gtotal',},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });

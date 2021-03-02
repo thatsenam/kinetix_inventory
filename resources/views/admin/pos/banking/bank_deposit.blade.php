@@ -13,58 +13,53 @@
                     
                     <form action="" method="POST">
                         @csrf
-                        
-                        <table class="table" style="width: 600px; margin: 0 auto;">
-                            <tr>
-                                <td>
+
+                        <div class="row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="bank_id">Select Bank</label>
                                     <select name="bank_id" id="bank_id" class="form-control">
                                         <option>Select Bank</option>
-                                        
                                         @foreach($bank_info as $row)
-                                        
-                                        <option value = {{$row->id}}>{{$row->name}}</option>
-                                        
+                                            <option value = {{$row->id}}>{{$row->name}}</option>
                                         @endforeach
-                                        
                                     </select>
-                                </td>
-                                <td>
-                                    <select name="account_id" id="account_id" class="form-control">
-                                        
-                                        <option>Select Account</option>
-                                        
-                                    </select>
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td>
+                                </div>
+                                <div class="form-group">
+                                    <label for="balance">Balance</label>
                                     <input type="text" name="balance" id="balance" class="form-control" placeholder="Balance">
-                                </td>
-                                <td>
-                                    <input type="text" name="check_no" id="check_no" class="form-control" placeholder="Check No">
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td>
+                                </div>
+                                <div class="form-group">
+                                    <label for="amount">Amount</label>
                                     <input type="text" name="amount" id="amount" class="form-control" placeholder="Amount">
-                                </td>
-                                <td>
-                                    <input type="text" name="date" id="date" class="form-control" value="<?php echo date('Y-m-d');?>">
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td>
+                                </div>
+                                <div class="form-group">
+                                    <label for="remarks">Remarks</label>
                                     <input type="text" name="remarks" id="remarks" class="form-control" placeholder="Remarks">
-                                </td>
-                                <td>
-                                    <input type="button" class="btn btn-success btn-lg" id="save" value="Save">
-                                </td>
-                            </tr>
-                            
-                        </table>
+                                </div>
+                            </div>
+
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="account_id">Select Account</label>
+                                    <select name="account_id" id="account_id" class="form-control">
+                                        <option>Select Account</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="check_no">Check NO</label>
+                                    <input type="text" name="check_no" id="check_no" class="form-control" placeholder="Check No">
+                                </div>
+                                <div class="form-group">
+                                    <label for="date">Date</label>
+                                    <input type="text" name="date" id="date" class="form-control" value="<?php echo date('Y-m-d');?>">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="button" class="btn btn-success btn-lg" id="save" value="Save">
+                        </div>
                         
                     </form>
                     
@@ -242,34 +237,3 @@
 </script>
 
 @stop
-
-<style>
-
-.custom-table{
-
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.custom-table tr th{
-    background-color: #1bcfb4;
-    padding: 5px;
-    color: #FFF;
-    text-align: center;
-    border: 1px solid #e6e6e6;
-}
-
-.custom-table tr td{
-    padding: 5px;
-    border: 1px solid #e6e6e6;
-    text-align: center;
-    font-size: 14px;
-}
-
-.col-2{
-    padding-left:10px !important;
-    padding-right:10px !important;
-    text-align: center;
-}
-
-</style>

@@ -1,19 +1,7 @@
 @extends('admin.pos.master')
         
 @section('content')
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
+
 
 <div class="content-wrapper">
     <div class="row">
@@ -93,7 +81,6 @@
     </div>
 </div>
 
-@endif
 
 @endsection
 
@@ -142,12 +129,14 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    qty = qty.toFixed(2);
                     uprice = api
                         .column( 7 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    uprice = uprice.toFixed(2);
 
                     tprice = api
                         .column( 8 )
@@ -155,6 +144,7 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    tprice = tprice.toFixed(2);
 
                     tvat = api
                         .column( 9 )
@@ -162,6 +152,7 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    tvat = tvat.toFixed(2);
 
 
                     // Payment Total
@@ -171,12 +162,15 @@
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    total = total.toFixed(2);
+
                     cash_return = api
                         .column( 11 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
+                    cash_return = cash_return.toFixed(2);
 
         
                     // Update footer

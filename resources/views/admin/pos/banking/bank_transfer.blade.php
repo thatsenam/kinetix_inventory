@@ -311,32 +311,3 @@
 
 @stop
 
-<style>
-    .custom-table {
-
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .custom-table tr th {
-        background-color: #1bcfb4;
-        padding: 5px;
-        color: #FFF;
-        text-align: center;
-        border: 1px solid #e6e6e6;
-    }
-
-    .custom-table tr td {
-        padding: 5px;
-        border: 1px solid #e6e6e6;
-        text-align: center;
-        font-size: 14px;
-    }
-
-    .col-2 {
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-        text-align: center;
-    }
-
-</style>

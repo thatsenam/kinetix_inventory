@@ -142,9 +142,9 @@
                                 <h3 class="card-title">Prepared By:</h3>
                               </div>
                               <div class="card-body">
-                                <b><i class="fa fa-globe mr-2"></i> BeautyShop, Inc.</b> <br>
-                                <span><i class="fa fa-map-marker-alt mr-2"></i> Some where in UK.</span> <br>
-                                <span><i class="fa fa-phone mr-2"></i> +01947347345345</span>
+                                <b><i class="fa fa-globe mr-2"></i> {{ $settings->site_name }}</b> <br>
+                                <span><i class="fa fa-map-marker-alt mr-2"></i> {{ $settings->site_address }}</span> <br>
+                                <span><i class="fa fa-phone mr-2"></i> {{ $settings->phone }}</span>
                               </div>
                             </div>
                             <!-- End Account Summary -->

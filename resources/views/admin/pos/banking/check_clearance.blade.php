@@ -1,28 +1,17 @@
 @extends('admin.pos.master')
         
 @section('content')
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
+
+
 <div class="content-wrapper" >
     <div class="row">
       <div class="col-12">
           
              <div class="card">
                 <div class="card-header">
-                    <h3>Check Cleareance</h3>
+                    <h3>Check Clearance</h3>
                 </div>
-                <div class="card-body custom-table">
+                <div class="card-body">
                     
                     <form action="get_sales_report_date" method="POST">
                         @csrf
@@ -54,7 +43,7 @@
                     
                     
                             
-                    <table class="collection-table custom-table" style="display:none;">
+                    <table class="collection-table custom-table table table-bordered mt-4" style="display:none;">
                         
                         <tr><th>Date</th><th>Invoice</th><th>Party Name</th><th>Address </th><th>Bank Name</th><th>Account</th><th>Check No</th><th>Amount</th><th>Action</th></tr>
                         
@@ -147,7 +136,8 @@
         </div>
     </div>
 </div>
-@endif
+
+
 @endsection
 
 @section('page-js-script')
@@ -307,34 +297,3 @@
 </script>
 
 @stop
-
-<style>
-
-.custom-table{
-
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.custom-table tr th{
-    background-color: #1bcfb4;
-    padding: 5px;
-    color: #FFF;
-    text-align: center;
-    border: 1px solid #e6e6e6;
-}
-
-.custom-table tr td{
-    padding: 5px;
-    border: 1px solid #e6e6e6;
-    text-align: center;
-    font-size: 14px;
-}
-
-.col-2{
-    padding-left:10px !important;
-    padding-right:10px !important;
-    text-align: center;
-}
-
-</style>

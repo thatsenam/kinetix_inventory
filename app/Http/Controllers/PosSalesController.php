@@ -204,6 +204,7 @@ class PosSalesController extends Controller
                 }
             }
         }
+        
 
         $get_invoice = DB::table('sales_invoice')->where('invoice_no', '=', $s_text)->first();
 
@@ -527,8 +528,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales I.V.A";
-                $description = "Due Sales I.V.A from Invoice ".$invoice;
+                $head = "Sales IVA";
+                $description = "Due Sales IVA from Invoice ".$invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -587,8 +588,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales I.V.A";
-                $description = "Sales I.V.A from Invoice ".$invoice;
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice ".$invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -647,8 +648,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales I.V.A";
-                $description = "Sales I.V.A from Invoice ".$invoice;
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice ".$invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -772,8 +773,8 @@ class PosSalesController extends Controller
 
             ]);
             
-                $head = "Sales I.V.A";
-                $description = "Sales I.V.A from Invoice ".$invoice;
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice ".$invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -801,7 +802,7 @@ class PosSalesController extends Controller
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
-                'notes' => "Mobile",
+                'note' => "Mobile",
                 'date' => $date,
                 'user_id' => $user,
 
@@ -927,8 +928,8 @@ class PosSalesController extends Controller
 
                 ]);
                 
-                $head = "Sales I.V.A";
-                $description = "Sales I.V.A from Invoice ".$invoice;
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice ".$invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -957,7 +958,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    'notes' => "Card",
+                    'note' => "Card",
                     'user_id' => $user,
 
                 ]);
@@ -976,7 +977,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    'notes' => "Card",
+                    'note' => "Card",
                     'user_id' => $user,
 
                 ]);
@@ -1007,8 +1008,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales I.V.A";
-                $description = "Sales I.V.A from Invoice ".$invoice;
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice ".$invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -1037,7 +1038,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    'notes' => "Card",
+                    'note' => "Card",
                     'user_id' => $user,
 
                 ]);
@@ -1068,8 +1069,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales I.V.A";
-                $description = "Sales I.V.A from Invoice ".$invoice;
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice ".$invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -1098,7 +1099,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    'notes' => "Card",
+                    'note' => "Card",
                     'user_id' => $user,
 
                 ]);
@@ -1205,8 +1206,8 @@ class PosSalesController extends Controller
 
             ]);
 
-            $head = "Sales I.V.A";
-                $description = "Sales I.V.A from Invoice ".$invoice;
+            $head = "Sales IVA";
+                $description = "Sales IVA from Invoice ".$invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -1234,7 +1235,7 @@ class PosSalesController extends Controller
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
-                'notes' => "Check",
+                'note' => "Check",
                 'date' => $date,
                 'user_id' => $user,
 
@@ -1463,8 +1464,8 @@ class PosSalesController extends Controller
 
             ]);
 
-                $head = "Sales I.V.A";
-                $description = "Sales Return I.V.A from Invoice ".$rinvoice;
+                $head = "Sales IVA";
+                $description = "Sales Return IVA from Invoice ".$rinvoice;
                 $debit = $total_vat;
                 $credit = 0;
 
@@ -1524,8 +1525,8 @@ class PosSalesController extends Controller
 
             ]);
 
-            $head = "Sales I.V.A";
-                $description = "Sales Return I.V.A from Invoice ".$rinvoice;
+            $head = "Sales IVA";
+                $description = "Sales Return IVA from Invoice ".$rinvoice;
                 $debit = $total_vat;
                 $credit = 0;
 
@@ -1585,8 +1586,8 @@ class PosSalesController extends Controller
 
             ]);
 
-            $head = "Sales I.V.A";
-                $description = "Sales Return I.V.A from Invoice ".$rinvoice;
+            $head = "Sales IVA";
+                $description = "Sales Return IVA from Invoice ".$rinvoice;
                 $debit = $total_vat;
                 $credit = 0;
 
@@ -1745,6 +1746,7 @@ class PosSalesController extends Controller
                         ->get(); 
             $brand_product_array->map(function($query, $i){
                 $query->sl = $i + 1;
+                $query->gtotal = $query->vat + $query->total;
                 return $query;
             });
         }
@@ -1809,7 +1811,7 @@ class PosSalesController extends Controller
         $sales = DB::table('sales_return')->where('sales_return.client_id', auth()->user()->client_id)
            ->select('sales_return.id as retid', 'sales_return.date as date','sales_return.rinvoice as rinvoice','sales_return.sinvoice as sinvoice','products.product_name as pname',
             'customers.name as cname', 'sales_return.qnt as qnt', 'sales_return.uprice as uprice', 'sales_return.tprice as tprice','sales_return.vat_amount as vat_amount',
-            'sales_return.total as total', 'sales_return.cash_return as cash_return', 'sales_return.remarks as remarks')
+            'sales_return.cash_return as cash_return', 'sales_return.remarks as remarks')
             ->join('customers', 'sales_return.cid', 'customers.id')
             ->join('products', 'sales_return.pid', 'products.id')
             ->whereBetween('date', [$stdate, $enddate])
@@ -1825,6 +1827,10 @@ class PosSalesController extends Controller
                 }else{
                     $sale->serial = '';
                 }
+
+                $total = $sale->vat_amount + $sale->tprice;
+
+                $sale->total = $total;
     
                 return $sale;
               });

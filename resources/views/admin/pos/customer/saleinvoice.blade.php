@@ -86,6 +86,7 @@
                       <th>Qty</th>
                       <th>Price</th>
                       <th>Subtotal</th>
+                      <th>I.V.A</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -101,6 +102,7 @@
                             $stotal = $detail->qnt * $detail->price;
                             echo number_format((float)$stotal, 2, '.', '');
                             ?></td>
+                            <td>{{$detail->vat}}</td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -86,6 +86,7 @@
                       <th>Qty.</th>
                       <th>Price</th>
                       <th>Total</th>
+                      <th>I.V.A</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -97,6 +98,7 @@
                         <td>{{$d->qnt}}</td>
                         <td>{{$d->price}}</td>
                         <td>{{$d->total}}</td>
+                        <td>{{$d->vat}}</td>
                       </tr>
                       @endforeach
                       

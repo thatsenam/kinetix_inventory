@@ -128,7 +128,7 @@
                 <div class="row">
                   <div class="col-12">
                       <div class="form-group">
-                        <label for="inputAddress">Address:*</label>
+                        <label for="inputAddress">Address:</label>
                         <input class="form-control" placeholder="Enter Address..." name="inputAddress" type="text" id="inputAddress">
                       </div>
                   </div>
@@ -402,7 +402,7 @@
                 <input class="form-control" name="phone" type="text" id="phone">
               </div>
               <div class="form-group">
-                <label for="address">Address:*</label>
+                <label for="address">Address:</label>
                 <input class="form-control" name="address" type="text" id="address">
               </div>
             </div>
@@ -429,9 +429,6 @@
                 },
                 inputPhone: {
                     required: true
-                },
-                inputAddress: {
-                    required: true
                 }
             },
             messages: {
@@ -440,9 +437,6 @@
                 },
                 inputPhone: {
                     required: "Customer Phone Field Can't Be Empty!",
-                },
-                inputAddress: {
-                    required: "Customer Address Field Can't Be Empty!",
                 }
             },
             errorElement: 'span',
@@ -628,7 +622,7 @@
       $("#CartMsg").hide();
       $('.save').click(function(e){
         e.preventDefault();
-        if($('#name').val() == '' || $('#phone').val() == '' || $('#address').val() == ''){
+        if($('#name').val() == '' || $('#phone').val() == ''){
             alert("Info fields can't be empty! Please give info to continue.");
             return false;
         }

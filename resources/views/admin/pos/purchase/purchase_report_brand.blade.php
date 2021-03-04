@@ -1,18 +1,6 @@
 @extends('admin.pos.master')
 @section('content')
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -81,8 +69,9 @@
                                             <th>Product Name</th>
                                             <th>Qnt</th>
                                             <th>Price</th>
-                                            <th>I.V.A</th>
+                                            <th>IVA</th>
                                             <th>Total</th>
+                                            <th>GTotal</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -91,6 +80,7 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="4">Total</th>
+                                            <th></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
@@ -108,7 +98,6 @@
     </div>
     <!-- /.content-wrapper -->
 
-@endif
 
     <script type="text/javascript">
 
@@ -170,6 +159,12 @@
                             .reduce(function(a, b) {
                                 return intVal(a) + intVal(b);
                             }, 0);
+                        gtotal = api
+                            .column(8)
+                            .data()
+                            .reduce(function(a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
 
                         // Update footer
                         $(api.column(4).footer()).html(
@@ -181,6 +176,9 @@
                         );
                         $(api.column(7).footer()).html(
                             total
+                        );
+                        $(api.column(8).footer()).html(
+                            gtotal
                         );
                     },
                     ajax: {
@@ -215,6 +213,9 @@
                         },
                         {
                             data: 'total',
+                        },
+                        {
+                            data: 'gtotal',
                         },
                     ]
                 });

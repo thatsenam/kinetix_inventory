@@ -87,8 +87,8 @@ class PagesController extends Controller
     }
 
     public function stock_transfer(Request $request){
-        $warehouses = Warehouse::get();
-        $products = Products::get();
+        $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+        $products = Products::where('client_id', auth()->user()->client_id)->get();
 
         if($request->isMethod('post')){
             $fieldValues = json_decode($request['fieldValues'], true);
@@ -201,7 +201,7 @@ class PagesController extends Controller
             $priceType = $getPriceType->profit_clc;
 
             $trowDiv = '<h4>'.$wname.'</h4>';
-            $trowDiv .= '<div class="mb-4"><table id="'.$tid++.'" class="display table-bordered table-hover"><thead><tr><th>নং</th><th>পণ্য</th><th>একক মূল্য</th><th>বর্তমান স্টক</th><th>মূল্য</th></tr></thead>';
+            $trowDiv .= '<div class="mb-4"><table id="'.$tid++.'" class="display table-bordered table-hover"><thead><tr><th>#</th><th>Product</th><th>Price</th><th>Current Stock</th><th>Total</th></tr></thead>';
             $TotalstockValue = 0;
             $i = 1;
             foreach($getStocks as $index=>$row){
@@ -222,7 +222,7 @@ class PagesController extends Controller
 
                 $trowDiv .= '<tbody><tr><td>'.$i++.'</td><td>'.$row->product_name.'</td><td>'.$row->price.'</td><td>'.$row->stock.'</td><td>'.$row->stockValue.'</td></tr>';
             }
-            $trowDiv .= '<tr><td colspan="4" class="text-right">সর্বমোট মূল্য =</td><td>'.$TotalstockValue.'</td></tr></tbody></table></div>';
+            $trowDiv .= '<tr><td colspan="4" class="text-right">All Total =</td><td>'.$TotalstockValue.'</td></tr></tbody></table></div>';
 
             $trow[] = $trowDiv;
 

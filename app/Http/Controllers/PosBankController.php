@@ -92,17 +92,18 @@ class PosBankController extends Controller
             $prev_cards=$req->card_name_prev ?? '';
             $new_cards=$req->card_name ?? '';
             // $acc_head->head = $name." A/C: ".$acc_name;
-            AccHead::where(['head'=>$bank->name . ' A/C: ' . $bank->account->acc_name])->update(['head'=>$data['bank_name'] . ' A/C: ' . $data['acc_name'],]);
-            $acc_transaction_head = AccTransaction::where('head', $bank->name . ' A/C: ' . $bank->account->acc_no)->get();
+            AccHead::where(['head'=>$bank->name . ' A/C: ' . $bank->account->acc_name])
+                    ->where('client_id', auth()->user()->client_id)->update(['head'=>$data['bank_name'] . ' A/C: ' . $data['acc_name'],]);
+            $acc_transaction_head = AccTransaction::where('head', $bank->name . ' A/C: ' . $bank->account->acc_no)->where('client_id', auth()->user()->client_id)->get();
             foreach($acc_transaction_head as $acc){
                 $acc->head = $data['bank_name'] . ' A/C: ' . $data['acc_name'];
                 $acc->save();
             }
-            BankInfo::where(['id'=>$id])->update(['name'=>$data['bank_name'],'address'=>$data['bank_address'],]);
-            BankAcc::where(['bank_id'=>$id])->update(['acc_name'=>$data['acc_name'],'acc_no'=>$data['acc_no'],]);
+            BankInfo::where(['id'=>$id])->where('client_id', auth()->user()->client_id)->update(['name'=>$data['bank_name'],'address'=>$data['bank_address'],]);
+            BankAcc::where(['bank_id'=>$id])->where('client_id', auth()->user()->client_id)->update(['acc_name'=>$data['acc_name'],'acc_no'=>$data['acc_no'],]);
             if($prev_cards){
                 foreach($prev_cards as $key=>$value){
-                    BankCard::where(['id'=>$key])->update(['card_name'=>$value,]);
+                    BankCard::where(['id'=>$key])->where('client_id', auth()->user()->client_id)->update(['card_name'=>$value,]);
                 }
             }
             if($new_cards){
@@ -305,7 +306,7 @@ class PosBankController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => date('Y-m-d'),
-                'user' => Auth::id(),
+                // 'user' => Auth::id(),
 
             ]);
 
@@ -323,7 +324,7 @@ class PosBankController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => date('Y-m-d'),
-                'user' => Auth::id(),
+                // 'user' => Auth::id(),
 
             ]);
 
@@ -335,7 +336,7 @@ class PosBankController extends Controller
 
     public function bank_deposit(){
 
-        $bank_info = DB::table('bank_info')->get();
+        $bank_info = DB::table('bank_info')->where('client_id', auth()->user()->client_id)->get();
 
         return view('admin.pos.banking.bank_deposit')->with('bank_info', $bank_info);
     }
@@ -440,7 +441,7 @@ class PosBankController extends Controller
 
     public function bank_withdraw(){
 
-        $bank_info = DB::table('bank_info')->get();
+        $bank_info = DB::table('bank_info')->where('client_id', auth()->user()->client_id)->get();
 
         return view('admin.pos.banking.bank_withdraw')->with('bank_info', $bank_info);
     }
@@ -577,7 +578,7 @@ class PosBankController extends Controller
 
     public function bank_transfer(){
 
-        $bank_info = DB::table('bank_info')->get();
+        $bank_info = DB::table('bank_info')->where('client_id', auth()->user()->client_id)->get();
 
         return view('admin.pos.banking.bank_transfer')->with('bank_info', $bank_info);
     }

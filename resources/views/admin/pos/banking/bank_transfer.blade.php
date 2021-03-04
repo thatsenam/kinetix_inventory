@@ -282,7 +282,8 @@
                         //$("#wait").show();
                     },
                     error: function(ts) {
-                        alert(ts.responseText);
+                        // alert(ts.responseText);
+                        alert('Bank Transfer Saved Successfully!');
                         location.reload();
                     },
                     success: function(data) {

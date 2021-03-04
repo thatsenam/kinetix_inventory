@@ -661,7 +661,7 @@
       $("#CartMsg").hide();
       $('.save').click(function(e){
         e.preventDefault();
-        if($('#name').val() == '' || $('#phone').val() == '' || $('#address').val() == ''){
+        if($('#name').val() == '' || $('#phone').val() == ''){
             alert("Info fields can't be empty! Please give info to continue.");
             return false;
         }

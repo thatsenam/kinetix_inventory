@@ -11,11 +11,7 @@
                 <div class="card-header">
                     <h3 class="ml-2">Sales Return Report</h3>
                 </div>
-                <div class="card-body custom-table">
-                    
-                    {{-- <form action="" method="POST">
-                        @csrf
-                    </form> --}}
+                <div class="card-body">
                     <div class="row">
                         <div class="col-2">
                             <label>Date From</label>
@@ -37,7 +33,7 @@
              </div>
              <div class="card">
                  <div class="card-body">
-                    <table class="custom-table" id="converting">
+                    <table class="table table-striped" id="converting">
                         
                         <thead>
                             <tr>
@@ -50,7 +46,7 @@
                                 <th>Qty</th>
                                 <th>U.Price</th>
                                 <th>T.Price</th>
-                                <th>I.V.A</th>
+                                <th>IVA</th>
                                 <th>Total</th>
                                 <th>Cash Return</th>
                                 <th>Remarks</th>
@@ -341,32 +337,3 @@
 
 @stop
 
-<style>
-
-.custom-table{
-
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.custom-table tr th{
-    background-color: #1bcfb4;
-    padding: 5px;
-    color: #FFF;
-    text-align: center;
-}
-
-.custom-table tr td{
-    padding: 5px;
-    border: 1px solid #e6e6e6;
-    text-align: center;
-    font-size: 14px;
-}
-
-.col-2{
-    padding-left:10px !important;
-    padding-right:10px !important;
-    text-align: center;
-}
-
-</style>

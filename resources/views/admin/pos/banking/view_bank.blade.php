@@ -93,7 +93,7 @@
       $("#ProductViewTable").DataTable({
         "responsive": true,
         "autoWidth": false,
-        "order": [[ 0, "desc" ]]
+        // "order": [[ 0, "desc" ]]
       });
     });
     function deleteConfirmation(id) {

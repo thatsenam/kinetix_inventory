@@ -322,7 +322,8 @@ class PosReportController extends Controller
             ->whereBetween('created_at', array($beforeTime, $newtime))
             ->sum('qnt');
 
-            $sku->pPurchase = DB::table('purchase_details')->where('client_id',auth()->user()->client_id)->where('pid',$pid)->whereBetween('created_at', array($newtime, $lastTime))->sum('qnt');
+            $sku->pPurchase = DB::table('purchase_details')->where('client_id',auth()->user()->client_id)
+            ->where('pid',$pid)->whereBetween('created_at', array($newtime, $lastTime))->sum('qnt');
 
             $oldDetails = Order_detail::where('product_id',$pid)->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($beforeTime, $newtime))->get();
 
@@ -461,7 +462,7 @@ class PosReportController extends Controller
 
             $sku->pPurchase = DB::table('stocks')
             ->where('product_id',$pid)
-            ->where('particulars', "purchase")
+            ->where('particulars', "Purchase")
             ->whereBetween('date', array($newtime, $lastTime))
             ->where('client_id',auth()->user()->client_id)
             ->sum('in_qnt');
@@ -575,7 +576,7 @@ class PosReportController extends Controller
     public function SalesByProduct(Request $request){
         $products = DB::table('sales_invoice_details')
 
-            ->select('sales_invoice_details.pid','sales_invoice_details.invoice_no','sales_invoice_details.qnt','sales_invoice_details.price','sales_invoice_details.total','products.product_name' ,'products.client_id'  )
+            ->select('sales_invoice_details.pid','sales_invoice_details.invoice_no','sales_invoice_details.qnt','sales_invoice_details.price','sales_invoice_details.total','sales_invoice_details.vat','products.product_name' ,'products.client_id'  )
 
             ->join('products','sales_invoice_details.pid', 'products.id')
             ->where('sales_invoice_details.client_id',auth()->user()->client_id)
@@ -590,7 +591,8 @@ class PosReportController extends Controller
             $lastTime = $request->to_date;
             if(!empty($request->from_date)){
                 $data = DB::table('sales_invoice_details')
-                    ->select('sales_invoice_details.pid','sales_invoice_details.invoice_no','sales_invoice_details.qnt','sales_invoice_details.price','sales_invoice_details.total','products.product_name')
+                    ->select('sales_invoice_details.pid','sales_invoice_details.invoice_no','sales_invoice_details.qnt',
+                    'sales_invoice_details.price','sales_invoice_details.total','sales_invoice_details.vat','products.product_name')
                 ->join('products','sales_invoice_details.pid', 'products.id')
                     ->where('sales_invoice_details.client_id',auth()->user()->client_id)
 
@@ -602,7 +604,8 @@ class PosReportController extends Controller
                 $data = DB::table('sales_invoice_details')
                     ->where('sales_invoice_details.client_id',auth()->user()->client_id)
 
-                    ->select('sales_invoice_details.pid','sales_invoice_details.invoice_no','sales_invoice_details.qnt','sales_invoice_details.price','sales_invoice_details.total','products.product_name')
+                    ->select('sales_invoice_details.pid','sales_invoice_details.invoice_no','sales_invoice_details.qnt',
+                    'sales_invoice_details.price','sales_invoice_details.total','sales_invoice_details.vat','products.product_name')
                 ->join('products','sales_invoice_details.pid', 'products.id')
 
                 ->get();
@@ -673,7 +676,8 @@ class PosReportController extends Controller
     public function PurchaseByProduct(Request $request){
         $products = DB::table('purchase_details')
             ->where('purchase_details.client_id',auth()->user()->client_id)
-            ->select('purchase_details.pid','purchase_details.pur_inv','purchase_details.qnt','purchase_details.price','purchase_details.total','products.product_name')
+            ->select('purchase_details.pid','purchase_details.pur_inv','purchase_details.qnt','purchase_details.price',
+            'purchase_details.total', 'purchase_details.vat','products.product_name')
         ->join('products','purchase_details.pid', 'products.id')
         ->groupBy('product_name')->get();
 
@@ -684,7 +688,8 @@ class PosReportController extends Controller
             if(!empty($request->from_date)){
                 $data = DB::table('purchase_details')
                     ->where('purchase_details.client_id',auth()->user()->client_id)
-                    ->select('purchase_details.pid','purchase_details.pur_inv','purchase_details.qnt','purchase_details.price','purchase_details.total','products.product_name')
+                    ->select('purchase_details.pid','purchase_details.pur_inv','purchase_details.qnt','purchase_details.price',
+                    'purchase_details.vat','purchase_details.total','products.product_name')
                 ->join('products','purchase_details.pid', 'products.id')
                 ->where('pid',$pid)
                 ->whereBetween('purchase_details.created_at', array($request->from_date, $request->to_date))
@@ -692,7 +697,8 @@ class PosReportController extends Controller
             }else{
                 $data = DB::table('purchase_details')
                     ->where('purchase_details.client_id',auth()->user()->client_id)
-                    ->select('purchase_details.pid','purchase_details.pur_inv','purchase_details.qnt','purchase_details.price','purchase_details.total','products.product_name')
+                    ->select('purchase_details.pid','purchase_details.pur_inv','purchase_details.qnt','purchase_details.price',
+                    'purchase_details.total', 'purchase_details.vat','products.product_name')
                 ->join('products','purchase_details.pid', 'products.id')
                 ->get();
             }

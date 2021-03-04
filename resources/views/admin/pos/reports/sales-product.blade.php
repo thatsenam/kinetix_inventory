@@ -58,10 +58,12 @@
                         <th>Quantity</th>
                         <th>Unit Price</th>
                         <th>Total</th>
+                        <th>I.V.A</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
+                      <th></th>
                       <th></th>
                       <th></th>
                       <th></th>
@@ -186,6 +188,7 @@
           {data:'qnt',},
           {data:'price',},
           {data:'total',},
+          {data:'vat',},
         ]
       });
     }

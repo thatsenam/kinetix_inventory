@@ -1,19 +1,7 @@
 @extends('admin.pos.master')
 @section('title', 'Stock Transfer')
 @section('content')
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
+
 <div class="content-wrapper" style="min-height: 1662.75px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -80,6 +68,17 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="inputToWareHouse">To Warehouse</label>
+                                        <select name="inputToWareHouse" id="inputToWareHouse" class="custom-select">
+                                            <option selected="" disabled="" value="">Select Warehouse</option>
+                                            @foreach($warehouses as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="inputProduct">Product</label>
@@ -94,17 +93,7 @@
                                         <input type="text" name="inputQty2" id="inputQty2" class="form-control" placeholder="Quantity" required>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="inputToWareHouse">Warehouse To</label>
-                                        <select name="inputToWareHouse" id="inputToWareHouse" class="custom-select">
-                                            <option selected="" disabled="" value="">Select Warehouse</option>
-                                            @foreach($warehouses as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
 
@@ -192,7 +181,6 @@
         }
 </style>
 
-@endif
 @endsection
 @section('page-js-script')
 <script>

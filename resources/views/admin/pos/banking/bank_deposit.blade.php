@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="balance">Balance</label>
-                                    <input type="text" name="balance" id="balance" class="form-control" placeholder="Balance">
+                                    <input type="text" name="balance" id="balance" class="form-control" placeholder="Balance" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="amount">Amount</label>
@@ -205,7 +205,9 @@
                 		},
             		  error: function(ts) {
             		      
-            		      alert(ts.responseText);
+            		    //   alert(ts.responseText);
+
+                            alert('Bank Deposit Saved Successfully!');
                           
                           location.reload();
                       },

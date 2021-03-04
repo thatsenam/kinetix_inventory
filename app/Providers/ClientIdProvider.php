@@ -25,6 +25,7 @@ use App\UserProfiles;
 use App\DamageProduct;
 use App\ProductImages;
 use App\AccTransaction;
+use App\BankCard;
 use App\GeneralSetting;
 use App\PaymentInvoice;
 use App\ProductsImages;
@@ -105,6 +106,12 @@ class ClientIdProvider extends ServiceProvider
         });
 
         BankInfo::creating(function ($model) {
+            $model->client_id = auth()->user()->client_id;
+            $model->user_id = auth()->user()->id;
+
+        });
+
+        BankCard::creating(function ($model) {
             $model->client_id = auth()->user()->client_id;
             $model->user_id = auth()->user()->id;
 

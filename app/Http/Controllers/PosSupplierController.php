@@ -449,7 +449,10 @@ class PosSupplierController extends Controller
         // $total_return = DB::table('purchase_returns')->where('sid',$id)->sum('total');
         // $cash_return = DB::table('sales_return')->where('cid',$id)->sum('cash_return');
         // $return_due = $total_return - $cash_return;
-        return view('admin.pos.suppliers.supplier_details')->with(compact('supplier','get_head','total_purchase','total_purchase_paid','purchase_due','ledgers','purchase'));
+
+        $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
+
+        return view('admin.pos.suppliers.supplier_details')->with(compact('settings', 'supplier','get_head','total_purchase','total_purchase_paid','purchase_due','ledgers','purchase'));
 
     }
 
@@ -488,7 +491,8 @@ class PosSupplierController extends Controller
         $sid = $get_supplier->sid;
         $supp_details = Supplier::where(['id'=>$sid])->get();
 
-        $details = DB::table('purchase_details')->select('products.product_name as name', 'products.product_img as image', 'purchase_details.qnt as qnt', 'purchase_details.price as price', 'purchase_details.total as total')
+        $details = DB::table('purchase_details')->select('products.product_name as name', 'products.product_img as image', 
+        'purchase_details.qnt as qnt', 'purchase_details.price as price', 'purchase_details.total as total', 'purchase_details.vat')
         ->join('products', 'purchase_details.pid', 'products.id')->where('purchase_details.pur_inv', $invoiceno)->get();
 
         $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();

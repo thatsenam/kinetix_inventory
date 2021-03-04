@@ -45,7 +45,7 @@
                                         <th>Supplier</th>
                                         <th>Supp Invocie</th>
                                         <th>Discount</th>
-                                        <th>Vat</th>
+                                        <th>IVA</th>
                                         <th>Amount</th>
                                         <th>Total</th>
                                         <th>Payment</th>
@@ -114,12 +114,12 @@
                                         
                         <div id="prodlistDiv" class="row" style="margin: 10px 0;">
                             <div class="col-12" style="padding-right: 0 !important; padding-left: 0 !important;">
-                                <table id="prodlist" class="price-table custom-table" style="">
+                                <table id="prodlist" class="price-table custom-table" style="width: 100%">
                                     <tr>
                                         <th style="width: 40%;">Item</th>
                                         <th style="width: 10%;">Price</th>
                                         <th style="width: 10%;">Qty</th>
-                                        <th style="width: 10%;">I.V.A</th>
+                                        <th style="width: 10%;">IVA</th>
                                         <th style="width: 10%;">Total</th>
                                         <th style="width: 20%;">Grand Total</th>
                                     </tr>
@@ -446,7 +446,7 @@
                                   $('#prodlistDiv').css("height","").css("clear","float").css("background","#FFF").css("overflow","");
                                   
                                  
-                                  $('#printdiv').append("<table class='footer-table' style='border-collapse: collapse; width:100%;' border='1'><tr><td>Total Tk: </td><td>"+amount+"</td><td> Discount: </td><td>"+discount+"</td></tr><tr></tr><tr><td>I.V.A: </td><td>"+vat_amount+"</td><td>All Total: </td><td>"+total+"</td></tr><tr><td> Payment: </td><td>"+payment+"</td><td> Due: </td><td>"+due+"</td></tr><tr><td> Date: </td><td>"+date+"</td><td></td><td></td></tr></table>");
+                                  $('#printdiv').append("<table class='footer-table' style='border-collapse: collapse; width:100%;' border='1'><tr><td>Total Tk: </td><td>"+amount+"</td><td> Discount: </td><td>"+discount+"</td></tr><tr></tr><tr><td>IVA: </td><td>"+vat_amount+"</td><td>All Total: </td><td>"+total+"</td></tr><tr><td> Payment: </td><td>"+payment+"</td><td> Due: </td><td>"+due+"</td></tr><tr><td> Date: </td><td>"+date+"</td><td></td><td></td></tr></table>");
                                  
                      
                                   $("#printRest tr td").css('font-size','12px').css('border', '1px solid #000').css('border-collapse', 'collapse');

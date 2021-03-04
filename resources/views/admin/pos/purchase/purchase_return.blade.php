@@ -66,7 +66,7 @@
                             <div class="row" style="height:350px; overflow-y: auto;">
                                 <div class="col-12" style="padding-right: 0 !important;">
                                     <table class="price-table custom-table">
-                                        <tr><th>SL</th><th style="width: 100px;">Item</th><th>Price</th><th>Qty</th><th>I.V.A</th><th>Total</th><th>Delete</th></tr>
+                                        <tr><th>SL</th><th style="width: 100px;">Item</th><th>Price</th><th>Qty</th><th>IVA</th><th>Total</th><th>Delete</th></tr>
                                         
                                     </table>
                                 </div>
@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="col-6">
                                       <div class="form-group">
-                                         <label>Total I.V.A</label>
+                                         <label>Total IVA</label>
                                          <input type="text" name="total_vat" id="total_vat" class="form-control" readonly="true" value="0">
                                       </div>
                                 </div>

@@ -27,9 +27,9 @@ class Warehouse extends Component
     {
         $validatedDate = $this->validate([
             'name' => 'required',
-            'address' => 'required',
-            'phone' => 'required',
-            'city' => 'nullable'
+            'address' => '',
+            'phone' => '',
+            // 'city' => 'nullable'
         ]);
 
         ModelsWarehouse::create($validatedDate);
@@ -59,9 +59,9 @@ class Warehouse extends Component
     {
         $validatedDate = $this->validate([
             'name' => 'required',
-            'address' => 'required',
-            'phone' => 'required',
-            'city' => 'nullable',
+            'address' => '',
+            'phone' => '',
+            // 'city' => 'nullable',
         ]);
 
         if ($this->id) {
@@ -70,7 +70,7 @@ class Warehouse extends Component
                 'name' => $this->name,
                 'address' => $this->address,
                 'phone' => $this->phone,
-                'city' => $this->city
+                // 'city' => $this->city
             ]);
             $this->updateMode = false;
             session()->flash('message', 'Warehouse Information Successfully Updated!');

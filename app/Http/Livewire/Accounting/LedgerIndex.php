@@ -61,6 +61,8 @@ class LedgerIndex extends Component
 
     public function render()
     {
+        $this->dispatchBrowserEvent('livewire:load');
+        
         return view('livewire.accounting.ledger-index');
     }
 }

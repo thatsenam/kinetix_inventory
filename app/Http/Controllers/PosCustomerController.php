@@ -590,7 +590,7 @@ class PosCustomerController extends Controller
 
         $details = DB::table('sales_invoice_details')
         ->select('products.product_name as name', 'products.product_img as image', 'sales_invoice_details.qnt as qnt',
-        'sales_invoice_details.price as price')
+        'sales_invoice_details.price as price','sales_invoice_details.vat')
         ->join('products', 'sales_invoice_details.pid', 'products.id')
         ->where('sales_invoice_details.invoice_no', $invoiceno)->get();
 
@@ -649,68 +649,6 @@ class PosCustomerController extends Controller
 
         return $due;
     }
-
-    // public function customers_due_collection()
-    // {
-    //     $customers = Customer::where('client_id', auth()->user()->client_id)->get();
-    //     return view('admin.pos.customer.customers-due-collection', compact('customers'));
-    // }
-
-    // public function store_customers_due_collection(Request $request)
-    // {
-    //     // $data = $request->validate([
-    //     //     'date' => 'required',
-    //     //     'customer_id' => 'required',
-    //     //     'payment_type' => '',
-    //     //     'total_due' => 'required',
-    //     //     'payment' => 'required',
-    //     //     'discount' => '',
-    //     // ]);
-
-    //     // CustomerDueCollection::create($data);
-
-    //     $cust_id = $request['customer_id'];
-    //     $customer = Customer::find($cust_id);
-    //     $date = $request['date'];
-    //     $cust_name = $customer->name;
-    //     $cust_phone = $customer->phone;
-    //     $amount = $request['payment'] + $request['discount'];
-
-    //     $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-    //     $vno = date('Ymd') . '-' . ($vno_counting + 1);
-
-    //     $head = $cust_name." ".$cust_phone;
-    //     $description = "Due Collect From ".$head;
-    //     $debit = 0;
-    //     $credit = $amount;
-
-    //     AccTransaction::create([
-    //         'vno' => $vno,
-    //         'head' => $head,
-    //         'sort_by' => "cid"." ".$cust_id,
-    //         'description' => $description,
-    //         'debit' => $debit,
-    //         'credit' => $credit,
-    //         'date' => $date,
-    //     ]);
-
-    //     $head = "Cash In Hand";
-    //     $description = "Due Collect From " . $cust_name." ".$cust_phone;
-    //     $debit = $amount;
-    //     $credit = 0;
-
-    //     AccTransaction::create([
-    //         'vno' => $vno,
-    //         'head' => $head,
-    //         'sort_by' => "cid"." ".$cust_id,
-    //         'description' => $description,
-    //         'debit' => $debit,
-    //         'credit' => $credit,
-    //         'date' => $date,
-    //     ]);
-        
-    //     return redirect()->back()->with('success', 'Customer Due Collection Successfully Inserted!');
-    // }
 
     public function customers_due_collection_report()
     {

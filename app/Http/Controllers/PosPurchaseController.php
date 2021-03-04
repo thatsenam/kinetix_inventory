@@ -749,21 +749,27 @@ class PosPurchaseController extends Controller
         if($supplier_id && $brand_id)
         {
             $brand_product_array = DB::table('purchase_primary')->where('purchase_primary.client_id', auth()->user()->client_id)
+                        // ->select('purchase_primary.pur_inv', 'purchase_primary.supp_inv', 'products.product_name',
+                        // 'purchase_details.qnt', 'purchase_details.price', 'purchase_primary.vat_amount', 'purchase_primary.total')
                         ->join('purchase_details', 'purchase_primary.pur_inv', 'purchase_details.pur_inv')
                         ->join('suppliers', 'purchase_primary.sid', 'suppliers.id')
                         ->join('products', 'purchase_details.pid', 'products.id')
                         ->join('brands', 'products.brand_id', 'brands.id')
                         ->where('sid', $supplier_id)
                         ->where('brand_id', $brand_id)
-                        ->get(); 
+                        ->get();
             $brand_product_array->map(function($query, $i){
                 $query->sl = $i + 1;
+                
+                $query->gtotal = $query->vat + $query->total;
+
                 return $query;
             });
         }
         else if($supplier_id)
         {
             $brand_product_array = DB::table('purchase_primary')->where('purchase_primary.client_id', auth()->user()->client_id)
+            
                         ->join('purchase_details', 'purchase_primary.pur_inv', 'purchase_details.pur_inv')
                         ->join('suppliers', 'purchase_primary.sid', 'suppliers.id')
                         ->join('products', 'purchase_details.pid', 'products.id')
@@ -772,6 +778,8 @@ class PosPurchaseController extends Controller
                         ->get(); 
             $brand_product_array->map(function($query, $i){
                 $query->sl = $i + 1;
+                $query->gtotal = $query->vat + $query->total;
+
                 return $query;
             });
         }
@@ -786,6 +794,7 @@ class PosPurchaseController extends Controller
                         ->get(); 
             $brand_product_array->map(function($query, $i){
                 $query->sl = $i + 1;
+                $query->gtotal = $query->vat + $query->total;
                 return $query;
             });
         }

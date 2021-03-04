@@ -135,11 +135,6 @@
                                                         <input type="hidden" name="pid_hid" id="pid_hid">
                                                     </div>
                                                 </div>
-                                                @if($showStock == 1)
-                                                    <div class="col-2">
-                                                        <div class="bg-info text-center rounded h4" id="product_stock"></div>
-                                                    </div>
-                                                @endif
                                             </div>
 
 
@@ -198,14 +193,15 @@
 
                                                 <div id="prodlistDiv" class="row" style="height:350px; overflow-y: auto; ">
                                                     <div class="col-12" style="padding-right: 0 !important;">
-                                                        <table id="prodlist" class="price-table custom-table" style="">
+                                                        <table id="prodlist" class="price-table custom-table" style="width: 100%">
                                                             <tr>
-                                                                <th style="width: 30%">Item</th>
-                                                                <th style="width: 20%">price</th>
-                                                                <th style="width: 20%">Qty</th>
-                                                                <th style="width: 20%">I.V.A</th>
-                                                                <th style="width: 20%">Total</th>
-                                                                <th style="width: 10%">Delete</th>
+                                                                <th>Item</th>
+                                                                <th>Price</th>
+                                                                <th>Qty</th>
+                                                                <th>IVA</th>
+                                                                <th>Total</th>
+                                                                <th>GTotal</th>
+                                                                <th>Delete</th>
                                                             </tr>
 
                                                         </table>
@@ -259,7 +255,19 @@
                                         </div>
 
                                         <div class="col-md-5">
-
+                                            
+                                            <div class="row">
+                                                @if($purchasePrice == 1)
+                                                    <div class="col">
+                                                        <div class="bg-warning text-center rounded h4" id="purchase_price_show"></div>
+                                                    </div>
+                                                @endif
+                                                @if($showStock == 1)
+                                                    <div class="col">
+                                                        <div class="bg-info text-center rounded h4" id="product_stock"></div>
+                                                    </div>
+                                                @endif
+                                            </div>
                                             <div class="row">
                                                 <div class="col-4">
                                                     <div class="form-group">
@@ -334,7 +342,7 @@
                                             <div class="row">
                                                 <div class="col-6" style="margin-top:-10px;">
                                                     <div class="form-group">
-                                                        <label>Total I.V.A</label>
+                                                        <label>Total IVA</label>
                                                         <input type="text" name="total_vat" id="total_vat"
                                                             class="form-control" value="0">
                                                     </div>
@@ -493,7 +501,7 @@
                     </tr>
 
                     <tr>
-                        <td><label style="padding:10px;">Cleck Type</label></td>
+                        <td><label style="padding:10px;">Check Type</label></td>
                         <td>
                             <select class="form-control" id="check_type" name="check_type">
                                 <option value="pay_cash">Cash</option>
@@ -924,11 +932,9 @@
                             $('#search').val(name);
                             $('#pid_hid').val(id);
                             
-                            var show = {!! json_encode($purchasePrice) !!};
-                            if(show == 1)
-                            {
-                                $('#price').val(price);
-                            }
+                            $('#purchase_price_show').html(price);
+
+                            $('#price').val(price);
 
                             $("#price").focus();
                             $("#products_div").hide();
@@ -2487,12 +2493,14 @@
             $('#search').val(name);
             $('#pid_hid').val(id);
 
-            var show = {!! json_encode($purchasePrice) !!};
+            // var show = {!! json_encode($purchasePrice) !!};
             
-            if(show == 1)
-            {
-                $('#price').val(price);
-            }
+            // if(show == 1)
+            // {
+            // }
+
+            $('#purchase_price_show').html(price);
+            $('#price').val(price);
             
             product_id = id;
             product_serial = serial;
@@ -2558,12 +2566,13 @@
             vat = (vat + calculate_vat);
 
             var total = (price * qnt);
+            var all_total = total + calculate_vat;
 
             $('.price-table').show();
 
             $('.price-table').append("<tr data-vat='" + calculate_vat + "'><td data-prodid='" + id +
                 "' style='width:200px;'>" + name + "</td><td class='uprice'>" + price + "</td><td class='qnty'>" + qnt +"</td><td class='prod_vat'>" + calculate_vat +
-                "</td><td class='totalPriceTd'>" + total + "</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
+                "</td><td class='totalPriceTd'>" + total + "</td><td>" + all_total + "</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
 
             totalPrice = Number(totalPrice + total);
 
@@ -2633,8 +2642,6 @@
 
             $("#prodlist tbody tr").each(function() {
 
-                $(this).find("th:eq(5)").remove();
-                $(this).find("td:eq(5)").remove();
                 $(this).find("th:eq(6)").remove();
                 $(this).find("td:eq(6)").remove();
 
@@ -2672,7 +2679,7 @@
 
             $('#printdiv').append(
                 "<table id='printRest' style='width:332px; border-collapse: collapse;'><tr><td>Total Tk: </td><td>" +
-                amount + "</td><td> Vat: </td><td>" + vat + "</td></tr><tr><td>Scharge: </td><td>" + scharge +
+                amount + "</td><td> IVA: </td><td>" + vat + "</td></tr><tr><td>Scharge: </td><td>" + scharge +
                 "</td><td>Discount: </td><td>" + discount + "</td></tr><tr><td> All Total: </td><td>" +
                 show_grand_total + "</td><td> payment: </td><td>" + payment + "</td></tr><tr><td> Due: </td><td>" +
                 due + "</td><td> Date: </td><td>" + date + "</td></tr></table>");
@@ -2775,7 +2782,7 @@
 
             $("#prodlist tbody tr").each(function() {
 
-                $(this).find("th:eq(5)").remove();
+                $(this).find("th:eq(6)").remove();
                 $(this).find("th:eq(6)").remove();
             });
 
@@ -2792,10 +2799,10 @@
 
             $('#printdiv').append(
                 "<table id='printRest' style='width:332px; border-collapse: collapse;'><tr><td>Total Tk: </td><td>" +
-                amount + "</td><td> Discount: </td><td>" + discount + "</td></tr><tr><td>Vat: </td><td>" + vat +
+                amount + "</td><td> Discount: </td><td>" + discount + "</td></tr><tr><td>IVA: </td><td>" + vat +
                 "</td><td> SCharge: </td><td>" + scharge + "</td></tr><tr><td>All Total: </td><td>" + gtotal +
                 "</td><td>Recieved: </td><td>" + discount + "</td></tr><tr><td> Due: </td><td>" + due +
-                "</td><td> payment: </td><td>" + payment + "</td></tr><tr><td> Date: </td><td>" + date +
+                "</td><td> Payment: </td><td>" + payment + "</td></tr><tr><td> Date: </td><td>" + date +
                 "</td><td> &nbsp; </td><td>&nbsp;</td></tr></table>");
 
             $("#printRest tr td").css('font-size', '12px').css('border', '1px solid #000').css('border-collapse',

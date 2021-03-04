@@ -73,8 +73,9 @@
                                             <th>Product Name</th>
                                             <th>Qnt</th>
                                             <th>Price</th>
-                                            <th>I.V.A</th>
+                                            <th>IVA</th>
                                             <th>Total</th>
+                                            <th>GTotal</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -83,6 +84,7 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="3">Total</th>
+                                            <th></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
@@ -160,6 +162,12 @@
                             .reduce(function(a, b) {
                                 return intVal(a) + intVal(b);
                             }, 0);
+                        gtotal = api
+                            .column(7)
+                            .data()
+                            .reduce(function(a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
 
                         // Update footer
                         $(api.column(3).footer()).html(
@@ -170,6 +178,9 @@
                         );
                         $(api.column(6).footer()).html(
                             total
+                        );
+                        $(api.column(7).footer()).html(
+                            gtotal
                         );
                     },
                     ajax: {
@@ -200,6 +211,9 @@
                         },
                         {
                             data: 'total',
+                        },
+                        {
+                            data: 'gtotal',
                         },
                     ]
                 });

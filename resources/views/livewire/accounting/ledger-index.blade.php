@@ -9,7 +9,7 @@
                 <div class="justify-content-center d-flex text-dark">
                     <div class="option">
                         <label class="pl-1"> <b> Select Head</b></label>
-                        <select class="custom-select" name="option" wire:model="selectedHead" required>
+                        <select class="custom-select" name="option" wire:model="selectedHead" id="SelectHead" required>
                             <option value="Choose your option" disabled selected>Choose your option</option>
                             @foreach($heads as $head)
                                 <option value="{{ $head->head }}">{{ $head->head }}</option>
@@ -90,6 +90,17 @@
 
 
 <script>
+
+    window.addEventListener("livewire:load", function (event) {
+
+        $('#SelectHead').select2();
+
+        $(document).on('change', '#SelectHead', function (e) {
+            @this.set('selectedHead', e.target.value);
+        });
+
+    });
+
     function makePDF(printSection) {
         var head = document.getElementById("heading");
         head.style.display = "block";

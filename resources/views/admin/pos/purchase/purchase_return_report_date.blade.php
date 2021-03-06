@@ -3,69 +3,77 @@
 @section('content')
 
 <div class="content-wrapper">
-    <div class="row">
-      <div class="col-12">
-          
-             <div class="card">
-                <div class="card-header">
-                    <h3>Purchase Return Report</h3>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Purchase Return Report</h1>
                 </div>
-                <div class="card-body custom-table">
-                    
-                    <div class="row mb-4">
-                        <div class="col-2">
-                            <label>Date From</label>
-                        </div>
-                        <div class="col-2">
-                            <input type="text" class="form-control" name="stdate" id="stdate" value="{{ date('Y-m-01') }}" autocomplete="off">
-                        </div>
-                        <div class="col-2">
-                            <label>Date To</label>
-                        </div>
-                        <div class="col-2">
-                            <input type="text" class="form-control" name="enddate" id="enddate" value="{{ date('Y-m-d') }}" autocomplete="off">
-                        </div>
-                        <div class="col-2">
-                            <input type="submit" class="btn btn-success btn-lg" id="search" value="Search">
-                        </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/dashboard/pos">POS</a></li>
+                    <li class="breadcrumb-item active">Purchase Return Reports</li>
+                    </ol>
+                </div>
+            </div>
+        <div class="row">
+        <div class="col-12">
+                <div class="justify-content-center d-flex mb-2">
+                    <div>
+                        <label class="text-dark"><b>Start Date</b></label>
+                        <input class="form-control" name="stdate" id="stdate" type="text" required autocomplete="off">
                     </div>
-                    
-                    <table class="table table-bordered" id="converting">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Invoice</th>
-                                <th>Serial</th>
-                                <th>Supplier</th>
-                                <th>Product</th>
-                                <th>Qnt</th>
-                                <th>Price</th>
-                                <th>IVA</th>
-                                <th>Total</th>
-                                <th>GTotal</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="4">Total</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    <p class="mr-4"></p>
+                    <div>
+                        <label class="text-dark"><b>End Date</b></label>
+                        <input class="form-control" name="enddate" id="enddate" type="text" required autocomplete="off">
+                    </div>
+                    <div class="mt-auto ml-2">
+                        <button type="button" id="search" class="btn btn-primary">Search</button>
+                    </div>
                 </div>
-             </div>
-      </div>
-    </div>
+
+                <div class="card">
+                    <div class="card-body">
+                    <table class="table table-bordered" id="converting">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Invoice</th>
+                                    <th>Serial</th>
+                                    <th>Supplier</th>
+                                    <th>Product</th>
+                                    <th>Qnt</th>
+                                    <th>Price</th>
+                                    <th>IVA</th>
+                                    <th>Total</th>
+                                    <th>GTotal</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="4">Total</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+        </div>
+        </div>
+        </div>
+    </section>
 </div>
 @endsection
 

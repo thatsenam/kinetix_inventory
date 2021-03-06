@@ -4,7 +4,8 @@
 
 
 <div class="content-wrapper"> 
-    <h3 class="ml-3">Purchase Products</h3>
+    <section class="content">
+    <h2 class="ml-3">Purchase Products</h2>
     <div class="box-body">
         <div class="row">
           <div class="col-12" style="position: relative;">
@@ -187,6 +188,7 @@
           </div>
         </div>
     </div>
+    </section>
 </div>
 
 @endsection
@@ -972,6 +974,8 @@
             var price = Number(price);
             var total = Number(total);
             var totalVat = Number(totalVat);
+            totalVat = totalVat.toFixed(2);
+            price = price.toFixed(2);
         
             
             $('.price-table').show();
@@ -982,13 +986,18 @@
             var totalVatField = Number($('#total_vat').val());
             
             totalPrice = Number(totalPrice + total);
+            totalPrice = totalPrice.toFixed(2);
             totalVatField = Number(totalVatField + totalVat);
+            totalVatField = totalVatField.toFixed(2);
         
             $('#hid_total').val(totalPrice);
             $('#total_vat').val(totalVatField);
             $('#amount').val(totalPrice);
             
-            $('#total').val(totalPrice+totalVatField);
+            var allTotal = Number(totalPrice)+Number(totalVatField);
+            allTotal = allTotal.toFixed(2);
+
+            $('#total').val(allTotal);
             
             $('#pid_hid').val("0");
             $('#search').val("");

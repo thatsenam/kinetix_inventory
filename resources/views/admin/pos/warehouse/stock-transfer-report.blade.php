@@ -2,19 +2,6 @@
 @section('title', 'Stock Transfer Report')
 @section('content')
 
-@if($AccHeads <= 0 || $GenSettings ==null)
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="card" style="height: 100px;width: 100%;padding: 30px;color: red;">
-                        <h1>Please, Configure General Settings and create Acoounts demo heads from before proceed.</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-@else
 <div class="content-wrapper" style="min-height: 1662.75px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -56,7 +43,7 @@
                 <div class="card-body">
                     <table id="reports" class="table table-sm table-bordered table-hover">
                         <thead>
-                            <tr style="font-size: 13px;">
+                            <tr>
                                 <th>Date</th>
                                 <th>Warehouse</th>
                                 <th>Product</th>
@@ -69,7 +56,7 @@
                                         
                         </tbody>
                         <tfoot>
-                            <tr style="font-size: 13px;">
+                            <tr>
                                 <th colspan="3">Total</th>
                                 <th></th>
                                 <th></th>
@@ -85,7 +72,7 @@
     </section>
     <!-- /.content -->
 </div>
-@endif
+
 @endsection
 @section('page-js-script')
 <script src="{{ asset('js/conversion.js')}}"></script>

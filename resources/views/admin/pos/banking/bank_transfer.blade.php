@@ -3,12 +3,11 @@
 @section('content')
 
     <div class="content-wrapper">
+        <section class="content">
+        <h2 class="ml-2">Bank Transfer</h2>
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Bank Transfer</h3>
-                    </div>
                     <div class="card-body custom-table">
 
                         <div class="row text-dark font-weight-bold text-center">
@@ -103,6 +102,7 @@
                 </div>
             </div>
         </div>
+        </section>
     </div>
 @endsection
 
@@ -237,6 +237,11 @@
                 var tf_bank_name = $('#tf_bank option:selected').text();
                 var tf_acc = $('#tf_acc').val();
                 var tf_account_name = $('#tf_acc option:selected').text();
+
+                if( tf_bank == '' && tf_acc == '')
+                {
+                    alert('Required');
+                }
 
                 var tt_bank = $('#tt_bank').val();
                 var tt_bank_name = $('#tt_bank option:selected').text();

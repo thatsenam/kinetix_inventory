@@ -4,77 +4,85 @@
 
 
 <div class="content-wrapper">
-    <div class="row">
-      <div class="col-12">
-          
-             <div class="card">
-                <div class="card-header">
-                    <h3 class="ml-2">Sales Return Report</h3>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-2">
-                            <label>Date From</label>
-                        </div>
-                        <div class="col-2">
-                            <input type="text" class="form-control" name="stdate" id="stdate" autocomplete="off">
-                        </div>
-                        <div class="col-2">
-                            <label>Date To</label>
-                        </div>
-                        <div class="col-2">
-                            <input type="text" class="form-control" name="enddate" id="enddate" autocomplete="off">
-                        </div>
-                        <div class="col-2">
-                            <input type="submit" class="btn btn-success btn-lg" id="search" value="Search">
-                        </div>
-                    </div>  
-                </div>
-             </div>
-             <div class="card">
-                 <div class="card-body">
-                    <table class="table table-striped" id="converting">
-                        
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Return Inv</th>
-                                <th>Sales Inv</th>
-                                <th>Serial</th>
-                                <th>Customer</th>
-                                <th>Product</th>
-                                <th>Qty</th>
-                                <th>U.Price</th>
-                                <th>T.Price</th>
-                                <th>IVA</th>
-                                <th>Total</th>
-                                <th>Cash Return</th>
-                                <th>Remarks</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Sales Return Report</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="/dashboard/pos">POS</a></li>
+                <li class="breadcrumb-item active">Sales Return Reports</li>
+                </ol>
+            </div>
+        </div>
 
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="5">Total</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                 </div>
-             </div>
-      </div>
-    </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="justify-content-center d-flex mb-2">
+                    <div>
+                        <label class="text-dark"><b>Start Date</b></label>
+                        <input class="form-control" name="stdate" id="stdate" type="text" required autocomplete="off">
+                    </div>
+                    <p class="mr-4"></p>
+                    <div>
+                        <label class="text-dark"><b>End Date</b></label>
+                        <input class="form-control" name="enddate" id="enddate" type="text" required autocomplete="off">
+                    </div>
+                    <div class="mt-auto ml-2">
+                        <button type="button" id="search" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+
+            
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-striped" id="converting">
+                            
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Return Inv</th>
+                                    <th>Sales Inv</th>
+                                    <th>Serial</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th>U.Price</th>
+                                    <th>T.Price</th>
+                                    <th>IVA</th>
+                                    <th>Total</th>
+                                    <th>Cash Return</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="5">Total</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+        </div>
+        </div>
+        </div>
+    </section>
 </div>
 
 
@@ -227,57 +235,6 @@
             load_data();
         });
         
-        // $( function() {
-        //     $( "#stdate" ).datepicker({dateFormat: 'yy-mm-dd' });
-        // } );
-        
-        // $( function() {
-        //     $( "#enddate" ).datepicker({dateFormat: 'yy-mm-dd' });
-        // } );
-        
-        
-        // $('#search').on('click', function(e){
-            
-        //     e.preventDefault();
-            
-        //     var stdate = $('#stdate').val();
-        //     var enddate = $('#enddate').val();
-        			
-        // 	var formData = new FormData();
-        // 	    formData.append('stdate', stdate);
-        // 	    formData.append('enddate', enddate);
-        			
-        // 	    $.ajaxSetup({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //             }
-        //         });
-        			
-        //         $.ajax({
-        //     		  url: "{{ URL::route('get_sales_return_report_date') }}",
-        //               method: 'post',
-        //               data: formData,
-        //               contentType: false,
-        //               cache: false,
-        //               processData: false,
-        //               dataType: "json",
-        //     		  beforeSend: function(){
-        //         			//$("#wait").show();
-        //         		},
-        //     		  error: function(ts) {
-        //                   $('.custom-table').show();
-        //                   $('.custom-table td').remove();
-        //                   $('.custom-table tr:last').after(ts.responseText);
-                          
-        //                   //alert(ts.responseText)
-        //               },
-        //               success: function(data){
-                         
-        //                   alert(data);
-        //               }
-            		   
-        //         }); 
-        //     });
         
         $('body').on('click', '.delete', function(){
             

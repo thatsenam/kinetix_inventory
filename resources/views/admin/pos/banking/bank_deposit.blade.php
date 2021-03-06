@@ -3,12 +3,12 @@
 @section('content')
 
 <div class="content-wrapper" >
+    
+    <section class="content">
+        <h2 class="ml-2">Bank Deposit</h2>
     <div class="row">
       <div class="col-12">
              <div class="card">
-                <div class="card-header">
-                    <h3>Bank Deposit</h3>
-                </div>
                 <div class="card-body custom-table">
                     
                     <form action="" method="POST">
@@ -67,6 +67,7 @@
              </div>
       </div>
     </div>
+    </section>
     
 </div>
 @endsection

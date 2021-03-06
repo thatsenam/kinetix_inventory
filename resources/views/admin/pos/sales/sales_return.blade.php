@@ -10,6 +10,8 @@
     <div class="content-wrapper">
     <!-- Page Title Header Starts-->
         
+    <section class="content">
+    <h2 class="ml-3">Sales Return</h2>
         
         <img id="wait" src="{{asset('images/wait2.gif')}}" style="width:300px; margin: 0 auto; position:fixed; top:200px; left:40%; z-index:999; display:none">
         
@@ -20,9 +22,6 @@
                  <form action="{{route('sales_return_save')}}" method="POST">
                      @csrf
                      <div class="card" style="min-height: 500px;">
-                         <div class="card-header">
-                            <h3>Sales Return</h3>
-                         </div>
                          <div class="card-body">
                             <div class="row">
                                 <div class="col-md-7">
@@ -38,7 +37,7 @@
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group" style="position: relative;">
-                                                <input type="text" name="cust_phone" id="cust_phone" class="form-control" placeholder="Customer Phone">
+                                                <input type="text" name="cust_phone" id="cust_phone" class="form-control" placeholder="Customer Phone" autocomplete="off">
                                                 <div id="cust_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                             
                                                 <input type="hidden" name="cust_id" id="cust_id" value="0" class="form-control">
@@ -212,16 +211,13 @@
             </div>
         </div>
                      <!-------Customer Entry----------->
-        
-                    
-        
-                     
-                  </div>
                 </div>
+            </div>
                 
         </div>
         
     </div>
+    </section>
           <!-- content-wrapper ends -->
           
 </div>
@@ -841,10 +837,12 @@
                     $("#wait").hide();
                         
                     $('#save').attr('disabled', false);
+
+                    alert('Sales Return Successfull!');
                     
                     location.reload();    
                 
-                    },
+                },
                     success: function(data){
                         
                         alert('Sales Return Successfull!');
@@ -922,6 +920,7 @@
             var totalPrice = Number(totalPrice);
 
             calculate_vat = ((price * product_vat) / 100)*qnt;
+            calculate_vat = Number(calculate_vat.toFixed(2));
 
             vat = (vat + calculate_vat);
 
@@ -938,7 +937,9 @@
             totalPrice = Number(totalPrice + total);
             
             $('#hid_total').val(totalPrice);
-            $('#gtotal').val(totalPrice+vatField);
+            var showGTotal = totalPrice+vatField;
+            showGTotal = Number(showGTotal.toFixed(2));
+            $('#gtotal').val(showGTotal);
         
             $('#total').val(totalPrice);
         

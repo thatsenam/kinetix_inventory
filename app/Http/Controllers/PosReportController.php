@@ -404,9 +404,16 @@ class PosReportController extends Controller
                 $sku->price = round($sku->price, 2);
             }
 
+            $sku->pPurchase = DB::table('stocks')
+                ->where('product_id',$pid)
+                ->where('particulars', "Purchase")
+                ->whereBetween('date', array($newtime, $lastTime))
+                ->where('client_id',auth()->user()->client_id)
+                ->sum('in_qnt');
+
             $sku->psold = DB::table('stocks')
             ->where('product_id',$pid)
-            ->whereBetween('date', array($newtime, $lastTime))->where('particulars', "sales")
+            ->whereBetween('date', array($newtime, $lastTime))->where('particulars', "Sales")
             ->where('client_id',auth()->user()->client_id)->sum('out_qnt');
 
             $sku->returns = DB::table('stocks')
@@ -460,46 +467,41 @@ class PosReportController extends Controller
             ->where('client_id',auth()->user()->client_id)
             ->sum('out_qnt');
 
-            $sku->pPurchase = DB::table('stocks')
-            ->where('product_id',$pid)
-            ->where('particulars', "Purchase")
-            ->whereBetween('date', array($newtime, $lastTime))
-            ->where('client_id',auth()->user()->client_id)
-            ->sum('in_qnt');
+            
 
-            $oldDetails = Order_detail::where('product_id',$pid)->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($beforeTime, $newtime))->get();
+            // $oldDetails = Order_detail::where('product_id',$pid)->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($beforeTime, $newtime))->get();
 
-            foreach($oldDetails as $count=>$orderOldDetail){
-                $oldOrderId = $orderOldDetail->order_id;
-                $Oldorder = Order::where('order_number',$oldOrderId)->where('client_id',auth()->user()->client_id)
-                    ->first();
-                if(!$Oldorder){
-                    continue;
-                }
-                if($Oldorder->delivered_date!=NULL){
-                   $sku->Oldsold += $orderOldDetail->quantity;
-                }
-            }
+            // foreach($oldDetails as $count=>$orderOldDetail){
+            //     $oldOrderId = $orderOldDetail->order_id;
+            //     $Oldorder = Order::where('order_number',$oldOrderId)->where('client_id',auth()->user()->client_id)
+            //         ->first();
+            //     if(!$Oldorder){
+            //         continue;
+            //     }
+            //     if($Oldorder->delivered_date!=NULL){
+            //        $sku->Oldsold += $orderOldDetail->quantity;
+            //     }
+            // }
 
-            $details = Order_detail::where('product_id',$pid)->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($newtime, $lastTime))->get();
+            // $details = Order_detail::where('product_id',$pid)->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($newtime, $lastTime))->get();
 
-            // dd($details);
-            foreach($details as $count=>$orderDetail){
-                $orderId = $orderDetail->order_id;
-                $order = Order::where('order_number',$orderId)->where('client_id',auth()->user()->client_id)
-                    ->first();
-                // dd($order);
-                if(!$order){
-                    continue;
-                }
-                if($order->delivered_date!=NULL){
-                   $sku->psold += $orderDetail->quantity;
-                }
-            }
+            // // dd($details);
+            // foreach($details as $count=>$orderDetail){
+            //     $orderId = $orderDetail->order_id;
+            //     $order = Order::where('order_number',$orderId)->where('client_id',auth()->user()->client_id)
+            //         ->first();
+            //     // dd($order);
+            //     if(!$order){
+            //         continue;
+            //     }
+            //     if($order->delivered_date!=NULL){
+            //        $sku->psold += $orderDetail->quantity;
+            //     }
+            // }
 
             $sku->OpenngS = $sku->oldPurchase - $sku->oldPurchaseReturn - $sku->Oldsold + $sku->OldSaleReturn - $sku->oldDamage;
             
-            $current_qty = $sku->OpenngS + ($sku->pPurchase - $sku->psold - $sku->returns + $sku->sale_return);
+            $current_qty = $sku->OpenngS + ($sku->pPurchase - $sku->psold - $sku->returns + $sku->sale_return - $sku->damage);
 
             $prod = DB::table('products')->find($sku->pid);
             

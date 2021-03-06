@@ -74,7 +74,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="vat">Category I.V.A</label>
+                                <label for="vat">Category IVA</label>
                                 <input type="text" name="vat" class="form-control" id="vat" value="{{$vat}}">
                             </div>
                             <div class="form-group">

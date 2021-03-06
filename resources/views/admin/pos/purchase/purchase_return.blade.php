@@ -3,14 +3,14 @@
 @section('content')
 
 <div class="content-wrapper">
+    <section class="content">
+    <h2 class="ml-3">Purchase Return</h2>
+    <div class="box-body">
     <div class="row">
       <div class="col-12" style="position: relative;">
         <form action="{{route('save_purchase_return')}}" method="POST">
              @csrf
              <div class="card" style="min-height: 500px;">
-                 <div class="card-header">
-                    <h3>Purchase Return</h3>
-                 </div>
                  <div class="card-body">
                     <div class="row">
                         <div class="col-md-7">
@@ -26,7 +26,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group" style="position: relative;">
-                                        <input type="text" name="supp_name" id="supp_name" class="form-control" placeholder="Supplier Name">
+                                        <input type="text" name="supp_name" id="supp_name" class="form-control" placeholder="Supplier Name" autocomplete="off">
                                         <div id="supp_div" style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                         <input type="hidden" name="supp_id" id="supp_id" value="0" class="form-control">
                                     </div>
@@ -155,6 +155,8 @@
              
       </div>
     </div>
+    </div>
+    </section>
 </div>
 
 @endsection

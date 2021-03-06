@@ -4,13 +4,12 @@
 
 
 <div class="content-wrapper" >
+    <section class="content">
+    <h2 class="ml-2">Check Clearance</h2>
     <div class="row">
       <div class="col-12">
           
              <div class="card">
-                <div class="card-header">
-                    <h3>Check Clearance</h3>
-                </div>
                 <div class="card-body">
                     
                     <form action="get_sales_report_date" method="POST">
@@ -53,6 +52,7 @@
              </div>
       </div>
     </div>
+    </section>
     
     <div class="row pos_div" style="position: absolute; top: 10px;width: 60%; margin: 0 auto; background: #FFF; height:600px; overflow-y:auto; padding: 10px; z-index: 999999; display: none;">
         

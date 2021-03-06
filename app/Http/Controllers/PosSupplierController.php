@@ -25,6 +25,7 @@ class PosSupplierController extends Controller
             $supplier->name = $data['inputName'];
             $supplier->phone = $data['inputPhone'];
             $supplier->address = $data['inputAddress'];
+            $supplier->email = $data['inputEmail'];
             $supplier->user = Auth::id();
             $supplier->save();
 

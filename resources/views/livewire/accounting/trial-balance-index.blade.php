@@ -23,6 +23,7 @@
                             <button type="button" wire:click="submit" class="btn btn-primary rounded-0">Filter
                             </button>
                         </div>
+                    </div>
                 </form>
             </div>
         

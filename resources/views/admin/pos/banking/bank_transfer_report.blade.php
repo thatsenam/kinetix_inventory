@@ -3,12 +3,11 @@
 @section('content')
 
     <div class="content-wrapper">
+        <section class="content">
+            <h2 class="ml-2">Bank Transfer Report</h2>
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Bank Transfer Report</h3>
-                    </div>
                     <div class="card-body custom-table">
                         <div class="row">
                             <div class="col-3">
@@ -55,6 +54,7 @@
                 </div>
             </div>
         </div>
+        </section>
     </div>
 @endsection
 

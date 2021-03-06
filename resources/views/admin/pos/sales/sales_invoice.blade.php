@@ -34,415 +34,417 @@
         <div class="content-wrapper">
             <!-- Page Title Header Starts-->
 
-            <h3 class="ml-3">Sales Invocie</h3>
+            <section class="content">
+            <h3 class="ml-2">Sales Invocie</h3>
 
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-12" style="position: relative;">
-                        <form action="{{ route('sales_invoice_save') }}" method="POST">
-                            @csrf
-                            <div class="card" style="min-height: 500px;">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-7">
-                                            <div class="row">
-                                                @if($warehouses->count()>1)
-                                                <div class="col-3">
-                                                    <select name="warehouse_id" id="warehouse_id" class="form-control">
-                                                        <option value="" disabled selected>Select Warehouse</option>
-                                                        @foreach($warehouses as $warehouse)
-                                                            <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-3">
-                                                    <div class="form-group" style="position: relative;">
-                                                        <input type="text" name="cust_phone" id="cust_phone"
-                                                            class="form-control" placeholder="Customer Phone"
-                                                            autocomplete="off">
-                                                        <div id="cust_div"
-                                                            style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
-                                                        </div>
-
-                                                        <input type="hidden" name="cust_id" id="cust_id" value="0"
-                                                            class="form-control">
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <div class="form-group" style="position: relative;">
-                                                        <input type="text" name="cust_name" id="cust_name"
-                                                            class="form-control" placeholder="Customer Name">
-                                                        <div id="memo_div"
-                                                            style="width: 100%; display: none; position: absolute; top: 45px; left: 0; z-index: 999;">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <div class="form-group" style="position: relative;">
-                                                        <input type="text" name="cust_address" id="cust_address"
-                                                            class="form-control" placeholder="Customer Address">
-                                                    </div>
-                                                </div>
-                                                @else
-                                                <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
-                                                <div class="col-4">
-                                                    <div class="form-group" style="position: relative;">
-                                                        <input type="text" name="cust_phone" id="cust_phone"
-                                                            class="form-control" placeholder="Customer Phone"
-                                                            autocomplete="off">
-                                                        <div id="cust_div"
-                                                            style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
-                                                        </div>
-
-                                                        <input type="hidden" name="cust_id" id="cust_id" value="0"
-                                                            class="form-control">
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-4">
-                                                    <div class="form-group" style="position: relative;">
-                                                        <input type="text" name="cust_name" id="cust_name"
-                                                            class="form-control" placeholder="Customer Name">
-                                                        <div id="memo_div"
-                                                            style="width: 100%; display: none; position: absolute; top: 45px; left: 0; z-index: 999;">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-4">
-                                                    <div class="form-group" style="position: relative;">
-                                                        <input type="text" name="cust_address" id="cust_address"
-                                                            class="form-control" placeholder="Customer Address">
-                                                    </div>
-                                                </div>
-                                                @endif
-                                            </div>
-                                            
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <div class="form-group" style="position: relative;">
-                                                        <input type="text" name="barcode" id="barcode" class="form-control"
-                                                            placeholder="Barcode" autocomplete="off">
-                                                    </div>
-                                                </div>
-                                                <div class="col-8">
-                                                    <div class="form-group" style="position: relative;">
-                                                        <input type="text" class="form-control" placeholder="Search Product"
-                                                            id="search" autocomplete="off">
-                                                        <div id="products_div"
-                                                            style="display: none; position: absolute; top: 30px; left: 0; width: 100%; z-index: 999;">
-                                                        </div>
-                                                        <input type="hidden" name="pid_hid" id="pid_hid">
-                                                    </div>
-                                                </div>
+<div class="box-body">
+    <div class="row">
+        <div class="col-12" style="position: relative;">
+            <form action="{{ route('sales_invoice_save') }}" method="POST">
+                @csrf
+                <div class="card" style="min-height: 500px;">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="row">
+                                    @if($warehouses->count()>1)
+                                    <div class="col-3">
+                                        <select name="warehouse_id" id="warehouse_id" class="form-control">
+                                            <option value="" disabled selected>Select Warehouse</option>
+                                            @foreach($warehouses as $warehouse)
+                                                <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group" style="position: relative;">
+                                            <input type="text" name="cust_phone" id="cust_phone"
+                                                class="form-control" placeholder="Customer Phone"
+                                                autocomplete="off">
+                                            <div id="cust_div"
+                                                style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
                                             </div>
 
-
-                                            <!-------------------------------->
-
-    
-
-
-                                            <div id="printdiv" style="margin:0 auto; font-family:Franklin Gothic Medium; ">
-
-
-                                                <table id="print_add"
-                                                    style="width: 332px; margin: 0px auto; padding: 10px; text-align:left; display:none;">
-
-                                                    <tr>
-                                                        <td style='width:70%;'>
-
-                                                            <span id="company"
-                                                                style='font-size:42px'>{{ $settings->site_name ?? '' }}</span><br />
-
-                                                            <span style='font-size:16px'
-                                                                id="company_add">{{ $settings->address ?? '' }}</span><br />
-
-
-                                                            <span style='font-size:14px'><b>{{ $settings->phone ?? '' }}
-                                                                    {{ $settings->email ?? '' }}</b></span>
-                                                        </td>
-
-                                                        <td id="logoimage" style='width:30%; text-align:right;'>
-
-                                                            <!--<img src='/images/logo_ccb.png' style='width:100px; height:auto;'>-->
-
-                                                        </td>
-                                                    </tr>
-                                                </table>
-
-
-                                                <table id="mid_section" style="width: 332px; font-size:16px; display:none;">
-
-                                                    <tr>
-                                                        <td style="text-align:center; font-size:22px" colspan="2"><b>INVOICE
-                                                                / BILL</b></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td id="cust_add" style="width: 50%; padding-left:10px;">
-
-                                                        </td>
-                                                        <td id="others_info" style="text-align: right;">
-
-                                                        </td>
-                                                    </tr>
-
-                                                </table>
-
-
-                                                <div id="prodlistDiv" class="row" style="height:350px; overflow-y: auto; ">
-                                                    <div class="col-12" style="padding-right: 0 !important;">
-                                                        <table id="prodlist" class="price-table custom-table" style="width: 100%">
-                                                            <tr>
-                                                                <th>Item</th>
-                                                                <th>Price</th>
-                                                                <th>Qty</th>
-                                                                <th>IVA</th>
-                                                                <th>Total</th>
-                                                                <th>GTotal</th>
-                                                                <th>Delete</th>
-                                                            </tr>
-
-                                                        </table>
-                                                    </div>
-                                                </div>
-
-                                                <table id="bottom_section"
-                                                    style="margin-top:40px; width: 94%; font-size:16px; display:none;">
-
-                                                    <tr>
-                                                        <td id="bottom_left" style="width:70%; padding-left:30px;">
-
-                                                        </td>
-                                                        <td id="bottom_right" style="width:30%;">
-
-                                                        </td>
-                                                    </tr>
-
-                                                </table>
-
-                                                <table id="footer_section"
-                                                    style="margin-top:40px; width: 94%; font-size:16px; display:none;">
-
-                                                    <tr>
-                                                        <td id="footer1" style="text-align:left; padding:20px;">
-
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td id="footer2" style="text-align:right; padding-top:80px;">
-                                                            <b>Authorized Signature & Company Stamp</b>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td id="footer3" style="text-align:center; padding:20px;">
-                                                            Note: warranty voide if sticker removed item, burn case and
-                                                            physical damage of goods, warranty not cover mouse, keyboard,
-                                                            cable adopter and powe supply unit of casing.
-                                                        </td>
-                                                    </tr>
-
-                                                </table>
-
-                                            </div>
-                                            
-
-
-                                            <!--------------------------------->
-
+                                            <input type="hidden" name="cust_id" id="cust_id" value="0"
+                                                class="form-control">
 
                                         </div>
-
-                                        <div class="col-md-5">
-                                            
-                                            <div class="row">
-                                                @if($purchasePrice == 1)
-                                                    <div class="col">
-                                                        <div class="bg-warning text-center rounded h4" id="purchase_price_show"></div>
-                                                    </div>
-                                                @endif
-                                                @if($showStock == 1)
-                                                    <div class="col">
-                                                        <div class="bg-info text-center rounded h4" id="product_stock"></div>
-                                                    </div>
-                                                @endif
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group" style="position: relative;">
+                                            <input type="text" name="cust_name" id="cust_name"
+                                                class="form-control" placeholder="Customer Name">
+                                            <div id="memo_div"
+                                                style="width: 100%; display: none; position: absolute; top: 45px; left: 0; z-index: 999;">
                                             </div>
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <div class="form-group">
-                                                        <input type="text" name="price" id="price" class="form-control"
-                                                            placeholder="Price">
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-4">
-                                                    <div class="form-group">
-                                                        <input type="text" name="qnt" id="qnt" class="form-control"
-                                                            placeholder="Quantity">
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-4">
-                                                    <div class="form-group">
-                                                        <input type="text" name="date" id="date" class="form-control"
-                                                            placeholder="date"
-                                                            value="<?php echo date('Y-m-d'); ?>"
-                                                            style="padding: 0.94rem 0.5rem;">
-
-                                                    </div>
-                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group" style="position: relative;">
+                                            <input type="text" name="cust_address" id="cust_address"
+                                                class="form-control" placeholder="Customer Address">
+                                        </div>
+                                    </div>
+                                    @else
+                                    <input type="hidden" name="warehouse_id" id="warehouse_id" value="{{ $warehouse_id }}">
+                                    <div class="col-4">
+                                        <div class="form-group" style="position: relative;">
+                                            <input type="text" name="cust_phone" id="cust_phone"
+                                                class="form-control" placeholder="Customer Phone"
+                                                autocomplete="off">
+                                            <div id="cust_div"
+                                                style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
                                             </div>
 
-                                            <div class="row">
-                                                <div class="col-6" style="margin-top:-10px;">
-                                                    <div class="form-group">
-                                                        <label>Amount</label>
-                                                        <input type="text" name="amount" id="amount"
-                                                            class="form-control bg-white" placeholder="" value="0" disabled>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="form-group" style="margin-top:-10px;">
-                                                        <label>Grand Total</label>
-                                                        <input type="text" name="show_grand_total" id="show_grand_total"
-                                                            class="form-control bg-white" placeholder="" disabled>
-                                                    </div>
-                                                </div>
+                                            <input type="hidden" name="cust_id" id="cust_id" value="0"
+                                                class="form-control">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group" style="position: relative;">
+                                            <input type="text" name="cust_name" id="cust_name"
+                                                class="form-control" placeholder="Customer Name">
+                                            <div id="memo_div"
+                                                style="width: 100%; display: none; position: absolute; top: 45px; left: 0; z-index: 999;">
                                             </div>
-
-                                            <div class="col-6" style="display: none;">
-                                                <div class="form-group">
-                                                    <label>Total</label>
-                                                    <input type="text" name="total" id="total" class="form-control"
-                                                        placeholder="" value="0">
-                                                    <input type="hidden" name="hid_total" id="hid_total"
-                                                        class="form-control" placeholder="" value="0">
-
-                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group" style="position: relative;">
+                                            <input type="text" name="cust_address" id="cust_address"
+                                                class="form-control" placeholder="Customer Address">
+                                        </div>
+                                    </div>
+                                    @endif
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="form-group" style="position: relative;">
+                                            <input type="text" name="barcode" id="barcode" class="form-control"
+                                                placeholder="Barcode" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="form-group" style="position: relative;">
+                                            <input type="text" class="form-control" placeholder="Search Product"
+                                                id="search" autocomplete="off">
+                                            <div id="products_div"
+                                                style="display: none; position: absolute; top: 30px; left: 0; width: 100%; z-index: 999;">
                                             </div>
-                                            <div class="row">
-                                                <div class="col-6" style="margin-top:-10px;">
-                                                    <div class="form-group">
-                                                        <label>Discount</label>
-                                                        <input type="text" name="discount" id="discount"
-                                                            class="form-control" placeholder="" value="0">
+                                            <input type="hidden" name="pid_hid" id="pid_hid">
+                                        </div>
+                                    </div>
+                                </div>
 
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="form-group" style="margin-top:-10px;">
-                                                        <label>S. Charge</label>
-                                                        <input type="text" name="scharge" id="scharge" class="form-control"
-                                                            placeholder="" value="{{ $scharge ?? 0 }}">
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="row">
-                                                <div class="col-6" style="margin-top:-10px;">
-                                                    <div class="form-group">
-                                                        <label>Total IVA</label>
-                                                        <input type="text" name="total_vat" id="total_vat"
-                                                            class="form-control" value="0">
-                                                    </div>
-                                                </div>
-                                                <div class="col-6" style="margin-top:-10px;">
-                                                    <div class="form-group">
-                                                        <label>Payment</label>
-                                                        <input type="text" name="payment" id="payment" class="form-control"
-                                                            placeholder="" value="0">
-                                                    </div>
-                                                </div>
-                                            </div>
+                                <!-------------------------------->
 
-                                            <div class="row">
-                                                
-                                                <div class="col-6" style="margin-top:-10px;">
-                                                    <div class="form-group">
-                                                        <label>Payment Type</label>
-                                                        <select name="paytype" id="paytype" class="form-control"
-                                                            placeholder="" value="0">
-                                                            <option value='cash'>Cash</option>
-                                                            <option value='card'>Card</option>
-                                                            <option value='mobile'>Mobile</option>
-                                                            <option value='check'>Check</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6" style="margin-top:-10px;">
-                                                    <div class="form-group">
-                                                        <label>Sale By</label>
-                                                        <input type="text" name="sby" id="sby" class="form-control"
-                                                            placeholder=""
-                                                            value="<?php echo $user_name; ?>">
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="row">
-                                                
-                                                <div class="col-12" style="margin-top:-10px;">
-                                                    <div class="form-group">
-                                                        <label>Remarks</label>
-                                                        <input type="text" name="remarks" id="remarks" class="form-control"
-                                                            placeholder="" value="">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-6" style="margin-top:-10px;">
-                                                    <div style="width: 80px; margin: 20px auto;">
-                                                        <input type="button" class="btn btn-danger btn-lg" id="cancel"
-                                                            value="Cancel">
-                                                    </div>
-                                                </div>
-                                                <div class="col-6" style="margin-top:-10px;">
-                                                    <div style="width: 80px; margin: 20px auto;">
-                                                        <input type="button" class="btn btn-success btn-lg" id="save"
-                                                            value="Save">
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="row">
 
-                                                <div class="col-6" style="margin-top:-10px;">
-                                                    <div class="form-group">
-                                                        <div style="width: 50px; margin: 0 auto;">
-                                                            <input type="button" class="btn btn-primary btn-md" id="reprint"
-                                                                value="Reprint">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                <div id="printdiv" style="margin:0 auto; font-family:Franklin Gothic Medium; ">
 
-                                                <div class="col-6" style="margin-top:-10px;">
-                                                    <div class="form-group" style="position: relative;">
 
-                                                        <input type="text" name="rep_invoice" id="rep_invoice"
-                                                            class="form-control" placeholder="Enter Invoice No"
-                                                            style="display: none;">
+                                    <table id="print_add"
+                                        style="width: 332px; margin: 0px auto; padding: 10px; text-align:left; display:none;">
 
-                                                        <div id="rep_div"
-                                                            style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                        <tr>
+                                            <td style='width:70%;'>
 
-                                            </div>
+                                                <span id="company"
+                                                    style='font-size:42px'>{{ $settings->site_name ?? '' }}</span><br />
+
+                                                <span style='font-size:16px'
+                                                    id="company_add">{{ $settings->address ?? '' }}</span><br />
+
+
+                                                <span style='font-size:14px'><b>{{ $settings->phone ?? '' }}
+                                                        {{ $settings->email ?? '' }}</b></span>
+                                            </td>
+
+                                            <td id="logoimage" style='width:30%; text-align:right;'>
+
+                                                <!--<img src='/images/logo_ccb.png' style='width:100px; height:auto;'>-->
+
+                                            </td>
+                                        </tr>
+                                    </table>
+
+
+                                    <table id="mid_section" style="width: 332px; font-size:16px; display:none;">
+
+                                        <tr>
+                                            <td style="text-align:center; font-size:22px" colspan="2"><b>INVOICE
+                                                    / BILL</b></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td id="cust_add" style="width: 50%; padding-left:10px;">
+
+                                            </td>
+                                            <td id="others_info" style="text-align: right;">
+
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+
+                                    <div id="prodlistDiv" class="row" style="height:350px; overflow-y: auto; ">
+                                        <div class="col-12" style="padding-right: 0 !important;">
+                                            <table id="prodlist" class="price-table custom-table" style="width: 100%">
+                                                <tr>
+                                                    <th>Item</th>
+                                                    <th>Price</th>
+                                                    <th>Qty</th>
+                                                    <th>IVA</th>
+                                                    <th>Total</th>
+                                                    <th>GTotal</th>
+                                                    <th>Delete</th>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <table id="bottom_section"
+                                        style="margin-top:40px; width: 94%; font-size:16px; display:none;">
+
+                                        <tr>
+                                            <td id="bottom_left" style="width:70%; padding-left:30px;">
+
+                                            </td>
+                                            <td id="bottom_right" style="width:30%;">
+
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                    <table id="footer_section"
+                                        style="margin-top:40px; width: 94%; font-size:16px; display:none;">
+
+                                        <tr>
+                                            <td id="footer1" style="text-align:left; padding:20px;">
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td id="footer2" style="text-align:right; padding-top:80px;">
+                                                <b>Authorized Signature & Company Stamp</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td id="footer3" style="text-align:center; padding:20px;">
+                                                Note: warranty voide if sticker removed item, burn case and
+                                                physical damage of goods, warranty not cover mouse, keyboard,
+                                                cable adopter and powe supply unit of casing.
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </div>
+                                
+
+
+                                <!--------------------------------->
+
+
+                            </div>
+
+                            <div class="col-md-5">
+                                
+                                <div class="row">
+                                    @if($purchasePrice == 1)
+                                        <div class="col">
+                                            <div class="bg-warning text-center rounded h4" id="purchase_price_show"></div>
+                                        </div>
+                                    @endif
+                                    @if($showStock == 1)
+                                        <div class="col">
+                                            <div class="bg-info text-center rounded h4" id="product_stock"></div>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <input type="text" name="price" id="price" class="form-control"
+                                                placeholder="Price">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <input type="text" name="qnt" id="qnt" class="form-control"
+                                                placeholder="Quantity">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <input type="text" name="date" id="date" class="form-control"
+                                                placeholder="date"
+                                                value="<?php echo date('Y-m-d'); ?>"
+                                                style="padding: 0.94rem 0.5rem;">
 
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-6" style="margin-top:-10px;">
+                                        <div class="form-group">
+                                            <label>Amount</label>
+                                            <input type="text" name="amount" id="amount"
+                                                class="form-control bg-white" placeholder="" value="0" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group" style="margin-top:-10px;">
+                                            <label>Grand Total</label>
+                                            <input type="text" name="show_grand_total" id="show_grand_total"
+                                                class="form-control bg-white" placeholder="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6" style="display: none;">
+                                    <div class="form-group">
+                                        <label>Total</label>
+                                        <input type="text" name="total" id="total" class="form-control"
+                                            placeholder="" value="0">
+                                        <input type="hidden" name="hid_total" id="hid_total"
+                                            class="form-control" placeholder="" value="0">
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6" style="margin-top:-10px;">
+                                        <div class="form-group">
+                                            <label>Discount</label>
+                                            <input type="text" name="discount" id="discount"
+                                                class="form-control" placeholder="" value="0">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group" style="margin-top:-10px;">
+                                            <label>S. Charge</label>
+                                            <input type="text" name="scharge" id="scharge" class="form-control"
+                                                placeholder="" value="{{ $scharge ?? 0 }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6" style="margin-top:-10px;">
+                                        <div class="form-group">
+                                            <label>Total IVA</label>
+                                            <input type="text" name="total_vat" id="total_vat"
+                                                class="form-control" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-6" style="margin-top:-10px;">
+                                        <div class="form-group">
+                                            <label>Payment</label>
+                                            <input type="text" name="payment" id="payment" class="form-control"
+                                                placeholder="" value="0">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    
+                                    <div class="col-6" style="margin-top:-10px;">
+                                        <div class="form-group">
+                                            <label>Payment Type</label>
+                                            <select name="paytype" id="paytype" class="form-control"
+                                                placeholder="" value="0">
+                                                <option value='cash'>Cash</option>
+                                                <option value='card'>Card</option>
+                                                <option value='mobile'>Mobile</option>
+                                                <option value='check'>Check</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6" style="margin-top:-10px;">
+                                        <div class="form-group">
+                                            <label>Sale By</label>
+                                            <input type="text" name="sby" id="sby" class="form-control"
+                                                placeholder=""
+                                                value="<?php echo $user_name; ?>">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    
+                                    <div class="col-12" style="margin-top:-10px;">
+                                        <div class="form-group">
+                                            <label>Remarks</label>
+                                            <input type="text" name="remarks" id="remarks" class="form-control"
+                                                placeholder="" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6" style="margin-top:-10px;">
+                                        <div style="width: 80px; margin: 20px auto;">
+                                            <input type="button" class="btn btn-danger btn-lg" id="cancel"
+                                                value="Cancel">
+                                        </div>
+                                    </div>
+                                    <div class="col-6" style="margin-top:-10px;">
+                                        <div style="width: 80px; margin: 20px auto;">
+                                            <input type="button" class="btn btn-success btn-lg" id="save"
+                                                value="Save">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-6" style="margin-top:-10px;">
+                                        <div class="form-group">
+                                            <div style="width: 50px; margin: 0 auto;">
+                                                <input type="button" class="btn btn-primary btn-md" id="reprint"
+                                                    value="Reprint">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6" style="margin-top:-10px;">
+                                        <div class="form-group" style="position: relative;">
+
+                                            <input type="text" name="rep_invoice" id="rep_invoice"
+                                                class="form-control" placeholder="Enter Invoice No"
+                                                style="display: none;">
+
+                                            <div id="rep_div"
+                                                style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
                             </div>
-
-                        </form>
-
-
+                        </div>
                     </div>
                 </div>
 
-            </div>
+            </form>
+
+
+        </div>
+    </div>
+
+</div>
+            </section>
 
         </div>
 
@@ -2552,11 +2554,13 @@
             var name = name;
             var qnt = Number(qnt);
             var price = Number(price);
+            price = Number(price.toFixed(2));
             var pvat = Number(pvat);
             var vat = Number(vat);
             var totalPrice = Number(totalPrice);
 
             calculate_vat = ((price * product_vat) / 100)*qnt;
+            calculate_vat = Number(calculate_vat.toFixed(2));
 
             if( ! product_vat)
             {
@@ -2567,6 +2571,7 @@
 
             var total = (price * qnt);
             var all_total = total + calculate_vat;
+            all_total = Number(all_total.toFixed(2));
 
             $('.price-table').show();
 
@@ -2584,12 +2589,9 @@
             var discount = Number($('#discount').val());
             scharge = Number(scharge);
 
-            // var vat_percent = Number($('#vat_percent').val());
-            // var vat_amount = Number($('#vat_amount').val());
-
-            // var total_vat = grandTotalPrice * (vat_percent / 100);
-            // $('#vat_amount').val(total_vat);
-            $('#show_grand_total').val(grandTotalPrice + scharge - discount);
+            var showGTotal = grandTotalPrice + scharge - discount;
+            showGTotal = Number(showGTotal.toFixed(2));
+            $('#show_grand_total').val(showGTotal);
 
             $('#hid_total').val(totalPrice);
 

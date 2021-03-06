@@ -86,7 +86,7 @@
                       <th>Qty.</th>
                       <th>Price</th>
                       <th>Total</th>
-                      <th>I.V.A</th>
+                      <th>IVA</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -130,7 +130,7 @@
                       </tr>
                       
                       <tr>
-                        <th>I.V.A</th>
+                        <th>IVA</th>
                         <td>{{ $get_supplier->vat_amount }}</td>
                       </tr>
                       <tr>

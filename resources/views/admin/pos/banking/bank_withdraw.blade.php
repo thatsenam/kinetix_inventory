@@ -3,71 +3,72 @@
 @section('content')
 
 <div class="content-wrapper" >
-    <div class="row">
-      <div class="col-12">
-          
-             <div class="card">
-                <div class="card-header">
-                    <h3>Bank Withdraw</h3>
-                </div>
-                <div class="card-body custom-table">
-                    
-                    <form action="" method="POST">
-                        @csrf
+    
+    <section class="content">
+            <h2 class="ml-2">Bank Withdraw</h2>
+        <div class="row">
+        <div class="col-12">
+            
+                <div class="card">
+                    <div class="card-body custom-table">
+                        
+                        <form action="" method="POST">
+                            @csrf
 
-                        <div class="row">
-                            <div class="col-md">
-                                <div class="form-group">
-                                    <label for="bank_id">Select Bank</label>
-                                    <select name="bank_id" id="bank_id" class="form-control">
-                                        <option>Select Bank</option>
-                                        @foreach($bank_info as $row)
-                                            <option value = {{$row->id}}>{{$row->name}}</option>
-                                        @endforeach
-                                    </select>
+                            <div class="row">
+                                <div class="col-md">
+                                    <div class="form-group">
+                                        <label for="bank_id">Select Bank</label>
+                                        <select name="bank_id" id="bank_id" class="form-control">
+                                            <option>Select Bank</option>
+                                            @foreach($bank_info as $row)
+                                                <option value = {{$row->id}}>{{$row->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="balance">Balance</label>
+                                        <input type="text" name="balance" id="balance" class="form-control" placeholder="Balance"  readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="amount">Amount</label>
+                                        <input type="text" name="amount" id="amount" class="form-control" placeholder="Amount">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="remarks">Remarks</label>
+                                        <input type="text" name="remarks" id="remarks" class="form-control" placeholder="Remarks">
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="balance">Balance</label>
-                                    <input type="text" name="balance" id="balance" class="form-control" placeholder="Balance"  readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="amount">Amount</label>
-                                    <input type="text" name="amount" id="amount" class="form-control" placeholder="Amount">
-                                </div>
-                                <div class="form-group">
-                                    <label for="remarks">Remarks</label>
-                                    <input type="text" name="remarks" id="remarks" class="form-control" placeholder="Remarks">
+
+                                <div class="col-md">
+                                    <div class="form-group">
+                                        <label for="account_id">Select Account</label>
+                                        <select name="account_id" id="account_id" class="form-control">
+                                            <option>Select Account</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="check_no">Check NO</label>
+                                        <input type="text" name="check_no" id="check_no" class="form-control" placeholder="Check No">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="date">Date</label>
+                                        <input type="text" name="date" id="date" class="form-control" value="<?php echo date('Y-m-d');?>">
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="col-md">
-                                <div class="form-group">
-                                    <label for="account_id">Select Account</label>
-                                    <select name="account_id" id="account_id" class="form-control">
-                                        <option>Select Account</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="check_no">Check NO</label>
-                                    <input type="text" name="check_no" id="check_no" class="form-control" placeholder="Check No">
-                                </div>
-                                <div class="form-group">
-                                    <label for="date">Date</label>
-                                    <input type="text" name="date" id="date" class="form-control" value="<?php echo date('Y-m-d');?>">
-                                </div>
+                            
+                            <div class="form-group">
+                                <input type="button" class="btn btn-success btn-lg" id="save" value="Save">
                             </div>
-                        </div>
+                            
+                        </form>
                         
-                        <div class="form-group">
-                            <input type="button" class="btn btn-success btn-lg" id="save" value="Save">
-                        </div>
-                        
-                    </form>
-                    
+                    </div>
                 </div>
-             </div>
-      </div>
-    </div>
+        </div>
+        </div>
+    </section>
     
 </div>
 @endsection

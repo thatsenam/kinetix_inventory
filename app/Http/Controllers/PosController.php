@@ -88,16 +88,47 @@ class PosController extends Controller
         foreach($getSKU as $index=>$sku){
             // dd($sku);
             $pid = $sku->pid;
-            $pPurchase = DB::table('purchase_details')->where('client_id', $client_id)
-                        ->where('pid',$pid)->sum('qnt');
-            $psold = DB::table('sales_invoice_details')->where('client_id', $client_id)
-                        ->where('pid',$pid)->sum('qnt');
-            $returns = DB::table('purchase_returns')->where('client_id', $client_id)
-                        ->where('pid',$pid)->sum('qnt');
-            $sale_return = DB::table('sales_return')->where('client_id', $client_id)
-                        ->where('pid',$pid)->sum('qnt');
-            $damage = DB::table('damage_products')->where('client_id',auth()->user()->client_id)
-                        ->where('pid',$pid)->sum('qnt');
+            // $pPurchase = DB::table('purchase_details')->where('client_id', $client_id)
+            //             ->where('pid',$pid)->sum('qnt');
+            // $psold = DB::table('sales_invoice_details')->where('client_id', $client_id)
+            //             ->where('pid',$pid)->sum('qnt');
+            // $returns = DB::table('purchase_returns')->where('client_id', $client_id)
+            //             ->where('pid',$pid)->sum('qnt');
+            // $sale_return = DB::table('sales_return')->where('client_id', $client_id)
+            //             ->where('pid',$pid)->sum('qnt');
+            // $damage = DB::table('damage_products')->where('client_id',auth()->user()->client_id)
+            //             ->where('pid',$pid)->sum('qnt');
+
+
+            $pPurchase = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Purchase")
+            ->where('client_id',auth()->user()->client_id)
+            ->sum('in_qnt');
+
+            $psold = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Sales")
+            ->where('client_id',auth()->user()->client_id)->sum('out_qnt');
+
+            $returns = DB::table('stocks')
+            ->where('client_id',auth()->user()->client_id)
+            ->where('product_id',$pid)
+            ->where('particulars', "Purchase Return")
+            ->sum('out_qnt');
+
+            $sale_return = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Sales Return")
+            ->where('client_id',auth()->user()->client_id)->sum('in_qnt');
+
+            $damage = DB::table('stocks')
+            ->where('product_id',$pid)
+            ->where('particulars', "Damage")
+            ->where('client_id',auth()->user()->client_id)
+            ->sum('out_qnt');
+
+
             $qty = $pPurchase - $returns - $psold + $sale_return - $damage;
             $total_stock += $qty;
             

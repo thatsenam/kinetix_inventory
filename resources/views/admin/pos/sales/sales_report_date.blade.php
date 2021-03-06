@@ -8,7 +8,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Sales Report By Date</h1>
+            <h1>Sales Report</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -26,22 +26,24 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <div class="row input-daterange mb-3">
-              <div class="col-md-3">
-                <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date">
-              </div>
-              <div class="col-md-3">
-                <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date">
-              </div>
-              <div class="col-md-3">
-                <button type="button" name="filter" id="filter" class="btn btn-primary">Filter</button>
-                <button type="button" name="refresh" id="refresh" class="btn btn-default">Refresh</button>
-              </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">All Reports</h3>
+            
+            <div class="justify-content-center d-flex mb-2">
+                <div>
+                    <label class="text-dark"><b>From Date</b></label>
+                    <input class="form-control" name="from_date" id="from_date" type="text" required autocomplete="off">
                 </div>
+                <p class="mr-4"></p>
+                <div>
+                    <label class="text-dark"><b>To Date</b></label>
+                    <input class="form-control" name="to_date" id="to_date" type="text" required autocomplete="off">
+                </div>
+                <div class="mt-auto ml-2">
+                    <button type="button" id="filter" class="btn btn-primary">Filter</button>
+                    <button type="button" id="refresh" class="btn btn-default">Refresh</button>
+                </div>
+            </div>
+
+            <div class="card">
                 <div class="card-body">
                     <table id="reports" class="table table-sm table-bordered table-hover">
                         <thead>

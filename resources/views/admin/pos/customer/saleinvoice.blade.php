@@ -86,7 +86,7 @@
                       <th>Qty</th>
                       <th>Price</th>
                       <th>Subtotal</th>
-                      <th>I.V.A</th>
+                      <th>IVA</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -131,7 +131,7 @@
                       </tr>
                       
                       <tr>
-                        <th>I.V.A</th>
+                        <th>IVA</th>
                         <td>{{ $get_customer->vat }}</td>
                       </tr>
                       <tr>

@@ -3,12 +3,11 @@
 @section('content')
 
 <div class="content-wrapper" >
+    <section class="content">
+    <h2 class="ml-2">Bank Ledger</h2>
     <div class="row">
       <div class="col-12">
              <div class="card">
-                <div class="card-header">
-                    <h3>Bank Ledger</h3>
-                </div>
                 <div class="card-body">
                     <form action="get_sales_report_date" method="POST">
                         @csrf
@@ -72,6 +71,7 @@
              </div>
         </div>
     </div>
+    </section>
 </div>
 @endsection
 

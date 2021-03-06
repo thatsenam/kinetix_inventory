@@ -194,8 +194,12 @@ class PosPurchaseController extends Controller
             $supp_id = $maxsupid;
         }
 
-        $maxid = (DB::table('purchase_primary')->max('id') + 1);
-        $pur_inv = "PUR-".$maxid;
+        $inv_counting = PurchasePrimary::whereDate('date', date('Y-m-d'))
+            ->where('client_id', auth()->user()->client_id)->distinct()->count('pur_inv');
+        $pur_inv = "PUR-" . date('Ymd') . ($inv_counting + 1);
+
+        // $maxid = (DB::table('purchase_primary')->max('id') + 1);
+        // $pur_inv = "PUR-".$maxid;
 
         PurchasePrimary::create([
             'pur_inv' => $pur_inv,

@@ -352,8 +352,14 @@ class PosBankController extends Controller
 
         foreach($accounts as $row){
 
-            $options .= "<option value='$row->id'>".$row->acc_name."</option>";
-
+            if( ! $row->acc_name)
+            {
+                $options .= "<option value='$row->id'>".$row->acc_no."</option>";
+            }
+            else
+            {
+                $options .= "<option value='$row->id'>".$row->acc_name."</option>";
+            }
         }
 
         return $options;

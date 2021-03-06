@@ -66,7 +66,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="inputVat">Category I.V.A</label>
+                                <label for="inputVat">Category IVA</label>
                                 <input type="text" name="inputVat" class="form-control" id="inputVat">
                             </div>
                             <div class="form-group">

@@ -408,10 +408,13 @@ class PosSalesController extends Controller
             $due = 0;
         }
 
+        $inv_counting = SalesInvoice::whereDate('date', date('Y-m-d'))
+            ->where('client_id', auth()->user()->client_id)->distinct()->count('invoice_no');
+        $invoice = "INV-" . date('Ymd') . ($inv_counting + 1);
 
-        $maxid = (DB::table('sales_invoice')->max('id') + 1);
+        // $maxid = (DB::table('sales_invoice')->max('id') + 1);
 
-        $invoice = "Inv-".$maxid;
+        // $invoice = "Inv-".$maxid;
 
         if($card_amount > 0 || $mobile_amount > 0 ){
 
@@ -1366,9 +1369,13 @@ class PosSalesController extends Controller
         $due=$hid_total+$total_vat-$payment;
 
 
-        $maxid = (DB::table('sales_return')->max('id') + 1);
+        $inv_counting = SalesReturn::whereDate('date', date('Y-m-d'))
+            ->where('client_id', auth()->user()->client_id)->distinct()->count('rinvoice');
+        $rinvoice = "SRI-" . date('Ymd') . ($inv_counting + 1);
 
-        $rinvoice = "Ret-".date('ymd')."-".$maxid;
+        // $maxid = (DB::table('sales_return')->max('id') + 1);
+
+        // $rinvoice = "Ret-".date('ymd')."-".$maxid;
 
         $take_cart_items = json_decode($req['cartData'], true);
 

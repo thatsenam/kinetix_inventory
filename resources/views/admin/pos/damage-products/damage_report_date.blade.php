@@ -3,34 +3,41 @@
 @section('content')
 
 <div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Damage Report</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="/dashboard/pos">POS</a></li>
+                <li class="breadcrumb-item active">Damage Report</li>
+                </ol>
+            </div>
+        </div>
     <div class="row">
       <div class="col-12">
           
-             <div class="card">
-                <div class="card-header">
-                    <h3>Damage Report</h3>
+            <div class="justify-content-center d-flex mb-2">
+                <div>
+                    <label class="text-dark"><b>Start Date</b></label>
+                    <input class="form-control" name="stdate" id="stdate" type="text" required autocomplete="off">
                 </div>
+                <p class="mr-4"></p>
+                <div>
+                    <label class="text-dark"><b>End Date</b></label>
+                    <input class="form-control" name="enddate" id="enddate" type="text" required autocomplete="off">
+                </div>
+                <div class="mt-auto ml-2">
+                    <button type="button" id="search" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+
+             <div class="card">
                 <div class="card-body">
-                    
-                    <div class="row mb-4">
-                        <div class="col-2">
-                            <label>Date From</label>
-                        </div>
-                        <div class="col-2">
-                            <input type="text" class="form-control" name="stdate" id="stdate" autocomplete="off">
-                        </div>
-                        <div class="col-2">
-                            <label>Date To</label>
-                        </div>
-                        <div class="col-2">
-                            <input type="text" class="form-control" name="enddate" id="enddate" autocomplete="off">
-                        </div>
-                        <div class="col-2">
-                            <input type="submit" class="btn btn-success btn-lg" id="search" value="Search">
-                        </div>
-                    </div>
-                        
-                    <table class="table table-bordered" id="converting">
+                <table class="table table-bordered" id="converting">
                         <thead>
                             <tr>
                                 <th>Date</th>
@@ -61,6 +68,7 @@
              </div>
       </div>
     </div>
+    </section>
 </div>
 @endsection
 

@@ -58,7 +58,7 @@
                         <th>Quantity</th>
                         <th>Unit Price</th>
                         <th>Total</th>
-                        <th>I.V.A</th>
+                        <th>IVA</th>
                     </tr>
                   </thead>
                   <tfoot>

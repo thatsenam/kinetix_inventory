@@ -57,6 +57,8 @@
                     <th>Price</th>
                     <th>Stock</th>
                     <th>Featured</th>
+                    <th>Unit</th>
+                    <th>Sub-Unit</th>
                     <th>Actions</th>
                   </tr>
                   </thead>
@@ -67,7 +69,7 @@
                     @foreach($products as $product)
                     <tr>
                         <td>{{$i++}}</td>
-                        <td style="width: 40%;">{{$product->product_name}}</td>
+                        <td style="width: 30%;">{{$product->product_name}}</td>
                         <td>
                             @if(empty($product->after_pprice))
                                 {{$product->before_price}}
@@ -77,6 +79,9 @@
                         </td>
                         <td>{{$product->stock}}</td>
                         <td><?php if($product->is_featured == 0){ echo '<span class="badge badge-warning">Regular</span>';}elseif($product->is_featured == 1){ echo "<span class='badge badge-success'>Featured</span>";} ?></td>
+                        
+                        <td>{{$product->unit}}</td>
+                        <td>{{$product->sub_unit}}</td>
                         <td class="project-actions text-center">
                           <a class="btn btn-info btn-sm mb-1" href="{{url('/products/'.$product->id)}}" target="_blank" title="View"><i class="fas fa-eye"></i></a>
                           <a class="btn btn-info btn-sm mb-1" href="{{url('/admin/edit_product/'.$product->id)}}" title="Edit"><i class="fas fa-pencil-alt"></i></a>

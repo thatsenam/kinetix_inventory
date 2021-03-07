@@ -196,11 +196,11 @@ class PosSalesController extends Controller
             else{
                 if($warranty)
                 {
-                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name . "<br>Warranty: ". $warranty . " Month" . "</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".($row->vat*100)/$row->total."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
                 }
                 else
                 {
-                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
+                    $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".($row->vat*100)/$row->total."</td><td>".$row->total."</td><td>".$product_gtotal."</td></tr>";
                 }
             }
         }
@@ -1713,7 +1713,7 @@ class PosSalesController extends Controller
         return DataTables()->of($sales)
         ->addIndexColumn()
         ->addColumn('action', function($row){
-            $action = '<a data-id='.$row->invoice_no.' title="View Details" href="#" class="view mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a>
+            $action = '<a data-id='.$row->invoice_no.' title="Print Transport Copy" href="/dashboard/sales_invoice/'.$row->invoice_no.'" class="mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-truck"></i></span></a><a data-id='.$row->invoice_no.' title="View Details" href="#" class="view mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a>
             <a data-id='.$row->invoice_no.' title="Delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
             return $action;
         })

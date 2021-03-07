@@ -1098,14 +1098,14 @@
             padding: 0.25rem 0.25rem !important;
         }
     
-        .box-body {
+        /* .box-body {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
             border-bottom-right-radius: 3px;
             border-bottom-left-radius: 3px;
             padding: 10px;
             background-color: #FFF;
-        }
+        } */
         
         .box.box-success {
             border-top-color: #6da252;

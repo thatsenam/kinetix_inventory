@@ -35,6 +35,10 @@ class CreateProductsTable extends Migration
             $table->tinyInteger('serial')->nullable();
             $table->tinyInteger('warranty')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('per_box_qty')->nullable();
+            $table->string('unit')->nullable();
+            $table->string('sub_unit')->nullable();
+
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
         });

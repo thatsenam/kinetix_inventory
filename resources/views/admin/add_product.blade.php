@@ -106,6 +106,34 @@
                                 </div>
                             </div> --}}
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>Unit<span class="text-danger">*</span></label>
+                                <select id="unit" name="unit" class="form-control custom-select">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="KG">KG</option>
+                                    <option value="Single">Single</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Sub Unit<span class="text-danger">*</span></label>
+                                <select id="sub_unit" name="sub_unit" class="form-control custom-select">
+                                    <option value="" selected disabled>Select</option>
+                
+                                    <option value="Box">Box</option>
+                                    <option value="Dozens">Dozens</option>
+                                </select>
+                            </div>
+
+
+                        </div>
+         
+                        <div class="form-group">
+                            <label> How many units in the sub unit?<span class="text-danger">*</span></label>
+                            <input type="text" name="per_box_qty" id="per_box_qty" class="form-control" placeholder="How many units in the sub unit?">
+                        </div>
+
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">

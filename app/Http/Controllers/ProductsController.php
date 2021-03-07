@@ -66,6 +66,11 @@ class ProductsController extends Controller
                 $file->move('images/products/', $img_name);
                 $product->product_img = $img_name;
             }
+
+            $product->sub_unit = $data['sub_unit'] ?? '';
+            $product->unit = $data['unit'] ?? '';
+            $product->per_box_qty = $data['per_box_qty'] ?? '';
+
             $product->save();
 
             $DataProduct = Products::where('slug', $slug)->where('client_id', auth()->user()->client_id)->first();

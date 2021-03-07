@@ -131,7 +131,7 @@
                                         <th style="width: 30%;">Item</th>
                                         <th style="width: 10%;">Price</th>
                                         <th style="width: 10%;">Qty</th>
-                                        <th style="width: 10%;">IVA</th>
+                                        <th style="width: 10%;">IVA(%)</th>
                                         <th style="width: 20%;">Total</th>
                                         <th style="width: 20%;">Grand Total</th>
                                     </tr>

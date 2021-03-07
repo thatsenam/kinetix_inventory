@@ -35,11 +35,10 @@
               <!-- title row -->
               <div class="row">
                 <div class="col-12">
-                  <img src="/images/theme/{{$settings->logo_small}}" alt="" width="120" style="border-radius: 25px;">
-                  <div class="float-right">
-                    <img src="/images/theme/{{$settings->logo_big}}" alt="" width="120" style="border-radius: 25px;"><br>
-                    <small>Date: <?php echo date('Y-m-d'); ?></small>
-                  </div>
+                  <h4>
+                    <i class="fas fa-globe"></i> {{  $settings->site_name }}
+                    <small class="float-right">Date: <?php echo date('Y-m-d'); ?></small>
+                  </h4>
                 </div>
                 <!-- /.col -->
               </div>
@@ -85,6 +84,9 @@
                       <th>Image</th>
                       <th>Product</th>
                       <th>Qty</th>
+                      <th>Price</th>
+                      <th>Subtotal</th>
+                      <th>IVA</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -93,17 +95,16 @@
                             <td><img src="/images/products/{{$detail->image}}" alt="" width="30px"></td>
                             <td>{{$detail->name}}</td>
                             <td>{{$detail->qnt}}</td>
-                            <!-- <td>{{$detail->price}}</td>
+                            <td>{{$detail->price}}</td>
                             <td><?php 
                             $paid = $get_customer->payment;
                             $ship = 0;
                             $stotal = $detail->qnt * $detail->price;
                             echo number_format((float)$stotal, 2, '.', '');
                             ?></td>
-                            <td>{{$detail->vat}}</td> -->
+                            <td>{{$detail->vat}}</td>
                         </tr>
                         @endforeach
-                        <br>
                     </tbody>
                   </table>
                 </div>
@@ -111,8 +112,8 @@
               </div>
               <!-- /.row -->
 
-              <!-- <div class="row">
-                accepted payments column
+              <div class="row">
+                <!-- accepted payments column -->
                 <div class="col-6">
                   <p class="lead">Payment Methods:</p>
                   <img src="../../dist/img/credit/visa.png" alt="Visa">
@@ -120,7 +121,7 @@
                   <img src="../../dist/img/credit/american-express.png" alt="American Express">
                   <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
                 </div>
-                /.col
+                <!-- /.col -->
                 <div class="col-6">
                   <div class="table-responsive">
                     <table class="table">
@@ -156,8 +157,8 @@
                     </table>
                   </div>
                 </div>
-                /.col
-              </div> -->
+                <!-- /.col -->
+              </div>
               <!-- /.row -->
 
               <!-- this row will not appear when printing -->
@@ -188,6 +189,5 @@
   @media print {
   .hr{display: block}
   .callout { display: none }
-  .main-footer{display: none;}
   }
 </style>

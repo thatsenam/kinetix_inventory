@@ -56,7 +56,7 @@ class PosSalesController extends Controller
 
         $products = DB::table('products')->where('products.client_id',auth()->user()->client_id)
             ->where('product_name', 'like', '%'.$s_text.'%')->join('categories','categories.id','products.cat_id')
-            ->select('products.id as id','products.product_name as product_name','products.after_pprice as after_pprice','products.before_price as before_price','products.serial as serial','products.warranty as warranty','products.product_img as product_img','categories.vat as vat')->limit(9)->get(); ?>
+            ->select('products.id as id','products.product_name as product_name','products.after_pprice as after_pprice','products.before_price as before_price','products.serial as serial','products.warranty as warranty','products.product_img as product_img','products.sub_unit','products.unit','products.per_box_qty','categories.vat as vat')->limit(9)->get(); ?>
 
 
         <ul class='products-list sugg-list' style='width:100%;'>
@@ -84,6 +84,9 @@ class PosSalesController extends Controller
             $serial = $row->serial;
             $warranty = $row->warranty;
             $vat = $row->vat;
+            $sub_unit = $row->sub_unit;
+            $unit = $row->unit;
+            $pbq = $row->per_box_qty;
 
             if(empty($price)){
                 $price = $row->before_price;
@@ -92,7 +95,7 @@ class PosSalesController extends Controller
 
             $url = config('global.url'); ?>
 
-            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $warranty; ?>", "<?php echo $stock; ?>", "<?php echo $vat; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?>' data-vat='<?php echo $vat; ?>'>
+            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $warranty; ?>", "<?php echo $stock; ?>", "<?php echo $vat; ?>", "<?php echo $pbq; ?>", "<?php echo $sub_unit; ?>", "<?php echo $unit; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-sub_unit='<?php echo $sub_unit; ?>' data-unit='<?php echo $unit; ?>' data-pbq='<?php echo $pbq; ?>' data-serial='<?php echo $serial; ?>' data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?>' data-vat='<?php echo $vat; ?>'>
             <img src= "<?php echo $url;?>/images/products/<?php echo $image;?>" style="width:60px; height:60px;"> &nbsp; <?php echo $name; ?> | <?php echo $price; ?>
             </li>
 
@@ -459,7 +462,7 @@ class PosSalesController extends Controller
         }
 
         $take_cart_items = json_decode($req['cartData'], true);
-
+        // dd($take_cart_items);
         $count = count($take_cart_items);
 
         for($i = 0; $i < $count;){
@@ -469,8 +472,9 @@ class PosSalesController extends Controller
             $j2 = $i+2;
             $j3 = $i+3;
             $j4 = $i+4;
+            $j5 = $i+5;
 
-             ///////Adjust Stock/////////
+            ///////Adjust Stock/////////
 
             $get_stock = DB::table('products')->select('stock')->where('id', $take_cart_items[$j])->first();
 
@@ -482,9 +486,10 @@ class PosSalesController extends Controller
                 'invoice_no' => $invoice,
                 'pid' => $take_cart_items[$j],
                 'qnt' => $take_cart_items[$j2],
-                'price' => $take_cart_items[$j1],
-                'vat' => $take_cart_items[$j3],
-                'total' => $take_cart_items[$j4],
+                'box' => $take_cart_items[$j1],
+                'price' => $take_cart_items[$j3],
+                'vat' => $take_cart_items[$j4],
+                'total' => $take_cart_items[$j5],
                 'user_id' => $user,
             ]);
 
@@ -499,7 +504,7 @@ class PosSalesController extends Controller
                 'client_id' => auth()->user()->client_id,
             ]);
 
-            $i = $i + 5;
+            $i = $i + 6;
         }
 
 
@@ -1378,7 +1383,7 @@ class PosSalesController extends Controller
         // $rinvoice = "Ret-".date('ymd')."-".$maxid;
 
         $take_cart_items = json_decode($req['cartData'], true);
-
+        // dd($take_cart_items);
         $count = count($take_cart_items);
 
         for($i = 0; $i < $count;){
@@ -1388,6 +1393,7 @@ class PosSalesController extends Controller
             $j2 = $i+2;
             $j3 = $i+3;
             $j4 = $i+4;
+            $j5 = $i+5;
 
              ///////Adjust Stock/////////
 
@@ -1404,8 +1410,9 @@ class PosSalesController extends Controller
                 'cid' => $cust_id,
                 'pid' => $take_cart_items[$j],
                 'qnt' => $take_cart_items[$j2],
-                'uprice' => $take_cart_items[$j1],
-                'vat_amount' => $take_cart_items[$j3],
+                'box' => $take_cart_items[$j1],
+                'uprice' => $take_cart_items[$j3],
+                'vat_amount' => $take_cart_items[$j4],
                 'tprice' => $take_cart_items[$j4],
                 'total' => $hid_total + $total_vat,
                 'cash_return' => $payment,
@@ -1425,7 +1432,7 @@ class PosSalesController extends Controller
                 'client_id' => auth()->user()->client_id,
             ]);
 
-            $i = $i + 5;
+            $i = $i + 6;
         }
 
         $serials = json_decode($req['serialArray'], true);
@@ -1713,10 +1720,10 @@ class PosSalesController extends Controller
         return DataTables()->of($sales)
         ->addIndexColumn()
         ->addColumn('action', function($row){
-            $action = '<a data-id='.$row->invoice_no.' title="Print Transport Copy" href="/dashboard/sales_invoice/'.$row->invoice_no.'" class="mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-truck"></i></span></a><a data-id='.$row->invoice_no.' title="View Details" href="#" class="view mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a>
-            <a data-id='.$row->invoice_no.' title="Delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
+            $action = '<a data-id='.$row->invoice_no.' title="Print Transport Copy" href="/dashboard/sales_invoice/'.$row->invoice_no.'" class="mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-truck"></i></span></a><a data-id='.$row->invoice_no.' title="View" href="/dashboard/sales_invoicemain/'.$row->invoice_no.'" class="mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a><a data-id='.$row->invoice_no.' title="Delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
             return $action;
         })
+        // <a data-id='.$row->invoice_no.' title="View Details" href="#" class="view mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a>
         ->rawColumns(['action'])
         ->make(true);
     }

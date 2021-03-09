@@ -35,7 +35,14 @@
               <!-- title row -->
               <div class="row">
                 <div class="col-12">
+                </div>
+                <div class="col-md-3">
                   <img src="/images/theme/{{$settings->logo_small}}" alt="" width="120" style="border-radius: 25px;">
+                </div>
+                <div class="col-md-6 text-center">
+                  <span>Transport Copy</span>
+                </div>
+                <div class="col-md-3">
                   <div class="float-right">
                     <img src="/images/theme/{{$settings->logo_big}}" alt="" width="120" style="border-radius: 25px;"><br>
                     <small>Date: <?php echo date('Y-m-d'); ?></small>
@@ -82,7 +89,6 @@
                   <table class="table table-striped">
                     <thead>
                     <tr>
-                      <th>Image</th>
                       <th>Product</th>
                       <th>Qty</th>
                     </tr>
@@ -90,19 +96,14 @@
                     <tbody>
                         @foreach($details as $detail)
                         <tr>
-                            <td><img src="/images/products/{{$detail->image}}" alt="" width="30px"></td>
-                            <td>{{$detail->name}}</td>
-                            <td>{{$detail->qnt}}</td>
-                            <!-- <td>{{$detail->price}}</td>
-                            <td><?php 
-                            $paid = $get_customer->payment;
-                            $ship = 0;
-                            $stotal = $detail->qnt * $detail->price;
-                            echo number_format((float)$stotal, 2, '.', '');
-                            ?></td>
-                            <td>{{$detail->vat}}</td> -->
+                          <td>{{$detail->name}}</td>
+                          <td>{{$detail->qnt}}</td>
                         </tr>
                         @endforeach
+                        <tr>
+                          <td class="text-right">Total Quantity: </td>
+                          <td>{{$total}}</td>
+                        </tr>
                         <br>
                     </tbody>
                   </table>

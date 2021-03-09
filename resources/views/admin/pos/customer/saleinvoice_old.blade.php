@@ -35,10 +35,18 @@
               <!-- title row -->
               <div class="row">
                 <div class="col-12">
-                  <h4>
-                    <i class="fas fa-globe"></i> {{  $settings->site_name }}
-                    <small class="float-right">Date: <?php echo date('Y-m-d'); ?></small>
-                  </h4>
+                </div>
+                <div class="col-md-3">
+                  <img src="/images/theme/{{$settings->logo_small}}" alt="" width="120" style="border-radius: 25px;">
+                </div>
+                <div class="col-md-6 text-center">
+                  
+                </div>
+                <div class="col-md-3">
+                  <div class="float-right">
+                    <img src="/images/theme/{{$settings->logo_big}}" alt="" width="120" style="border-radius: 25px;"><br>
+                    <small>Date: <?php echo date('Y-m-d'); ?></small>
+                  </div>
                 </div>
                 <!-- /.col -->
               </div>
@@ -58,10 +66,10 @@
                   To
                   <address>
                     @foreach($cust_details as $cust_detail)
-                        <input type="hidden" name="custid" id="custid" value="{{$cust_detail->id}}">
-                        <strong>{{$cust_detail->name}}</strong><br>
-                        {{$cust_detail->address}}<br>
-                        Phone: {{$cust_detail->phone}}<br>
+                      <input type="hidden" name="custid" id="custid" value="{{$cust_detail->id}}">
+                      <strong>{{$cust_detail->name}}</strong><br>
+                      {{$cust_detail->address}}<br>
+                      Phone: {{$cust_detail->phone}}<br>
                     @endforeach
                   </address>
                 </div>
@@ -81,9 +89,9 @@
                   <table class="table table-striped">
                     <thead>
                     <tr>
-                      <th>Image</th>
                       <th>Product</th>
-                      <th>Qty</th>
+                      <th>Sub-unit</th>
+                      <th>Unit</th>
                       <th>Price</th>
                       <th>Subtotal</th>
                       <th>IVA</th>
@@ -92,17 +100,17 @@
                     <tbody>
                         @foreach($details as $detail)
                         <tr>
-                            <td><img src="/images/products/{{$detail->image}}" alt="" width="30px"></td>
-                            <td>{{$detail->name}}</td>
-                            <td>{{$detail->qnt}}</td>
-                            <td>{{$detail->price}}</td>
-                            <td><?php 
-                            $paid = $get_customer->payment;
-                            $ship = 0;
-                            $stotal = $detail->qnt * $detail->price;
-                            echo number_format((float)$stotal, 2, '.', '');
-                            ?></td>
-                            <td>{{$detail->vat}}</td>
+                          <td>{{$detail->name}}</td>
+                          <td>{{$detail->box}}</td>
+                          <td>{{$detail->qnt}}</td>
+                          <td>{{$detail->price}}</td>
+                          <td><?php 
+                          $paid = $get_customer->payment;
+                          $ship = 0;
+                          $stotal = $detail->qnt * $detail->price;
+                          echo number_format((float)$stotal, 2, '.', '');
+                          ?></td>
+                          <td>{{$detail->vat}}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -114,12 +122,16 @@
 
               <div class="row">
                 <!-- accepted payments column -->
-                <div class="col-6">
-                  <p class="lead">Payment Methods:</p>
-                  <img src="../../dist/img/credit/visa.png" alt="Visa">
-                  <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
-                  <img src="../../dist/img/credit/american-express.png" alt="American Express">
-                  <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
+                <div class="col-6 text-center">
+                  <br>
+                  <br>
+                  <br>
+                  <div class="signature">
+                    <span>N.B: This is computer generated invoice, no signature required</span>
+                  </div>
+                  <div class="thanks">
+                    <span style="color:#888888;">THANKS FOR YOUR BUSINESS</span>
+                  </div>
                 </div>
                 <!-- /.col -->
                 <div class="col-6">
@@ -189,5 +201,6 @@
   @media print {
   .hr{display: block}
   .callout { display: none }
+  .main-footer{display: none;}
   }
 </style>

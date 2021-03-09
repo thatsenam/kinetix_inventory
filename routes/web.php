@@ -179,6 +179,7 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::match(['get','post'],'/payment/invoice/{id}','PosCustomerController@payinvoice');
     Route::match(['get','post'],'/dashboard/sales_invoice/{id}','PosCustomerController@saleinvoice');
+    Route::match(['get','post'],'/dashboard/sales_invoicemain/{id}','PosCustomerController@saleinvoicemain');
 
     Route::get('/dashboard/customers/due-report','PosCustomerController@customers_due_report');
     // Route::get('/dashboard/customers/due-collection','PosCustomerController@customers_due_collection');

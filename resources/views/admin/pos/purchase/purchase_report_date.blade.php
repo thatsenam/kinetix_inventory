@@ -119,10 +119,11 @@
                                     <tr>
                                         <th style="width: 40%;">Item</th>
                                         <th style="width: 10%;">Price</th>
-                                        <th style="width: 10%;">Qty</th>
+                                        <th style="width: 10%;">Sub-unit</th>
+                                        <th style="width: 10%;">Unit</th>
                                         <th style="width: 10%;">IVA</th>
                                         <th style="width: 10%;">Total</th>
-                                        <th style="width: 20%;">Grand Total</th>
+                                        <th style="width: 10%;">Grand Total</th>
                                     </tr>
                                 </table>
                             </div>

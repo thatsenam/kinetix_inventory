@@ -197,14 +197,12 @@
                                             <table id="prodlist" class="price-table custom-table" style="width: 100%">
                                                 <tr>
                                                     <th>Item</th>
+                                                    <th>Sub-unit</th><th>Unit</th>
                                                     <th>Price</th>
-                                                    <th>Qty</th>
                                                     <th>IVA</th>
                                                     <th>Total</th>
-                                                    <th>GTotal</th>
                                                     <th>Delete</th>
                                                 </tr>
-
                                             </table>
                                         </div>
                                     </div>
@@ -438,6 +436,36 @@
                 </div>
 
             </form>
+
+            <!-- Modal -->
+            <div class="modal fade" id="square_foot_modal" tabindex="-1" role="dialog" aria-labelledby="square_foot_modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title float-center" id="square_foot_modalLabel">Quantity</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group row">
+                                <label for="quantity" class="col-sm-4 col-form-label">Quantity</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="quantity">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">
+                                Cancel
+                            </button>
+                            {{-- <button type="button" class="btn btn-primary">OK</button> --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
         </div>
@@ -712,8 +740,7 @@
                 </table>
             </div>
         </div>
-
-    </div>
+</div>
 
 @endsection
 
@@ -722,6 +749,11 @@
 
     <script type="text/javascript">
 
+        var per_box_qty;
+        var sub_unit;
+        var unit;
+        var box=0;
+        var fraction=0;
         var product_id;
         var product_serial;
         var serial_qty;
@@ -885,6 +917,18 @@
                 }
             });
 
+            $('#quantity').on("keyup", function (e) {
+                if (e.which == 13) {
+                    var qty_box = $('#quantity').val();
+                    var total_kg = per_box_qty * qty_box;
+                    box=qty_box;
+                    fraction=0;
+                    $('#qnt').val(total_kg);
+                    $('#quantity').val('');
+                    $('#square_foot_modal').modal('hide');
+                    $('#price').focus();
+                }
+            });
 
             $("#search").keyup(function(e) {
 
@@ -892,8 +936,7 @@
 
                     $("#search").blur();
 
-                    $('.products-list').find("li:first").focus().addClass('active').siblings()
-                .removeClass();
+                    $('.products-list').find("li:first").focus().addClass('active').siblings().removeClass();
 
                     $('.products-list').on('focus', 'li', function() {
                         $this = $(this);
@@ -922,13 +965,31 @@
                             var id = $(this).find(".active").attr("data-id");
                             var name = $(this).find(".active").attr("data-name");
                             var price = $(this).find(".active").attr("data-price");
+                            var pbq = $(this).find(".active").attr("data-pbq");
+                            sub_unit = $(this).find(".active").attr("data-sub_unit");
+                            unit = $(this).find(".active").attr("data-unit");
+
+                            if(pbq){
+                                $('#search').val(name);
+                                $('#square_foot_modal').modal('toggle');
+
+                                per_box_qty = pbq;
+                                box=0;
+                                $('#square_foot_modal').on('shown.bs.modal', function () {
+                                    $('#quantity').trigger('focus')
+                                });
+                            }else{
+                                $('#search').val(name);
+                                per_box_qty=0;
+                                box=0;
+                                $('#qnt').val('');
+                            }
 
                             product_id = id;
                             product_serial = $(this).find(".active").attr("data-serial");
                             warranty = $(this).find(".active").attr("data-warranty");
                             product_stock = $(this).find(".active").attr("data-stock");
                             product_vat = $(this).find(".active").attr("data-vat");
-
 
                             $('#product_stock').html(product_stock);
                             $('#search').val(name);
@@ -1593,7 +1654,7 @@
                     var qnt = Number($(this).val());
                     var price = Number($('#price').val());
                     var totalPrice = Number($('#hid_total').val());
-
+                    var pp = box;
                     var warehouse_id = $('#warehouse_id').val();
                     if(warehouse_id == null){
                         alert('Please Select Warehouse');
@@ -1659,7 +1720,16 @@
                                 $('#serial_modal').modal('toggle');
 
                                 $('#serial_modal').on('shown.bs.modal', function () {
-                                        $('#serial-'+0).trigger('focus')
+                                    $('#serial-'+0).trigger('focus')
+                                });
+                                $('#serial_modal').on('hidden.bs.modal', function () {
+                                    var $nonempty = $('.serialfield').filter(function() {
+                                        return this.value != ''
+                                    });
+                                    if ($nonempty.length == 0) {
+                                        alert('Serial Numbers Can not be empty')
+                                        return false;
+                                    }
                                 });
                             }
                         });
@@ -1676,8 +1746,45 @@
                         return false;
                     }
 
+                    if(sub_unit){
+                        if(pp == 0){
+                            price_per_kg = price;
+                            totalPrice = (qnt * price);
 
-                    add_product_to_table(id, name, qnt, price, totalPrice, 0, 0);
+                            var box_qty=parseInt(qnt/per_box_qty);
+                            var fraction=qnt-( box_qty *per_box_qty);
+                            if(fraction!=0){
+                                var box_value = box_qty+" "+sub_unit+" "+fraction+unit;
+                            }else{
+                                var box_value = box_qty+" "+sub_unit;
+                            }
+                        }else{
+                            var box_qty=parseInt(qnt/per_box_qty);
+                            var fraction=qnt-( box_qty *per_box_qty);
+                            price_per_kg = price / per_box_qty ;
+                            // alert(per_box_qty)
+                            console.log(price_per_kg)
+
+                            if(fraction!=0){
+                                var price_per_kg=price/per_box_qty;
+                                totalPrice = (box_qty * price)+(price_per_kg*fraction);
+                                var box_value= box_qty+" "+sub_unit+" "+fraction+unit;
+
+                            }else{
+                                totalPrice = (box_qty * price);
+                                var box_value= box_qty+" "+sub_unit;
+
+                            }
+                        }
+
+                    }else{
+                        totalPrice = (qnt * price);
+                        var box_value= qnt+" "+unit;
+                        price_per_kg = price/per_box_qty;
+                    }
+
+
+                    add_product_to_table(id, name, qnt, price, totalPrice, 0, 0, price_per_kg, box_value);
 
                 }
 
@@ -2077,6 +2184,8 @@
                         prod_vat = $(this).html();
                         cartData.push(prod_vat);
                     }
+
+                    if($(this).attr("class") == 'box'){var box_item = $(this).html(); cartData.push(box_item);}
 
                     i = i + 1;
                 });
@@ -2490,9 +2599,29 @@
             $("#cust_div").hide();
         }
 
-        function selectProducts(id, name, price, serial, warranty, stock, vat) {
+        function selectProducts(id, name, price, serial, warranty, stock, vat, pbq, su, u) {
+            sub_unit=su;
+            unit=u;
+            if(pbq)
+            {
+                $('#search').val(name);
+                $('#square_foot_modal').modal('toggle');
 
-            $('#search').val(name);
+                per_box_qty = pbq;
+                box=0;
+
+                $('#square_foot_modal').on('shown.bs.modal', function () {
+                    $('#quantity').trigger('focus')
+                });
+            }
+            else
+            {
+                $('#search').val(name);
+                per_box_qty=0;
+                box=0;
+                $('#qnt').val('');
+            }
+
             $('#pid_hid').val(id);
 
             // var show = {!! json_encode($purchasePrice) !!};
@@ -2548,7 +2677,7 @@
             $("#shop_account_div").hide();
         }
 
-        function add_product_to_table(id, name, qnt, price, totalPrice, pvat, vat) {
+        function add_product_to_table(id, name, qnt, price, totalPrice, pvat, vat, price_per_kg, box) {
 
             var id = id;
             var name = name;
@@ -2575,14 +2704,14 @@
 
             $('.price-table').show();
 
-            $('.price-table').append("<tr data-vat='" + calculate_vat + "'><td data-prodid='" + id +
-                "' style='width:200px;'>" + name + "</td><td class='uprice'>" + price + "</td><td class='qnty'>" + qnt +"</td><td class='prod_vat'>" + calculate_vat +
-                "</td><td class='totalPriceTd'>" + total + "</td><td>" + all_total + "</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
+            $('.price-table').append("<tr data-vat='" + calculate_vat + "'><td data-prodid='" + id + "' style='width:200px;'>" + name + "</td><td class='box'>"+box+"</td><td class='qnty'>" + qnt +"</td><td class='uprice'>" + price + "</td><td class='prod_vat'>" + calculate_vat + "</td><td class='totalPriceTd'>" + total + "</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
 
-            totalPrice = Number(totalPrice + total);
+            var totalPriceVal = Number($('#hid_total').val());
+            var totalVatFieldVal = Number($('#total_vat').val());
 
-            var vatField=Number($('#total_vat').val());
-            vatField=Number(vatField+calculate_vat);
+            totalPrice = Number(totalPriceVal +Number(total));
+
+            vatField=Number(totalVatFieldVal+calculate_vat);
             $('#total_vat').val(vatField)
             grandTotalPrice = Number(totalPrice + vatField);
             var scharge = $('#scharge').val();

@@ -52,7 +52,7 @@ class PosPurchaseController extends Controller
 
         ->orderByRaw("(product_name = '{$s_text}') desc, length(product_name)")
         ->join('categories','categories.id','products.cat_id')
-        ->select('products.id as id','products.product_name as product_name','products.serial as serial','categories.vat as vat')
+        ->select('products.id as id','products.product_name as product_name','products.serial as serial','products.sub_unit','products.unit','products.per_box_qty','categories.vat as vat')
         ->limit(9)->get(); ?>
 
         <ul class='products-list sugg-list'>
@@ -65,6 +65,9 @@ class PosPurchaseController extends Controller
             $name = $row->product_name;
             $serial = $row->serial;
             $vat = $row->vat;
+            $sub_unit = $row->sub_unit;
+            $unit = $row->unit;
+            $pbq = $row->per_box_qty;
 
             $products_price = DB::table('purchase_details')
                 ->where('client_id',auth()->user()->client_id)
@@ -80,7 +83,7 @@ class PosPurchaseController extends Controller
 
             $url = config('global.url'); ?>
 
-            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $vat; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' data-vat='<?php echo $vat; ?>'><?php echo $name; ?> </li>
+            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $vat; ?>", "<?php echo $pbq; ?>", "<?php echo $sub_unit; ?>", "<?php echo $unit; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-sub_unit='<?php echo $sub_unit; ?>' data-unit='<?php echo $unit; ?>' data-pbq='<?php echo $pbq; ?>' data-serial='<?php echo $serial; ?>' data-vat='<?php echo $vat; ?>'><?php echo $name; ?> </li>
 
             <?php
 
@@ -231,6 +234,7 @@ class PosPurchaseController extends Controller
 
         $take_cart_items = json_decode($req['cartData'], true);
         $count = count($take_cart_items);
+        // dd($take_cart_items);
 
         for($i = 0; $i < $count;){
 
@@ -240,6 +244,7 @@ class PosPurchaseController extends Controller
             $j3 = $i+3;
             $j4 = $i+4;
             $j5 = $i+5;
+            $j6 = $i+6;
 
             if($take_cart_items[$j] == 0){
 
@@ -248,7 +253,7 @@ class PosPurchaseController extends Controller
                 $product = new Products;
                 $product->id = $max_pid;
                 $product->name = $take_cart_items[$j1];
-                $product->price = $take_cart_items[$j2];
+                $product->price = $take_cart_items[$j4];
                 $product->stock = $take_cart_items[$j3];
                 $product->save();
 
@@ -270,9 +275,10 @@ class PosPurchaseController extends Controller
                 'pur_inv' => $pur_inv,
                 'pid' => $pid,
                 'qnt' => $take_cart_items[$j3],
-                'price' => $take_cart_items[$j2],
-                'vat' => $take_cart_items[$j4],
-                'total' => $take_cart_items[$j5],
+                'box' => $take_cart_items[$j2],
+                'price' => $take_cart_items[$j4],
+                'vat' => $take_cart_items[$j5],
+                'total' => $take_cart_items[$j6],
                 'user' => $user
             ]);
 
@@ -288,7 +294,7 @@ class PosPurchaseController extends Controller
             ]);
 
 
-            $i = $i + 6;
+            $i = $i + 7;
         }
 
         //////Save to Accounts//////
@@ -456,7 +462,7 @@ class PosPurchaseController extends Controller
         $user = Auth::id();
 
         $take_cart_items = json_decode($req['cartData'], true);
-
+        // dd($take_cart_items);
         $count = count($take_cart_items);
 
         for($i = 0; $i < $count;){
@@ -467,6 +473,7 @@ class PosPurchaseController extends Controller
             $j3 = $i+3;
             $j4 = $i+4;
             $j5 = $i+5;
+            $j6 = $i+6;
 
             $product = DB::table('products')->where('client_id',auth()->user()->client_id)->where('id', $take_cart_items[$j])->first();
 
@@ -486,9 +493,10 @@ class PosPurchaseController extends Controller
                 'pur_inv' => $supp_memo,
                 'pid' => $pid,
                 'qnt' => $take_cart_items[$j3],
-                'price' => $take_cart_items[$j2],
-                'vat_amount' => $take_cart_items[$j4],
-                'total' => $take_cart_items[$j5],
+                'box' => $take_cart_items[$j2],
+                'price' => $take_cart_items[$j4],
+                'vat_amount' => $take_cart_items[$j5],
+                'total' => $take_cart_items[$j6],
                 'sid' => $supp_id,
                 'user' => $user
             ]);
@@ -505,7 +513,7 @@ class PosPurchaseController extends Controller
             ]);
 
 
-            $i = $i + 6;
+            $i = $i + 7;
         }
 
         $serials = json_decode($req['serialArray'], true);
@@ -1060,9 +1068,9 @@ class PosPurchaseController extends Controller
             if($serials)
             {
                 $serials = implode (", ", $serials);
-                $trow .= "<tr><td>".$row->product_name ."<br>". $serials."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$gtotal."</td></tr>";
+                $trow .= '<tr><td>'.$row->product_name .'<br>'. $serials.'</td><td>'.$row->price.'</td><td>'.$row->box.'</td><td>'.$row->qnt.'</td><td>'.$row->vat.'</td><td>'.$row->total.'</td><td>'.$gtotal.'</td></tr>';
             }else{
-                $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$gtotal."</td></tr>";
+                $trow .= "<tr><td>".$row->product_name."</td><td>".$row->price."</td><td>".$row->box."</td><td>".$row->qnt."</td><td>".$row->vat."</td><td>".$row->total."</td><td>".$gtotal."</td></tr>";
             }
         }
 

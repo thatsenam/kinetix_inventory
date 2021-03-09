@@ -41,7 +41,7 @@
 
     <!-- Main content -->
 
-<section class="content">
+    <section class="content">
       <div class="container-fluid">
       <form action="{{ url('/admin/add_product') }}" id="addProduct" method="POST" enctype="multipart/form-data">
         @csrf
@@ -113,20 +113,18 @@
                                 <select id="unit" name="unit" class="form-control custom-select">
                                     <option value="" selected disabled>Select</option>
                                     <option value="KG">KG</option>
-                                    <option value="Single">Single</option>
+                                    <option value="Pcs">Pcs</option>
                                 </select>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Sub Unit<span class="text-danger">*</span></label>
                                 <select id="sub_unit" name="sub_unit" class="form-control custom-select">
                                     <option value="" selected disabled>Select</option>
-                
                                     <option value="Box">Box</option>
                                     <option value="Dozens">Dozens</option>
+                                    <option value="Catoon">Catoon</option>
                                 </select>
                             </div>
-
-
                         </div>
          
                         <div class="form-group">

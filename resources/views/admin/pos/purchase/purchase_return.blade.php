@@ -66,8 +66,7 @@
                             <div class="row" style="height:350px; overflow-y: auto;">
                                 <div class="col-12" style="padding-right: 0 !important;">
                                     <table class="price-table custom-table">
-                                        <tr><th>SL</th><th style="width: 100px;">Item</th><th>Price</th><th>Qty</th><th>IVA</th><th>Total</th><th>Delete</th></tr>
-                                        
+                                        <tr><th>SL</th><th style="width: 100px;">Item</th><th>Sub-unit</th><th>Unit</th><th>Price</th><th>IVA</th><th>Total</th><th>Delete</th></tr>
                                     </table>
                                 </div>
                             </div>
@@ -157,6 +156,34 @@
     </div>
     </div>
     </section>
+
+    <!-- ///////////// -->
+    <div class="modal fade" id="square_foot_modal" tabindex="-1" role="dialog" aria-labelledby="square_foot_modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title float-center" id="square_foot_modalLabel">Quantity</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group row">
+                    <label for="quantity" class="col-sm-4 col-form-label">Quantity</label>
+                    <div class="col-sm-8">
+                    <input type="text" class="form-control" id="quantity">
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
+            {{-- <button type="button" class="btn btn-primary">OK</button> --}}
+            </div>
+        </div>
+        </div>
+    </div>
 </div>
 
 @endsection
@@ -170,8 +197,27 @@
     var serial_qty;
     var serial_array = {};
     var product_vat;
+    var per_box_qty;
+    var sub_unit;
+    var unit;
+    var box=0;
+    var fraction=0;
 
     $(document).ready(function(){
+
+        $('#quantity').on("keypress", function (e) {
+            if (e.which == 13) {
+                var qty_box =Number($('#quantity').val());
+                var total_kg = per_box_qty*qty_box;
+                box=qty_box;
+                fraction=0;
+                $('#qnt').val(total_kg);
+                // $('#quantity').val('');
+
+                $('#square_foot_modal').modal('hide');
+                $('#price').focus();
+            }
+        });
         
         $("#search").keyup(function(e){
                     
@@ -206,7 +252,29 @@
                                 
                         var id = $(this).find(".active").attr("data-id");    
                         var name = $(this).find(".active").attr("data-name");
-                        var price = $(this).find(".active").attr("data-price");  
+                        var price = $(this).find(".active").attr("data-price");
+                        var pbq = $(this).find(".active").attr("data-pbq");
+                        sub_unit = $(this).find(".active").attr("data-sub_unit");
+                        unit = $(this).find(".active").attr("data-unit");
+                        if(pbq)
+                        {
+                            $('#search').val(name);
+
+                            $('#square_foot_modal').modal('toggle');
+
+                            per_box_qty = pbq;
+                            box=0;
+                            $('#square_foot_modal').on('shown.bs.modal', function () {
+                                  $('#quantity').trigger('focus')
+                            });
+                        }
+                        else
+                        {
+                            $('#search').val(name);
+                            per_box_qty=0;
+                            box=0;
+                            $('#qnt').val('');
+                        }
 
                         product_id = id;
                         product_serial = $(this).find(".active").attr("data-serial");
@@ -468,9 +536,8 @@
             }
             for(i=0; i<serial_qty; i++)
             {
-                var ser = $('#serial-'+i).val();
-                
-                val[i] = ser;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                var ser = $('#serial-'+i).val(); 
+                val[i] = ser;                               
             }
             serial_array[product_id] = val;
 
@@ -491,6 +558,7 @@
                 var memo = $('#supp_memo').val();
                 var qnt = Number($(this).val());
                 var price = Number($('#price').val());
+                var pp = Number($('#quantity').val());
 
                 serial_qty = qnt;
 
@@ -558,11 +626,41 @@
                     alert("Please Fillup All Fields ");
                     return false;
                 }
+
+                if(sub_unit){
+                    if(pp == 0){
+                        price_per_kg = price;
+                        totalPrice = (qnt * price);
+                        var box_qty=parseInt(qnt/per_box_qty);
+                        var fraction=qnt-( box_qty *per_box_qty);
+                        if(fraction!=0){
+                            var box_value= box_qty+" "+sub_unit+" "+fraction+unit;
+                        }else{
+                            var box_value= box_qty+" "+sub_unit;
+                        }
+                    }else{
+                        var box_qty=parseInt(qnt/per_box_qty);
+                        var fraction=qnt-( box_qty *per_box_qty);
+                        price_per_kg = price / per_box_qty;
+                        if(fraction!=0){
+                            var price_per_kg=price/per_box_qty;
+                            totalPrice = (box_qty * price)+(price_per_kg*fraction);
+                            var box_value= box_qty+" "+sub_unit+" "+fraction+unit;
+                        }else{
+                            totalPrice = (box_qty * price);
+                            var box_value= box_qty+" "+sub_unit;
+                        }
+                    }
+
+                }else{
+                    totalPrice = (qnt * price);
+                    var box_value= qnt+" "+unit;
+                    price_per_kg = price/per_box_qty;
+                }
                 
-                totalPrice = (qnt * price); 
                 var total_vat= totalPrice*product_vat/100;
 
-                add_product_to_table(id, name, qnt, price, totalPrice, total_vat);
+                add_product_to_table(id, name, qnt, price, totalPrice, total_vat, price_per_kg, box_value);
                 
                 $('#search').focus();
             }
@@ -595,8 +693,11 @@
              
                if($(this).attr("class") == 'price'){price = $(this).html(); cartData.push(price);}
               
-               if($(this).attr("class") == 'totalPriceTd'){totalPriceTd = $(this).html(); cartData.push(totalPriceTd);} 
-               if($(this).attr("class") == 'totalVatTd'){totalVatTd = $(this).html(); cartData.push(totalVatTd);} 
+               if($(this).attr("class") == 'totalPriceTd'){totalPriceTd = $(this).html(); cartData.push(totalPriceTd);}
+
+               if($(this).attr("class") == 'totalVatTd'){totalVatTd = $(this).html(); cartData.push(totalVatTd);}
+
+               if($(this).attr("class") == 'box'){var box_item = $(this).html(); cartData.push(box_item);}
 
                i = i +1;
            });
@@ -620,12 +721,9 @@
             fieldValues.supp_id = $('#supp_id').val();
             fieldValues.supp_memo = $('#supp_memo').val();
             fieldValues.date = $('#date').val();
-            
         
             fieldValues.total = $('#total').val();
             fieldValues.total_vat = $('#total_vat').val();
-
-            
            
             var formData = new FormData();
            
@@ -662,7 +760,7 @@
                 error: function(ts) {
                     
                     alert('Purchase return successfull!');
-                    location.reload();
+                    // location.reload();
                     if(ts.responseText == '')  {
     
                         //alert(ts.responseText);
@@ -679,7 +777,7 @@
                         
                         $('#pur_save').attr('disabled', false); 
 
-                        location.reload();
+                        // location.reload();
                     
                     }else{
                         //alert(ts.responseText);
@@ -696,14 +794,14 @@
                         $('.price-table td').remove();
                         
                         $('#pur_save').attr('disabled', false);
-                        location.reload();
+                        // location.reload();
                     }
             
                 },
                 success: function(data){
                     
                     alert('Purchase Return Successfull!');
-                    location.reload();   
+                    // location.reload();
                 
                          //$('.cart-table tr').remove();
                     
@@ -711,7 +809,7 @@
                 }); 
           
               e.preventDefault(); 
-       }); 
+        }); 
         
         
         
@@ -802,14 +900,35 @@
       
     });
     
-    function selectProducts(id, name, price, serial,warrenty,stock, vat){
+    function selectProducts(id, name, price, serial, vat, pbq, su, u){
+        sub_unit=su;
+        unit=u;
+        if(pbq)
+        {
+            $('#search').val(name);
+            $('#square_foot_modal').modal('toggle');
+            per_box_qty = pbq;
+            box=0;
 
-        $('#search').val(name);
+            $('#square_foot_modal').on('shown.bs.modal', function () {
+                $('#quantity').trigger('focus')
+            });
+        }
+        else
+        {
+            $('#search').val(name);
+            per_box_qty=0;
+            box=0;
+            $('#qnt').val('');
+        }
+
         $('#pid_hid').val(id);
         $('#price').val(price);
+
         product_id = id;
         product_serial = serial;  
-        product_vat = vat;  
+        product_vat = vat;
+
         $("#price").focus();
         $("#products_div").hide();
         
@@ -829,44 +948,40 @@
                                     
         $("#search").focus();
         $("#memo_div").hide();
-    }
-     
-                        
-        
+    }                    
                                    
                         
     var sl = 1;
     
-    function add_product_to_table(id, name, qnt, price, total, vat){
+    function add_product_to_table(id, name, qnt, price, total, totalVat, price_per_kg, box){
         
-            var id = id;
-            var name = name;
-            var price = Number(price);
-            var total = Number(total);
+        var id = id;
+        var name = name;
+        var price = Number(price);
+        var total = Number(total);
+        var totalVat = Number(totalVat).toFixed(2);
         
-            
-            $('.price-table').show();
-            
-            $('.price-table').append("<tr><td>"+sl+"</td><td data-prodid='"+id+"' style='width:200px;' class='name'>"+name+"</td><td class='price'>"+price+"</td><td class='qnt'>"+qnt+"</td><td class='totalVatTd'>"+vat+"</td><td class='totalPriceTd'>"+total+"</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
-            
-            var totalPrice = Number($('#hid_total').val());
-            
-            totalPrice = Number(totalPrice + total);
-            var totalVatField = Number($('#total_vat').val());
-            
-            totalVatField = Number(totalVatField + vat);
+        $('.price-table').show();
         
-            $('#hid_total').val(totalPrice);
-            $('#total_vat').val(totalVatField);
+        $('.price-table').append("<tr><td>"+sl+"</td><td data-prodid='"+id+"' style='width:200px;' class='name'>"+name+"</td><td class='box'>"+box+"</td><td class='qnt'>"+qnt+"</td><td class='price'>"+price+"</td><td class='totalVatTd'>"+totalVat+"</td><td class='totalPriceTd'>"+total+"</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
+        
+        var totalPrice = Number($('#hid_total').val());
+        var totalVatFieldVal = Number($('#total_vat').val());
+        
+        totalPrice = Number(totalPrice + Number(total));
+        totalVatField = Number(totalVatFieldVal + Number(totalVat));
+    
+        $('#hid_total').val(totalPrice);
+        $('#total_vat').val(totalVatField);
 
-            $('#total').val(totalPrice);
-            
-            $('#pid_hid').val("0");
-            $('#search').val("");
-            $('#price').val("");
-            $('#qnt').val("");
-            
-            sl = sl + 1;
+        $('#total').val(totalPrice);
+        
+        $('#pid_hid').val("0");
+        $('#search').val("");
+        $('#price').val("");
+        $('#qnt').val("");
+        
+        sl = sl + 1;
     }
     
 </script>
@@ -960,14 +1075,14 @@
             padding: 0.25rem 0.25rem !important;
         }
     
-        .box-body {
+        /* .box-body {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
             border-bottom-right-radius: 3px;
             border-bottom-left-radius: 3px;
             padding: 10px;
             background-color: #FFF;
-        }
+        } */
         
         .box.box-success {
             border-top-color: #6da252;

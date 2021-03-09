@@ -594,9 +594,32 @@ class PosCustomerController extends Controller
         ->join('products', 'sales_invoice_details.pid', 'products.id')
         ->where('sales_invoice_details.invoice_no', $invoiceno)->get();
 
+        $total = 0;
+        foreach($details as $row){
+            $qnt = $row->qnt;
+            $total += $qnt;
+        }
+
         $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
 
-        return view('admin.pos.customer.saleinvoice')->with(compact('cust_details','get_customer','details', 'settings'));
+        return view('admin.pos.customer.saleinvoice')->with(compact('cust_details','get_customer','details', 'settings','total'));
+    }
+
+    public function saleinvoicemain($id){
+        $invoiceno = $id;
+        $get_customer = DB::table('sales_invoice')->where('invoice_no', $id)->first();
+        $custid = $get_customer->cid;
+        $cust_details = Customer::where(['id'=>$custid])->get();
+
+        $details = DB::table('sales_invoice_details')
+        ->select('products.product_name as name', 'products.product_img as image', 'sales_invoice_details.qnt as qnt','sales_invoice_details.box',
+        'sales_invoice_details.price as price','sales_invoice_details.vat')
+        ->join('products', 'sales_invoice_details.pid', 'products.id')
+        ->where('sales_invoice_details.invoice_no', $invoiceno)->get();
+
+        $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
+
+        return view('admin.pos.customer.saleinvoice_old')->with(compact('cust_details','get_customer','details', 'settings'));
     }
 
 

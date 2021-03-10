@@ -215,6 +215,16 @@
       });
     }
 
+    $('#filter').click(function(){
+      var from_date = $('#from_date').val();
+      var to_date = $('#to_date').val();
+      if(from_date != '' &&  to_date != ''){
+        $('#trials').DataTable().destroy();
+        load_data(from_date, to_date);
+      }
+      else{alert('Both Date is required');}
+    });
+
   });
 </script>
 @stop

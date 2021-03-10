@@ -10,6 +10,7 @@ class TrialBalanceIndex extends Component
 {
     public $startDate, $endDate;
     public $trails = [];
+    public $show = false;
 
     public function submit(): void
     {

@@ -38,6 +38,7 @@
                                     <th>To Bank</th>
                                     <th>To Account</th>
                                     <th>Amount</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,6 +47,7 @@
                             <tfoot>
                                 <tr>
                                     <th colspan="5">Total</th>
+                                    <th></th>
                                     <th></th>
                                 </tr>
                             </tfoot>
@@ -121,9 +123,54 @@
                         {data:'to_bank',},
                         {data:'to_acc',},
                         {data:'amount',},
+                        {data: 'action'},
                     ]
                 });
             }
+
+            $('body').on('click', '.delete', function () {
+                var invoice = $(this).attr("data-id");
+                swal.fire({
+                    title: "Are you sure to delete?",
+                    text: "All related data will be deleted!!",
+                    showCancelButton: !0,
+                    confirmButtonText: "Yes!",
+                    cancelButtonText: "No!",
+                    reverseButtons: !0,
+                }).then (function (e) {
+                    if (e.value === true) {
+                        var formData = new FormData();
+                        formData.append('invoice', invoice);
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+                        $.ajax({
+                            type: 'POST',
+                            url: "{{ route('delete_bank_transfer')}}",
+                            method: 'post',
+                            data: formData,
+                            contentType: false,
+                            cache: false,
+                            processData: false,
+                            dataType: "json",
+                            success: function (results) {
+                                if (results.success === true) {
+                                    swal.fire("Success!", results.message, "success");
+                                } else {
+                                    swal.fire("Failed!", results.message, "error");
+                                }
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        e.dismiss;
+                    }
+                }, function (dismiss) {
+                    return false;
+                });
+            });
 
 
             $('#search').click(function(){

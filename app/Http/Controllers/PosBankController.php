@@ -16,6 +16,8 @@ use App\Category;
 use App\Manufacturer;
 use App\ProductImage;
 use App\AccTransaction;
+use App\BankInstallment;
+use App\BankLoan;
 use App\BankTransaction;
 use App\BankTransfer;
 use Illuminate\Support\Str;
@@ -604,7 +606,11 @@ class PosBankController extends Controller
         $amount = $req['amount'];
         $date = $req['date'];
 
+        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+        $vno = date('Ymd') . '-' . ($vno_counting + 1);
+
         BankTransfer::create([
+            'vno' => $vno,
             'tf_bank' => $tf_bank,
             'tf_acc' => $tf_acc,
             'tt_bank' => $tt_bank,
@@ -615,6 +621,7 @@ class PosBankController extends Controller
         ]);
 
         BankTransaction::create([
+            'vno' => $vno,
             'seller_bank_id' => $tf_bank,
             'seller_bank_acc_id' => $tf_acc,
             'check_no' => $check_no,
@@ -627,6 +634,7 @@ class PosBankController extends Controller
         ]);
 
         BankTransaction::create([
+            'vno' => $vno,
             'seller_bank_id' => $tt_bank,
             'seller_bank_acc_id' => $tt_acc,
             'check_no' => $check_no,
@@ -639,10 +647,6 @@ class PosBankController extends Controller
         ]);
 
         // // $vno = (DB::table('acc_transactions')->max('id') + 1);
-        
-        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-        $vno = date('Ymd') . '-' . ($vno_counting + 1);
-
         
         $head = $tf_bank_name." A/C: ".$tf_account_name;
         $description = "Cash Withdrwan";
@@ -716,7 +720,7 @@ class PosBankController extends Controller
         }
 
         $bank_transfer = DB::table('bank_transfer')->where('bank_transfer.client_id',auth()->user()->client_id)
-            ->select('bank_transfer.id as bank_transfer_id', 'bank_transfer.date as date', 'bank_transfer.amount as amount',
+            ->select('bank_transfer.id as bank_transfer_id', 'bank_transfer.date as date', 'bank_transfer.amount as amount','bank_transfer.vno as vno',
             'A.name as from_bank', 'B.name as to_bank', 'C.acc_name as from_acc', 'D.acc_name as to_acc')
             ->leftJoin('bank_info as A', 'bank_transfer.tf_bank', 'A.id')
             ->leftJoin('bank_info as B', 'bank_transfer.tt_bank', 'B.id')
@@ -726,7 +730,387 @@ class PosBankController extends Controller
             ->whereDate('date', '<=', $enddate)
             ->get();
 
-        return DataTables()->of($bank_transfer)->make(true);
+        return DataTables()->of($bank_transfer)
+        ->addIndexColumn()
+        ->addColumn('action', function($row){
+            $action = '<a data-id='.$row->vno.' title="Delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
+            return $action;
+        })
+        ->rawColumns(['action'])
+        ->make(true);
+    }
+
+    public function delete_bank_transfer(Request $req){
+
+        $id = $req['invoice'];
+        // return $id;
+        $deletebtransfer = BankTransfer::whereIn('vno', [$id])->delete();
+        $deleteAccTrans = AccTransaction::whereIn('vno', [$id])->delete();
+        $deletebtransaction = BankTransaction::whereIn('vno', [$id])->delete();
+        
+        if ($deletebtransfer == 1 || $deleteAccTrans == 1 || $deletebtransaction == 1) {
+            $success = true;
+            $message = "Data Deleted Successfully!";
+        } else {
+            $success = true;
+            $message = "";
+        }
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
+    }
+
+    //bank loan
+    public function create_loan(Request $request)
+    {
+        $banks = DB::table('bank_info')->where('client_id', auth()->user()->client_id)->get();
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+
+            $maxid = (DB::table('bank_loans')->max('id') + 1);
+            $invoice = "Loan-" . $maxid;
+
+            $loan = new BankLoan;
+            $loan->invoice_no = $invoice;
+            $loan->bank_id = $data['bank_id'];
+            $loan->bank_acc = $data['account_id'];
+            $loan->loan_date = $data['inputLoanDate'];
+            $loan->loan_expiry_date = $data['inputLoanExpireDate'];
+            $loan->loan_amount = $data['inputLoanAmount'];
+            $loan->interest_rate = $data['inputInterestRate'];
+            $loan->total_amount = $data['inputTotalAmount'];
+            $loan->installment_amount = $data['installmentAmount'];
+            $loan->client_id = auth()->user()->client_id;
+            $loan->status = 1;
+            $loan->save();
+
+            $user = Auth::id();
+            $getBankName = DB::table('bank_info')->select('name')->where('id', $data['bank_id'])->first();
+
+            $getBankAccNo = DB::table('bank_acc')->select('acc_no')->where('id', $data['account_id'])->first();
+
+            $head = "Bank Loan";
+            $description = "Loan " . $getBankName->name . " A/C: " . $getBankAccNo->acc_no . " " . $invoice;
+            $debit = 0;
+            $credit = $data['inputLoanAmount'];
+
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            AccTransaction::create([
+                'user_id' => $user,
+                'client_id' => auth()->user()->client_id,
+                'vno' => $vno,
+                'head' => $head,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $data['inputLoanDate'],
+            ]);
+
+            $head = $getBankName->name . " " . $getBankAccNo->acc_no;
+            $description = "Loan Deposit " . $getBankName->name . " A/C: " . $getBankAccNo->acc_no;
+            $credit = 0;
+            $debit = $data['inputLoanAmount'];
+
+            AccTransaction::create([
+                'user_id' => $user,
+                'client_id' => auth()->user()->client_id,
+                'vno' => $vno,
+                'head' => $head,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $data['inputLoanDate'],
+            ]);
+
+            return redirect('/admin/bank_loan_create')->with('flash_message_success', 'Bank Loan Created Successfully!');
+        }
+        return view('admin.pos.bank-loans.create')->with(compact('banks'));
+    }
+
+    public function create_installment(Request $request)
+    {
+
+        $banks = DB::table('bank_info')
+            ->where('client_id', auth()->user()->client_id)->get();
+        $loans = DB::table('bank_loans')
+            ->select('bank_loans.id', 'bank_loans.invoice_no', 'bank_loans.bank_id', 'bank_loans.bank_acc', 'bank_info.name', 'bank_acc.acc_no')
+            ->join('bank_info', 'bank_loans.bank_id', 'bank_info.id')
+            ->join('bank_acc', 'bank_loans.bank_acc', 'bank_acc.id')
+            ->where('bank_loans.client_id', auth()->user()->client_id)
+            ->get();
+        //dd($request->all());
+
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+
+            $maxid = (DB::table('bank_installments')->max('id') + 1);
+            $invoice = "Installment-" . $maxid;
+
+            $installment = new BankInstallment;
+
+            $installment->invoice_no = $invoice;
+            $installment->installment_date = $data['inputDate'];
+            $installment->loan_id = $data['inputLoan'];
+            $installment->bank_id = $data['bank_id'];
+            $installment->bank_acc = $data['account_id'];
+            $installment->payment_type = $data['inputType'];
+            $installment->amount = $data['inputAmount'];
+            $installment->client_id = auth()->user()->client_id;
+            $installment->save();
+
+            $user = Auth::id();
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+
+            $getBankName = DB::table('bank_info')->select('name')->where('id', $data['bank_id'])->first();
+
+            $getBankAccNo = DB::table('bank_acc')->select('acc_no')->where('id', $data['account_id'])->first();
+
+            $get_loan = DB::table('bank_loans')->select('installment_amount', 'interest_rate')->where('id', $data['inputLoan'])->first();
+
+            $interestRate = $get_loan->interest_rate;
+            $installAmount = $get_loan->installment_amount;
+            $realAmount = ($installAmount * 100) / (100 + $interestRate);
+            $interest = $installAmount - $realAmount;
+
+            if ($data['inputType'] == "Cash") {
+
+                $head = "Cash In Hand";
+                $description = "Loan Installment";
+                $credit = $data['inputAmount'];
+                $debit = 0;
+                AccTransaction::create([
+                    'user_id' => $user,
+                    'client_id' => auth()->user()->client_id,
+                    'vno' => $vno,
+                    'head' => $head,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $data['inputDate'],
+                ]);
+
+                $head = "Bank Loan";
+                $description = "Loan Installment in Cash";
+                $credit = 0;
+                $debit = $realAmount;
+
+                AccTransaction::create([
+                    'user_id' => $user,
+                    'client_id' => auth()->user()->client_id,
+                    'vno' => $vno,
+                    'head' => $head,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $data['inputDate'],
+                ]);
+
+                $countHead = DB::table('acc_heads')->where('head', "Interest of Loan")->count();
+
+                if ($countHead < 1) {
+                    AccHead::create([
+                        'user_id' => $user,
+                        'client_id' => auth()->user()->client_id,
+                        'parent_head' => "Expense",
+                        'sub_head' => "Loan Expense",
+                        'head' => "Interest of Loan"
+                    ]);
+                }
+
+                $head = "Interest of Loan";
+                $description = "Deposit Installment";
+                $credit = 0;
+                $debit = $interest;
+
+                AccTransaction::create([
+                    'user_id' => $user,
+                    'client_id' => auth()->user()->client_id,
+                    'vno' => $vno,
+                    'head' => $head,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $data['inputDate'],
+                ]);
+            }
+
+            if ($data['inputType'] == "bank") {
+
+                $head = $getBankName->name . " " . $getBankAccNo->acc_no;
+                $description = "Loan Deposit " . $getBankName->name . " A/C: " . $getBankAccNo->acc_no;
+                $credit = $interest;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'user_id' => $user,
+                    'client_id' => auth()->user()->client_id,
+                    'vno' => $vno,
+                    'head' => $head,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $data['inputDate'],
+                ]);
+
+                $head = $getBankName->name . " " . $getBankAccNo->acc_no;
+                $description = "Installment Deposit " . $getBankName->name . " A/C: " . $getBankAccNo->acc_no;
+                $credit = $realAmount;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'user_id' => $user,
+                    'client_id' => auth()->user()->client_id,
+                    'vno' => $vno,
+                    'head' => $head,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $data['inputDate'],
+                ]);
+
+                $head = "Bank Loan";
+                $description = "Installment Deposit " . $getBankName->name . " A/C: " . $getBankAccNo->acc_no;
+                $credit = 0;
+                $debit = $realAmount;
+
+                AccTransaction::create([
+                    'user_id' => $user,
+                    'client_id' => auth()->user()->client_id,
+                    'vno' => $vno,
+                    'head' => $head,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $data['inputDate'],
+                ]);
+
+                $countHead = DB::table('acc_heads')->where('head', "Interest of Loan")->count();
+
+                if ($countHead < 1) {
+                    AccHead::create([
+                        'user_id' => $user,
+                        'client_id' => auth()->user()->client_id,
+                        'parent_head' => "Expense",
+                        'sub_head' => "Loan Expense",
+                        'head' => "Interest of Loan"
+                    ]);
+                }
+
+                $head = "Interest of Loan";
+                $description = "Installment Deposit " . $getBankName->name . " A/C: " . $getBankAccNo->acc_no;
+                $credit = 0;
+                $debit = $interest;
+
+                AccTransaction::create([
+                    'user_id' => $user,
+                    'client_id' => auth()->user()->client_id,
+                    'vno' => $vno,
+                    'head' => $head,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $data['inputDate'],
+                ]);
+            }
+
+            return redirect('/admin/create_installment')->with('flash_message_success', 'Installment Deposit Completed!');
+        }
+
+        return view('admin.pos.bank-loans.create-installment')->with(compact('banks', 'loans'));
+    }
+
+    public function get_installment_amount(Request $request)
+    {
+        $loan_id = $request['loan_id'];
+        $get_loan = DB::table('bank_loans')->select('installment_amount')->where('id', $loan_id)->first();
+
+        $data = $get_loan->installment_amount;
+        return $data;
+    }
+
+    public function bank_loan_report()
+    {
+        return view('admin.pos.bank-loans.bank_loan-report');
+    }
+
+    public function bank_loan_report_date(Request $req)
+    {
+        $stdate = $req['from_date'];
+        $enddate = $req['to_date'];
+
+        if (!$stdate) {
+            $stdate = date('Y-m-d');
+        }
+        if (!$enddate) {
+            $enddate = date('Y-m-d');
+        }
+
+        $loans = DB::table('bank_loans')->select('bank_loans.id', 'bank_loans.bank_id', 'bank_loans.invoice_no', 'bank_loans.loan_date', 'bank_loans.loan_expiry_date', 'bank_loans.loan_amount', 'bank_loans.interest_rate', 'bank_loans.total_amount', 'bank_loans.installment_amount', 'bank_loans.status', 'bank_info.name')
+            ->join('bank_info', 'bank_loans.bank_id', 'bank_info.id')
+            ->whereBetween('bank_loans.loan_date', [$stdate, $enddate])
+            ->where('bank_loans.client_id', auth()->user()->client_id)
+            ->get();
+
+        $total_paid = 0;
+        $total_unpaid = 0;
+        $status = "";
+        foreach ($loans as $index => $row) {
+            $loan_id = $row->id;
+            $row->total_paid = DB::table('bank_installments')->where('client_id', auth()->user()->client_id)->where('loan_id', $loan_id)->sum('amount');
+
+            $row->total_unpaid = $row->total_amount - $row->total_paid;
+
+            if ($row->total_unpaid > 0) {
+                $row->status = "Running";
+            } else {
+                $row->status = "Paid";
+            }
+        }
+
+        return datatables()->of($loans)->make(true);
+    }
+
+    public function installment_report()
+    {
+        return view('admin.pos.bank-loans.installment_report');
+    }
+
+    public function installment_report_date(Request $req)
+    {
+        $stdate = $req['from_date'];
+        $enddate = $req['to_date'];
+
+        if (!$stdate) {
+            $stdate = date('Y-m-d');
+        }
+        if (!$enddate) {
+            $enddate = date('Y-m-d');
+        }
+
+        $installments = DB::table('bank_installments')->select('id', 'invoice_no', 'installment_date', 'bank_installments.loan_id', 'bank_id', 'bank_acc', 'payment_type', 'amount')
+            ->whereBetween('bank_installments.installment_date', [$stdate, $enddate])
+            ->where('bank_installments.client_id', auth()->user()->client_id)
+            ->get();
+
+        foreach ($installments as $index => $row) {
+
+            if ($row->payment_type == "Cash") {
+                $row->bank_name = "Cash Payment";
+                $row->account_no = "Cash Payment";
+            }
+            if ($row->payment_type == "bank") {
+                $getbank_name = DB::table('bank_info')->select('name')->where('id', $row->bank_id)->first();
+                $row->bank_name = $getbank_name->name;
+
+                $getaccount_no = DB::table('bank_acc')->select('acc_no')->where('id', $row->bank_acc)->first();
+                $row->account_no = $getaccount_no->acc_no;
+            }
+        }
+
+        return datatables()->of($installments)->make(true);
     }
 
 }

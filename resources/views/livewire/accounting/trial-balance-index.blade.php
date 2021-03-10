@@ -30,7 +30,6 @@
             <div class="card bg-white mt-4">
                 <div class="card-body">
                     <table class="table table-striped w-full ">
-        
                         <tr>
                             <th class="border text-center   " scope="col">Ledger Name</th>
                             <th class="border" scope="col">Debit Taka</th>
@@ -47,10 +46,8 @@
                                     scope="row">{{ $trail['bal']  }}</th>
                             </tr>
                         @endforeach
-            
                     </table>
                 </div>
-        
             </div>
         </div>
         

@@ -19,14 +19,13 @@
                             </div>
                         </div>
 
-                        <form class="row">
-
+                        <form class="row" action="">
                             <div class="col-md">
                                 <div class="form-group row">
                                     <label for="tf_bank" class="col-sm-4 col-form-label">Bank Name</label>
                                     <div class="col-sm-8">
-                                        <select name="tf_bank" id="tf_bank" class="form-control">
-                                            <option>Select Bank</option>
+                                        <select name="tf_bank" id="tf_bank" class="form-control" required>
+                                            <option selected disabled>Select Bank</option>
                                             @foreach ($bank_info as $row)
                                                 <option value={{ $row->id }}>{{ $row->name }}</option>
                                             @endforeach
@@ -37,8 +36,8 @@
                                 <div class="form-group row">
                                     <label for="tf_acc" class="col-sm-4 col-form-label">Account Name</label>
                                     <div class="col-sm-8">
-                                        <select name="tf_acc" id="tf_acc" class="form-control">
-                                            <option>Select Account</option>
+                                        <select name="tf_acc" id="tf_acc" class="form-control" required>
+                                            <option selected disabled>Select Account</option>
                                         </select>
                                     </div>
                                 </div>
@@ -61,8 +60,8 @@
                                 <div class="form-group row">
                                     <label for="tt_bank" class="col-sm-4 col-form-label">Bank Name</label>
                                     <div class="col-sm-8">
-                                        <select name="tt_bank" id="tt_bank" class="form-control">
-                                            <option>Select Bank</option>
+                                        <select name="tt_bank" id="tt_bank" class="form-control" required>
+                                            <option selected disabled>Select Bank</option>
                                             @foreach ($bank_info as $row)
                                                 <option value={{ $row->id }}>{{ $row->name }}</option>
                                             @endforeach
@@ -73,8 +72,8 @@
                                 <div class="form-group row">
                                     <label for="tt_acc" class="col-sm-4 col-form-label">Account Name</label>
                                     <div class="col-sm-8">
-                                        <select name="tt_acc" id="tt_acc" class="form-control">
-                                            <option>Select Account</option>
+                                        <select name="tt_acc" id="tt_acc" class="form-control" required>
+                                            <option selected disabled>Select Account</option>
                                         </select>
                                     </div>
                                 </div>
@@ -90,14 +89,12 @@
                                     <div class="col-sm-8">
                                         <input type="text" name="date" id="date" class="form-control" value="{{ date('Y-m-d') }}">
                                         <div class="mt-4">
-                                            <input type="button" class="btn btn-success btn-block" id="save" value="Save">
+                                            <input type="submit" class="btn btn-success btn-block" id="save" value="Save">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -238,15 +235,22 @@
                 var tf_acc = $('#tf_acc').val();
                 var tf_account_name = $('#tf_acc option:selected').text();
 
-                if( tf_bank == '' && tf_acc == '')
+                if( tf_bank == null || tf_acc == null)
                 {
-                    alert('Required');
+                    alert('Both Bank and Bank Account Required');
+                    return false;
                 }
 
                 var tt_bank = $('#tt_bank').val();
                 var tt_bank_name = $('#tt_bank option:selected').text();
                 var tt_acc = $('#tt_acc').val();
                 var tt_account_name = $('#tt_acc option:selected').text();
+
+                if( tf_bank == null || tf_acc == null || tt_bank == null || tt_acc == null)
+                {
+                    alert('Both Bank and Bank Account Required');
+                    return false;
+                }
 
                 var balance = $('#balance').val();
                 var check_no = $('#check_no').val();

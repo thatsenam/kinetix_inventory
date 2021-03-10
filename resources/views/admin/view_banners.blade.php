@@ -39,15 +39,15 @@
               <div class="card-body">
                 <table id="BrandViewTable" class="table table-bordered table-hover">
                   <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Image</th>
-                    <th>Title</th>
-                    <th>URL</th>
-                    <th>Status</th>
-                    <th>Type</th>
-                    <th>Actions</th>
-                  </tr>
+                    <tr>
+                      <th>ID</th>
+                      <th>Image</th>
+                      <th>Title</th>
+                      <th>URL</th>
+                      <th>Status</th>
+                      <th>Type</th>
+                      <th>Actions</th>
+                    </tr>
                   </thead>
                   <tbody>
                     @foreach($banners as $banner)

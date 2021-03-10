@@ -817,7 +817,6 @@ class PosPurchaseController extends Controller
     public function delete_purchase(Request $req){
 
         $purinv = $req['purinv'];
-
         DB::table('purchase_primary')
             ->where('client_id',auth()->user()->client_id)
             ->where('pur_inv', $purinv)->delete();

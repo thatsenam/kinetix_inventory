@@ -799,7 +799,7 @@
 }
 @media (min-width: 576px){
   .modal-dialog {
-      max-width: 600px !important;
+    max-width: 600px !important;
   }
 }
 @media screen and (max-width: 768px) {

@@ -357,6 +357,34 @@
                   <p>Bank Transfer Report</p>
                 </a>
               </li>
+              <li class="nav-item">
+                  <a href="{{route('admin.pos.bank-loans.create')}}"
+                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank-loans.create' ? 'active' : '' }}">
+                      <i class="fas fa-angle-right nav-icon"></i>
+                      <p>Bank Loan </p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{route('admin.pos.bank_loans.report')}}"
+                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank_loans.report' ? 'active' : '' }}">
+                      <i class="fas fa-angle-right nav-icon"></i>
+                      <p>Bank Loan Report</p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{route('admin.pos.bank-loans.create_installment')}}"
+                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank-loans.create_installment' ? 'active' : '' }}">
+                      <i class="fas fa-angle-right nav-icon"></i>
+                      <p>Bank Loan Installments</p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{route('admin.pos.bank_loans.installment_report')}}"
+                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank_loans.installment_report' ? 'active' : '' }}">
+                      <i class="fas fa-angle-right nav-icon"></i>
+                      <p>Installment Reports</p>
+                  </a>
+              </li>
             </ul>
           </li>
           <li class="nav-item {{ (request()->is('dashboard/customers', 'dashboard/customers/customer_ledger', 'dashboard/customers/due-report', 'dashboard/customers/due-collection-report')) ? 'menu-open' : '' }}">

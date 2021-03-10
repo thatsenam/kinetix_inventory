@@ -1882,12 +1882,12 @@
                 var hid_total = Number($('#hid_total').val());
 
                 var discount = Number($('#discount').val());
-
+                var check_cash = Number($('#check_cash').val());
                 var scharge = Number($('#scharge').val());
-
                 var check_amount = Number($(this).val());
 
                 $('#total').val(hid_total - check_amount - discount + scharge);
+                $('#payment').val(check_amount + check_cash);
 
             });
 
@@ -1896,12 +1896,13 @@
                 var hid_total = Number($('#hid_total').val());
 
                 var discount = Number($('#discount').val());
-
+                var mobile_cash = Number($('#mobile_cash').val());
                 var scharge = Number($('#scharge').val());
 
                 var mobile_amount = Number($(this).val());
 
                 $('#total').val(hid_total - mobile_amount - discount + scharge);
+                $('#payment').val(mobile_amount + mobile_cash);
 
             });
 
@@ -1934,6 +1935,7 @@
                 var total_tk = (mobile_amount + mobile_cash);
 
                 $('#total').val(hid_total - total_tk - discount + scharge);
+                $('#payment').val(total_tk);
 
             });
 
@@ -1970,6 +1972,8 @@
                 var total_tk = (check_amount + check_cash);
 
                 $('#total').val(hid_total - total_tk - discount + scharge);
+
+                $('#payment').val(total_tk);
 
             });
 
@@ -2034,7 +2038,7 @@
 
                     $('#check_info').show();
 
-                    $('.check_total').html($('#total').val());
+                    $('.check_total').html($('#show_grand_total').val());
                 }
 
             });
@@ -2045,7 +2049,7 @@
 
                     $('#mobile_info').show();
 
-                    $('.mobile_total').html($('#total').val());
+                    $('.mobile_total').html($('#show_grand_total').val());
                 }
 
             });
@@ -2056,7 +2060,7 @@
 
                     $('#card_info').show();
 
-                    $('.card_total').html($('#total').val());
+                    $('.card_total').html($('#show_grand_total').val());
                 }
 
             });

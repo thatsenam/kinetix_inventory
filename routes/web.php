@@ -152,6 +152,15 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('/admin/cancel_pending', 'OrderController@cancel_pending')->name('admin.orders.cancel_pending');
     Route::post('/admin/saveas_paid', 'OrderController@saveas_paid')->name('admin.orders.saveas_paid');
 
+    //Bank Loan Routes
+    Route::match(['get', 'post'], '/admin/bank_loan_create', 'PosBankController@create_loan')->name('admin.pos.bank-loans.create');
+    Route::match(['get', 'post'], '/admin/create_installment', 'PosBankController@create_installment')->name('admin.pos.bank-loans.create_installment');
+    Route::match(['get', 'post'], '/admin/get_installment_amount', 'PosBankController@get_installment_amount')->name('get_installment_amount');
+    Route::match(['get', 'post'], '/admin/bank_loan_report', 'PosBankController@bank_loan_report')->name('admin.pos.bank_loans.report');
+    Route::match(['get', 'post'], '/admin/bank_loan_report_date', 'PosBankController@bank_loan_report_date')->name('bank_loan_report_date');
+    Route::match(['get', 'post'], '/admin/installment_report', 'PosBankController@installment_report')->name('admin.pos.bank_loans.installment_report');
+    Route::match(['get', 'post'], '/admin/installment_report_date', 'PosBankController@installment_report_date')->name('installment_report_date');
+
     //Admin Banners
     Route::match(['get','post'],'/admin/add_banner','BannersController@addBanner')->name('admin.add_banner');
     Route::match(['get','post'],'/admin/view_banners','BannersController@viewBanners')->name('admin.view_banners');
@@ -298,6 +307,8 @@ Route::post('/dashboard/get_products', 'PosSalesController@get_products')->name(
 Route::post('/dashboard/get_barcode', 'PosSalesController@get_barcode')->name('get_barcode')->middleware('auth');
 
 Route::post('/dashboard/get_bank', 'PosBankController@get_bank')->name('get_bank')->middleware('auth');
+
+Route::post('/dashboard/delete_bank_transfer', 'PosBankController@delete_bank_transfer')->name('delete_bank_transfer')->middleware('auth');
 
 Route::post('/dashboard/get_bank_account', 'PosBankController@get_bank_account')->name('get_bank_account')->middleware('auth');
 

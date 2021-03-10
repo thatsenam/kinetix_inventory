@@ -205,9 +205,7 @@
                 
                         </div>
                         <div class="modal-footer">
-                          <button type="button" class="btn btn-outline-danger" data-dismiss="modal">বাদ</button>
-                          {{-- <button type="button" class="btn btn-primary">OK</button> --}}
-                        </div>
+                          <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel
                       </div>
                     </div>
                   </div>
@@ -215,32 +213,6 @@
         </div>
     </div>
     </section>
-
-    <!-- Modal -->
-    <div class="modal fade" id="square_foot_modal" tabindex="-1" role="dialog" aria-labelledby="square_foot_modalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title float-center" id="square_foot_modalLabel">Quantity</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <label for="quantity" class="col-sm-4 col-form-label">Quantity</label>
-                        <div class="col-sm-8">
-                        <input type="text" class="form-control" id="quantity">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">বাদ</button>
-                    {{-- <button type="button" class="btn btn-primary">OK</button> --}}
-                </div>
-            </div>
-        </div>
-    </div>
 
 </div>
 @endsection
@@ -732,14 +704,14 @@
                     });
 
                     $('#serial_modal').on('hidden.bs.modal', function () {
-                        var $nonempty = $('.serialfield').filter(function() {
-                            return this.value != ''
-                        });
-                        if ($nonempty.length == 0) {
-                            alert('Serial Numbers Can not be empty')
-                            return false;
-                        }else{
-                            
+                        var inputs = $(".serialfield");
+                        for(var i = 0; i < inputs.length; i++){
+                            // alert($(inputs[i]).val());
+                            val = $(inputs[i]).val();
+                            if(val == ''){
+                                $('#serial_modal').modal('toggle');
+                                $("#msg").show();
+                            }
                         }
                     });
                 }
@@ -799,7 +771,7 @@
                     var box_value= qnt+" "+unit;
                     price_per_kg = price/per_box_qty;
                 }
-                
+
                 add_product_to_table(id, name, qnt, price, totalPrice, total_vat, price_per_kg, box_value);
                 
                 $('#search').focus();

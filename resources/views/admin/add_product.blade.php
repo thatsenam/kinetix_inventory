@@ -123,6 +123,7 @@
                                     <option value="Box">Box</option>
                                     <option value="Dozens">Dozens</option>
                                     <option value="Catoon">Catoon</option>
+                                    <option value="Packets">Packets</option>
                                 </select>
                             </div>
                         </div>

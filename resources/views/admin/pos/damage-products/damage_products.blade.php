@@ -1,7 +1,6 @@
 @extends('admin.pos.master')
         
 @section('content')
-
 <div class="content-wrapper">
     <div class="row">
       <div class="col-12" style="position: relative;">
@@ -64,12 +63,10 @@
                             <div class="row" style="height:350px; overflow-y: auto;">
                                 <div class="col-12" style="padding-right: 0 !important; margin-top:20px;">
                                     <table class="price-table custom-table">
-                                        <tr><th>SL</th><th style="width: 100px;">Item</th><th>price</th><th>Qty</th><th>Total</th><th>Delete</th></tr>
-                                        
+                                        <tr><th>SL</th><th style="width: 100px;">Item</th><th>Sub-unit</th><th>Qty</th><th>Price</th><th>Total</th><th>Delete</th></tr>
                                     </table>
                                 </div>
                             </div>
-                            
                         </div>
                         <div class="col-md-5">
                             <div class="row">
@@ -127,6 +124,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div id="msg" style="display: none;"><div class="alert alert-danger" role="alert">Serial numbers can't be empty!</div></div>
                     <form action="">
                         <div id="serial_input">
 
@@ -144,6 +142,32 @@
              
       </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="square_foot_modal" tabindex="-1" role="dialog" aria-labelledby="square_foot_modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title float-center" id="square_foot_modalLabel">Quantity</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="quantity" class="col-sm-4 col-form-label">Quantity</label>
+                        <div class="col-sm-8">
+                        <input type="text" class="form-control" id="quantity">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
+                    {{-- <button type="button" class="btn btn-primary">OK</button> --}}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -151,6 +175,11 @@
 
 <script type="text/javascript">
 
+    var per_box_qty;
+    var sub_unit;
+    var unit;
+    var box=0;
+    var fraction=0;
     var product_id;
     var product_serial;
     var serial_qty;
@@ -159,6 +188,19 @@
     $(document).ready(function(){
         $('#date').datepicker({
             dateFormat: 'yy-mm-dd'
+        });
+
+        $('#quantity').on("keyup", function (e) {
+            if (e.which == 13) {
+                var qty_box = $('#quantity').val();
+                var total_kg = per_box_qty * qty_box;
+                box=qty_box;
+                fraction=0;
+                $('#qnt').val(total_kg);
+                $('#quantity').val('');
+                $('#square_foot_modal').modal('hide');
+                $('#price').focus();
+            }
         });
         
         $("#search").keyup(function(e){
@@ -194,7 +236,26 @@
                                 
                         var id = $(this).find(".active").attr("data-id");    
                         var name = $(this).find(".active").attr("data-name");
-                        var price = $(this).find(".active").attr("data-price");  
+                        var price = $(this).find(".active").attr("data-price");
+                        var pbq = $(this).find(".active").attr("data-pbq");
+                        sub_unit = $(this).find(".active").attr("data-sub_unit");
+                        unit = $(this).find(".active").attr("data-unit");
+
+                        if(pbq){
+                            $('#search').val(name);
+                            $('#square_foot_modal').modal('toggle');
+
+                            per_box_qty = pbq;
+                            box=0;
+                            $('#square_foot_modal').on('shown.bs.modal', function () {
+                                $('#quantity').trigger('focus')
+                            });
+                        }else{
+                            $('#search').val(name);
+                            per_box_qty=0;
+                            box=0;
+                            $('#qnt').val('');
+                        }
 
                         product_id = id;
                         product_serial = $(this).find(".active").attr("data-serial");
@@ -283,7 +344,6 @@
                 val[i] = ser;                                     
             }
             serial_array[product_id] = val;
-
             $('#serial_modal').modal('hide');
             
             console.log(JSON.stringify(serial_array));
@@ -301,6 +361,7 @@
                 var memo = $('#supp_memo').val();
                 var qnt = Number($(this).val());
                 var price = Number($('#price').val());
+                var pp = box;
 
                 serial_qty = qnt;
 
@@ -319,7 +380,7 @@
                             "<div class='form-group row'>" +
                                 "<label for='serial-"+i+"' class='col-3 col-form-label'>Serial "+(i+1)+"</label>" +
                                 "<div class='col-9'>" + 
-                                    "<input list='serial_suggest' type='text' class='form-control' id='serial-"+i+"' required>" +
+                                    "<input list='serial_suggest' type='text' class='form-control serialfield' id='serial-"+i+"' required>" +
                                     "<datalist id='serial_suggest'></datalist>" +
                                 "</div>" +
                             "</div>"
@@ -357,7 +418,19 @@
                             $('#serial_modal').modal('toggle');
 
                             $('#serial_modal').on('shown.bs.modal', function () {
-                                    $('#serial-'+0).trigger('focus')
+                                $('#serial-'+0).trigger('focus')
+                            });
+
+                            $('#serial_modal').on('hidden.bs.modal', function () {
+                                var inputs = $(".serialfield");
+                                for(var i = 0; i < inputs.length; i++){
+                                    // alert($(inputs[i]).val());
+                                    val = $(inputs[i]).val();
+                                    if(val == ''){
+                                        $('#serial_modal').modal('toggle');
+                                        $("#msg").show();
+                                    }
+                                }
                             });
                         }
                     });
@@ -368,10 +441,49 @@
                     alert("Please Fillup All Fields ");
                     return false;
                 }
+
+
                 
-                totalPrice = (qnt * price); 
+                totalPrice = (qnt * price);
+
+                if(sub_unit){
+                    if(pp == 0){
+                        price_per_kg = price;
+                        totalPrice = (qnt * price);
+
+                        var box_qty=parseInt(qnt/per_box_qty);
+                        var fraction=qnt-( box_qty *per_box_qty);
+                        if(fraction!=0){
+                            var box_value = box_qty+" "+sub_unit+" "+fraction+unit;
+                        }else{
+                            var box_value = box_qty+" "+sub_unit;
+                        }
+                    }else{
+                        var box_qty=parseInt(qnt/per_box_qty);
+                        var fraction=qnt-( box_qty *per_box_qty);
+                        price_per_kg = price / per_box_qty ;
+                        // alert(per_box_qty)
+                        console.log(price_per_kg)
+
+                        if(fraction!=0){
+                            var price_per_kg=price/per_box_qty;
+                            totalPrice = (box_qty * price)+(price_per_kg*fraction);
+                            var box_value= box_qty+" "+sub_unit+" "+fraction+unit;
+
+                        }else{
+                            totalPrice = (box_qty * price);
+                            var box_value= box_qty+" "+sub_unit;
+
+                        }
+                    }
+
+                }else{
+                    totalPrice = (qnt * price);
+                    var box_value= qnt+" "+unit;
+                    price_per_kg = price/per_box_qty;
+                }
                 
-                add_product_to_table(id, name, qnt, price, totalPrice);
+                add_product_to_table(id, name, qnt, price, totalPrice, price_per_kg, box_value);
                 
                 $('#search').focus();
             }
@@ -618,51 +730,42 @@
     function selectSupplier(name, id){
                                    
         $('#supp_name').val(name);
-        $('#supp_id').val(id);
-                                    
+        $('#supp_id').val(id);               
         $("#supp_name").focus();
         $("#supp_div").hide(); 
     }
     
     function selectPurmemo(val){
         $('#supp_memo').val(val);
-                                    
         $("#search").focus();
         $("#memo_div").hide();
-    }
-     
-                        
-        
-                                   
+    }                        
                         
     var sl = 1;
     
-    function add_product_to_table(id, name, qnt, price, total){
+    function add_product_to_table(id, name, qnt, price, total, price_per_kg, box){
         
-            var id = id;
-            var name = name;
-            var price = Number(price);
-            var total = Number(total);
+        var id = id;
+        var name = name;
+        var price = Number(price);
+        var total = Number(total);
         
-            
-            $('.price-table').show();
-            
-            $('.price-table').append("<tr><td>"+sl+"</td><td data-prodid='"+id+"' style='width:200px;' class='name'>"+name+"</td><td class='price'>"+price+"</td><td class='qnt'>"+qnt+"</td><td class='totalPriceTd'>"+total+"</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
-            
-            var totalPrice = Number($('#hid_total').val());
-            
-            totalPrice = Number(totalPrice + total);
+        $('.price-table').show();
         
-            $('#hid_total').val(totalPrice);
-            
-            $('#total').val(totalPrice);
-            
-            $('#pid_hid').val("0");
-            $('#search').val("");
-            $('#price').val("");
-            $('#qnt').val("");
-            
-            sl = sl + 1;
+        $('.price-table').append("<tr><td>"+sl+"</td><td data-prodid='"+id+"' style='width:200px;' class='name'>"+name+"</td><td class='box'>"+box+"</td><td class='qnt'>"+qnt+"</td><td class='price'>"+price+"</td><td class='totalPriceTd'>"+total+"</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
+        
+        var totalPrice = Number($('#hid_total').val());
+        totalPrice = Number(totalPrice + total);
+    
+        $('#hid_total').val(totalPrice);
+        $('#total').val(totalPrice);
+        
+        $('#pid_hid').val("0");
+        $('#search').val("");
+        $('#price').val("");
+        $('#qnt').val("");
+        
+        sl = sl + 1;
     }
     
 </script>

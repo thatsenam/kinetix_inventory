@@ -1722,13 +1722,16 @@
                                 $('#serial_modal').on('shown.bs.modal', function () {
                                     $('#serial-'+0).trigger('focus')
                                 });
+                                
                                 $('#serial_modal').on('hidden.bs.modal', function () {
-                                    var $nonempty = $('.serialfield').filter(function() {
-                                        return this.value != ''
-                                    });
-                                    if ($nonempty.length == 0) {
-                                        alert('Serial Numbers Can not be empty')
-                                        return false;
+                                    var inputs = $(".serialfield");
+                                    for(var i = 0; i < inputs.length; i++){
+                                        // alert($(inputs[i]).val());
+                                        val = $(inputs[i]).val();
+                                        if(val == ''){
+                                            $('#serial_modal').modal('toggle');
+                                            $("#msg").show();
+                                        }
                                     }
                                 });
                             }

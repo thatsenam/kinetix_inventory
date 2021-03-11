@@ -209,6 +209,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get','post'], '/dashboard/addS_payment', 'PosSupplierController@addPayment')->name('supp_payment');
     Route::match(['get','post'],'/dashboard/supplier/{id}','PosSupplierController@getSupplier');
     Route::match(['get','post'],'/supplier/details','PosSupplierController@filter_data')->name('supplier.details');
+    Route::get('/supplier/details/prev', [PosSupplierController::class, 'getPreviousBalance'])->name('supplier.details.previousBalance');
+    Route::get('/bank/details/prev', [PosSupplierController::class, 'getPreviousBalanceBank'])->name('bank.details.previousBalance');
     Route::match(['get','post'],'/dashboard/purchase_invoice/{id}','PosSupplierController@purchaseinvoice');
 
     //POS General Ledger Report
@@ -389,6 +391,10 @@ Route::post('/dashboard/save_bank_transfer', 'PosBankController@save_bank_transf
 Route::match(['get', 'post'],'/dashboard/bank_transfer_report', 'PosBankController@bank_transfer_report')->name('bank_transfer_report')->middleware('auth');
 
 Route::match(['get', 'post'], '/dashboard/get_bank_transfer_report', 'PosBankController@get_bank_transfer_report')->name('get_bank_transfer_report')->middleware('auth');
+
+Route::match(['get', 'post'],'/dashboard/bankdepowithdraw_report', 'PosBankController@bankdepowithdraw_report')->name('bankdepowithdraw_report')->middleware('auth');
+
+Route::match(['get', 'post'],'/dashboard/get_bankdepowithdraw_report', 'PosBankController@get_bankdepowithdraw_report')->name('get_bankdepowithdraw_report')->middleware('auth');
 
 // Warranty Management
 

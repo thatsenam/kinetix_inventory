@@ -224,29 +224,51 @@ class PosBankController extends Controller
         return view('admin.pos.banking.check_clearance');
     }
 
-    public function get_check_clearance(Request $req){
+    public function get_check_clearance(Request $req)
+    {
 
         $stdate = $req['stdate'];
         $enddate = $req['enddate'];
         $check_type = $req['check_type'];
-
         $trow = "";
 
-        if($check_type == "collection"){
-
-            $bank_transactions = DB::table('bank_transactions')->select("bank_transactions.id as transid", "bank_transactions.date as date", "bank_transactions.invoice_no as invoice", "customers.name as name", "customers.address as add", "customers.phone as phone",
-                "bank_transactions.clients_bank as bank", "bank_transactions.clients_bank_acc", "bank_transactions.check_no", "bank_transactions.deposit")
-                ->join('customers', 'bank_transactions.cid', 'customers.id')->where('bank_transactions.deposit', '>', '0')
-                ->where('bank_transactions.status', 'pending')
-                ->whereBetween('date', [$stdate, $enddate])
-                ->get();
-
-            foreach($bank_transactions as $row){
-
-                $trow .= "<tr data-transid = '$row->transid'><td>".$row->date."</td><td>".$row->invoice."</td><td>".$row->name."</td><td>".$row->add."<br>".$row->phone."</td><td>".$row->bank."</td><td>".$row->clients_bank_acc."</td>
-                <td>".$row->check_no."</td><td>".$row->deposit."</td><td><a title='Clear' href='#' class='clear'><span class='btn btn-xs btn-primary'><i class='mdi mdi-check'></i></span></a></td></tr>";
+        if ($check_type == "collection") {
+            try {
+                $bank_transactions = DB::table('bank_transactions')->select("bank_transactions.id as transid", "bank_transactions.date as date", "bank_transactions.invoice_no as invoice", "customers.name as name", "customers.address as add", "customers.phone as phone",
+                    "bank_transactions.clients_bank as bank", "bank_transactions.clients_bank_acc", "bank_transactions.check_no", "bank_transactions.withdraw")
+                    ->join('customers', 'bank_transactions.cid', 'customers.id')
+                    ->where('bank_transactions.client_id', auth()->user()->client_id)
+                    ->where('bank_transactions.withdraw', '>', 0)
+                    ->where('bank_transactions.type', 'check')
+                    ->where('bank_transactions.status', 'pending')
+                    ->whereBetween('bank_transactions.date', [$stdate, $enddate])
+                    ->get();
+            } catch (\Exception $exception) {
+                $bank_transactions = [];
             }
 
+            foreach ($bank_transactions as $row) {
+                $trow .= "<tr data-transid = '$row->transid'><td>" . $row->date . "</td><td>" . $row->invoice . "</td><td>" . $row->name . "</td><td>" . $row->add . "<br>" . $row->phone . "</td><td>" . $row->bank . "</td><td>" . $row->clients_bank_acc . "</td><td>" . $row->check_no . "</td><td>" . $row->withdraw . "</td><td><a title='Clear' href='#' class='clear'><span class='btn btn-xs btn-primary'><i class='mdi mdi-check'></i></span></a></td></tr>";
+            }
+
+            return $trow;
+
+        }
+        if ($check_type == "payment") {
+
+            $bank_transactions = DB::table('bank_transactions')->select("bank_transactions.id as transid", "bank_transactions.date", "bank_transactions.invoice_no as invoice", "suppliers.name as name", "suppliers.address as add", "suppliers.phone as phone", "bank_transactions.clients_bank as bank", "bank_transactions.clients_bank_acc", "bank_transactions.check_no", "bank_transactions.deposit")
+                ->join('suppliers', 'bank_transactions.sid', 'suppliers.id')
+                ->where('bank_transactions.client_id', auth()->user()->client_id)
+                ->where('bank_transactions.deposit', '>', 0)
+                ->where('bank_transactions.type', 'check')
+                ->where('bank_transactions.status', 'pending')
+                ->whereBetween('bank_transactions.date', [$stdate, $enddate])
+                ->get();
+
+            foreach ($bank_transactions as $row) {
+                $trow .= "<tr data-transid = '$row->transid'><td>" . $row->date . "</td><td>" . $row->invoice . "</td><td>" . $row->name . "</td><td>" . $row->add . "<br>" . $row->phone . "</td><td>" . $row->bank . "</td><td>" . $row->clients_bank_acc . "</td>
+                <td>" . $row->check_no . "</td><td>" . $row->deposit . "</td><td><a title='Clear' href='#' class='clear'><span class='btn btn-xs btn-primary'><i class='mdi mdi-check'></i></span></a></td></tr>";
+            }
             return $trow;
         }
     }
@@ -339,7 +361,6 @@ class PosBankController extends Controller
     public function bank_deposit(){
 
         $bank_info = DB::table('bank_info')->where('client_id', auth()->user()->client_id)->get();
-
         return view('admin.pos.banking.bank_deposit')->with('bank_info', $bank_info);
     }
 
@@ -348,7 +369,7 @@ class PosBankController extends Controller
 
         $bank_id = $req['bank_id'];
 
-        $options = "<option>Select Account</option>";
+        $options = "<option disabled selected>Select Account</option>";
 
         $accounts = DB::table('bank_acc')->where('bank_id', $bank_id)->get();
 
@@ -394,8 +415,11 @@ class PosBankController extends Controller
         $remarks = $req['remarks'];
         $user = Auth::id();
 
-        BankTransaction::create([
+        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+        $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
+        BankTransaction::create([
+            'vno' => $vno,
             'seller_bank_id' => $bank_id,
             'seller_bank_acc_id' => $account_id,
             'check_no' => $check_no,
@@ -406,11 +430,6 @@ class PosBankController extends Controller
             'remarks' => $remarks,
             // 'user' => $user,
         ]);
-
-        // $vno = (DB::table('acc_transactions')->max('id') + 1);
-        
-        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-        $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
         $head = $bank_name." A/C: ".$account_name;
         $description = "Cash Deposit";
@@ -467,8 +486,11 @@ class PosBankController extends Controller
         $remarks = $req['remarks'];
         $user = Auth::id();
 
-        BankTransaction::create([
+        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+        $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
+        BankTransaction::create([
+            'vno' => $vno,
             'seller_bank_id' => $bank_id,
             'seller_bank_acc_id' => $account_id,
             'check_no' => $check_no,
@@ -481,9 +503,6 @@ class PosBankController extends Controller
         ]);
 
         // $vno = (DB::table('acc_transactions')->max('id') + 1);
-
-        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-        $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
         $head = $bank_name." A/C: ".$account_name;
         $description = "Cash Withdrwan";
@@ -738,6 +757,62 @@ class PosBankController extends Controller
         })
         ->rawColumns(['action'])
         ->make(true);
+    }
+
+    public function bankdepowithdraw_report()
+    {
+        return view('admin.pos.banking.depositwithdraw_report');
+    }
+
+    public function get_bankdepowithdraw_report(Request $req)
+    {
+        $stdate = $req['stdate'];
+        $enddate = $req['enddate'];
+        $type = $req['type'];
+
+        if (!$stdate) {
+            $stdate = date('Y-m-d');
+        }
+        if (!$enddate) {
+            $enddate = date('Y-m-d');
+        }
+
+        $trow = "";
+
+        if ($type == "withdraw") {
+
+            $bank_transactions = DB::table('bank_transactions')->select("bank_transactions.id as transid", "bank_transactions.date as date", "bank_transactions.vno", "bank_transactions.seller_bank_acc_id","bank_transactions.withdraw as amount","bank_info.name","bank_acc.acc_name","bank_acc.acc_no")
+            ->join('bank_info', 'bank_transactions.seller_bank_id', 'bank_info.id')
+            ->join('bank_acc', 'bank_transactions.seller_bank_acc_id', 'bank_acc.id')
+            ->where('bank_transactions.client_id', auth()->user()->client_id)
+            ->where('bank_transactions.withdraw', '>', 0)
+            ->whereBetween('bank_transactions.date', [$stdate, $enddate])
+            ->get();
+
+            foreach ($bank_transactions as $row) {
+                $trow .= "<tr data-id ='$row->vno'><td>" . $row->date . "</td><td>" . $row->name . "</td><td>" .$row->acc_name." ".$row->acc_no."</td><td>" . $row->amount ."</td><td><a data-id ='$row->vno' title='Delete' href='#' class='delete'><span class='btn btn-xs btn-primary'><i class='mdi mdi-delete'></i></span></a></td></tr>";
+            }
+
+            return $trow;
+
+        }
+        if ($type == "deposit") {
+
+            $bank_transactions = DB::table('bank_transactions')->select("bank_transactions.id as transid", "bank_transactions.date as date", "bank_transactions.vno", "bank_transactions.seller_bank_acc_id","bank_transactions.deposit as amount","bank_info.name","bank_acc.acc_name","bank_acc.acc_no")
+            ->join('bank_info', 'bank_transactions.seller_bank_id', 'bank_info.id')
+            ->join('bank_acc', 'bank_transactions.seller_bank_acc_id', 'bank_acc.id')
+            ->where('bank_transactions.client_id', auth()->user()->client_id)
+            ->where('bank_transactions.deposit', '>', 0)
+            ->whereBetween('bank_transactions.date', [$stdate, $enddate])
+            ->get();
+
+            foreach ($bank_transactions as $row) {
+                $trow .= "<tr data-id ='$row->vno'><td>" . $row->date . "</td><td>" . $row->name . "</td><td>" .$row->acc_name." ".$row->acc_no."</td><td>" . $row->amount ."</td><td><a data-id ='$row->vno' title='Delete' href='#' class='delete'><span class='btn btn-xs btn-primary'><i class='mdi mdi-delete'></i></span></a></td></tr>";
+            }
+
+            return $trow;
+        }
+
     }
 
     public function delete_bank_transfer(Request $req){

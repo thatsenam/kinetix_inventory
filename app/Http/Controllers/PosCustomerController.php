@@ -22,6 +22,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\CustomerDueCollection;
 use App\GeneralSetting;
+use App\Supplier;
 use Illuminate\Support\Facades\DB;
 // use Response;
 
@@ -575,11 +576,19 @@ class PosCustomerController extends Controller
 
     }
 
-    public function payinvoice($id){
+    public function payinvoice($id)
+    {
         $get_customer = DB::table('payment_invoice')->where('invoice_no', $id)->first();
-        $custid = $get_customer->cid;
-        $cust_details = Customer::where(['id'=>$custid])->get();
-        return view('admin.pos.customer.payinvoice')->with(compact('cust_details','get_customer'));
+        if (!empty($get_customer->cid)) {
+            $custid = $get_customer->cid;
+            $cust_details = Customer::where(['id' => $custid])->get();
+        }
+        if (!empty($get_customer->sid)) {
+            $custid = $get_customer->sid;
+            $cust_details = Supplier::where(['id' => $custid])->get();
+        }
+
+        return view('admin.pos.customer.payinvoice')->with(compact('cust_details', 'get_customer'));
     }
 
     public function saleinvoice($id){

@@ -25,10 +25,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <div class="callout callout-info">
-              <h5><i class="fas fa-info"></i> Note:</h5>
-              This page has been enhanced for printing. Click the print button at the bottom of the invoice to print.
-            </div>
+            
             <div class="hr mb-4 bg-info" style="height: 30px;"></div>
             <!-- Main content -->
             <div class="invoice p-3 mb-3">
@@ -36,7 +33,7 @@
               <div class="row">
                 <div class="col-12">
                   <h4>
-                    <i class="fas fa-globe"></i> Beautyshop, Inc.
+                    <i class="fas fa-globe"></i> {{$GenSettings->site_name ?? " "}}
                     <small class="float-right">Date: <?php echo date('Y-m-d'); ?></small>
                   </h4>
                 </div>
@@ -45,13 +42,11 @@
               <!-- info row -->
               <div class="row invoice-info">
                 <div class="col-sm-4 invoice-col">
-                  From
+                  Company
                   <address>
-                    <strong>Beautyshop, Inc.</strong><br>
-                    795 Folsom Ave, Suite 600<br>
-                    San Francisco, CA 94107<br>
-                    Phone: (804) 123-5432<br>
-                    Email: info@beautyshop.com
+                    <strong>{{$GenSettings->site_name ?? " "}}</strong><br>
+                    {{$GenSettings->site_address ?? " "}} <br>
+                    {{$GenSettings->phone ?? " "}}<br>
                   </address>
                 </div>
                 <!-- /.col -->
@@ -70,7 +65,7 @@
                 <div class="col-sm-4 invoice-col">
                   <br>
                   <b>Invoice #{{$get_customer->invoice_no}}</b><br>
-                  <b>Payment Date:</b> {{$get_customer->date}}<br>
+                  <b>Payment Date:</b> {{ $get_customer->date }}<br>
                 </div>
                 <!-- /.col -->
               </div>
@@ -82,7 +77,7 @@
                   <table class="table table-striped">
                     <thead>
                     <tr>
-                      <th>Description</th>
+                      <th>Details</th>
                       <th>Total</th>
                     </tr>
                     </thead>
@@ -101,14 +96,8 @@
               <div class="row">
                 <!-- accepted payments column -->
                 <div class="col-6">
-                  <p class="lead">Payment Methods:</p>
+                  <p class="lead">Payment Type</p>
                   {{$get_customer->method}}
-
-                  <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                    Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
-                    plugg
-                    dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                  </p>
                 </div>
                 <!-- /.col -->
                 <div class="col-6">
@@ -125,11 +114,11 @@
                 <!-- /.col -->
               </div>
               <!-- /.row -->
-
+              <br>
               <!-- this row will not appear when printing -->
               <div class="row no-print">
                 <div class="col-12">
-                  <a href="javascript:window.print();" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
+                  <a href="javascript:window.print();" class="btn btn-default"><i class="fas fa-print"></i>Print</a>
                 </div>
               </div>
             </div>

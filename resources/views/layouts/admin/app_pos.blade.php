@@ -340,6 +340,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{route('bankdepowithdraw_report')}}" class="nav-link {{ Route::currentRouteName() == 'bankdepowithdraw_report' ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Bank Withdraw/Deposit Report</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{route('bank_ledger')}}" class="nav-link {{ Route::currentRouteName() == 'bank_ledger' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Bank Ledger</p>

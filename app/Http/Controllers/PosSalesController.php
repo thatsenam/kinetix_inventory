@@ -803,7 +803,7 @@ class PosSalesController extends Controller
             $debit = $mobile_amount;
             $credit = 0;
 
-//            DB::table('acc_transactions')->([
+            //            DB::table('acc_transactions')->([
             AccTransaction::Create([
                 'vno' => $vno,
                 'head' => $head,
@@ -824,7 +824,7 @@ class PosSalesController extends Controller
                 $debit = $mobile_cash;
                 $credit = 0;
 
-//                DB::table('acc_transactions')->([
+            //                DB::table('acc_transactions')->([
                     AccTransaction::Create([
                     'vno' => $vno,
                     'head' => $head,
@@ -870,7 +870,7 @@ class PosSalesController extends Controller
 
                 $maxcardid = (DB::table('bank_acc')->max('id')+1);
 
-//                BankAcc::Create
+            //                BankAcc::Create
                 BankAcc::Create
                 (['id' => $maxcardid, 'bank_id' => $card_bank_id, 'acc_name' => $card_bank_account, 'user' => $user]);
 
@@ -881,7 +881,7 @@ class PosSalesController extends Controller
 
                 $maxbankid = (DB::table('bank_info')->max('id')+1);
 
-//                DB::table('bank_info')->
+            //                DB::table('bank_info')->
                 BankInfo::Create
                 (['id' => $maxbankid, 'name' => $card_bank, 'user' => $user]);
 
@@ -1158,8 +1158,12 @@ class PosSalesController extends Controller
                     $maxaccountid = (DB::table('bank_acc')->max('id')+1);
 
 //                    DB::table('bank_acc')->
-                    BankAcc::Create
-                    (['id' => $maxaccountid, 'bank_id' => $maxbankid, 'acc_name' => $shops_bank_account, 'user' => $user]);
+                    BankAcc::Create([
+                        'id' => $maxaccountid, 
+                        'bank_id' => $maxbankid, 
+                        'acc_name' => $shops_bank_account, 
+                        'user' => $user
+                    ]);
 
                     $bank_id = $maxbankid;
 
@@ -1191,16 +1195,15 @@ class PosSalesController extends Controller
             ///// into Accounts For Check Transaction
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-                $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
+            $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
             $head = "Sales";
             $description = "Sale Invoice ".$invoice;
             $debit = 0;
             $credit = $sales_amount;
 
-//            AccTransaction::Create
+            //AccTransaction::Create
 
             AccTransaction::Create([
 

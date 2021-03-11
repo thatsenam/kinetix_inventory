@@ -19,7 +19,7 @@
                             </div>
                         </div>
 
-                        <form class="row" action="">
+                        <form class="row">
                             <div class="col-md">
                                 <div class="form-group row">
                                     <label for="tf_bank" class="col-sm-4 col-form-label">Bank Name</label>
@@ -37,7 +37,7 @@
                                     <label for="tf_acc" class="col-sm-4 col-form-label">Account Name</label>
                                     <div class="col-sm-8">
                                         <select name="tf_acc" id="tf_acc" class="form-control" required>
-                                            <option selected disabled>Select Account</option>
+                                            <option selected value="">Select Account</option>
                                         </select>
                                     </div>
                                 </div>
@@ -73,7 +73,7 @@
                                     <label for="tt_acc" class="col-sm-4 col-form-label">Account Name</label>
                                     <div class="col-sm-8">
                                         <select name="tt_acc" id="tt_acc" class="form-control" required>
-                                            <option selected disabled>Select Account</option>
+                                            <option selected value="">Select Account</option>
                                         </select>
                                     </div>
                                 </div>
@@ -147,7 +147,6 @@
 
                     },
                     success: function(data) {
-
                         alert(data);
                     }
                 });
@@ -235,16 +234,12 @@
                 var tf_acc = $('#tf_acc').val();
                 var tf_account_name = $('#tf_acc option:selected').text();
 
-                if( tf_bank == null || tf_acc == null)
-                {
-                    alert('Both Bank and Bank Account Required');
-                    return false;
-                }
-
                 var tt_bank = $('#tt_bank').val();
                 var tt_bank_name = $('#tt_bank option:selected').text();
                 var tt_acc = $('#tt_acc').val();
                 var tt_account_name = $('#tt_acc option:selected').text();
+
+                console.log(tf_bank,tf_acc,tt_bank,tt_acc)
 
                 if( tf_bank == null || tf_acc == null || tt_bank == null || tt_acc == null)
                 {
@@ -257,6 +252,12 @@
                 var amount = $('#amount').val();
                 var date = $('#date').val();
                 // var remarks = $('#remarks').val();
+
+                if( amount == '')
+                {
+                    alert('Amount field can not be empty!');
+                    return false;
+                }
 
                 var formData = new FormData();
 
@@ -297,8 +298,6 @@
                     },
                     success: function(data) {
                         alert(data);
-
-
                     }
                 });
             });

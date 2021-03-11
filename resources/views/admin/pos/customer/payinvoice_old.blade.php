@@ -9,12 +9,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>মেমো</h1>
+            <h1>Invoice</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{route('home')}}">হোম</a></li>
-              <li class="breadcrumb-item active">মেমো</li>
+              <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+              <li class="breadcrumb-item active">Invoice</li>
             </ol>
           </div>
         </div>
@@ -25,7 +25,10 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            
+            <div class="callout callout-info">
+              <h5><i class="fas fa-info"></i> Note:</h5>
+              This page has been enhanced for printing. Click the print button at the bottom of the invoice to print.
+            </div>
             <div class="hr mb-4 bg-info" style="height: 30px;"></div>
             <!-- Main content -->
             <div class="invoice p-3 mb-3">
@@ -33,8 +36,8 @@
               <div class="row">
                 <div class="col-12">
                   <h4>
-                    <i class="fas fa-globe"></i> {{$GenSettings->site_name ?? " "}}
-                    <small class="float-right">তারিখ: <?php echo date('Y-m-d'); ?></small>
+                    <i class="fas fa-globe"></i> Beautyshop, Inc.
+                    <small class="float-right">Date: <?php echo date('Y-m-d'); ?></small>
                   </h4>
                 </div>
                 <!-- /.col -->
@@ -42,30 +45,32 @@
               <!-- info row -->
               <div class="row invoice-info">
                 <div class="col-sm-4 invoice-col">
-                  প্রতিষ্ঠান
+                  From
                   <address>
-                    <strong>{{$GenSettings->site_name ?? " "}}</strong><br>
-                    {{$GenSettings->site_address ?? " "}} <br>
-                    {{$GenSettings->phone ?? " "}}<br>
+                    <strong>Beautyshop, Inc.</strong><br>
+                    795 Folsom Ave, Suite 600<br>
+                    San Francisco, CA 94107<br>
+                    Phone: (804) 123-5432<br>
+                    Email: info@beautyshop.com
                   </address>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-4 invoice-col">
-                  প্রাপক
+                  To
                   <address>
-                    @foreach($supp_details as $detail)
-                    <input type="hidden" name="custid" id="custid" value="{{$detail->id}}">
-                    <strong>{{$detail->name}}</strong><br>
-                    {{$detail->address}}<br>
-                    Phone: {{$detail->phone}}<br>
+                    @foreach($cust_details as $cust_detail)
+                    <input type="hidden" name="custid" id="custid" value="{{$cust_detail->id}}">
+                    <strong>{{$cust_detail->name}}</strong><br>
+                    {{$cust_detail->address}}<br>
+                    Phone: {{$cust_detail->phone}}<br>
                     @endforeach
                   </address>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-4 invoice-col">
                   <br>
-                  <b>মেমো #{{$get_supplier->pur_inv}}</b><br>
-                  <b>পরিশোধের তারিখ:</b> {{ $get_supplier->date }}<br>
+                  <b>Invoice #{{$get_customer->invoice_no}}</b><br>
+                  <b>Payment Date:</b> {{$get_customer->date}}<br>
                 </div>
                 <!-- /.col -->
               </div>
@@ -74,30 +79,17 @@
               <!-- Table row -->
               <div class="row">
                 <div class="col-12 table-responsive">
-                  <table class="table table-sm table-striped">
+                  <table class="table table-striped">
                     <thead>
                     <tr>
-                      <th>#</th>
-                      <th>পণ্য</th>
-                      <th>পরিমান</th>
-                      <th>মূল্য</th>
-                      <th>মোট</th>
+                      <th>Description</th>
+                      <th>Total</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @php($i = 1)
-                      @foreach($details as $d)
                       <tr>
-                        <td>{{$i++}}</td>
-                        <td>{{$d->product_name}}</td>
-                        <td>{{$d->qnt}}</td>
-                        <td>{{$d->price}}</td>
-                        <td>{{$d->price * $d->qnt}}</td>
-                      </tr>
-                      @endforeach
-                      <tr>
-                        <td colspan="3" class="text-right"><strong>মোট</strong></td>
-                        <td colspan="2" class="text-right">{{$get_supplier->amount }}</td>
+                        <td>{{$get_customer->description}}</td>
+                        <td>{{$get_customer->amount}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -106,7 +98,32 @@
               </div>
               <!-- /.row -->
 
-              
+              <div class="row">
+                <!-- accepted payments column -->
+                <div class="col-6">
+                  <p class="lead">Payment Methods:</p>
+                  {{$get_customer->method}}
+
+                  <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
+                    Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
+                    plugg
+                    dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+                  </p>
+                </div>
+                <!-- /.col -->
+                <div class="col-6">
+
+                  <div class="table-responsive">
+                    <table class="table">
+                      <tr>
+                        <th style="width:50%">Total:</th>
+                        <td>{{$get_customer->amount}}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <!-- /.col -->
+              </div>
               <!-- /.row -->
 
               <!-- this row will not appear when printing -->

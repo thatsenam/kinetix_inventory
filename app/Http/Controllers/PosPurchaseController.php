@@ -286,6 +286,7 @@ class PosPurchaseController extends Controller
                 'date' => $date,
                 'warehouse_id' => $warehouse,
                 'product_id' => $pid,
+                'box' => $take_cart_items[$j2],
                 'in_qnt' => $take_cart_items[$j3],
                 'particulars' => 'Purchase',
                 'remarks' => 'Purchase Invoice No-'.$pur_inv,
@@ -505,6 +506,7 @@ class PosPurchaseController extends Controller
                 'date' => $date,
                 'warehouse_id' => $warehouse,
                 'product_id' => $pid,
+                'box' => $take_cart_items[$j2],
                 'out_qnt' => $take_cart_items[$j3],
                 'particulars' => 'Purchase Return',
                 'remarks' => 'Purchase Return Invoice No-'.$supp_memo,
@@ -626,7 +628,7 @@ class PosPurchaseController extends Controller
         $warehouse = $fieldValues['warehouse_id'];
 
         $take_cart_items = json_decode($req['cartData'], true);
-
+        // dd($take_cart_items);
         $count = count($take_cart_items);
 
         for($i = 0; $i < $count;)
@@ -636,6 +638,7 @@ class PosPurchaseController extends Controller
             $j2 = $i+2;
             $j3 = $i+3;
             $j4 = $i+4;
+            $j5 = $i+5;
 
             $product = DB::table('products')->where('client_id',auth()->user()->client_id)
                         ->where('id', $take_cart_items[$j])->first();
@@ -653,15 +656,17 @@ class PosPurchaseController extends Controller
                 'date' => $date,
                 'dmg_inv' => $dmg_inv,
                 'pid' => $pid,
+                'box' => $take_cart_items[$j2],
                 'qnt' => $take_cart_items[$j3],
-                'price' => $take_cart_items[$j2],
-                'total' => $take_cart_items[$j4],
+                'price' => $take_cart_items[$j4],
+                'total' => $take_cart_items[$j5],
             ]);
 
             Stock::create ([
                 'date' => $date,
                 'warehouse_id' => $warehouse,
                 'product_id' => $pid,
+                'box' => $take_cart_items[$j2],
                 'out_qnt' => $take_cart_items[$j3],
                 'particulars' => 'Damage',
                 'remarks' => 'Damage Invoice No-'.$dmg_inv,
@@ -669,7 +674,7 @@ class PosPurchaseController extends Controller
                 'client_id' => auth()->user()->client_id,
             ]);
 
-            $i = $i + 5;
+            $i = $i + 6;
         }
 
         $serials = json_decode($req['serialArray'], true);

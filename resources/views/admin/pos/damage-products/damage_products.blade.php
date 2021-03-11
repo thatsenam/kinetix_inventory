@@ -516,7 +516,9 @@
              
                if($(this).attr("class") == 'price'){price = $(this).html(); cartData.push(price);}
               
-               if($(this).attr("class") == 'totalPriceTd'){totalPriceTd = $(this).html(); cartData.push(totalPriceTd);} 
+               if($(this).attr("class") == 'totalPriceTd'){totalPriceTd = $(this).html(); cartData.push(totalPriceTd);}
+
+               if($(this).attr("class") == 'box'){var box_item = $(this).html(); cartData.push(box_item);}
                
                i = i +1;
            });

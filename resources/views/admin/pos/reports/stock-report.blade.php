@@ -77,7 +77,7 @@
               <!-- /.card-header -->
                 <div class="card-body">
                     <table id="stocks" class="table table-sm table-bordered table-hover">
-                        <thead>
+                        <thead style="font-size: 14px;">
                             <tr>
                                 <th>Product</th>
                                 <th>Unit Price</th>
@@ -252,7 +252,7 @@
                     {data:'psold',},
                     {data:'sale_return',},
                     {data:'damage',},
-                    {data:'currenTstock',},
+                    {data:'box_value',},
                     {data:'stocValue',},
                 ]
             });

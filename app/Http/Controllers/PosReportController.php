@@ -372,7 +372,7 @@ class PosReportController extends Controller
         $beforeTime = date('Y-m-d', strtotime("$newtime -1 month"));
 
         $getSKU = DB::table('stocks')
-        ->select('stocks.product_id as pid','products.product_name')
+        ->select('stocks.product_id as pid','products.product_name','products.unit','products.sub_unit','products.per_box_qty')
         ->where('stocks.client_id',auth()->user()->client_id)
         ->join('products','stocks.product_id', 'products.id')
         ->groupBy('products.id')->get();
@@ -467,8 +467,6 @@ class PosReportController extends Controller
             ->where('client_id',auth()->user()->client_id)
             ->sum('out_qnt');
 
-            
-
             // $oldDetails = Order_detail::where('product_id',$pid)->where('client_id',auth()->user()->client_id)->whereBetween('created_at', array($beforeTime, $newtime))->get();
 
             // foreach($oldDetails as $count=>$orderOldDetail){
@@ -506,7 +504,22 @@ class PosReportController extends Controller
             $prod = DB::table('products')->find($sku->pid);
             
             $sku->currenTstock = $sku->OpenngS + ($sku->pPurchase - $sku->psold - $sku->returns + $sku->sale_return - $sku->damage);
+            $unit = $sku->unit;
+            $sub_unit = $sku->sub_unit;
+            $per_box_qty = $sku->per_box_qty;
+            if($sub_unit){
+                $box_qty= intval($sku->currenTstock/$per_box_qty);
+                $fraction=$sku->currenTstock-( $box_qty * $per_box_qty);
+                if($fraction!=0){
+                    $sku->box_value= $box_qty." ".$sub_unit." ".$fraction." ".$unit;
 
+                }else{
+                    $sku->box_value= $box_qty." ".$sub_unit;
+                }
+
+            }else{
+                $sku->box_value= $sku->currenTstock." ".$unit;
+            }
             $sku->stocValue = $sku->currenTstock*$sku->price;
         }
 

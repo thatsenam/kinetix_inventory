@@ -89,30 +89,35 @@
                   <table class="table table-striped">
                     <thead>
                     <tr>
+                      <th>#</th>
                       <th>Product</th>
                       <th>Sub-unit</th>
                       <th>Unit</th>
                       <th>Price</th>
                       <th>Subtotal</th>
-                      <th>IVA</th>
+                      <th>IVA(%)</th>
+                      <th>G.Total</th>
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach($details as $detail)
-                        <tr>
-                          <td>{{$detail->name}}</td>
-                          <td>{{$detail->box}}</td>
-                          <td>{{$detail->qnt}}</td>
-                          <td>{{$detail->price}}</td>
-                          <td><?php 
-                          $paid = $get_customer->payment;
-                          $ship = 0;
-                          $stotal = $detail->qnt * $detail->price;
-                          echo number_format((float)$stotal, 2, '.', '');
-                          ?></td>
-                          <td>{{$detail->vat}}</td>
-                        </tr>
-                        @endforeach
+                      @php $i = 1; @endphp
+                      @foreach($details as $detail)
+                      <tr>
+                        <td>{{$i++}}</td>
+                        <td>{{$detail->name}}</td>
+                        <td>{{$detail->box}}</td>
+                        <td>{{$detail->price}}</td>
+                        <td>{{$detail->qnt}}</td>
+                        <td><?php 
+                        $paid = $get_customer->payment;
+                        $ship = 0;
+                        $stotal = $detail->qnt * $detail->price;
+                        echo number_format((float)$stotal, 2, '.', '');
+                        ?></td>
+                        <td>{{ ($detail->vat * 100)/$stotal }}</td>
+                        <td>{{$detail->vat + $stotal }}</td>
+                      </tr>
+                      @endforeach
                     </tbody>
                   </table>
                 </div>
@@ -143,12 +148,12 @@
                       </tr>
                       
                       <tr>
-                        <th>IVA</th>
-                        <td>{{ $get_customer->vat }}</td>
+                        <th>Total IVA</th>
+                        <td>{{ $get_customer->vat }} (<small>Avg.{{ ($get_customer->vat * 100)/$get_customer->amount }}%)</td>
                       </tr>
                       <tr>
                         <th>SCharge:</th>
-                        <td>{{ $get_customer->scharge }}</td>
+                        <td>{{ $get_customer->scharge }}</small></td>
                       </tr>
                       <tr>
                         <th>Discount:</th>

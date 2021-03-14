@@ -200,6 +200,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('/dashboard/customers/get_customer_ledger', 'PosCustomerController@get_customer_ledger')->name('get_customer_ledger')->middleware('auth');
     
     //POS Suppliers Options
+    Route::match(['get', 'post'], '/dashboard/supplier_group', 'PosSupplierController@setSupplierGroup')->name('set_supplier_group');
+    Route::match(['get', 'post'], '/dashboard/update_supp_group', 'PosSupplierController@edit_group')->name('edit_supplier_group');
+    Route::match(['get', 'post'], '/dashboard/supplierGroupUp', 'PosSupplierController@updateSuppGroup')->name('updateSuppGroup');
+    Route::match(['get', 'post'], '/dashboard/delete_supp_group/{id}', 'PosSupplierController@deleteSuppGroup');
     Route::match(['get','post'],'/dashboard/suppliers','PosSupplierController@setSupplier')->name('set_supplier');
     Route::match(['get','post'],'/dashboard/update_supp','PosSupplierController@edit')->name('edit_supplier');
     Route::match(['get','post'],'/dashboard/supplierUp', 'PosSupplierController@updateSupp')->name('updateSupp');

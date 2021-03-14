@@ -445,6 +445,13 @@
                   <p>Supplier List</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{route('set_supplier_group')}}"
+                  class="nav-link {{ Route::currentRouteName() == 'set_supplier_group' ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Supplier Group</p>
+                </a>
+              </li>
             </ul>
           </li>
           

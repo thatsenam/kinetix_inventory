@@ -14,11 +14,39 @@ use App\ProductImage;
 use App\AccTransaction;
 use App\BankInfo;
 use App\GeneralSetting;
+use App\SupplierGroup;
 use Image;
 use Auth;
 
 class PosSupplierController extends Controller
 {
+
+    public function setSupplierGroup(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            //dd($request->all());
+            $data = $request->all();
+            $supplier = new SupplierGroup();
+            $supplier->supplier_group = $data['inputName'];
+            $supplier->user_id = Auth::id();
+            $supplier->save();
+            return redirect('/dashboard/supplier_group')->with('flash_message_success', 'Supplier Group Added Successfully!');
+        }
+        $supplier_groups = DB::table('supplier_groups')->orderBy('id', 'DESC')->get();
+        return view('admin.pos.suppliers.supplier_group')->with(compact('supplier_groups'));
+    }
+
+    public function edit_group(Request $request)
+    {
+        $id = $request->id;
+        $get_data = DB::table('supplier_groups')->where('id', $id)->first();
+
+        $data = array(
+            'id' => $get_data->id,
+            'name' => $get_data->supplier_group,
+        );
+        return json_encode($data);
+    }
     public function setSupplier(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -86,10 +114,36 @@ class PosSupplierController extends Controller
         return view('admin.pos.suppliers.suppliers')->with(compact('suppliers', 'supplier_groups', 'bank_infos', 'getbanks'));
     }
 
+    public function updateSuppGroup(Request $request)
+    {
+        $id = $request->id;
+        $name = $request->name;
+
+        DB::table('supplier_groups')
+            ->where(['id' => $id])->update(['supplier_group' => $name]);
+
+        echo 'Supplier Group Updated Successfully!';
+    }
+
+    public function deleteSuppGroup($id)
+    {
+        $delete = SupplierGroup::where('id', $id)->delete();
+        if ($delete == 1) {
+            $success = true;
+            $message = "Supplier Group Deleted Successfully!";
+        } else {
+            $success = true;
+            $message = "No Group Found";
+        }
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
+    }
+
     public function edit(Request $request){
         $id = $request->id;
         $get_data = DB::table('suppliers')
-            ->where('client_id',auth()->user()->client_id)
             ->select('suppliers.name','suppliers.phone','suppliers.address','suppliers.email')->where('id',$id)->first();
 
         $data = array(

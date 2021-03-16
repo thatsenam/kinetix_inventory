@@ -84,7 +84,7 @@ class PosSupplierController extends Controller
             return redirect('/dashboard/suppliers')->with('flash_message_success', 'Supplier Added Successfully!');
         }
         $suppliers = Supplier::where('client_id', auth()->user()->client_id)->orderBy('id', 'DESC')->get();
-        $supplier_groups = DB::table('supplier_groups')->where('client_id', auth()->user()->client_id)->orderBy('id', 'DESC')->get();
+        $supplier_groups = DB::table('supplier_groups')->where('user_id', Auth::id())->orderBy('id', 'DESC')->get();
 
         foreach ($suppliers as $index => $row) {
             $get_head = DB::table('acc_heads')->where('cid', "sid " . $row->id)->first();

@@ -102,7 +102,7 @@
                   <div class="col-12">
                     <div class="form-group">
                       <label for="inputName">Group Name:*</label>
-                      <input class="form-control" placeholder="গ্রূপের নাম..." name="inputName" type="text" id="inputName" aria-required="true" required>
+                      <input class="form-control" placeholder="Enter group name..." name="inputName" type="text" id="inputName" aria-required="true" required>
                     </div>
                   </div>
                 </div>

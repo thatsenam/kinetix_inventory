@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AccHead;
 use App\BankTransaction;
 use App\PaymentInvoice;
+use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -80,7 +81,6 @@ class PosSupplierController extends Controller
 
             addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Cr');
 
-
             return redirect('/dashboard/suppliers')->with('flash_message_success', 'Supplier Added Successfully!');
         }
         $suppliers = Supplier::where('client_id', auth()->user()->client_id)->orderBy('id', 'DESC')->get();
@@ -143,54 +143,77 @@ class PosSupplierController extends Controller
 
     public function edit(Request $request){
         $id = $request->id;
-        $get_data = DB::table('suppliers')
-            ->select('suppliers.name','suppliers.phone','suppliers.address','suppliers.email')->where('id',$id)->first();
+        $get_data = Supplier::where('client_id', auth()->user()->client_id)->where('id', $id)->first();
+        $groups = SupplierGroup::where('id', '!=', $get_data->supplier_group)->get();
+        $head = AccHead::query()->where('cid', 'sid ' . $get_data->id)->first();
+        $opb = AccTransaction::query()->where('type', AccHead::class)
+            ->where('type_id', $head->id)
+            ->where('description', "OpeningBalance")->sum('credit');
 
         $data = array(
+            'id' => $get_data->id,
             'name' => $get_data->name,
             'phone' => $get_data->phone,
             'address' => $get_data->address,
-            'email' => $get_data->email
+            'email' => $get_data->email,
+            'area' => $get_data->area,
+            'upazilla' => $get_data->upazilla,
+            'district' => $get_data->district,
+            'details' => $get_data->details,
+            'supplier_group_id' => $get_data->supplier_group,
+            'groups' => $groups,
+            'opb' => $opb,
         );
         return json_encode($data);
     }
 
-    public function updateSupp(Request $request){
+    public function updateSupp(Request $request)
+    {
         $id = $request->id;
         $name = $request->name;
         $phone = $request->phone;
         $address = $request->address;
         $email = $request->email;
+        $area = $request->area;
+        $upazilla = $request->upazilla;
+        $district = $request->district;
+        $details = $request->details;
+        $supplier_group = $request->supplier_group;
+        $opb = $request->inputOpeningBalance ?? 0;
 
         $prev_supplier = Supplier::find($id);
 
         DB::table('suppliers')
-            ->where('client_id',auth()->user()->client_id)
-            ->where(['id'=>$id])->update(['name'=>$name,'phone'=>$phone,'address'=>$address,'email'=>$email]);
-        
-        $sid = "sid ".$id;
-        $head = $name." ".$phone;
-        
+            ->where('client_id', auth()->user()->client_id)
+            ->where(['id' => $id])
+            ->update(['name' => $name, 'phone' => $phone, 'address' => $address, 'email' => $email, 'area' => $area, 'upazilla' => $upazilla, 'district' => $district, 'details' => $details, 'supplier_group' => $supplier_group]);
+
+        $sid = "sid " . $id;
+        $head = $name . " " . $phone;
+
         AccHead::where('client_id', auth()->user()->client_id)
-                ->where('cid', $sid)->update([
-                    'head' => $head,
-                ]);
+            ->where('cid', $sid)->update([
+                'head' => $head,
+            ]);
+        $head = AccHead::where('client_id', auth()->user()->client_id)
+            ->where('cid', $sid)
+            ->where('head', $head)->first();
+        //        dd($opb);
+
+        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Cr');
 
         $prev_supp_name = $prev_supplier->name;
-        // $prev_cust_phone = $prev_supplier->phone;
-        // $cust_head = $prev_cust_name." ".$prev_cust_phone;
-        
-        AccTransaction::where('client_id', auth()->user()->client_id)
-            ->where('sort_by', $sid)
-            ->where('head', $prev_supp_name)
-            ->update([
-                'head' => $name,
-            ]);
 
-        echo 'Supplier Data Updated Successfully!';
+        AccTransaction::where('client_id', auth()->user()->client_id)->where('sort_by', $sid)->where('head', $prev_supp_name)->update(['head' => $head]);
+
+        echo 'Supplier Updated!';
     }
 
     public function deleteSupp($id){
+        $supplier = Supplier::find($id);
+        $head = $supplier->name. " " .$supplier->phone; 
+        $deleteTrans = AccTransaction::where('head', $head)->where('description',"OpeningBalance")->delete();
+        // $deleteAcc = AccHead::where('head', $head)->delete();
         $delete = Supplier::where('id', $id)->delete();
         if ($delete == 1) {
             $success = true;

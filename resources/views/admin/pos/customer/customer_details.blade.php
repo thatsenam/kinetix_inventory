@@ -13,8 +13,8 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/Dashboard">Home</a></li>
-              <li class="breadcrumb-item active">View Customer</li>
+              <li class="breadcrumb-item"><a href="/dashboard/pos">Home</a></li>
+              <li class="breadcrumb-item">View Customer</li>
             </ol>
           </div>
         </div>
@@ -100,8 +100,7 @@
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
-            <div class="col-12">
-              <div class="card card-primary card-outline card-outline-tabs">
+            <div class="card card-primary card-outline card-outline-tabs">
                 <div class="card-header p-0 border-bottom-0">
                   <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                     <li class="nav-item">
@@ -183,7 +182,7 @@
                       </table>
                     </div>
                     <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-                      <table id="sales" class="table table-bordered table-hover">
+                      <table id="saless" class="table table-bordered table-hover">
                         <thead>
                           <tr>
                             <th>Date</th>
@@ -215,7 +214,6 @@
                 </div>
                 <!-- /.card -->
               </div>
-            </div>
           </div>
           <!-- /.col -->
         </div>
@@ -240,7 +238,7 @@
     });
     $("#from_date").datepicker('setDate', lastdate);
     $("#to_date").datepicker('setDate', new Date());
-    $("#sales").DataTable({
+    $("#saless").DataTable({
         "responsive": true,
         "autoWidth": false,
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],

@@ -23,6 +23,8 @@ use Illuminate\Http\Request;
 use App\CustomerDueCollection;
 use App\GeneralSetting;
 use App\Supplier;
+use App\BankInfo;
+use App\BankAcc;
 use Illuminate\Support\Facades\DB;
 // use Response;
 
@@ -60,45 +62,75 @@ class PosCustomerController extends Controller
 
     }
 
-    public function setCustomer(Request $request){
+    public function setCustomer(Request $request)
+    {
 
-        if($request->isMethod('post')){
+        if ($request->isMethod('post')) {
             $data = $request->all();
             $customer = new Customer;
             $customer->name = $data['inputName'];
             $customer->phone = $data['inputPhone'];
             $customer->address = $data['inputAddress'];
+            $opb = $data['inputOpeningBalance'] ?? 0;
+            $customer->email = $data['inputEmail'] ?? '';
+            $customer->date = $data['inputDate'];
             $customer->user = Auth::id();
             $customer->save();
 
             $cust_id = $customer->id;
 
-            $data = AccHead::create([
-                'cid' => "cid ".$cust_id,
+            $head = AccHead::create([
+                'cid' => "cid " . $cust_id,
                 'parent_head' => 'Asset',
                 'sub_head' => 'Customers Receivable',
-                'head' => $data['inputName']." ".$data['inputPhone'],
+                'head' => $data['inputName'] . " " . $data['inputPhone'],
             ]);
 
-            return redirect('/dashboard/customers')->with('flash_message_success', 'Customer Created Successfully!');
+
+            addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Dr');
+
+
+            return redirect('/dashboard/customers')->with('flash_message_success', 'Customer Added Successfully!');
         }
-        $customers = DB::table('customers')
-            ->where('client_id',auth()->user()->client_id)
-            ->orderBy('id', 'DESC')->get();
-        return view('admin.pos.customer.customers')->with(compact('customers'));
+        $customers = DB::table('customers')->where('client_id', auth()->user()->client_id)->get();
+
+        foreach ($customers as $index => $row) {
+            $get_head = DB::table('acc_heads')->where('cid', "cid " . $row->id)->first();
+            $head = $get_head->head ?? '';
+            $debit = DB::table('acc_transactions')->where('head', $head)->sum('debit');
+            $credit = DB::table('acc_transactions')->where('head', $head)->sum('credit');
+            $row->balance = $debit - $credit;
+        }
+
+        $mobile_banks = BankInfo::where('type', 'mobile_bank')->where('client_id', auth()->user()->client_id)->get();
+        $bank_infos = array();
+        foreach ($mobile_banks as $bank) {
+            $bank_infos[] = $bank->name;
+            $bank_infos[] = $bank->id;
+            $bank_infos[] = $bank->account->id ?? '';
+            $bank_infos[] = $bank->account->acc_no ?? '';
+        }
+        $getbanks = BankInfo::where('type', 'general_bank')->where('client_id', auth()->user()->client_id)->get();
+        $banks = array();
+        foreach ($banks as $bank) {
+            $banks[] = $bank->name;
+            $banks[] = $bank->id;
+            $banks[] = $bank->account->id ?? '';
+            $banks[] = $bank->account->acc_no ?? '';
+        }
+        return view('admin.pos.customer.customers')->with(compact('customers', 'bank_infos', 'getbanks'));
     }
 
-    public function custDetals(Request $request){
+    public function custDetals(Request $request)
+    {
         $id = $request->id;
         $get_data = DB::table('customers')
-            ->where('client_id',auth()->user()->client_id)
-            ->select('customers.name','customers.phone','customers.address')->where('id', $id)->first();
-        $get_head = DB::table('acc_heads')->where('cid',"cid ".$id)->first();
+            ->where('client_id', auth()->user()->client_id)
+            ->select('customers.name', 'customers.phone', 'customers.address')->where('id', $id)->first();
+        $get_head = DB::table('acc_heads')->where('cid', "cid " . $id)->first();
         $head = $get_head->head;
-        $debit = DB::table('acc_transactions')->where('client_id',auth()->user()->client_id)
-        ->where('head',$head)->sum('debit');
-        $credit = DB::table('acc_transactions')->where('client_id',auth()->user()->client_id)
-        ->where('head',$head)->sum('credit');
+        $debit = DB::table('acc_transactions')->where('head', $head)->sum('debit');
+        $credit = DB::table('acc_transactions')->where('head', $head)->sum('credit');
         $balance = $debit - $credit;
         $data = array(
             'id' => $id,
@@ -113,48 +145,71 @@ class PosCustomerController extends Controller
         return json_encode($data);
     }
 
-    public function edit(Request $request){
+    public function edit(Request $request)
+    {
         $id = $request->id;
-        $get_data = DB::table('customers')->select('customers.name','customers.phone','customers.address')->where('id', $id)->first();
+        $get_data = DB::table('customers')->select('customers.id', 'customers.name', 'customers.phone', 'customers.address', 'customers.email', 'customers.date')->where('id', $id)->first();
+
+        $head = AccHead::query()->where('cid', 'cid ' . $get_data->id)->first();
+        try {
+            $opb = AccTransaction::query()->where('type', AccHead::class)
+                ->where('type_id', $head->id)
+                ->where('description', "OpeningBalance")->sum('debit');
+        } catch (\Exception $exception) {
+            $opb = 0;
+        }
 
         $data = array(
             'name' => $get_data->name,
             'phone' => $get_data->phone,
-            'address' => $get_data->address
+            'address' => $get_data->address,
+            'email' => $get_data->email,
+            'date' => $get_data->date,
+            'id' => $get_data->id,
+            'opb' => $opb,
+
         );
         return json_encode($data);
     }
 
-    public function updateCust(Request $request){
+    public function updateCust(Request $request)
+    {
         $id = $request->id;
         $name = $request->name;
         $phone = $request->phone;
         $address = $request->address;
+        $email = $request->email ?? '';
+        $opb = $request->inputOpeningBalance ?? 0;
+
+        $date = $request->date ?? '';
 
         $prev_customer = Customer::find($id);
 
-        DB::table('customers')->where(['id'=>$id])->update(['name'=>$name,'phone'=>$phone,'address'=>$address]);
+        DB::table('customers')->where(['id' => $id])->update(['name' => $name, 'phone' => $phone, 'address' => $address, 'email' => $email, 'date' => $date]);
 
-        $cid = "cid ".$id;
-        $head = $name." ".$phone;
-        
+        $cid = "cid " . $id;
+        $head = $name . " " . $phone;
+
         AccHead::where('client_id', auth()->user()->client_id)
-                ->where('cid', $cid)->update([
-                    'head' => $head,
-                ]);
+            ->where('cid', $cid)->update([
+                'head' => $head,
+            ]);
 
         $prev_cust_name = $prev_customer->name;
         $prev_cust_phone = $prev_customer->phone;
-        $cust_head = $prev_cust_name." ".$prev_cust_phone;
-        
-        AccTransaction::where('client_id', auth()->user()->client_id)
-                ->where('sort_by', $cid)
-                ->where('head', $cust_head)
-                ->update([
-                    'head' => $head,
-                ]);
+        $cust_head = $prev_cust_name . " " . $prev_cust_phone;
 
-        echo 'Customer Data Updated Successfully!';
+        AccTransaction::where('client_id', auth()->user()->client_id)
+            ->where('sort_by', $cid)
+            ->where('head', $cust_head)
+            ->update([
+                'head' => $head,
+            ]);
+        $head = AccHead::query()->where('client_id', auth()->user()->client_id)->firstWhere('cid', $cid);
+
+        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Dr');
+
+        echo 'Customer Updated Successfully!';
     }
 
     public function deleteCust($id){
@@ -292,7 +347,8 @@ class PosCustomerController extends Controller
         }
     }
 
-    public function addPayment(Request $request){
+    public function addPayment(Request $request)
+    {
 
         $fieldValues = json_decode($request['fieldValues'], true);
 
@@ -306,88 +362,109 @@ class PosCustomerController extends Controller
         $user = Auth::id();
 
         $cardtype = $fieldValues['cardtype'];
-        $cardbank = $fieldValues['cardbank'];
-        $card_bank_id = $fieldValues['card_bank_id'];
+        //$cardbank = $fieldValues['cardbank'];
+        //$card_bank_id = $fieldValues['card_bank_id'];
         $card_bank_account = $fieldValues['card_bank_account'];
-        $card_bank_acc_id = $fieldValues['card_bank_acc_id'];
+        $card_bank_name = $fieldValues['card_bank_name'];
+        //$card_bank_acc_id = $fieldValues['card_bank_acc_id'];
 
         $clients_bank = $fieldValues['clientsbank'];
         $clientsbacc = $fieldValues['clientsbacc'];
         $checkno = $fieldValues['checkno'];
         $checktype = $fieldValues['checktype'];
         $checkdate = $fieldValues['checkdate'];
-        $shopbank = $fieldValues['shopbank'];
-        $bank_id = $fieldValues['bank_id'];
+        //$shopbank = $fieldValues['shopbank'];
+        //$bank_id = $fieldValues['bank_id'];
         $shops_bank_account = $fieldValues['checksbacc'];
-        $account_id = $fieldValues['account_id'];
+        $shops_bank_name = $fieldValues['shops_bank_name'];
+        //$account_id = $fieldValues['account_id'];
 
         $btcbank = $fieldValues['btcbank'];
-        $btcbankacc = $fieldValues['btcbankacc'];
-        $bankaacno = $fieldValues['bankaacno'];
-        $mobile_bank = $fieldValues['bt_shops_bank'];
-        $mobile_bank_account = $fieldValues['bt_shops_bank_acc'];
-        $mobile_bank_id = $fieldValues['mobile_bank_id'];
-        $mobile_bank_acc_id = $fieldValues['mobile_bank_acc_id'];
+        //$btcbankacc = $fieldValues['btcbankacc'];
+        $bankaacno = $fieldValues['btcbankacc'];
+        //$mobile_bank = $fieldValues['bt_shops_bank'];
+        $btbank_account = $fieldValues['bt_shops_bank_acc'];
+        $mobile_bank = $fieldValues['mobile_bank'];
+        $mclients_bank = $fieldValues['mclients_bank'];
+        $maccount_number = $fieldValues['mclientsaccount_number'];
         $tranxid = $fieldValues['tranxid'];
+        $mtranxid = $fieldValues['mtranxid'];
 
-        if($cardtype == 'visa'){
-            $card = "Visa Card";
-        }else if($cardtype == 'master'){
-            $card = "MasterCard";
-        }else if($cardtype == 'credit'){
-            $card = "Crebit Card";
-        }else if($cardtype == 'debit'){
-            $card = "Debit Card";
-        }else{
-            $card = "Cash";
+        $method = '';
+        $desc = '';
+        if ($paytype == 'cash') {
+            $desc = "Cash Payment";
+            $method = "Cash";
         }
-
-        if($paytype == 'cash'){
-            $desc = "Paid In Cash";
-        }else if($paytype == 'card'){
+        if ($paytype == 'card') {
             $desc = "Card Payment";
-        }else if($paytype == 'cheque'){
-            $desc = "Cheque Payment";
-        }else if($paytype == 'bank_transfer'){
-            $desc = "Mobile Banking/Bank Tranfer";
+            if ($cardtype == 'visa') {
+                $method = "Visa Card";
+            } else if ($cardtype == 'master') {
+                $method = "Master Card";
+            } else if ($cardtype == 'credit') {
+                $method = "Credit Card";
+            } else if ($cardtype == 'debit') {
+                $method = "DEbit Card";
+            }
+        }
+        if ($paytype == 'cheque') {
+            $desc = "Checque Payment";
+            if ($checktype == 'pay_cash') {
+                $method = "Cash";
+            } else {
+                $method = "Account Payee";
+            }
+
+        }
+        if ($paytype == 'bank_transfer') {
+            $desc = "Bank Transfer";
+            $method = "Bank Transfer";
+        }
+        if ($paytype == 'mobile_banking') {
+            $desc = "Mobile Banking";
+            $method = "Mobile Banking";
         }
 
         $maxid = (DB::table('payment_invoice')->max('id') + 1);
-        $invoice = "Inv-".$maxid;
+        $invoice = "CPAYMEMO-" . $maxid;
 
-//        DB::table('payment_invoice')->insert([
-            PaymentInvoice::create([
+        PaymentInvoice::create([
             'invoice_no' => $invoice,
             'cid' => $cust_id,
             'amount' => $amount,
-            'method' => $card,
+            'method' => $method,
             'description' => $desc,
             'remarks' => $remarks,
             'date' => $date,
-            // 'user' => $user,
+            'user' => $user,
+            'user_type' => "customer",
         ]);
 
-        if($paytype == 'cash'){
+        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->pluck('vno')->unique()->count();
+        $vno = date('Ymd') . '-' . ($vno_counting + 1);
+
+        if ($paytype == 'cash') {
+
             $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
             $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
-            $head = $cust_name." ".$cust_phone;
-            $description = "Payment Invoice ".$invoice;
+            $head = $cust_name . " " . $cust_phone;
+            $description = "Payment Invoice " . $invoice;
             $debit = 0;
             $credit = $amount;
-
-//            DB::table('acc_transactions')->insert([
 
             AccTransaction::create([
                 'vno' => $vno,
                 'head' => $head,
-                'sort_by' => "cid"." ".$cust_id,
+                'sort_by' => "cid" . " " . $cust_id,
                 'note' => "Paid In Cash",
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
 
             ]);
 
@@ -400,7 +477,7 @@ class PosCustomerController extends Controller
             // }
 
             $head = "Cash In Hand";
-            $description = "Cash Payment Invoice ".$invoice;
+            $description = "Pain in Cash Invoice " . $invoice;
             $debit = $amount;
             $credit = 0;
 
@@ -408,46 +485,43 @@ class PosCustomerController extends Controller
 
                 'vno' => $vno,
                 'head' => $head,
-                'sort_by' => "cid"." ".$cust_id,
-                'note' => "Recieved In Cash",
+                'sort_by' => "cid" . " " . $cust_id,
+                'note' => "Recieved in Cash",
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
 
             ]);
         }
 
         ///// Card transaction
 
-        if($paytype == 'card'){
-
-//            DB::table('bank_transactions')->insert([
+        if ($paytype == 'card') {
 
             BankTransaction::create([
-                'seller_bank_id' => $card_bank_id,
-                'seller_bank_acc_id' => $card_bank_acc_id,
-                'clients_bank' => $card,
+                'seller_bank_id' => $card_bank_account,
+                'seller_bank_acc_id' => $card_bank_account,
+                'clients_bank' => $method,
                 'clients_bank_acc' => "Payment by Card",
                 'date' => $date,
                 'cid' => $cust_id,
                 'invoice_no' => $invoice,
-                'deposit' => $amount,
+                'withdraw' => $amount,
                 'type' => 'card',
                 'status' => 'paid',
                 'remarks' => $remarks,
-                // 'user' => $user,
-
+                'user' => $user,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
             ]);
 
             /////Insert into Accounts For Card Transaction
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
-
-            $head = $cust_name." ".$cust_phone;
-            $description = "Payment Invoice ".$invoice;
+            $head = $cust_name . " " . $cust_phone;
+            $description = "Payment Invoice " . $invoice;
             $debit = 0;
             $credit = $amount;
 
@@ -455,17 +529,23 @@ class PosCustomerController extends Controller
 
                 'vno' => $vno,
                 'head' => $head,
-                'sort_by' => "cid"." ".$cust_id,
+                'sort_by' => "cid" . " " . $cust_id,
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
 
             ]);
 
-            $head = $cardbank." A/C: ".$card_bank_account;
-            $description = "Card Payment Invoice ".$invoice;
+            $getname = DB::table("bank_info")->select('name')
+                ->where('id', $card_bank_account)->first();
+            $getAcc = DB::table("bank_acc")->select('acc_no')
+                ->where('bank_id', $card_bank_account)->first();
+
+            $head = $getname->name . " " . $getAcc->acc_no;
+            $description = "Card Payment Invoice " . $invoice;
             $debit = $amount;
             $credit = 0;
 
@@ -473,24 +553,23 @@ class PosCustomerController extends Controller
 
                 'vno' => $vno,
                 'head' => $head,
-                'sort_by' => "cid"." ".$cust_id,
+                'sort_by' => "cid" . " " . $cust_id,
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
 
             ]);
         }
 
         ///// Check transaction
 
-        if($paytype == 'cheque'){
-
+        if ($paytype == 'cheque') {
             BankTransaction::create([
-
-                'seller_bank_id' => $bank_id,
-                'seller_bank_acc_id' => $account_id,
+                'seller_bank_id' => $shops_bank_account,
+                'seller_bank_acc_id' => $shops_bank_account,
                 'clients_bank' => $clients_bank,
                 'clients_bank_acc' => $clientsbacc,
                 'check_no' => $checkno,
@@ -498,45 +577,43 @@ class PosCustomerController extends Controller
                 'date' => $date,
                 'cid' => $cust_id,
                 'invoice_no' => $invoice,
-                'deposit' => $amount,
+                'withdraw' => $amount,
                 'type' => 'check',
                 'status' => 'pending',
                 'remarks' => $remarks,
-                // 'user' => $user,
-
+                'user' => $user,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
             ]);
 
         }
 
         ///// Mobile/Bank Transfer transaction
 
-        if($paytype == 'bank_transfer'){
-
+        if ($paytype == 'bank_transfer') {
             BankTransaction::create([
-
-                'seller_bank_id' => $mobile_bank_id,
-                'seller_bank_acc_id' => $mobile_bank_acc_id,
+                'seller_bank_id' => $btbank_account,
+                'seller_bank_acc_id' => $btbank_account,
                 'clients_bank' => $btcbank,
-                'clients_bank_acc' => $btcbankacc,
+                'clients_bank_acc' => $bankaacno,
                 'date' => $date,
                 'cid' => $cust_id,
                 'invoice_no' => $invoice,
-                'deposit' => $amount,
-                'type' => 'mobile',
+                'withdraw' => $amount,
+                'type' => 'bank',
                 'status' => 'paid',
                 'tranxid' => $tranxid,
                 'remarks' => $remarks,
-                // 'user' => $user,
+                'user' => $user,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
 
             ]);
 
             /////Insert into Accounts For Mobile Transaction
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
-
-            $head = $cust_name." ".$cust_phone;
-            $description = "Payment Invoice ".$invoice;
+            $head = $cust_name . " " . $cust_phone;
+            $description = "Payment Invoice " . $invoice;
             $debit = 0;
             $credit = $amount;
 
@@ -544,17 +621,23 @@ class PosCustomerController extends Controller
 
                 'vno' => $vno,
                 'head' => $head,
-                'sort_by' => "cid"." ".$cust_id,
+                'sort_by' => "cid" . " " . $cust_id,
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
 
             ]);
 
-            $head = $mobile_bank." A/C: ".$mobile_bank_account;
-            $description = "Bank Transfer Invoice ".$invoice;
+            $getname = DB::table("bank_info")->select('name')
+                ->where('id', $btbank_account)->first();
+            $getAcc = DB::table("bank_acc")->select('acc_no')
+                ->where('bank_id', $btbank_account)->first();
+
+            $head = $getname->name . " " . $getAcc->acc_no;
+            $description = "Bank Transfer Invoice " . $invoice;
             $debit = $amount;
             $credit = 0;
 
@@ -562,17 +645,90 @@ class PosCustomerController extends Controller
 
                 'vno' => $vno,
                 'head' => $head,
-                'sort_by' => "cid"." ".$cust_id,
+                'sort_by' => "cid" . " " . $cust_id,
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
-                // 'user' => $user,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
 
             ]);
         }
 
-        echo $invoice;
+        //Mobile Banking
+
+        if ($paytype == 'mobile_banking') {
+            BankTransaction::create([
+
+                'seller_bank_id' => $mobile_bank,
+                'seller_bank_acc_id' => $mobile_bank,
+                'clients_bank' => $mclients_bank,
+                'clients_bank_acc' => $maccount_number,
+                'date' => $date,
+                'cid' => $cust_id,
+                'invoice_no' => $invoice,
+                'withdraw' => $amount,
+                'type' => 'mobile',
+                'status' => 'paid',
+                'tranxid' => $mtranxid,
+                'remarks' => $remarks,
+                'user' => $user,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
+
+            ]);
+
+            /////Insert into Accounts For Mobile Transaction
+
+            $head = $cust_name . " " . $cust_phone;
+            $description = "Payment Invoice " . $invoice;
+            $debit = 0;
+            $credit = $amount;
+
+            AccTransaction::create([
+
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "cid" . " " . $cust_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
+
+            ]);
+
+            $getname = DB::table("bank_info")->select('name')
+                ->where('id', $mobile_bank)->first();
+            $getAcc = DB::table("bank_acc")->select('acc_no')
+                ->where('bank_id', $mobile_bank)->first();
+
+            $head = $getname->name . " " . $getAcc->acc_no;
+            $description = "Mobile Banking Memo " . $invoice;
+            $debit = $amount;
+            $credit = 0;
+
+            AccTransaction::create([
+
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "cid" . " " . $cust_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'client_id' => auth()->user()->client_id,
+                'user_id' => Auth::id(),
+
+            ]);
+        }
+
+        // $customer = Customer::find($cust_id);
+
+        // $this->sendSms($cust_name, $cust_phone, $amount, optional($customer)->due ?? 0, 0);
+        return $invoice;
 
     }
 

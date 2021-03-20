@@ -198,7 +198,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get', 'post'], '/dashboard/customers/get-due-collection-report','PosCustomerController@get_customers_due_collection_report')->name('get_customers_due_collection_report');
     Route::get('/dashboard/customers/customer_ledger', 'PosCustomerController@customer_ledger')->name('customer_ledger')->middleware('auth');
     Route::post('/dashboard/customers/get_customer_ledger', 'PosCustomerController@get_customer_ledger')->name('get_customer_ledger')->middleware('auth');
-    
+
     //POS Suppliers Options
     Route::match(['get', 'post'], '/dashboard/supplier_group', 'PosSupplierController@setSupplierGroup')->name('set_supplier_group');
     Route::match(['get', 'post'], '/dashboard/update_supp_group', 'PosSupplierController@edit_group')->name('edit_supplier_group');
@@ -339,6 +339,7 @@ Route::match(['get', 'post'], '/dashboard/get_sales_return_report_date', 'PosSal
 Route::post('/dashboard/delete_sales_return', 'PosSalesController@delete_sales_return')->name('delete_sales_return')->middleware('auth');
 
 Route::get('/get_serial/{product}', 'PosSalesController@get_serial');
+Route::get('/all/get_serial/{product}', 'PosSalesController@get_serial_all');
 Route::get('/get_serial_sold/{product}', 'PosSalesController@get_serial_sold');
 Route::get('/get_serial_purchased/{product}', 'PosPurchaseController@get_serial_purchased');
 

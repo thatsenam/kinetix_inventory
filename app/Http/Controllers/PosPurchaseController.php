@@ -163,6 +163,7 @@ class PosPurchaseController extends Controller
         return $serials;
     }
 
+
     public function save_purchase_products(Request $req){
 
         $fieldValues = json_decode($req['fieldValues'], true);
@@ -303,7 +304,7 @@ class PosPurchaseController extends Controller
         $supplier = DB::table('suppliers')->where('id', $supp_id)->first();
 
         if($payment>0){
-            
+
             $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
             $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
@@ -379,7 +380,7 @@ class PosPurchaseController extends Controller
             }
 
         }else{
-            
+
             $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
             $vno = date('Ymd') . '-' . ($vno_counting + 1);
 
@@ -543,7 +544,7 @@ class PosPurchaseController extends Controller
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
             $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
             $vno = date('Ymd') . '-' . ($vno_counting + 1);
-            
+
             $head = "Purchase Return";
             $description = "Purchase Return from Supplier Memo ".$supp_memo;
             $credit = $total;
@@ -561,7 +562,7 @@ class PosPurchaseController extends Controller
                 'user_id' => $user,
 
             ]);
-            
+
             $head = "Purchase I.V.A";
             $description = "Purchase Return I.V.A from Invoice ".$supp_memo;
             $credit = $total_vat;
@@ -757,12 +758,12 @@ class PosPurchaseController extends Controller
         $brand_product_array = [];
 
         if(!$stdate){
-            $stdate = date('Y-m-d', strtotime('-1 day')); 
+            $stdate = date('Y-m-d', strtotime('-1 day'));
         }
         if(!$enddate){
             $enddate = date('Y-m-d', strtotime('+1 day'));
         }
-        
+
         if($supplier_id && $brand_id)
         {
             $brand_product_array = DB::table('purchase_primary')->where('purchase_primary.client_id', auth()->user()->client_id)
@@ -777,7 +778,7 @@ class PosPurchaseController extends Controller
                         ->get();
             $brand_product_array->map(function($query, $i){
                 $query->sl = $i + 1;
-                
+
                 $query->gtotal = $query->vat + $query->total;
 
                 return $query;
@@ -786,13 +787,13 @@ class PosPurchaseController extends Controller
         else if($supplier_id)
         {
             $brand_product_array = DB::table('purchase_primary')->where('purchase_primary.client_id', auth()->user()->client_id)
-            
+
                         ->join('purchase_details', 'purchase_primary.pur_inv', 'purchase_details.pur_inv')
                         ->join('suppliers', 'purchase_primary.sid', 'suppliers.id')
                         ->join('products', 'purchase_details.pid', 'products.id')
                         ->join('brands', 'products.brand_id', 'brands.id')
                         ->where('sid', $supplier_id)
-                        ->get(); 
+                        ->get();
             $brand_product_array->map(function($query, $i){
                 $query->sl = $i + 1;
                 $query->gtotal = $query->vat + $query->total;
@@ -808,14 +809,14 @@ class PosPurchaseController extends Controller
                         ->join('products', 'purchase_details.pid', 'products.id')
                         ->join('brands', 'products.brand_id', 'brands.id')
                         ->where('brand_id', $brand_id)
-                        ->get(); 
+                        ->get();
             $brand_product_array->map(function($query, $i){
                 $query->sl = $i + 1;
                 $query->gtotal = $query->vat + $query->total;
                 return $query;
             });
         }
-        
+
         return DataTables()->of($brand_product_array)->make(true);
     }
 
@@ -856,7 +857,7 @@ class PosPurchaseController extends Controller
         $get_accounts = DB::table('acc_transactions')
             ->where('client_id',auth()->user()->client_id)
             ->where('description', 'like', '%'.$purinv)->get();
-        
+
         $get_stocks = DB::table('stocks')
             ->where('client_id',auth()->user()->client_id)
             ->where('remarks', 'like', '%'.$purinv)->delete();
@@ -894,7 +895,7 @@ class PosPurchaseController extends Controller
             ->join('suppliers', 'purchase_returns.sid', 'suppliers.id')
             ->join('products', 'purchase_returns.pid', 'products.id')
             ->whereBetween('date', [$stdate, $enddate])->get();
-        
+
         $purchase->map(function($purchase){
             $serials = Serial::where('client_id', auth()->user()->client_id)
                 ->where('pur_ret_inv', $purchase->pur_inv)->pluck('serial')->toArray();

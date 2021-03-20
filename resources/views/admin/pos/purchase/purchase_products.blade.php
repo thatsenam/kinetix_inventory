@@ -237,7 +237,8 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title float-center" id="square_foot_modalLabel">Quantity</h5>
+                                        <h5 class="modal-title float-center" id="square_foot_modalLabel">Quantity -
+                                            <span id="qty_type"></span></h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -371,7 +372,11 @@
                             var pbq = $(this).find(".active").attr("data-pbq");
                             sub_unit = $(this).find(".active").attr("data-sub_unit");
                             unit = $(this).find(".active").attr("data-unit");
-
+                            if (!sub_unit){
+                                $('#qty_type').text(unit)
+                            }else{
+                                $('#qty_type').text(sub_unit)
+                            }
                             if (pbq) {
                                 $('#search').val(name);
                                 $('#square_foot_modal').modal('toggle');
@@ -675,16 +680,24 @@
                 var i, val = [];
                 var qnt = $('#qnt').val();
                 var access = 0;
-
+                let inputedSerials = [];
                 for (i = 0; i < serial_qty; i++) {
                     var ser = $('#serial-' + i).val();
+                    console.log(serial_unsold)
                     if (ser == '') {
+                        $('#serial-' + i).addClass("is-invalid");
+                        access = 1;
+                    }else if (serial_unsold.includes(ser)) {
                         $('#serial-' + i).addClass("is-invalid");
                         access = 1;
                     } else {
                         $('#serial-' + i).removeClass("is-invalid");
                     }
+                    inputedSerials.push(ser)
+
                 }
+
+
                 if (access == 1) {
                     return;
                 }
@@ -711,6 +724,7 @@
                 if (e.which == 13) {
 
                     var id = $('#pid_hid').val();
+                    var id = $('#pid_hid').val();
                     var supp_id = $('#supp_id').val();
                     var name = $('#search').val();
                     var memo = $('#supp_memo').val();
@@ -727,6 +741,33 @@
                     }
 
                     if (product_serial == 1) {
+
+
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+
+                        $.ajax({
+                            url: "/all/get_serial/" + product_id,
+                            method: 'get',
+                            data: '',
+                            contentType: false,
+                            cache: false,
+                            processData: false,
+                            async: true,
+                            dataType: "json",
+                            beforeSend: function () {
+                            },
+                            error: function (ts) {
+                            },
+                            success: function (response) {
+                                serial_unsold = response;
+
+                            }
+                        });
+
                         $("#serial_input").empty();
                         for (i = 0; i < qnt; i++) {
                             $('#serial_input').append(
@@ -1125,7 +1166,12 @@
             if (pbq) {
                 $('#search').val(name);
                 $('#square_foot_modal').modal('toggle');
+                if (!sub_unit) {
+                    $('#qty_type').text(unit)
 
+                } else {
+                    $('#qty_type').text(sub_unit)
+                }
                 per_box_qty = pbq;
                 box = 0;
 

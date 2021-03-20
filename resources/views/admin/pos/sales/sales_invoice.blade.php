@@ -473,7 +473,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title float-center" id="square_foot_modalLabel">
-                                                Quantity</h5>
+                                                Quantity - <span id="qty_type">  </span></h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -481,7 +481,7 @@
                                         <div class="modal-body">
 
                                             <div class="form-group row">
-                                                <label for="quantity" class="col-sm-4 col-form-label">Quantity</label>
+                                                <label for="quantity" class="col-sm-4 col-form-label">Quantity </label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" id="quantity">
                                                 </div>
@@ -1015,6 +1015,13 @@
                             if (pbq) {
                                 $('#search').val(name);
                                 $('#square_foot_modal').modal('toggle');
+                                if (!sub_unit){
+                                    $('#qty_type').text(unit)
+
+                                }else{
+                                    $('#qty_type').text(sub_unit)
+
+                                }
 
                                 per_box_qty = pbq;
                                 box = 0;
@@ -1697,18 +1704,7 @@
                     if (product_serial == 1) {
 
 
-                        // $("#serial_input").empty();
-                        // for (i = 0; i < qnt; i++) {
-                        //     $('#serial_input').append(
-                        //         "<div class='form-group row'>" +
-                        //         "<label for='serial-" + i + "' class='col-3 col-form-label'>Serial " + (i + 1) + "</label>" +
-                        //         "<div class='col-9'>" +
-                        //         "<input list='serial_suggest' type='text' class='form-control' id='serial-" + i + "' required>" +
-                        //         "<datalist id='serial_suggest'></datalist>" +
-                        //         "</div>" +
-                        //         "</div>"
-                        //     );
-                        // }
+
 
                         $.ajaxSetup({
                             headers: {
@@ -1732,13 +1728,6 @@
                                 // var obj = JSON.parse(JSON.stringify(response));
                                 serial_unsold = response;
                                 console.log(serial_unsold);
-                                // $("datalist").empty();
-                                // var j;
-                                // for (j = 0; j < serial_unsold.length; ++j) {
-                                //     $('datalist').append(
-                                //         "<option>" + serial_unsold[j] + "</option>"
-                                //     );
-                                // }
 
                                 $('#serial_modal').modal('toggle');
 

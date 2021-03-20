@@ -315,6 +315,14 @@ class PosSalesController extends Controller
         return $serials;
     }
 
+    public function get_serial_all($product)
+    {
+        $serials = Serial::where('client_id', auth()->user()->client_id)
+            ->where('product_id', $product)
+            ->pluck('serial');
+        return $serials;
+    }
+
     public function sales_invoice_save(Request $req)
     {
 

@@ -19,7 +19,7 @@
         $purchase_price = $settings->purchase_price == '1' ? 1 : 0;
         $prevent_sale = $settings->prevent_sale == '1' ? 1 : 0;
       }
-      
+
   @endphp
 
    <!-- Content Wrapper. Contains page content -->
@@ -97,16 +97,25 @@
                           </div>
                         </div>
                       </div>
+                        <div class="form-group col-md">
+                            <label for="vat">Vat Type</label>
+                            <div class="input-group">
+                                <select name="vat_type" id="vat_type" class="form-control">
+                                    <option value="{{ \App\VatType::$PRODUCT_BASE }}" @if($settings->vat_type == \App\VatType::$PRODUCT_BASE) selected @endif>{{ \App\VatType::$PRODUCT_BASE }}</option>
+                                    <option value="{{ \App\VatType::$GLOBAL_BASE }}" @if($settings->vat_type == \App\VatType::$GLOBAL_BASE) selected @endif>{{ \App\VatType::$GLOBAL_BASE }}</option>
+                                </select>
+                            </div>
+                        </div>
                       <div class="form-group col-md">
                         <label for="scharge">Service Charge</label>
                         <input type="text" name="scharge" class="form-control" id="scharge"  value="<?php echo $settings->scharge ?? "N/A";?>">
                       </div>
                     </div>
-                    
+
                     <div class="row">
                       <div class="col-sm">
                         <div class="form-group">
-                          
+
                           <label for="print_opt">Print Type</label>
                           <select id="print_opt" name="print_opt" class="form-control custom-select">
                               <option value="1" {{ $ledger ? 'selected' : '' }}>Ledger Print</option>

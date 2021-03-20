@@ -82,7 +82,7 @@ class PagesController extends Controller
     }
 
     public function warehouse_manage(){
-        
+
         return view('admin.pos.warehouse.manage-warehouse');
     }
 
@@ -96,7 +96,7 @@ class PagesController extends Controller
             $inputRemarks = $fieldValues['remarks'];
 
             $take_cart_items = json_decode($request['cartData'], true);
-            
+
             $count = count($take_cart_items);
             for($i = 0; $i < $count;){
                 $j = $i;
@@ -294,6 +294,7 @@ class PagesController extends Controller
         $siteAddress = $req['siteAddress'];
         $email       = $req['email'];
         $vat         = $req['vat'];
+        $vat_type         = $req['vat_type'];
         $scharge     = $req['scharge'];
         $print_opt    = $req['print_opt'];
         $profit_clc  = $req['profit_clc'];
@@ -314,6 +315,7 @@ class PagesController extends Controller
         $general_settings->phone            = $phone;
         $general_settings->email            = $email;
         $general_settings->vat              = $vat;
+        $general_settings->vat_type         = $vat_type;
         $general_settings->scharge          = $scharge;
         $general_settings->print_opt        = $print_opt;
         $general_settings->profit_clc       = $profit_clc;

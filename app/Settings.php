@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -81,9 +82,14 @@ class Settings extends Model
      */
     public $timestamps = false;
 
-    // Scopes...
 
-    // Functions ...
 
-    // Relations ...
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('scopeClient', function (Builder $builder) {
+            $builder->where('client_id', auth()->user()->client_id ?? -1);
+        });
+    }
 }

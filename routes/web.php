@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PosSupplierController;
 use App\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

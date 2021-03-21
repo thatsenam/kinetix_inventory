@@ -428,7 +428,7 @@ class PosSalesController extends Controller
 
         $inv_counting = SalesInvoice::whereDate('date', date('Y-m-d'))
             ->where('client_id', auth()->user()->client_id)->distinct()->count('invoice_no');
-        $invoice = "INV-" . date('Ymd') . ($inv_counting + 1);
+        $invoice = "INV-".auth()->user()->client_id . date('Ymd') . ($inv_counting + 1);
 
         // $maxid = (DB::table('sales_invoice')->max('id') + 1);
 

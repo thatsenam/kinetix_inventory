@@ -540,9 +540,6 @@
         <!-- content-wrapper ends -->
 
     </div>
-    <!-- main-panel ends -->
-
-    <!-------Check Information----------->
 
     <div id="check_info" class="custom-modal">
 
@@ -628,8 +625,6 @@
             </div>
         </div>
     </div>
-
-    <!-------Mobile Bank Information----------->
 
     <div id="mobile_info" class="custom-modal">
 

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -27,5 +28,15 @@ class Category extends Model
 
     public static function tree() {
         return static::with(implode('.', array_fill(0, 4, 'children')))->where('parent_id', '=', NULL)->get();
+    }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('scopeClient', function (Builder $builder) {
+            $builder->where('client_id', auth()->user()->client_id ?? -1);
+        });
     }
 }

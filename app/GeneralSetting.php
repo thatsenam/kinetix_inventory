@@ -19,4 +19,14 @@ class GeneralSetting extends Model
 //            $builder->where('client_id', auth()->user()->client_id ?? -1);
 //        });
 //    }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('scopeClient', function (Builder $builder) {
+            $builder->where('client_id', auth()->user()->client_id ?? -1);
+        });
+    }
 }

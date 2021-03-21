@@ -30,10 +30,11 @@ class PosSupplierController extends Controller
             $supplier = new SupplierGroup();
             $supplier->supplier_group = $data['inputName'];
             $supplier->user_id = Auth::id();
+            $supplier->client_id = auth()->user()->client_id;
             $supplier->save();
             return redirect('/dashboard/supplier_group')->with('flash_message_success', 'Supplier Group Added Successfully!');
         }
-        $supplier_groups = DB::table('supplier_groups')->orderBy('id', 'DESC')->get();
+        $supplier_groups = SupplierGroup::query()->orderBy('id', 'DESC')->get();
         return view('admin.pos.suppliers.supplier_group')->with(compact('supplier_groups'));
     }
 
@@ -211,7 +212,7 @@ class PosSupplierController extends Controller
 
     public function deleteSupp($id){
         $supplier = Supplier::find($id);
-        $head = $supplier->name. " " .$supplier->phone; 
+        $head = $supplier->name. " " .$supplier->phone;
         $deleteTrans = AccTransaction::where('head', $head)->where('description',"OpeningBalance")->delete();
         // $deleteAcc = AccHead::where('head', $head)->delete();
         $delete = Supplier::where('id', $id)->delete();
@@ -742,7 +743,7 @@ class PosSupplierController extends Controller
         $sid = $get_supplier->sid;
         $supp_details = Supplier::where(['id'=>$sid])->get();
 
-        $details = DB::table('purchase_details')->select('products.product_name as name', 'products.product_img as image', 
+        $details = DB::table('purchase_details')->select('products.product_name as name', 'products.product_img as image',
         'purchase_details.qnt as qnt', 'purchase_details.price as price', 'purchase_details.total as total', 'purchase_details.vat')
         ->join('products', 'purchase_details.pid', 'products.id')->where('purchase_details.pur_inv', $invoiceno)->get();
 

@@ -17,6 +17,7 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
+      <input type="color" class="colorpicker form-control">
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -73,14 +74,7 @@
                             <label for="inputDescription">Product Description</label>
                             <textarea name="inputDescription" id="inputDescription" class="form-control" rows="8"></textarea>
                         </div>
-                        {{-- <div class="form-group">
-                            <label for="inputSpecs">Product Specification</label>
-                            <textarea name="inputSpecs" id="inputSpecs" class="form-control" rows="8"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputFeature">Main Features</label>
-                            <textarea name="inputFeature" id="inputFeature" class="form-control" rows="8"></textarea>
-                        </div> --}}
+
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -99,12 +93,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Discounted Price</label>
-                                    <input type="text" name="DiscountPrice" class="form-control" placeholder="Enter ...">
-                                </div>
-                            </div> --}}
                         </div>
 
                         <div class="row">
@@ -119,7 +107,7 @@
                             <div class="col-md-6 form-group">
                                 <label>Sub Unit<span class="text-danger">*</span></label>
                                 <select id="sub_unit" name="sub_unit" class="form-control custom-select">
-                                    <option value="" selected disabled>Select</option>
+                                    <option value="" selected >Select</option>
                                     <option value="Box">Box</option>
                                     <option value="Dozens">Dozens</option>
                                     <option value="Catoon">Catoon</option>
@@ -127,7 +115,7 @@
                                 </select>
                             </div>
                         </div>
-         
+
                         <div class="form-group">
                             <label> How many units in the sub unit?<span class="text-danger">*</span></label>
                             <input type="text" name="per_box_qty" id="per_box_qty" class="form-control" placeholder="How many units in the sub unit?">
@@ -139,7 +127,7 @@
                                     <label for="inputCategory">Select Category<span class="text-danger">*</span></label>
                                     <select id="inputCategory" name="inputCategory" class="form-control custom-select">
                                         <option selected disabled>Select One</option>
-                                        <?php if($category != null){ 
+                                        <?php if($category != null){
                                             foreach($category as $cat){ ?>
                                             <option value="<?php echo $cat['id'] ?>"><?php echo $cat['name'] ?> </option>
                                         <?php } }?>
@@ -151,7 +139,7 @@
                                     <label for="inputBrand">Select Brand<span class="text-danger">*</span></label>
                                     <select id="inputBrand" name="inputBrand" class="form-control custom-select">
                                         <option selected disabled>Select One</option>
-                                        <?php if($brands != null){ 
+                                        <?php if($brands != null){
                                             foreach($brands as $brand){ ?>
                                             <option value="<?php echo $brand['id'] ?>"><?php echo $brand['name'] ?> </option>
                                         <?php } }?>
@@ -159,7 +147,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -173,7 +161,7 @@
                                     <input type="text" name="inputSize" id="inputSize" placeholder="Enter Weight" class="form-control"/>
                                 </div>
                             </div>
-                            
+
                             <div class="">
                                 <div class="">
                                     {{-- <label for="inputStock">Stock</label> --}}
@@ -198,7 +186,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <div class="form-check text-center">
                                 <input name="serial" type="hidden" value="0">
@@ -247,14 +235,14 @@
         var wrapper = $('.field_wrapper');
         var fieldHTML = '<div class="row"><input type="file" name="addImage[]" id="sku" class="form-control col-md-9 m-1" placeholder="Add New Additional Image" required><a href="javascript:void(0);" class="remove_button col-md-2 m-auto text-danger" title="Remove Field">Remove</a></div>';
         var x = 1;
-        
+
         $(addButton).click(function(){
-            if(x < maxField){ 
+            if(x < maxField){
                 x++;
                 $(wrapper).append(fieldHTML);
             }
         });
-        
+
         $(wrapper).on('click', '.remove_button', function(e){
             e.preventDefault();
             $(this).parent('div').remove();

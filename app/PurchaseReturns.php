@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -73,9 +74,13 @@ class PurchaseReturns extends Model
      */
     public $timestamps = false;
 
-    // Scopes...
 
-    // Functions ...
+    protected static function boot()
+    {
+        parent::boot();
 
-    // Relations ...
+        static::addGlobalScope('scopeClient', function (Builder $builder) {
+            $builder->where('client_id', auth()->user()->client_id ?? -1);
+        });
+    }
 }

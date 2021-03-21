@@ -2,22 +2,23 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property int        $product_id
- * @property string     $product_name
- * @property string     $image
- * @property string     $product_code
- * @property string     $product_color
- * @property string     $weight
- * @property string     $price
- * @property int        $quantity
- * @property string     $user_email
- * @property string     $session_id
- * @property int        $created_at
- * @property int        $updated_at
- * @property int        $client_id
+ * @property int $product_id
+ * @property string $product_name
+ * @property string $image
+ * @property string $product_code
+ * @property string $product_color
+ * @property string $weight
+ * @property string $price
+ * @property int $quantity
+ * @property string $user_email
+ * @property string $session_id
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $client_id
  */
 class Cart extends Model
 {
@@ -76,9 +77,13 @@ class Cart extends Model
      */
     public $timestamps = true;
 
-    // Scopes...
 
-    // Functions ...
+    protected static function boot()
+    {
+        parent::boot();
 
-    // Relations ...
+        static::addGlobalScope('scopeClient', function (Builder $builder) {
+            $builder->where('client_id', auth()->user()->client_id ?? -1);
+        });
+    }
 }

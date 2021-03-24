@@ -331,6 +331,9 @@ Route::post('/dashboard/sales_return_save', 'PosSalesController@sales_return_sav
 
 Route::post('/dashboard/get_invoice', 'PosSalesController@get_invoice')->name('get_invoice')->middleware('auth');
 
+Route::get('/dashboard/get_invoice/{invoice}', 'PosSalesController@get_invoice_products')->name('get_invoice_products')->middleware('auth');
+Route::get('/dashboard/get_purchase_invoice/{invoice}', 'PosSalesController@get_purchase_invoice_products')->name('get_purchase_invoice_products')->middleware('auth');
+
 Route::post('/dashboard/get_invoice_details', 'PosSalesController@get_invoice_details')->name('get_invoice_details')->middleware('auth');
 
 Route::get('/dashboard/sales_return_report_date', 'PosSalesController@sales_return_report_date')->name('sales_return_report_date')->middleware('auth');

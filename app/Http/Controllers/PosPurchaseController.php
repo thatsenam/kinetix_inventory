@@ -44,7 +44,9 @@ class PosPurchaseController extends Controller
     public function get_purchase_products(Request $req){
 
         $s_text = $req['s_text'];
+        $products = json_decode($req['products']??'[]');
         $products = DB::table('products')
+            ->whereIn('products.id',$products)
             ->where('products.client_id',auth()->user()->client_id)
             ->where('product_name', 'like', '%'.$s_text.'%')
         ->orWhere('product_name', $s_text)
@@ -131,7 +133,7 @@ class PosPurchaseController extends Controller
 
         $suppmemo = DB::table('purchase_primary')
             ->where('client_id',auth()->user()->client_id)
-            ->where('supp_inv', 'like', '%'.$s_text.'%')->limit(9)->get(); ?>
+            ->where('pur_inv', 'like', '%'.$s_text.'%')->limit(9)->get(); ?>
 
         <ul class='suppmemo-list sugg-list'>
 
@@ -446,7 +448,12 @@ class PosPurchaseController extends Controller
             $warehouse_id = "";
         }
 
-        return view('admin.pos.purchase.purchase_return', compact('warehouses','warehouse_id'));
+
+
+        $pd = PurchasePrimary::query()->pluck('supp_inv','pur_inv')->toArray();
+
+
+        return view('admin.pos.purchase.purchase_return', compact('warehouses','warehouse_id','pd'));
     }
 
     public function save_purchase_return (Request $req){

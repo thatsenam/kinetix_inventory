@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\PurchasePrimary;
 use Auth;
 use Image;
 use App\Filter;
@@ -55,8 +56,10 @@ class PosSalesController extends Controller
     {
 
         $s_text = $req['s_text'];
+        $products = json_decode($req['products']);
 
         $products = DB::table('products')->where('products.client_id', auth()->user()->client_id)
+            ->whereIn('products.id', $products)
             ->where('product_name', 'like', '%' . $s_text . '%')->join('categories', 'categories.id', 'products.cat_id')
             ->select('products.id as id', 'products.product_name as product_name', 'products.after_pprice as after_pprice', 'products.before_price as before_price', 'products.serial as serial', 'products.warranty as warranty', 'products.product_img as product_img', 'products.sub_unit', 'products.unit', 'products.per_box_qty', 'categories.vat as vat')->limit(9)->get(); ?>
 
@@ -148,13 +151,36 @@ class PosSalesController extends Controller
     }
 
 
+    public function get_invoice_products($invoice_no)
+    {
+        $products = [];
+        $invoice = SalesInvoice::query()->where('invoice_no', $invoice_no)->first();
+        if (!$invoice) {
+            return [];
+        }
+        $products = SalesInvoiceDetails::query()->where('invoice_no', $invoice_no)->pluck('pid')->toArray();
+        return $products;
+
+    }
+
+    public function get_purchase_invoice_products($invoice_no)
+    {
+        $products = [];
+        $invoice = PurchasePrimary::query()->where('pur_inv', $invoice_no)->first();
+        if (!$invoice) {
+            return [];
+        }
+        $products = PurchaseDetails::query()->where('pur_inv', $invoice_no)->pluck('pid')->toArray();
+        return $products;
+
+    }
+
     public function get_invoice(Request $req)
     {
 
         $s_text = $req['s_text'];
 
-        $get_invoice = DB::table('sales_invoice')
-            ->where('invoice_no', 'like', '%' . $s_text . '%')->limit(9)->get(); ?>
+        $get_invoice = SalesInvoice::query()->where('invoice_no', 'like', '%' . $s_text . '%')->limit(9)->get(); ?>
 
         <ul class='invoice-list sugg-list'>
 
@@ -428,7 +454,7 @@ class PosSalesController extends Controller
 
         $inv_counting = SalesInvoice::whereDate('date', date('Y-m-d'))
             ->where('client_id', auth()->user()->client_id)->distinct()->count('invoice_no');
-        $invoice = "INV-".auth()->user()->client_id . date('Ymd') . ($inv_counting + 1);
+        $invoice = "INV-" . auth()->user()->client_id . date('Ymd') . ($inv_counting + 1);
 
         // $maxid = (DB::table('sales_invoice')->max('id') + 1);
 
@@ -496,7 +522,6 @@ class PosSalesController extends Controller
             $j3 = $i + 3;
             $j4 = $i + 4;
             $j5 = $i + 5;
-
 
 
             ///////Adjust Stock/////////

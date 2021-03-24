@@ -6,6 +6,7 @@ use App\AccHead;
 use App\BankTransaction;
 use App\PaymentInvoice;
 use App\Helpers\AppHelper;
+use App\PurchaseDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -749,6 +750,6 @@ class PosSupplierController extends Controller
 
         $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
 
-        return view('admin.pos.suppliers.payinvoice')->with(compact('supp_details','get_supplier','details', 'settings'));
+        return view('admin.pos.suppliers.payinvoice')->with(compact('supp_details','get_supplier','details', 'settings','pd'));
     }
 }

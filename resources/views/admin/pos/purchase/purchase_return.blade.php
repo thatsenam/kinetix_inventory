@@ -42,7 +42,7 @@
                                                             <input type="text" name="supp_memo" id="supp_memo"
                                                                    class="form-control" placeholder="Memo No">
                                                             <div id="memo_div"
-                                                                 style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
+                                                                 style="width: 100%; dis    play: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                                         </div>
                                                     </div>
                                                 @else
@@ -65,7 +65,7 @@
                                                                 <option value="" disabled selected> Select Memo
                                                                 </option>
                                                                 @foreach($pd as $key=> $d)
-                                                                    <option value="{{ $key }}"> {{ $d }}</option>
+                                                                    <option value="{{ $key }}"> {{ $d }}  ({{ $key }})</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -307,7 +307,6 @@
                         if (e.keyCode == 40) {
 
                             $this.next().focus();
-
                             return false;
                         } else if (e.keyCode == 38) {
                             $this.prev().focus();
@@ -351,7 +350,7 @@
                             $("#price").focus();
                             $("#products_div").hide();
 
-                            //window.location.replace("{{Request::root()}}/admin/editcat/"+val);
+
 
                         }
                     });
@@ -360,10 +359,14 @@
                 }
 
                 var s_text = $(this).val();
+                var supp_memo =$('#supp_memo').val();
+
 
                 var formData = new FormData();
                 formData.append('s_text', s_text);
-                formData.append('products', JSON.stringify(allowedProducts));
+
+                    formData.append('products', JSON.stringify(allowedProducts));
+                     formData.append('supp_memo', supp_memo);
 
                 $.ajaxSetup({
                     headers: {
@@ -372,7 +375,7 @@
                 });
 
                 $.ajax({
-                    url: "{{ URL::route('get_purchase_products') }}",
+                    url: "{{ URL::route('get_purchase_return_products') }}",
                     method: 'post',
                     data: formData,
                     contentType: false,
@@ -383,12 +386,13 @@
                         //$("#wait").show();
                     },
                     error: function (ts) {
-
+                        console.log(ts);
                         $('#products_div').show();
                         $('#products_div').html(ts.responseText);
                         //alert((ts.responseText));
                     },
                     success: function (data) {
+                        console.log(data);
 
                         $('#products_div').show();
                         $('#products_div').html(ts.responseText);
@@ -840,7 +844,7 @@
                     error: function (ts) {
 
                         alert('Purchase return successfull!');
-                        // location.reload();
+                        location.reload();
                         if (ts.responseText == '') {
 
                             //alert(ts.responseText);
@@ -861,30 +865,21 @@
 
                         } else {
                             //alert(ts.responseText);
-
                             $('#supp_name').val("");
                             $('#supp_id').val("0");
                             $('#supp_memo').val("");
-
                             $('#total').val("0");
-
-
                             $('#hid_total').val("0");
-
                             $('.price-table td').remove();
-
                             $('#pur_save').attr('disabled', false);
                             // location.reload();
                         }
-
                     },
                     success: function (data) {
 
                         alert('Purchase Return Successfull!');
-                        // location.reload();
-
+                        location.reload();
                         //$('.cart-table tr').remove();
-
                     }
                 });
 

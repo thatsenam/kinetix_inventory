@@ -58,7 +58,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Name</th>
-                                            <th>Supplier Group</th>
+
                                             <th>Phone</th>
                                             <th>Address</th>
                                             <th>Payable</th>
@@ -73,7 +73,7 @@
                                             <tr>
                                                 <td>{{$i++}}</td>
                                                 <td>{{$supplier->name}}</a></td>
-                                                <td>{{$supplier->group->supplier_group ?? ''}}</a></td>
+
                                                 <td>{{$supplier->phone}}</td>
                                                 <td>{{$supplier->address}}</td>
                                                 <td>{{ $supplier->balance }}</td>
@@ -145,18 +145,7 @@
                                                id="inputName" aria-required="true" required>
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="input_supplier_group" class="required">Supplier Group:</label>
-                                        <select name="input_supplier_group" id="input_supplier_group"
-                                                class="form-control">
-                                            <option selected="" disabled="" value="">Select Group</option>
-                                            @foreach($supplier_groups as $group)
-                                                <option value="{{$group->id}}">{{$group->supplier_group}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
+
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="inputPhone" class="required">Phone:</label>
@@ -522,17 +511,7 @@
                                                id="sup_id" aria-required="true" hidden required>
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="supplier_group" class="required">Supplier Group:</label>
-                                        <select name="supplier_group" id="supplier_group" class="form-control">
-                                            <option selected="" disabled="" value="">Select Group</option>
-                                            @foreach($supplier_groups as $group)
-                                                <option value="{{$group->id}}">{{$group->supplier_group}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
+
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="inputPhone" class="required">Phone:</label>
@@ -620,9 +599,7 @@
                     inputPhone: {
                         required: true
                     },
-                    input_supplier_group: {
-                        required: true
-                    },
+
                 },
                 messages: {
                     inputName: {
@@ -631,9 +608,7 @@
                     inputPhone: {
                         required: "This field value is required",
                     },
-                    input_supplier_group: {
-                        required: "This field value is required",
-                    },
+
                 },
                 errorElement: 'span',
                 errorPlacement: function (error, element) {
@@ -793,7 +768,7 @@
                     $('#inputOpeningBalance').val(data.opb || 0);
                     // alert(data.opb)
                     $('#details').val(data.details);
-                    $('#supplier_group').val(data.supplier_group_id).trigger('change');
+
                     $('#editmodal').modal('show');
                 }
             });
@@ -884,10 +859,10 @@
                 var district = $("#district").val();
                 var details = $("#details").val();
                 var inputOpeningBalance = $("#inputOpeningBalance").val();
-                var supplier_group = $("#supplier_group").val();
+
                 $.ajax({
                     url: "{{url('/dashboard/supplierUp')}}",
-                    data: 'id=' + id + '&name=' + name + '&phone=' + phone + '&address=' + address + '&email=' + email + '&area=' + area + '&upazilla=' + upazilla + '&district=' + district + '&details=' + details + '&supplier_group=' + supplier_group + '&inputOpeningBalance=' + inputOpeningBalance,
+                    data: 'id=' + id + '&name=' + name + '&phone=' + phone + '&address=' + address + '&email=' + email + '&area=' + area + '&upazilla=' + upazilla + '&district=' + district + '&details=' + details + '&inputOpeningBalance=' + inputOpeningBalance,
                     type: 'get',
                     success: function (response) {
                         $("#CartMsg").show();

@@ -26,7 +26,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            
+
             <div class="justify-content-center d-flex mb-2">
                 <div>
                     <label class="text-dark"><b>From Date</b></label>
@@ -64,7 +64,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                         </tbody>
                         <tfoot>
                             <tr>
@@ -84,46 +84,46 @@
         </div>
       </div>
       <div class="row shadow-lg pos_div" style="position: absolute; top: 10px;width: 60%; margin: 0 auto; background: #FFF; height:600px; overflow-y:auto; padding: 10px; z-index: 999999; display: none;">
-        
+
         <div class="col-12" style="position:relative">
-            
+
             <button class="btn btn-primary close" style="position:absolute; top: 10px; right: 10px;">X</button>
-            
+
             <!-------------------------------->
-                                    
+
                     <div id="printdiv" style="font-family:Franklin Gothic Medium; ">
-                							
+
                 		<table id="print_add" style="width: margin: 0px auto; padding: 10px; text-align:left; display:none;">
                 			<tr>
                 			    <td style='width:70%;'>
-                							
+
                         			<span id="company" style='font-size:42px'><?php echo "Company Name";?></span><br />
-                        			
+
                         				<span style='font-size:16px' id="company_add"><?php echo "Street Name"; ?></span><br />
-                        							
+
                         				<!--<span style='font-size:14px'><b>Contact: 01XXXXXXXXX, Contact: 01XXXXXXXXX</b></span>-->
-                    							
+
                 				</td>
                 				<td id="logoimage" style='width:30%; text-align:right;'>
-                						            
+
                 				    <!--<img src='/images/logo_ccb.png' style='width:100px; height:auto;'>-->
-                						            
+
                 				</td>
                 			</tr>
                 		</table>
-                						
-                						
+
+
                 		<table id="mid_section" style="width:100%; font-size:16px; display:none;">
-                						    
+
                 		    <tr><td style="text-align:center; font-size:22px" colspan="2"><b>INVOICE / BILL</b></td></tr>
-                						    
+
                 		    <tr>
                 				<td id="cust_add" style="width: 50%; padding-left:10px;"></td>
                         		<td id="others_info" style="text-align: right;"></td>
                     		</tr>
-                    						
+
                     	</table>
-                                        
+
                         <div id="prodlistDiv" class="row" style="margin: 10px 0;">
                             <div class="col-12" style="padding-right: 0 !important; padding-left: 0 !important;">
                                 <table id="prodlist" class="price-table custom-table" style="width: 100%">
@@ -138,14 +138,14 @@
                                 </table>
                             </div>
                         </div>
-                               
+
                         <table id="bottom_section" style="margin-top:40px; width: 94%; font-size:16px; display:none;">
                 		    <tr>
                 		        <td id="bottom_left" style="width:70%; padding-left:30px;"></td>
                         		<td id="bottom_right" style="width:30%;"></td>
                     		</tr>
                     	</table>
-                                        
+
                         <table id="footer_section" style="margin-top:40px; width: 94%; font-size:16px; display:none;">
                 		    <tr>
                 				<td id="footer1" style="text-align:left; padding:20px;"></td>
@@ -161,11 +161,11 @@
                         		</td>
                     		</tr>
                     	</table>
-                             
-                                    
+
+
                     </div>
             <!--------------------------------->
-            
+
             @php
                 $ledger = false;
                 $pos = false;
@@ -184,12 +184,12 @@
             @endphp
 
             @if($pos)
-                <button class="btn btn-success btn-lg print" style="margin-top: 20px;"> Print</button> 
+                <button class="btn btn-success btn-lg print" style="margin-top: 20px;"> Print</button>
             @else
-                <button onclick="ledgerPrint()" class="btn btn-success btn-lg" style="margin-top: 20px;">Print</button>   
-            @endif   
-            
-            
+                <button onclick="ledgerPrint()" class="btn btn-success btn-lg" style="margin-top: 20px;">Print</button>
+            @endif
+
+
         </div>
     </div>
     </section>
@@ -229,7 +229,7 @@
                             typeof i === 'number' ?
                                 i : 0;
                     };
-        
+
                     // Total over all pages
                     amount = api
                         .column( 7 )
@@ -265,7 +265,7 @@
 
                     due = total - payTotal;
                     due = due.toFixed(2);
-        
+
                     // Update footer
                     $( api.column( 7 ).footer() ).html(
                         amount
@@ -322,20 +322,20 @@
 
         //JKGGGGGGGGGGGGGG
         $('body').on('click', '.delete', function(){
-            
+
             if(confirm("Are you Sure to Delete?")){
-                
+
                 var invoice = $(this).data("id");
-                
+
                 var formData = new FormData();
         	    formData.append('invoice', invoice);
-        	        
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-        			
+
                 $.ajax({
             		  url: "{{ URL::route('delete_sales_invoice')}}",
                       method: 'post',
@@ -348,35 +348,35 @@
                 			//$("#wait").show();
                 		},
             		  error: function(ts) {
-                          
+
                           alert(ts.responseText);
                           location.reload();
                       },
                       success: function(data){
-                         
+
                           alert(data);
                       }
-                }); 
-                
+                });
+
             }else{
                 e.preventDefault();
             }
-            
+
         });
-        
+
         $('body').on('click', '.view', function(){
-            
+
                         var s_text = $(this).data("id");
-                			
+
                 		var formData = new FormData();
                 			formData.append('s_text', s_text);
-                			
+
                 			$.ajaxSetup({
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 }
                             });
-                			
+
                     	$.ajax({
                     		  url: "{{ URL::route('get_invoice_details') }}",
                               method: 'post',
@@ -389,20 +389,20 @@
                         			//$("#wait").show();
                         		},
                     		  error: function(ts) {
-                                  
+
                                     alert(ts.responseText);
-                                    
-                                    
+
+
                                     /* $('#search').val(name);
                                     $('#pid_hid').val(id);
                                     $('#price').val(price);
-                                                
+
                                     $("#price").focus(); */
                               },
                               success: function(data){
-                                  
+
                                  var obj = JSON.parse(JSON.stringify(data));
-                                 
+
                                  var invoice = obj.invoice;
                                  var trow = obj.trow;
                                  var company = obj.company;
@@ -417,96 +417,96 @@
                                  var payment = obj.payment;
                                  var due = obj.due;
                                  var date = obj.date;
-                                 
+
                                  ////////////////////////////////////////
-                                 
+
                                  $('.pos_div').show();
-            
+
                                  $('#print_add').css('width','100%').css('text-align','center');
-                    		    
+
                     			 $('#print_add').show();
 
                                  $('#prodlist td').remove();
                                  $('.footer-table td').remove();
-                    			 
+
                     			 $('#logoimage').css("display","none");
-                    			 
+
                     			 $('#company').css("font-size","26px");
-                    			 
+
                     			 $('#company').html(company);
-                    		     
+
                     		     $('#company_add').html(company_add);
-                    			
+
                                  $("#mid_section").show();
-                                 
+
                                  $("#cust_add").show();
-                    	 		    
+
                                  $("#mid_section").append("<table class='footer-table'><tr><td>Customer Name: </td><td>"+tcname+"</td></tr><tr><td>Phone: </td><td>"+tcphone+"</td></tr><tr><td>Memo: </td><td>"+invoice+"</td></tr></table>");
-                    		     
+
                     		     $("#prodlist").css('border-collapse','collapse');
-                    		
+
                     		    //  $("#prodlist tbody tr").each(function() {
-                    		          
+
                     		    //        $(this).find("th:eq(4)").remove();
                                 //  });
-                                
+
                                  $("#prodlist").append(trow);
-                                 
+
                                  $("#prodlist th").css('font-size','14px');
-                    		     
+
                     		     $("#prodlist td").css('font-size','14px').css('border','1px solid #000');
-                        
+
                     			 $('#prodlistDiv').css("height","").css("clear","float").css("background","#FFF").css("overflow","");
-                    			 
-                    			
+
+
                     			 $('#printdiv').append("<table class='footer-table' style='border-collapse: collapse; width:100%;' border='1'><tr><td>Total Tk: </td><td>"+amount+"</td><td> Discount: </td><td>"+discount+"</td></tr><tr><td>IVA: </td><td>"+vat+"</td><td> SCharge: </td><td>"+scharge+"</td></tr><tr><td>All Total: </td><td>"+gtotal+"</td><td>Recieved: </td><td>"+payment+"</td></tr><tr><td> Due: </td><td>"+due+"</td><td> Date: </td><td>"+date+"</td></tr></table>");
-                    			
-                    
+
+
                     			 $("#printRest tr td").css('font-size','12px').css('border', '1px solid #000').css('border-collapse', 'collapse');
-                    			 
-                                 
+
+
                               }
-                    		   
-                    	    });            
-            
-            
+
+                    	    });
+
+
         });
 
         $('.close').click(function(){
-            
+
             $('#cust_add').html("");
-            
+
             $("#prodlist td").remove();
-            
+
             $(".footer-table td").remove();
-            
+
             $('.pos_div').hide();
-            
+
         });
-        
+
         $('.print').click(function(){
-            
+
             $('#print_add').css('width', '332px');
-            
+
             $('#mid_section').css('width', '332px');
-            
+
             $('#prodlist').css('width', '332px');
-            
+
             $('#prodlist td').css('font-size', '12px');
-            
+
             $('.footer-table').css('width', '332px');
-            
+
             $('.footer-table td').css('font-size', '12px');
-            
+
             Print();
-            
+
             location.reload();
         });
-        
+
         function Print(){
-            
+
             //////////////printReceipt///////////
-          
+
              var prtContent = document.getElementById("printdiv");
              var WinPrint = window.open('', '', 'left=0,top=0, toolbar=0,scrollbars=0,status=0');
              WinPrint.document.write(prtContent.innerHTML);
@@ -517,9 +517,9 @@
         }
     });
     function ledgerPrint() {
-        
+
         document.getElementById("prodlist").style.width = "100%";
-        
+
         var printContents = document.getElementById("printdiv").innerHTML;
         var originalContents = document.body.innerHTML;
 

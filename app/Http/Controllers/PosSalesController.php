@@ -59,8 +59,77 @@ class PosSalesController extends Controller
         $products = json_decode($req['products']);
 
         $products = DB::table('products')->where('products.client_id', auth()->user()->client_id)
+//            ->whereIn('products.id', $products)
+            ->where('product_name', 'like', '%' . $s_text . '%')
+            ->join('categories', 'categories.id', 'products.cat_id')
+            ->select('products.id as id', 'products.product_name as product_name', 'products.after_pprice as after_pprice', 'products.before_price as before_price', 'products.serial as serial', 'products.warranty as warranty', 'products.product_img as product_img', 'products.sub_unit', 'products.unit', 'products.per_box_qty', 'categories.vat as vat')->limit(9)->get(); ?>
+
+
+        <ul class='products-list sugg-list' style='width:100%;'>
+
+            <?php $i = 1;
+
+            foreach ($products as $row) {
+                $pid = $row->id;
+                $pPurchase = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->sum('qnt');
+                $psold = DB::table('sales_invoice_details')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->sum('qnt');
+                $returns = DB::table('purchase_returns')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->sum('qnt');
+                $sale_return = DB::table('sales_return')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->sum('qnt');
+                $damage = DB::table('damage_products')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->sum('qnt');
+                $stock = $pPurchase - $returns - $psold + $sale_return - $damage;
+
+                $id = $row->id;
+                $name = $row->product_name;
+                $price = $row->after_pprice;
+                $serial = $row->serial;
+                $warranty = $row->warranty;
+                $vat = $row->vat;
+                $sub_unit = $row->sub_unit;
+                $unit = $row->unit;
+                $pbq = $row->per_box_qty;
+
+                if (empty($price)) {
+                    $price = $row->before_price;
+                }
+                $image = $row->product_img;
+
+                $url = config('global.url'); ?>
+
+                <li tabindex='<?php echo $i; ?>'
+                    onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $warranty; ?>", "<?php echo $stock; ?>", "<?php echo $vat; ?>", "<?php echo $pbq; ?>", "<?php echo $sub_unit; ?>", "<?php echo $unit; ?>");'
+                    data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>'
+                    data-sub_unit='<?php echo $sub_unit; ?>' data-unit='<?php echo $unit; ?>'
+                    data-pbq='<?php echo $pbq; ?>' data-serial='<?php echo $serial; ?>'
+                    data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?>'
+                    data-vat='<?php echo $vat; ?>'>
+                    <img src="<?php echo $url; ?>/images/products/<?php echo $image; ?>"
+                         style="width:60px; height:60px;"> &nbsp; <?php echo $name; ?> | <?php echo $price; ?>
+                </li>
+
+                <?php
+
+                $i = $i + 1;
+            } ?>
+
+        </ul>
+
+    <?php }
+
+    public function get_return_products(Request $req)
+    {
+
+        $s_text = $req['s_text'];
+        $products = json_decode($req['products']);
+
+        $products = DB::table('products')->where('products.client_id', auth()->user()->client_id)
             ->whereIn('products.id', $products)
-            ->where('product_name', 'like', '%' . $s_text . '%')->join('categories', 'categories.id', 'products.cat_id')
+            ->where('product_name', 'like', '%' . $s_text . '%')
+            ->join('categories', 'categories.id', 'products.cat_id')
             ->select('products.id as id', 'products.product_name as product_name', 'products.after_pprice as after_pprice', 'products.before_price as before_price', 'products.serial as serial', 'products.warranty as warranty', 'products.product_img as product_img', 'products.sub_unit', 'products.unit', 'products.per_box_qty', 'categories.vat as vat')->limit(9)->get(); ?>
 
 
@@ -541,7 +610,7 @@ class PosSalesController extends Controller
                 'invoice_no' => $invoice,
                 'pid' => $take_cart_items[$j],
                 'qnt' => $take_cart_items[$j2],
-                'box' => $take_cart_items[$j1],
+//                'box' => $take_cart_items[$j1],
                 'price' => $take_cart_items[$j3],
                 'vat' => $take_cart_items[$j4],
                 'total' => $take_cart_items[$j5],
@@ -552,7 +621,7 @@ class PosSalesController extends Controller
                 'date' => $date,
                 'warehouse_id' => $warehouse,
                 'product_id' => $take_cart_items[$j],
-                'box' => $take_cart_items[$j1],
+//                'box' => $take_cart_items[$j1],
                 'out_qnt' => $take_cart_items[$j2],
                 'particulars' => 'Sales',
                 'remarks' => 'Sales Invoice No-' . $invoice,
@@ -1471,7 +1540,7 @@ class PosSalesController extends Controller
                 'cid' => $cust_id,
                 'pid' => $take_cart_items[$j],
                 'qnt' => $take_cart_items[$j2],
-                'box' => $take_cart_items[$j1],
+//                'box' => $take_cart_items[$j1],
                 'uprice' => $take_cart_items[$j3],
                 'vat_amount' => $take_cart_items[$j4],
                 'tprice' => $take_cart_items[$j4],
@@ -1486,7 +1555,7 @@ class PosSalesController extends Controller
                 'date' => $date,
                 'warehouse_id' => $warehouse,
                 'product_id' => $take_cart_items[$j],
-                'box' => $take_cart_items[$j1],
+//                'box' => $take_cart_items[$j1],
                 'in_qnt' => $take_cart_items[$j2],
                 'particulars' => 'Sales Return',
                 'remarks' => 'Sales Return Invoice No-' . $rinvoice,
@@ -1760,19 +1829,20 @@ class PosSalesController extends Controller
             $sales_product = SalesInvoiceDetails::where('client_id', auth()->user()->client_id)
                 ->where('invoice_no', $inv)->select('price', 'pid', 'qnt')->get();
             $netProfit = 0;
-            foreach ($sales_product as $sale_product) {
-                if ($profitCalculation == '2') {
-                    $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
-                        ->where('pid', $sale_product->pid)->latest()->first()->price;
-                } else {
-                    $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
-                        ->where('pid', $sale_product->pid)->avg('price');
-                }
-                $purchasePrice = PurchaseDetails::where('client_id', auth()->user()->client_id)
-                    ->where('pid', $sale_product->pid)->avg('price');
-                $profit = ($sale_product->price - $purchasePrice) * $sale_product->qnt;
-                $netProfit += $profit;
-            }
+//            foreach ($sales_product as $sale_product) {
+//                if ($profitCalculation == '2') {
+//                    $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+//                        ->where('pid', $sale_product->pid)->latest()->first()->price;
+//                } else {
+//                    $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+//                        ->where('pid', $sale_product->pid)->avg('price');
+//                }
+//                $purchasePrice = PurchaseDetails::where('client_id', auth()->user()->client_id)
+//                    ->where('pid', $sale_product->pid)->avg('price');
+//
+//                $profit = ($sale_product->price - $purchasePrice) * $sale_product->qnt;
+//                $netProfit += $profit;
+//            }
             $sale->profit = round($netProfit, 2);
 
         }

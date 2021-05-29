@@ -931,7 +931,7 @@
                         processData: false,
                         dataType: "json",
                         error: function (ts) {
-                            alert(ts.responseText);
+                            // alert(ts.responseText);
                         },
                         success: function (data) {
                             var obj = data;
@@ -1078,12 +1078,13 @@
                         //$("#wait").show();
                     },
                     error: function (ts) {
-
+                            console.log(ts);
                         $('#products_div').show();
                         $('#products_div').html(ts.responseText);
                         //alert((ts.responseText));
                     },
                     success: function (data) {
+                        console.log(data);
 
                         $('#products_div').show();
                         $('#products_div').html(ts.responseText);
@@ -2514,14 +2515,7 @@
                         dataType: "json",
                         error: function (ts) {
 
-                            //alert(ts.responseText);
 
-
-                            /* $('#search').val(name);
-                            $('#pid_hid').val(id);
-                            $('#price').val(price);
-
-                            $("#price").focus(); */
                         },
                         success: function (data) {
 
@@ -2562,26 +2556,6 @@
             });
         });
 
-        // $('body').on('click', '.delete', function (e) {
-        //
-        //     var totalPriceTd = Number($(this).closest('tr').find('.totalPriceTd').html());
-        //
-        //     var grandTotal = Number($('#total').val());
-        //
-        //     var totalPrice = $('#hid_total').val();
-        //
-        //
-        //     totalPrice = Number(totalPrice - totalPriceTd);
-        //
-        //     grandTotalPrice = Number(grandTotal - totalPriceTd);
-        //
-        //     $('#hid_total').val(totalPrice);
-        //
-        //     $('#total').val(grandTotalPrice);
-        //
-        //     $(this).closest('tr').remove();
-        //
-        // });
 
         function selectCustomer(id, phone, name, address) {
 

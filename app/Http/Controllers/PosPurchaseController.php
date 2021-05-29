@@ -44,57 +44,101 @@ class PosPurchaseController extends Controller
     public function get_purchase_products(Request $req){
 
         $s_text = $req['s_text'];
-        $products = json_decode($req['products']??'[]');
         $products = DB::table('products')
-            ->whereIn('products.id',$products)
-            ->where('products.client_id',auth()->user()->client_id)
+            ->where('client_id',auth()->user()->client_id)
             ->where('product_name', 'like', '%'.$s_text.'%')
-        ->orWhere('product_name', $s_text)
-        ->where('product_name', '!=', '')
+            ->orWhere('product_name', $s_text)
+            ->where('product_name', '!=', '')
 
-        ->orderByRaw("(product_name = '{$s_text}') desc, length(product_name)")
-        ->join('categories','categories.id','products.cat_id')
-        ->select('products.id as id','products.product_name as product_name','products.serial as serial','products.sub_unit','products.unit','products.per_box_qty','categories.vat as vat')
-        ->limit(9)->get(); ?>
+            ->orderByRaw("(product_name = '{$s_text}') desc, length(product_name)")
+            ->limit(9)->get(); ?>
 
         <ul class='products-list sugg-list'>
 
-        <?php $i = 1;
+            <?php $i = 1;
 
-        foreach($products as $row){
+            foreach($products as $row){
 
-            $id = $row->id;
-            $name = $row->product_name;
-            $serial = $row->serial;
-            $vat = $row->vat;
-            $sub_unit = $row->sub_unit;
-            $unit = $row->unit;
-            $pbq = $row->per_box_qty;
+                $id = $row->id;
+                $name = $row->product_name;
+                $serial = $row->serial;
 
-            $products_price = DB::table('purchase_details')
-                ->where('client_id',auth()->user()->client_id)
-                ->where('pid',  $id)->orderBy('id', 'DESC')->limit(1)->get();
+                $products_price = DB::table('purchase_details')
+                    ->where('client_id',auth()->user()->client_id)
+                    ->where('pid',  $id)->orderBy('id', 'DESC')->limit(1)->get();
 
-            if(count($products_price) > 0){
-                foreach($products_price as $row2){
-                    $price = $row2->price;
+                if(count($products_price) > 0){
+                    foreach($products_price as $row2){
+                        $price = $row2->price;
+                    }
+                }else{
+                    $price = 0;
                 }
-            }else{
-                $price = 0;
-            }
 
-            $url = config('global.url'); ?>
+                $url = config('global.url'); ?>
 
-            <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $vat; ?>", "<?php echo $pbq; ?>", "<?php echo $sub_unit; ?>", "<?php echo $unit; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-sub_unit='<?php echo $sub_unit; ?>' data-unit='<?php echo $unit; ?>' data-pbq='<?php echo $pbq; ?>' data-serial='<?php echo $serial; ?>' data-vat='<?php echo $vat; ?>'><?php echo $name; ?> </li>
+                <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' ><?php echo $name; ?> </li>
 
-            <?php
+                <?php
 
-            $i = $i + 1;
-        } ?>
+                $i = $i + 1;
+            } ?>
 
         </ul>
 
-<?php    }
+    <?php    }
+
+
+    public function get_purchase_return_products(Request $req){
+
+        $s_text = $req['s_text'];
+        $memo = $req['supp_memo'];
+        $products_id = Serial::where('pur_inv',$memo)->pluck('product_id');
+
+        $products = DB::table('products')
+            ->whereIn('id', $products_id)
+            ->where('client_id',auth()->user()->client_id)
+            ->where('product_name', 'like', '%'.$s_text.'%')
+            ->orWhere('product_name', $s_text)
+            ->where('product_name', '!=', '')
+
+            ->orderByRaw("(product_name = '{$s_text}') desc, length(product_name)")
+            ->limit(9)->get(); ?>
+
+        <ul class='products-list sugg-list'>
+
+            <?php $i = 1;
+
+            foreach($products as $row){
+
+                $id = $row->id;
+                $name = $row->product_name;
+                $serial = $row->serial;
+
+                $products_price = DB::table('purchase_details')
+                    ->where('client_id',auth()->user()->client_id)
+                    ->where('pid',  $id)->orderBy('id', 'DESC')->limit(1)->get();
+
+                if(count($products_price) > 0){
+                    foreach($products_price as $row2){
+                        $price = $row2->price;
+                    }
+                }else{
+                    $price = 0;
+                }
+
+                $url = config('global.url'); ?>
+
+                <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' ><?php echo $name; ?> </li>
+
+                <?php
+
+                $i = $i + 1;
+            } ?>
+
+        </ul>
+
+    <?php    }
 
 
     public function get_supplier(Request $req){
@@ -453,6 +497,8 @@ class PosPurchaseController extends Controller
         $pd = PurchasePrimary::query()->pluck('supp_inv','pur_inv')->toArray();
 
 
+
+
         return view('admin.pos.purchase.purchase_return', compact('warehouses','warehouse_id','pd'));
     }
 
@@ -484,7 +530,8 @@ class PosPurchaseController extends Controller
             $j5 = $i+5;
             $j6 = $i+6;
 
-            $product = DB::table('products')->where('client_id',auth()->user()->client_id)->where('id', $take_cart_items[$j])->first();
+            $product = DB::table('products')->where('client_id',auth()->user()->client_id)
+                ->where('id', $take_cart_items[$j])->first();
 
             $stock = $product->stock;;
             $stock = ($stock - $take_cart_items[$j3]);
@@ -496,13 +543,13 @@ class PosPurchaseController extends Controller
             $pid = $take_cart_items[$j];
 
 //            DB::table('purchase_returns')->insert([
-            PurchaseReturns::create([
+            $pur_ret = PurchaseReturns::create([
 
                 'date' => $date,
                 'pur_inv' => $supp_memo,
                 'pid' => $pid,
                 'qnt' => $take_cart_items[$j3],
-                'box' => $take_cart_items[$j2],
+
                 'price' => $take_cart_items[$j4],
                 'vat_amount' => $take_cart_items[$j5],
                 'total' => $take_cart_items[$j6],
@@ -514,7 +561,6 @@ class PosPurchaseController extends Controller
                 'date' => $date,
                 'warehouse_id' => $warehouse,
                 'product_id' => $pid,
-                'box' => $take_cart_items[$j2],
                 'out_qnt' => $take_cart_items[$j3],
                 'particulars' => 'Purchase Return',
                 'remarks' => 'Purchase Return Invoice No-'.$supp_memo,
@@ -528,16 +574,20 @@ class PosPurchaseController extends Controller
 
         $serials = json_decode($req['serialArray'], true);
 
+
+
         foreach($serials as $productID => $serial)
         {
+
             foreach($serial as $ser)
             {
-                Serial::where('client_id', auth()->user()->client_id)
-                    ->where('product_id', $productID)
+
+
+                Serial::where('product_id', $productID)
                     ->where('serial', $ser)
                     ->update([
                         'status' => 'pur_ret',
-                        'pur_ret_inv' => $supp_memo,
+                        'pur_ret_inv' => $supp_memo ?? " ",
                     ]);
             }
         }
@@ -586,7 +636,7 @@ class PosPurchaseController extends Controller
                 'user_id' => $user
             ]);
 
-            $head = $supplier->name." ".$supplier->phone;;
+            $head = $supplier->name?? " "." ".$supplier->phone;;
             $description = "Purchase Return";
             $credit = 0;
             $debit = $total+$total_vat;

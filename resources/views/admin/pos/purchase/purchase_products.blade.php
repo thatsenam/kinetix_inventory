@@ -270,6 +270,7 @@
 
     <script type="text/javascript">
 
+
         var per_box_qty;
         var sub_unit;
         var unit;
@@ -695,6 +696,34 @@
                     }
                     inputedSerials.push(ser)
 
+                }
+                function onlyUnique(value, index, self) {
+                    return self.indexOf(value) === index;
+                }
+                var unique = inputedSerials.filter(onlyUnique);
+                console.log("---")
+                console.log(unique)
+                console.log(inputedSerials)
+
+                function areEqual(arr1, arr2)
+                {
+                    let n = arr1.length;
+                    let m = arr2.length;
+                    if (n != m)
+                        return false;
+                    arr1.sort();
+                    arr2.sort();
+                    for (let i = 0; i < n; i++)
+                        if (arr1[i] != arr2[i])
+                            return false;
+                    return true;
+                }
+
+                console.log(typeof unique);
+                console.log(typeof inputedSerials);
+                if (areEqual(unique, inputedSerials) ===false){
+                    alert('Please Enter Unique Serial Number')
+                    return false;
                 }
 
 

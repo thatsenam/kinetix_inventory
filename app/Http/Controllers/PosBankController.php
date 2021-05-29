@@ -86,6 +86,8 @@ class PosBankController extends Controller
         return view('admin.pos.banking.view_bank', compact('banks'));
     }
 
+    
+
     public function edit_bank(Request $req, $id = null){
         $bank = BankInfo::where(['id'=>$id])->first();
         $cards=$bank->cards ?? '';

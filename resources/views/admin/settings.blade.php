@@ -101,8 +101,8 @@
                             <label for="vat">Vat Type</label>
                             <div class="input-group">
                                 <select name="vat_type" id="vat_type" class="form-control">
-                                    <option value="{{ \App\VatType::$PRODUCT_BASE }}" @if($settings->vat_type == \App\VatType::$PRODUCT_BASE) selected @endif>{{ \App\VatType::$PRODUCT_BASE }}</option>
-                                    <option value="{{ \App\VatType::$GLOBAL_BASE }}" @if($settings->vat_type == \App\VatType::$GLOBAL_BASE) selected @endif>{{ \App\VatType::$GLOBAL_BASE }}</option>
+                                    <option value="{{ \App\VatType::$PRODUCT_BASE }}" @if($settings->vat_type ?? 0 == \App\VatType::$PRODUCT_BASE) selected @endif>{{ \App\VatType::$PRODUCT_BASE }}</option>
+                                    <option value="{{ \App\VatType::$GLOBAL_BASE }}" @if($settings->vat_type ?? 0 == \App\VatType::$GLOBAL_BASE) selected @endif>{{ \App\VatType::$GLOBAL_BASE }}</option>
                                 </select>
                             </div>
                         </div>

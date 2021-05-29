@@ -66,7 +66,7 @@ class PosSupplierController extends Controller
             $supplier->details = $data['inputDetails'] ?? '';
             $opb = $data['inputOpeningBalance'] ?? 0;
             $opb = $opb;
-            $supplier->supplier_group = $data['input_supplier_group'] ?? '';
+
             $supplier->user = Auth::id();
             $supplier->save();
 
@@ -86,7 +86,7 @@ class PosSupplierController extends Controller
             return redirect('/dashboard/suppliers')->with('flash_message_success', 'Supplier Added Successfully!');
         }
         $suppliers = Supplier::where('client_id', auth()->user()->client_id)->orderBy('id', 'DESC')->get();
-        $supplier_groups = DB::table('supplier_groups')->where('user_id', Auth::id())->orderBy('id', 'DESC')->get();
+//        $supplier_groups = DB::table('supplier_groups')->where('user_id', Auth::id())->orderBy('id', 'DESC')->get();
 
         foreach ($suppliers as $index => $row) {
             $get_head = DB::table('acc_heads')->where('cid', "sid " . $row->id)->first();
@@ -113,7 +113,7 @@ class PosSupplierController extends Controller
             $banks[] = $bank->account->id ?? '';
             $banks[] = $bank->account->acc_no ?? '';
         }
-        return view('admin.pos.suppliers.suppliers')->with(compact('suppliers', 'supplier_groups', 'bank_infos', 'getbanks'));
+        return view('admin.pos.suppliers.suppliers')->with(compact('suppliers', 'bank_infos', 'getbanks'));
     }
 
     public function updateSuppGroup(Request $request)
@@ -635,7 +635,7 @@ class PosSupplierController extends Controller
 
         $supplier = Supplier::where(['id' => $id])->first();
         $get_head = DB::table('acc_heads')->where('cid', "sid " . $id)->first();
-        $group = DB::table('supplier_groups')->select('supplier_group')->where('id', $supplier->supplier_group)->first();
+
         $head = $get_head->head;
         $ledgers = AccTransaction::where(['head' => $head])->get();
         $total_purchase = DB::table('purchase_primary')

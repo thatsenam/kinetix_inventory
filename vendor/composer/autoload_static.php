@@ -675,6 +675,7 @@ class ComposerStaticInit21cae6532322a43a3bee6fb32f0fd415
         'App\\SupplierGroup' => __DIR__ . '/../..' . '/app/SupplierGroup.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'App\\UserProfiles' => __DIR__ . '/../..' . '/app/UserProfiles.php',
+        'App\\VatType' => __DIR__ . '/../..' . '/app/VatType.php',
         'App\\Warehouse' => __DIR__ . '/../..' . '/app/Warehouse.php',
         'App\\WarrantyManagement' => __DIR__ . '/../..' . '/app/WarrantyManagement.php',
         'Asm89\\Stack\\Cors' => __DIR__ . '/..' . '/asm89/stack-cors/src/Cors.php',

@@ -121,6 +121,7 @@ return array(
     'App\\SupplierGroup' => $baseDir . '/app/SupplierGroup.php',
     'App\\User' => $baseDir . '/app/User.php',
     'App\\UserProfiles' => $baseDir . '/app/UserProfiles.php',
+    'App\\VatType' => $baseDir . '/app/VatType.php',
     'App\\Warehouse' => $baseDir . '/app/Warehouse.php',
     'App\\WarrantyManagement' => $baseDir . '/app/WarrantyManagement.php',
     'Asm89\\Stack\\Cors' => $vendorDir . '/asm89/stack-cors/src/Cors.php',

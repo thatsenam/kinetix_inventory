@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{$GenSettings->site_name ??  " "}} - @yield('title') | POS Dashboard</title>
-  
+
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/x-icon" href="/images/theme/{{$GenSettings->favicon ?? " "}}">
 
@@ -445,16 +445,16 @@
                   <p>Supplier List</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{route('set_supplier_group')}}"
-                  class="nav-link {{ Route::currentRouteName() == 'set_supplier_group' ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Supplier Group</p>
-                </a>
-              </li>
+{{--              <li class="nav-item">--}}
+{{--                <a href="{{route('set_supplier_group')}}"--}}
+{{--                  class="nav-link {{ Route::currentRouteName() == 'set_supplier_group' ? 'active' : '' }}">--}}
+{{--                  <i class="fas fa-angle-right nav-icon"></i>--}}
+{{--                  <p>Supplier Group</p>--}}
+{{--                </a>--}}
+{{--              </li>--}}
             </ul>
           </li>
-          
+
           {{-- Accounting --}}
           <li class="nav-item {{ (request()->is('accounting/acc-heads', 'accounting/voucher-entry', 'accounting/voucher-history', 'accounting/ledger', 'accounting/trial-balance', 'accounting/income-statement', 'accounting/cash-book', 'accounting/balance-sheet', 'add_cost', 'admin/cost_reports')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
@@ -787,7 +787,7 @@
     @else
 
       @yield('content')
-      
+
     @endif
 
 @yield('page-js-files')

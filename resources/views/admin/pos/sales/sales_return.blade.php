@@ -642,7 +642,7 @@
                 });
 
                 $.ajax({
-                    url: "{{ URL::route('get_products') }}",
+                    url: "{{ URL::route('get_return_products') }}",
                     method: 'post',
                     data: formData,
                     contentType: false,
@@ -838,16 +838,7 @@
             });
 
 
-            // $("#payment").on("change keyup paste", function(){
 
-            //     var hid_total = Number($('#hid_total').val());
-            //     var total_vat = Number($('#total_vat').val());
-
-            //     var payment = Number($(this).val());
-
-            //     $('#gtotal').val(hid_total + total_vat - payment);
-
-            // });
 
             $('#cancel').click(function () {
 
@@ -988,7 +979,7 @@
                     },
                     error: function (ts) {
 
-                        alert(ts.responseText);
+                        // alert(ts.responseText);
 
                         $('.price-table td').remove();
 
@@ -998,13 +989,13 @@
 
                         alert('Sales Return Successfull!');
 
-                        // location.reload();
+                        location.reload();
 
                     },
                     success: function (data) {
 
                         alert('Sales Return Successfull!');
-                        // location.reload();
+                        location.reload();
                     }
                 });
 

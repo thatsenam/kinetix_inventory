@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\PosSupplierController;
@@ -271,6 +272,7 @@ Route::get('/dashboard/pos', 'PosController@index')->name('pos_index')->middlewa
 Route::get('/dashboard/purchase_products', 'PosPurchaseController@purchase_products')->name('purchase_products')->middleware('auth');
 
 Route::post('/dashboard/get_purchase_products', 'PosPurchaseController@get_purchase_products')->name('get_purchase_products')->middleware('auth');
+Route::post('/dashboard/get_purchase_return_products', 'PosPurchaseController@get_purchase_return_products')->name('get_purchase_return_products')->middleware('auth');
 
 Route::post('/dashboard/save_purchase_products', 'PosPurchaseController@save_purchase_products')->name('save_purchase_products')->middleware('auth');
 
@@ -310,6 +312,7 @@ Route::post('/dashboard/sales_invoice_save', 'PosSalesController@sales_invoice_s
 Route::post('/dashboard/get_customer', 'PosCustomerController@get_customer')->name('get_customer')->middleware('auth');
 
 Route::post('/dashboard/get_products', 'PosSalesController@get_products')->name('get_products')->middleware('auth');
+Route::post('/dashboard/get_return_products', 'PosSalesController@get_return_products')->name('get_return_products')->middleware('auth');
 
 Route::post('/dashboard/get_barcode', 'PosSalesController@get_barcode')->name('get_barcode')->middleware('auth');
 

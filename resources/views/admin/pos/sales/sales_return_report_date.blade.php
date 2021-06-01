@@ -1,5 +1,5 @@
 @extends('admin.pos.master')
-        
+
 @section('content')
 
 
@@ -22,12 +22,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="justify-content-center d-flex mb-2">
-                    <div>
+                    <div class="col-lg-4">
                         <label class="text-dark"><b>Start Date</b></label>
                         <input class="form-control" name="stdate" id="stdate" type="text" required autocomplete="off">
                     </div>
-                    <p class="mr-4"></p>
-                    <div>
+                    <div class="col-lg-4 mr-4">
                         <label class="text-dark"><b>End Date</b></label>
                         <input class="form-control" name="enddate" id="enddate" type="text" required autocomplete="off">
                     </div>
@@ -36,11 +35,11 @@
                     </div>
                 </div>
 
-            
+
                 <div class="card">
                     <div class="card-body">
                         <table class="table table-striped" id="converting">
-                            
+
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -125,7 +124,7 @@
                             typeof i === 'number' ?
                                 i : 0;
                     };
-        
+
                     // Total over all pages
                     qty = api
                         .column( 6 )
@@ -176,7 +175,7 @@
                         }, 0 );
                     cash_return = cash_return.toFixed(2);
 
-        
+
                     // Update footer
                     $( api.column( 6 ).footer() ).html(
                         qty
@@ -234,25 +233,25 @@
             $('#converting').DataTable().destroy();
             load_data();
         });
-        
-        
+
+
         $('body').on('click', '.delete', function(){
-            
+
             if(confirm("Are you Sure to Delete?")){
-                
+
                 // var invoice = $(this).closest('tr').find('.invoice').html();
 
                 var invoice = $(this).data("invoice");
-                
+
                 var formData = new FormData();
         	        formData.append('invoice', invoice);
-        	        
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-        			
+
                 $.ajax({
             		  url: "{{ URL::route('delete_sales_return')}}",
                       method: 'post',
@@ -265,31 +264,31 @@
                 			//$("#wait").show();
                 		},
             		  error: function(ts) {
-                          
+
                           alert(ts.responseText);
                           location.reload();
                       },
                       success: function(data){
-                         
+
                           alert(data);
                       }
-                }); 
-                
+                });
+
             }else{
                 e.preventDefault();
             }
-            
+
         });
-        
+
         $('body').on('dblclick', '.custom-table tr', function(){
-            
+
             var purinv = $(this).find('.purinv').html();
-            
+
             window.location.replace("{{Request::root()}}/dashboard/purchase_report_single/"+purinv);
         })
-        
+
     });
-    
+
 </script>
 
 @stop

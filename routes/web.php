@@ -179,6 +179,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get','post'],'/dashboard/up_cust/{id}','PosCustomerController@UpCust');
 
     Route::match(['get','post'],'/dashboard/customer/{id}','PosCustomerController@getCustomer');
+    Route::get('/customer/details/prev', [PosSupplierController::class, 'getPreviousBalance_customer'])->name('customer.details.previousBalance');
 
     Route::match(['get','post'],'/customer/details','PosCustomerController@filter_data')->name('customer.details');
     Route::resource('customer', 'PosCustomerController');
@@ -214,6 +215,11 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get','post'],'/dashboard/get_supp_details','PosSupplierController@suppDetails')->name('get_cust_details');
     Route::match(['get','post'], '/dashboard/addS_payment', 'PosSupplierController@addPayment')->name('supp_payment');
     Route::match(['get','post'],'/dashboard/supplier/{id}','PosSupplierController@getSupplier');
+    Route::get('/supplier/details/prev', [PosSupplierController::class, 'getPreviousBalance'])->name('supplier.details.previousBalance');
+
+
+
+
     Route::match(['get','post'],'/supplier/details','PosSupplierController@filter_data')->name('supplier.details');
     Route::get('/supplier/details/prev', [PosSupplierController::class, 'getPreviousBalance'])->name('supplier.details.previousBalance');
     Route::get('/bank/details/prev', [PosSupplierController::class, 'getPreviousBalanceBank'])->name('bank.details.previousBalance');

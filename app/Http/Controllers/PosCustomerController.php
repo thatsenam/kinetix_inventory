@@ -247,6 +247,8 @@ class PosCustomerController extends Controller
         $customer = Customer::where(['id'=>$id])->first();
         $get_head = DB::table('acc_heads')->where('cid',"cid ".$id)->first();
         $head = $get_head->head;
+
+
         $ledgers = AccTransaction::where(['head'=>$head])->get();
         $total_sale = DB::table('sales_invoice')->where('cid',$id)->sum('amount');
         $sales = DB::table('sales_invoice')->where('cid',$id)->get();
@@ -257,25 +259,9 @@ class PosCustomerController extends Controller
         $total_return = DB::table('sales_return')->where('cid',$id)->sum('tprice');
         $cash_return = DB::table('sales_return')->where('cid',$id)->sum('cash_return');
         $return_due = $total_return - $cash_return;
-        $setting = DB::table('general_settings')->where('client_id', auth()->user()->client_id)->first();
-        return view('admin.pos.customer.customer_details')->with(compact('setting', 'customer','get_head','total_sale','total_sale_paid','sale_due','total_return','cash_return','return_due','ledgers','sales'));
+        return view('admin.pos.customer.customer_details')->with(compact('customer','get_head','total_sale','total_sale_paid','sale_due','total_return','cash_return','return_due','ledgers','sales'));
 
-        // $get_data = DB::table('acc_transactions')->get();
 
-        //         $data = array();
-
-        //     foreach($get_data as $row){
-        //         $data['date'] = $row->date;
-        //         // $data['id'] = $row->id;
-        //         $data['vno'] = $row->vno;
-        //         // $data['head'] = $row->head;
-        //         $data['description'] = $row->description;
-        //         $data['debit'] = $row->debit;
-        //         $data['credit'] = $row->credit;
-
-        //     }
-
-        //     dd($data);
 
     }
 
@@ -815,7 +801,7 @@ class PosCustomerController extends Controller
                 'due' => $due,
             ];
         }
-        
+
         return view('admin.pos.customer.customers-due-report', compact('customers_due'));
     }
 
@@ -873,7 +859,7 @@ class PosCustomerController extends Controller
                 ->whereDate('date', '>=', $stdate)
                 ->whereDate('date', '<=', $enddate)
                 ->get();
-            
+
             foreach($collection as $collect)
             {
                 $collections [] = [
@@ -886,7 +872,7 @@ class PosCustomerController extends Controller
         }
 
         // dd($collections);
-        
+
         return DataTables()->of($collections)->make(true);
     }
 
@@ -939,7 +925,7 @@ class PosCustomerController extends Controller
                     <th>Credit</th>
                     <th>Balance</th>
                 </tr>";
-        
+
         foreach($accounts as $row)
         {
             $Balance = $Balance + $row->debit - $row->credit;

@@ -9,12 +9,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Supplier</h1>
+                        <h1>সরবরাহকারী</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/Dashboard">Home</a></li>
-                            <li class="breadcrumb-item active">Supplier Details</li>
+                            <li class="breadcrumb-item"><a href="/Dashboard">হোম</a></li>
+                            <li class="breadcrumb-item active">সরবরাহকারী তথ্য</li>
                         </ol>
                     </div>
                 </div>
@@ -34,32 +34,30 @@
                         @endif
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Supplier Details</h3>
+                                <h3 class="card-title">সরবরাহকারী বিস্তারিত</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="row">
-                                    <input type="hidden" name="cust_head" id="cust_id" value="{{$get_head->head}}">
+                                    <input type="hidden" class="form-control" value="{{$get_head->head}}" id="cust_id">
                                     <input type="hidden" name="cust_id" id="id" value="{{$get_head->cid}}">
+                                    <input type="hidden" name="supplier_id" id="supplier_id" value="{{$supplier->id}}">
                                     <div class="col-md-6">
                                         <table class="table table-bordered table-sm">
                                             <tbody>
                                             <tr>
-                                                <th scope="row">Name</th>
+                                                <th scope="row">নাম</th>
                                                 <td>{{$supplier->name}}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">Address</th>
+                                                <th scope="row">ঠিকানা</th>
                                                 <td>{{$supplier->address}}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">Mobile</th>
+                                                <th scope="row">মোবাইল</th>
                                                 <td>{{$supplier->phone}}</td>
                                             </tr>
-                                            <tr>
-                                                <th scope="row">Group</th>
-                                                <td>{{ $group->supplier_group?? '' }}</td>
-                                            </tr>
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -67,20 +65,20 @@
                                         <table class="table table-bordered table-sm">
                                             <tbody>
                                             <tr>
-                                                <th scope="row">Total Purchase</th>
+                                                <th scope="row"> মোট ক্রয়</th>
                                                 <td>{{ $total_purchase }}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">Total Discount</th>
+                                                <th scope="row"> মোট ছাড়</th>
                                                 <td>{{ $sumDiscount }}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">Total Paid</th>
+                                                <th scope="row">মোট পরিশোধ</th>
                                                 <td>{{ $fromPayment }}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">Total Due</th>
-                                                <td>{{ $purchase_due }}</td>
+                                                <th scope="row">সর্বমোট বকেয়া</th>
+                                                <td>{{$supplier->due}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -97,12 +95,13 @@
                                         <li class="nav-item">
                                             <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill"
                                                href="#custom-tabs-four-home" role="tab"
-                                               aria-controls="custom-tabs-four-home" aria-selected="true">Ledger</a>
+                                               aria-controls="custom-tabs-four-home" aria-selected="true">লেজার</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill"
                                                href="#custom-tabs-four-profile" role="tab"
-                                               aria-controls="custom-tabs-four-profile" aria-selected="false">Purchases</a>
+                                               aria-controls="custom-tabs-four-profile" aria-selected="false">ক্রয়
+                                                সমূহ</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -118,7 +117,7 @@
                                                         <div class="card card-widget widget-user-2">
                                                             <!-- Add the bg color to the header using any of the bg-* classes -->
                                                             <div class="card-header bg-info">
-                                                                <h3 class="card-title">Customer:</h3>
+                                                                <h3 class="card-title">গ্রাহক:</h3>
                                                             </div>
                                                             <div class="card-body">
                                                                 <b><i class="fa fa-user mr-2"></i> {{$supplier->name}}
@@ -139,7 +138,7 @@
                                                         <div class="card card-widget widget-user-2">
                                                             <!-- Add the bg color to the header using any of the bg-* classes -->
                                                             <div class="card-header bg-info">
-                                                                <h3 class="card-title">Prepared By</h3>
+                                                                <h3 class="card-title">প্রস্তুতকারক</h3>
                                                             </div>
                                                             <div class="card-body">
                                                                 <b><i class="fa fa-globe mr-2"></i> {{$GenSettings->site_name ?? " "}}
@@ -155,16 +154,19 @@
                                             </div>
                                             <div class="row input-daterange mb-3">
                                                 <div class="col-md-3">
-                                                    <input type="text" name="from_date" id="from_date" class="form-control" readonly="">
+                                                    <input type="text" name="from_date" id="from_date"
+                                                           class="form-control" readonly="">
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date" readonly="">
+                                                    <input type="text" name="to_date" id="to_date" class="form-control"
+                                                           placeholder="To Date" readonly="">
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button type="button" name="filter" id="filter" class="btn btn-primary">Filter
+                                                    <button type="button" name="filter" id="filter"
+                                                            class="btn btn-primary">ফিল্টার
                                                     </button>
                                                     <button type="button" name="refresh" id="refresh"
-                                                            class="btn btn-default">Refresh
+                                                            class="btn btn-default">রিফ্রেশ
                                                     </button>
                                                 </div>
                                                 <div class="col-md-3">
@@ -174,16 +176,16 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                             <span class="float-right font-weight-bolder">Previous Balance : <span id="previousBalance">0</span></span>
+                                            <span class="float-right font-weight-bolder">Previous Balance : <span id="previousBalance">0</span></span>
                                             <table id="ledger" class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>Date</th>
-                                                    <th>Invoice No</th>
-                                                    <th>Deatils</th>
-                                                    <th>Debit</th>
-                                                    <th>Credit</th>
-                                                    <th>Due</th>
+                                                    <th>তারিখ</th>
+                                                    <th>মেমো নং</th>
+                                                    <th>বিস্তারিত</th>
+                                                    <th>ডেবিট</th>
+                                                    <th>ক্রেডিট</th>
+                                                    <th>বাকী</th>
                                                 </tr>
                                                 </thead>
                                             </table>
@@ -193,17 +195,17 @@
                                             <table id="sales" class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>Date</th>
-                                                    <th>Invoice No</th>
-                                                    <th>Total</th>
-                                                    <th>Paid</th>
-                                                    <th>Due</th>
+                                                    <th>তারিখ</th>
+                                                    <th>মেমো নং</th>
+                                                    <th>মোট</th>
+                                                    <th>পরিশোধ</th>
+                                                    <th>বাকী</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 @foreach($purchase as $purc)
                                                     <tr>
-                                                        <td>{{ $purc->date }}</td>
+                                                        <td>{{ $purc->date}}</td>
                                                         <td>
                                                             <a href="{{url('/dashboard/purchase_invoice/'.$purc->pur_inv)}}"><i
                                                                     class="fa fa-eye"
@@ -213,8 +215,8 @@
                                                         <td>{{ $purc->payment }}</td>
                                                         <td>{{ $purc->total }}</td>
                                                     </tr>
-                                                    @endforeach
-                                                    </tobody>
+                                                @endforeach
+                                                </tbody>
                                             </table>
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel"
@@ -248,10 +250,11 @@
 @endsection
 <style>
     .nav-tabs {
-      display: flex !important;
+        display: flex !important;
     }
 </style>
 @section('page-js-script')
+    <script src="/js/conversion.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             var lastdate = new Date();
@@ -319,6 +322,8 @@
                         $("#previousBalance").text(response.p_balance);
                     }
                 });
+
+
                 $("#ledger").DataTable({
                     "responsive": true,
                     "autoWidth": false,
@@ -326,12 +331,25 @@
                     "precessing": true,
                     "serverSide": true,
                     "columnDefs": [
-                      {"orderable": false, "targets": 0}
+                        {"orderable": false, "targets": 0}
                     ],
+
                     "pageLength": 50,
+                    "oLanguage": {
+                        "sSearch": "খুঁজুন:"
+                    },
+                    "language": {
+                        "paginate": {
+                            "previous": "পূর্বের পাতা",
+                            "next": "পরবর্তী পাতা",
+                        },
+                        "info": "মোট _TOTAL_ রেকর্ড থেকে _START_ থেকে _END_ পর্যন্ত দেখানো হচ্ছে",
+                        "infoEmpty": "মোট 0 রেকর্ড থেকে 0 থেকে 0 পর্যন্ত দেখানো হচ্ছে",
+                    },
                     ajax: {
                         url: '{{ route("supplier.details") }}',
-                        data: {from_date: from_date, to_date: to_date, sid: sid},
+                        data: {from_date: from_date, to_date: to_date, sid: sid, supplier_id:$('#supplier_id').val()},
+
                     },
                     columns: [
                         {data: 'date',},
@@ -342,6 +360,7 @@
                         // {data:'user',},
                         {data: 'balance',},
                     ]
+
                 });
             }
 

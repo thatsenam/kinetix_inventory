@@ -349,12 +349,12 @@
                 		},
             		  error: function(ts) {
 
-                          alert(ts.responseText);
+                          // alert(ts.responseText);
                           location.reload();
                       },
                       success: function(data){
 
-                          alert(data);
+                          // alert(data);
                       }
                 });
 

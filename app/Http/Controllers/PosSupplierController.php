@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AccHead;
 use App\BankTransaction;
+use App\Customer;
 use App\PaymentInvoice;
 use App\Helpers\AppHelper;
 use App\PurchaseDetails;
@@ -22,6 +23,32 @@ use Auth;
 
 class PosSupplierController extends Controller
 {
+
+
+    public function getPreviousBalance_customer(Request $request)
+    {
+        $start_date =$request->from_date;
+        $end_date = $request->to_date;
+
+        $sid = $request->sid;
+        $id = explode(' ', $sid)[1];
+        $supplier = Customer::find($id);
+//        return $supplier;
+        $head = $supplier->name . ' ' . $supplier->phone;
+
+        $previousBalance = 0;
+        $previousTxn = DB::table('acc_transactions')
+            ->where('client_id', auth()->user()->client_id)
+            ->where('description', 'OpeningBalance')
+            ->where('head', $head);
+
+
+        $debit = $previousTxn->sum('debit');
+        $credit = $previousTxn->sum('credit');
+
+        return ['p_balance' => $debit];
+//        return $previousTxn->get();
+    }
 
     public function setSupplierGroup(Request $request)
     {
@@ -52,6 +79,7 @@ class PosSupplierController extends Controller
     }
     public function setSupplier(Request $request)
     {
+
         if ($request->isMethod('post')) {
             //dd($request->all());
             $data = $request->all();
@@ -634,55 +662,62 @@ class PosSupplierController extends Controller
     public function getSupplier($id){
 
         $supplier = Supplier::where(['id' => $id])->first();
-        $get_head = DB::table('acc_heads')->where('cid', "sid " . $id)->first();
 
+        $get_head = DB::table('acc_heads')->where('cid', "sid " . $id)->first();
+        $group = "Null";
         $head = $get_head->head;
         $ledgers = AccTransaction::where(['head' => $head])->get();
+
         $total_purchase = DB::table('purchase_primary')
             ->where('client_id', auth()->user()->client_id)
             ->where('sid', $id)->sum('amount');
+
         $purchase = DB::table('purchase_primary')
             ->where('client_id', auth()->user()->client_id)
             ->where('sid', $id)->get();
+
         $fromPurchase = DB::table('purchase_primary')
             ->where('client_id', auth()->user()->client_id)
             ->where('sid', $id)->sum('payment');
-        $fromPayment = DB::table('payment_invoice')
-            ->where('client_id', auth()->user()->client_id)
-            ->where('sid', $id)->sum('amount');
+
+//        $fromPayment = DB::table('payment_invoice')
+//            ->where('client_id', auth()->user()->client_id)
+//            ->where('sid', $id)->sum('amount');
+        $fromPayment = 0;
+
         $sumDiscount = DB::table('purchase_primary')
             ->where('client_id', auth()->user()->client_id)
             ->where("sid", $id)->sum('discount');
         $total_purchase_paid = $fromPurchase + $fromPayment;
         $purchase_due = $total_purchase - $total_purchase_paid - $sumDiscount;
 
-        $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
+        return view('admin.pos.suppliers.supplier_details')
+            ->with(compact('supplier', 'get_head', 'total_purchase', 'total_purchase_paid',
+                'purchase_due', 'sumDiscount', 'fromPayment', 'ledgers', 'purchase', 'group'));
 
-        return view('admin.pos.suppliers.supplier_details')->with(compact('supplier', 'get_head', 'total_purchase', 'total_purchase_paid', 'purchase_due', 'sumDiscount', 'fromPayment', 'ledgers', 'purchase', 'group','settings'));
 
     }
 
+
     public function getPreviousBalance(Request $request)
     {
-        $start_date = $request->from_date;
-        $end_date = $request->to_date;
+        $start_date =  $request->from_date;
+        $end_date =  $request->to_date;
         $sid = $request->sid;
         $id = explode(' ', $sid)[1];
         $supplier = Supplier::find($id);
-//        return $supplier;
         $head = $supplier->name . ' ' . $supplier->phone;
 
 
         $previousBalance = 0;
         $previousTxn = DB::table('acc_transactions')
             ->where('client_id', auth()->user()->client_id)
-            ->where('head', $head)->whereDate('date', '<', $start_date);
-        $debit = $previousTxn->sum('debit');
+            ->where('head', $head)
+            ->where('description', 'OpeningBalance');
+
         $credit = $previousTxn->sum('credit');
 
-        $previousBalance = $debit - $credit;
-        return ['p_balance' => $previousBalance];
-//        return $previousTxn->get();
+        return ['p_balance' => $credit];
     }
 
     public function getPreviousBalanceBank(Request $request)
@@ -712,10 +747,16 @@ class PosSupplierController extends Controller
     public function filter_data(Request $request){
         if(request()->ajax()){
             $sid = $request->sid;
+            $sid = $request->sid;
+            $supp = Supplier::find($request->supplier_id);
+            $head = $supp->name . " " . $supp->phone;
+
             if(!empty($request->from_date)){
                 $data = DB::table('acc_transactions')
                     ->where('client_id',auth()->user()->client_id)
-                    ->where('sort_by',$sid)->whereBetween('date', array($request->from_date, $request->to_date))->get()->toArray();
+                    ->where('head',$head)
+                    ->whereBetween('date', array($request->from_date, $request->to_date))
+                    ->get()->toArray();
             }else{
                 $data = DB::table('acc_transactions')
                     ->where('client_id',auth()->user()->client_id)

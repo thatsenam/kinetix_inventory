@@ -189,7 +189,7 @@ class PagesController extends Controller
         foreach($stocks as $key=>$value){
             $wid = $value->warehouse_id;
             $getWname = Warehouse::where('id',$wid)->first();
-            $wname = $getWname->name;
+            $wname = $getWname->name ?? " ";
             $getStocks = DB::table('stocks')
             ->select('stocks.product_id as pid','products.product_name')
             ->where('stocks.warehouse_id',$wid)

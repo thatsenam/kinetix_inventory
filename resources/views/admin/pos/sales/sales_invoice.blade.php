@@ -387,7 +387,7 @@
                                                             <label>Payment Type</label>
                                                             <select name="paytype" id="paytype" class="form-control"
                                                                     placeholder="" value="0">
-                                                                <option value='cash'>Cash</option>
+                                                                <option value='cash'>Cash Payment</option>
                                                                 <option value='card'>Card</option>
                                                                 <option value='mobile'>Mobile</option>
                                                                 <option value='check'>Check</option>

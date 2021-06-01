@@ -47,11 +47,11 @@
                                 <label for="inputName">Brand Name <span class="text-danger">*</span></label>
                                 <input type="text" name="inputName" id="inputName" class="form-control" placeholder="Type Brand Name Here...">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="inputDesc">Brand Description</label>
                                 <textarea id="inputDesc" name="inputDesc" class="form-control" rows="8" placeholder="Type Braand Description Here..."></textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="inputImage">Brand Image</label>
                                 <div class="custom-file">
                                     <input type="file" name="inputImage" class="custom-file-input" id="inputImage">
@@ -66,7 +66,7 @@
                                     <option value="0">Inactive</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="inputURL">Brand URL</label>
                                 <input type="text" id="inputURL" name="inputURL" class="form-control" placeholder="Brand URL Here...">
                             </div>

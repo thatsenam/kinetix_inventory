@@ -24,7 +24,7 @@
             </div>
         @endif
         @foreach($products as $product)
-                    
+
             @php( $cat_id = $product->cat_id )
             @php( $brand_id = $product->brand_id )
             @php( $name = $product->product_name )
@@ -41,7 +41,8 @@
             @php( $barcode = $product->barcode )
             @php( $serial = $product->serial )
             @php( $warranty = $product->warranty )
-                                        
+            @php( $reorder = $product->reorder )
+
         @endforeach
       </div><!-- /.container-fluid -->
     </section>
@@ -110,7 +111,8 @@
                     <div class="card-header">
                         <h3 class="card-title">Other Details</h3>
                         <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -138,21 +140,21 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group" style="display: none">
                                     <label for="inputSKU">SKU</label>
                                     <input type="text" name="inputSKU" id="inputSKU" value="{{$sku}}" class="form-control"/>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" style="display: none">
                                 <div class="form-group">
                                     <label for="inputSize">Product Weight</label>
                                     <input type="text" name="inputSize" id="inputSize" class="form-control" value="{{$weight}}">
                                 </div>
                             </div>
-                            
+
                             <div class="">
                                 <div class="">
                                     {{-- <label for="inputStock">Stock</label> --}}
@@ -162,13 +164,13 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group" style="display: none">
                                     <label>Product Code</label>
                                     <input type="text" name="inputCode" class="form-control" value="{{$code}}">
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group" style="display: none">
                                     <label for="inputImage">Product Image</label> <br>
                                     @if($image)
                                         <img src="/images/products/{{$image}}" alt="" width="70px" style="border-radius: 100%;">
@@ -179,16 +181,20 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
-                        
-                        <div class="form-group">
-                            <div class="form-check text-center">
+
+                        <div class="form-group row">
+                            <div class="form-check text-center col-sm-6">
                                 <input name="serial" type="hidden" value="0">
                                 <input name="serial" class="form-check-input" type="checkbox" value="1" id="SerialCheckbox" {{ $serial == '1' ? 'checked' : '' }}>
                                 <label class="form-check-label font-weight-bold" for="SerialCheckbox">
                                   SERIAL NUMBER ?
                                 </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="">Re-Order Number</label>
+                                <input type="number" name="reorder" id="reorder" value="{{$reorder}}" class="form-control">
                             </div>
                         </div>
                     </div>

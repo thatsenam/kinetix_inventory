@@ -20,11 +20,13 @@ class ProductsController extends Controller
     public function addProduct(Request $request){
         $category = Category::orderBy('name', 'ASC')->where('client_id', auth()->user()->client_id)->get();
         $brands = Brands::orderBy('name', 'ASC')->where('client_id', auth()->user()->client_id)->get();
-        
+
         if($request->isMethod('post')){
 
             $slug = Str::slug($request->inputName);
-            $slug_count = Products::where('slug', $slug)->where('client_id', auth()->user()->client_id)->count();
+            $slug_count = Products::where('slug', $slug)
+                ->where('client_id', auth()->user()->client_id)
+                ->count();
             if($slug_count > 0){
                 $x = Date('ms')."-".rand(1000,10000);
                 $slug = $slug.$x;
@@ -58,6 +60,7 @@ class ProductsController extends Controller
             $product->warranty = $data['inputWarranty'];
             // $product->is_featured = $data['inputStatus'];
             $product->serial = $data['serial'];
+            $product->reorder = $data['reorder'];
 
             if($request->hasFile('inputImage')){
                 $file = $request->file('inputImage');
@@ -113,8 +116,11 @@ class ProductsController extends Controller
     }
 
     public function editProduct(Request $req, $id = null){
-        $products = Products::where(['id'=>$id])->where('client_id', auth()->user()->client_id)->get();
-        $categories = Category::orderBy('name', 'ASC')->where('client_id', auth()->user()->client_id)->get();
+        $products = Products::where(['id'=>$id])
+            ->where('client_id', auth()->user()->client_id)->get();
+
+        $categories = Category::orderBy('name', 'ASC')
+            ->where('client_id', auth()->user()->client_id)->get();
         $catArray = [];
         if($categories != null){
             foreach($categories as $cat){
@@ -160,6 +166,7 @@ class ProductsController extends Controller
                 'stock'=>$data['inputStock'],
                 // 'is_featured'=>$data['inputStatus'],
                 'serial' => $data['serial'],
+                'reorder' => $data['reorder'],
             ]);
 
             $DataProduct = Products::where('id', $id)->first();
@@ -518,7 +525,7 @@ class ProductsController extends Controller
                 'product_name' => $product->product_name,
             );
         }
-  
+
         return response()->json($response);
     }
 

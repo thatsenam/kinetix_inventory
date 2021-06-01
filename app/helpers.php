@@ -15,6 +15,7 @@ if (!function_exists('addOrUpdateOpeningBalance')) {
         $txn = AccTransaction::firstOrNew(['head' => $head, 'description' => 'OpeningBalance', 'type' => AccHead::class, 'type_id' => $head_id]);
         $txn->credit = $credit;
         $txn->debit = $debit;
+        $txn->date = date("Y/m/d");
         $txn->save();
     }
 }

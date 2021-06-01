@@ -75,14 +75,14 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-3">
+                                                <div class="" style="display: none">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" name="barcode" id="barcode"
                                                                class="form-control" placeholder="Barcode"
                                                                autocomplete="off">
                                                     </div>
                                                 </div>
-                                                <div class="col-9">
+                                                <div class="col-12">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" class="form-control"
                                                                placeholder="Search Product" id="search"
@@ -880,7 +880,8 @@
 
                     } else {
                         totalPrice = (qnt * price);
-                        var box_value = qnt + " " + unit;
+                        // var box_value = qnt + " " + unit;
+                        var box_value = qnt ;
                         price_per_kg = price / per_box_qty;
                     }
 

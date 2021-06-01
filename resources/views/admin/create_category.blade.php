@@ -47,15 +47,15 @@
                                 <label for="inputName">Category Name <span class="text-danger">*</span></label>
                                 <input type="text" name="cat_name" id="inputName" class="form-control" placeholder="Type Category Name Here...">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="cat_desc">Category Description</label>
                                 <textarea id="cat_desc" name="cat_desc" class="form-control" rows="8" placeholder="Type Category Description Here..."></textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="parent_cat">Parent Category</label>
                                 <select id="parent_cat" name="parent_cat" class="form-control">
                                     <option value="0" selected>Select Parent Category</option>
-                                    <?php if($category != null){ 
+                                    <?php if($category != null){
                                         foreach($category as $cat){ ?>
                                         @if($cat->parent_id != 0)
                                         <option value="<?php echo $cat['id'] ?>"><?php echo $cat['name'] ?> </option>
@@ -65,18 +65,18 @@
                                     <?php } }?>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="inputVat">Category IVA</label>
                                 <input type="text" name="inputVat" class="form-control" id="inputVat">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="inputImage">Category Image</label>
                                 <div class="custom-file">
                                     <input type="file" name="inputImage" class="custom-file-input" id="inputImage">
                                     <label class="custom-file-label" for="inputImage">Choose file</label>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="inputType">Category Type <span class="small">(If fetaured category block will be diplayed on homepage)</span></label>
                                 <select id="inputType" name="cat_type" class="form-control custom-select">
                                     <option selected disabled>Select one</option>
@@ -92,7 +92,7 @@
                                     <option value="0">Inactive</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="cat_url">Category URL</label>
                                 <input type="text" id="cat_url" name="cat_url" class="form-control" placeholder="Category URL Here...">
                             </div>

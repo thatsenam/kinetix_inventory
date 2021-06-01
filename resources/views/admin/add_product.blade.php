@@ -54,9 +54,9 @@
                   <li class="nav-item">
                     <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Product Information</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Additional Images</a>
-                  </li>
+{{--                  <li class="nav-item">--}}
+{{--                    <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Additional Images</a>--}}
+{{--                  </li>--}}
                 </ul>
               </div>
               <div class="card-body">
@@ -150,13 +150,13 @@
 
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group" style="display: none">
                                     <label for="inputSKU">SKU</label>
                                     <input type="text" name="inputSKU" id="inputSKU" placeholder="Enter SKU" class="form-control"/>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group" style="display: none">
                                     <label for="inputSize">Product Weight</label>
                                     <input type="text" name="inputSize" id="inputSize" placeholder="Enter Weight" class="form-control"/>
                                 </div>
@@ -169,14 +169,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="display: none">
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Product Code</label>
                                     <input type="text" name="inputCode" class="form-control" placeholder="Enter ...">
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" style="display: none">
                                 <div class="form-group">
                                     <label for="inputImage">Product Image</label>
                                     <div class="custom-file">
@@ -187,13 +187,17 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <div class="form-check text-center">
+                        <div class="form-group row">
+                            <div class="form-check text-center col-sm-6">
                                 <input name="serial" type="hidden" value="0">
                                 <input name="serial" class="form-check-input" type="checkbox" value="1" id="SerialCheckbox">
                                 <label class="form-check-label font-weight-bold" for="SerialCheckbox">
                                   SERIAL NUMBER ?
                                 </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="">Re-Order Number</label>
+                                <input type="number" name="reorder" id="reorder" class="form-control">
                             </div>
                         </div>
                   </div>

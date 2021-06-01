@@ -32,14 +32,14 @@
                 </div>
                 @endif
                 @foreach($brands as $brand)
-                    
+
                     @php( $name = $brand->name)
                     @php( $description = $brand->description )
                     @php( $parent = $brand->parent_id )
                     @php( $status = $brand->status )
                     @php( $url = $brand->url )
                     @php( $image = $brand->image )
-                                        
+
                 @endforeach
                 <div class="card card-primary">
                     <div class="card-header">
@@ -57,11 +57,11 @@
                                 <label for="inputName">Brand Name <span class="text-danger">*</span></label>
                                 <input type="text" name="inputName" value="{{$name}}" id="inputName" class="form-control">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="inputDesc">Brand Description</label>
                                 <textarea id="inputDesc" name="inputDesc" class="form-control" rows="8">{{$description}}</textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="inputImage">Brand Image</label> <br>
                                 <img src="/images/brands/{{$image}}" alt="" style="border-radius: 100%; width: 70px;">
                                 <div class="custom-file">
@@ -72,7 +72,7 @@
                             <div class="form-group">
                                 <label for="inputStatus">Status</label>
                                 <select id="inputStatus" name="inputStatus" class="form-control custom-select">
-                                    <option selected value="{{$status}}"><?php 
+                                    <option selected value="{{$status}}"><?php
                                     if($status == 0){
                                         echo 'Inactive';
                                     }elseif($status == 1){
@@ -83,7 +83,7 @@
                                     <option value="0">Inactive</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none" >
                                 <label for="inputURL">Brand URL</label>
                                 <input type="text" id="inputURL" name="inputURL" class="form-control" value="{{$url}}">
                             </div>

@@ -1,5 +1,5 @@
 @extends('admin.pos.master')
-        
+
 @section('content')
 
 <div class="content-wrapper">
@@ -20,12 +20,11 @@
         <div class="row">
         <div class="col-12">
                 <div class="justify-content-center d-flex mb-2">
-                    <div>
+                    <div class="col-lg-4">
                         <label class="text-dark"><b>Start Date</b></label>
                         <input class="form-control" name="stdate" id="stdate" type="text" required autocomplete="off">
                     </div>
-                    <p class="mr-4"></p>
-                    <div>
+                    <div class="col-lg-4">
                         <label class="text-dark"><b>End Date</b></label>
                         <input class="form-control" name="enddate" id="enddate" type="text" required autocomplete="off">
                     </div>
@@ -116,7 +115,7 @@
                             typeof i === 'number' ?
                                 i : 0;
                     };
-        
+
                     // Total over all pages
                     qty = api
                         .column( 5 )
@@ -158,7 +157,7 @@
                             return intVal(a) + intVal(b);
                         }, 0 );
                     gTotal = gTotal.toFixed(2);
-        
+
                     // Update footer
                     $( api.column( 5 ).footer() ).html(
                         qty
@@ -205,41 +204,41 @@
             }
             else{alert('Both Date is required');}
         });
-        
+
         $('#refresh').click(function(){
             $('#stdate').val('');
             $('#enddate').val('');
             $('#converting').DataTable().destroy();
             load_data();
         });
-        
+
         // $( function() {
         //     $( "#stdate" ).datepicker({dateFormat: 'yy-mm-dd' });
         // } );
-        
+
         // $( function() {
         //     $( "#enddate" ).datepicker({dateFormat: 'yy-mm-dd' });
         // } );
-        
-        
-        
+
+
+
         // $('#search').on('click', function(e){
-            
+
         //     e.preventDefault();
-            
+
         //     var stdate = $('#stdate').val();
         //     var enddate = $('#enddate').val();
-        			
+
         // 	var formData = new FormData();
         // 	    formData.append('stdate', stdate);
         // 	    formData.append('enddate', enddate);
-        			
+
         // 	    $.ajaxSetup({
         //             headers: {
         //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         //             }
         //         });
-        			
+
         //         $.ajax({
         //     		  url: "{{ URL::route('get_purchase_return_report_date') }}",
         //               method: 'post',
@@ -255,37 +254,37 @@
         //     		      $('.custom-table td').remove();
         //                   $('.custom-table').show();
         //                   $('.custom-table tr:last').after(ts.responseText);
-                          
+
         //                   //alert(ts.responseText)
         //               },
         //               success: function(data){
-                         
+
         //                   alert(data);
         //               }
-            		   
-        //         }); 
+
+        //         });
         //     });
-        
+
         $('body').on('click', '.delete', function(){
-            
+
             if(confirm("Are you Sure to Delete?")){
 
                 var id = $(this).data("id");
                 var invoice = $(this).data("invoice");
-                
+
                 // var id = $(this).closest('tr').find('data-id').html();
                 // var invoice = $(this).closest('tr').find('data-invoice').html();
-                
+
                 var formData = new FormData();
         	        formData.append('id', id);
         	        formData.append('invoice', invoice);
-        	        
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-        			
+
                 $.ajax({
             		  url: "{{ URL::route('delete_purchase_return')}}",
                       method: 'post',
@@ -298,32 +297,32 @@
                 			//$("#wait").show();
                 		},
             		  error: function(ts) {
-                          
+
                           alert(ts.responseText);
                           location.reload();
                       },
                       success: function(data){
-                         
+
                           alert(data);
                           location.reload();
                       }
-                }); 
-                
+                });
+
             }else{
                 e.preventDefault();
             }
-            
+
         });
-        
+
         $('body').on('dblclick', '.custom-table tr', function(){
-            
+
             var purinv = $(this).find('.purinv').html();
-            
+
             //window.location.replace("{{Request::root()}}/dashboard/purchase_report_single/"+purinv);
         })
-        
+
     });
-    
+
 </script>
 
 @stop

@@ -32,7 +32,7 @@
                 </div>
                 @endif
                 @foreach($category as $cat)
-                    
+
                     @php( $name = $cat->name)
                     @php( $description = $cat->description )
                     @php( $parent = $cat->parent_id )
@@ -41,7 +41,7 @@
                     @php( $url = $cat->url )
                     @php( $image = $cat->image )
                     @php( $vat = $cat->vat ?? '' )
-                                        
+
                 @endforeach
                 <div class="card card-primary">
                     <div class="card-header">
@@ -59,7 +59,7 @@
                                 <label for="inputName">Category Name <span class="text-danger">*</span></label>
                                 <input type="text" name="cat_name" value="{{$name}}" id="inputName" class="form-control">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="cat_desc">Category Description</label>
                                 <textarea id="cat_desc" name="cat_desc" class="form-control">{{$description}}</textarea>
                             </div>
@@ -73,11 +73,11 @@
                                     @endfor
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="vat">Category IVA</label>
                                 <input type="text" name="vat" class="form-control" id="vat" value="{{$vat}}">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group"  style="display: none">
                                 @if($image)
                                 <img src="/images/categories/{{$image}}" alt="" width="100px"> <br>
                                 @endif
@@ -90,7 +90,7 @@
                             <div class="form-group">
                                 <label for="inputType">Category Type <span class="small">(If fetaured category block will be diplayed on homepage)</span></label>
                                 <select id="inputType" name="cat_type" class="form-control custom-select">
-                                    <option selected value="{{$type}}"><?php 
+                                    <option selected value="{{$type}}"><?php
                                     if($type == 0){
                                         echo 'Normal Category';
                                     }elseif($status == 1){
@@ -104,7 +104,7 @@
                             <div class="form-group">
                                 <label for="inputStatus">Status <span class="text-danger">*</span></label>
                                 <select id="inputStatus" name="cat_status" class="form-control custom-select">
-                                    <option selected value="{{$status}}"><?php 
+                                    <option selected value="{{$status}}"><?php
                                     if($status == 0){
                                         echo 'Inactive';
                                     }elseif($status == 1){
@@ -115,7 +115,7 @@
                                     <option value="0">Inactive</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="cat_url">Category URL</label>
                                 <input type="text" id="cat_url" name="cat_url" value="{{$url}}" class="form-control">
                             </div>

@@ -85,7 +85,7 @@
                         <td class="project-actions text-center">
 {{--                          <a class="btn btn-info btn-sm mb-1" href="{{url('/products/'.$product->id)}}" target="_blank" title="View"><i class="fas fa-eye"></i></a>--}}
                           <a class="btn btn-info btn-sm mb-1" href="{{url('/admin/edit_product/'.$product->id)}}" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                          <a class="btn btn-info btn-sm mb-1" href="{{url('/admin/create_attribute/'.$product->id)}}" title="Add Attribute">+Attribute</a>
+{{--                          <a class="btn btn-info btn-sm mb-1" href="{{url('/admin/create_attribute/'.$product->id)}}" title="Add Attribute">+Attribute</a>--}}
                           <!--<a class="btn btn-info btn-sm mb-1" href="{{url('/admin/create_attribute/'.$product->id)}}" title="Add Images For This Product">+ Images</a>-->
                           <button class="btn btn-danger btn-sm" onclick="deleteConfirmation({{$product->id}})" title="Delete Prodduct"><i class="fas fa-trash"></i></button>
                         </td>

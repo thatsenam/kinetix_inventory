@@ -453,5 +453,6 @@ Route::match(['get','post'],'/admin/create_cost','CostController@CreateCost');
 Route::post('/admin/add_cost','CostController@add_cost')->name('add_cost');
 Route::match(['get','post'],'/admin/edit_cost/{id}','CostController@editCost');
 Route::match(['get','post'],'/admin/delete_cost/{id}','CostController@deleteCost');
+Route::match(['get','post'],'/admin/deleteBank/{id}','PosBankController@deleteBank');
 Route::get('/admin/cost_reports', 'CostController@cost_reports')->name('admin.cost_reports');
 

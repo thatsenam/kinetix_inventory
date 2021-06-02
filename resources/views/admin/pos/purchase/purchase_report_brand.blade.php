@@ -69,7 +69,7 @@
                                             <th>Product Name</th>
                                             <th>Qnt</th>
                                             <th>Price</th>
-
+                                            <th>Vat</th>
                                             <th>Total</th>
                                             <th>GTotal</th>
                                         </tr>
@@ -171,7 +171,9 @@
                             qnt
                         );
 
-
+                        $(api.column(6).footer()).html(
+                            vat
+                        );
                         $(api.column(7).footer()).html(
                             total
                         );
@@ -205,6 +207,9 @@
                         },
                         {
                             data: 'price',
+                        },
+                        {
+                            data: 'vat',
                         },
                         {
                             data: 'total',

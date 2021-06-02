@@ -769,7 +769,8 @@ class PosCustomerController extends Controller
         $cust_details = Customer::where(['id'=>$custid])->get();
 
         $details = DB::table('sales_invoice_details')
-        ->select('products.product_name as name', 'products.product_img as image', 'sales_invoice_details.qnt as qnt','sales_invoice_details.box',
+        ->select('products.product_name as name', 'products.product_img as image',
+            'sales_invoice_details.qnt as qnt','sales_invoice_details.box',
         'sales_invoice_details.price as price','sales_invoice_details.vat')
         ->join('products', 'sales_invoice_details.pid', 'products.id')
         ->where('sales_invoice_details.invoice_no', $invoiceno)->get();

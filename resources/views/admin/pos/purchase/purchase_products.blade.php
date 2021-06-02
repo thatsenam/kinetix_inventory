@@ -50,7 +50,11 @@
                                                 @else
                                                     <input type="hidden" name="warehouse_id" id="warehouse_id"
                                                            value="{{ $warehouse_id }}">
-                                                    <div class="col-8">
+                                                    <div class="col-1">
+                                                        <div onclick="addNewSupplier()"><i class="fas fa-plus-square fa-2x mt-1 pl-2"></i></div>
+
+                                                    </div>
+                                                    <div class="col-7">
                                                         <div class="form-group" style="position: relative;">
                                                             <input type="text" name="supp_name" id="supp_name"
                                                                    class="form-control" placeholder="Supplier Name"
@@ -62,6 +66,7 @@
                                                                    class="form-control">
                                                         </div>
                                                     </div>
+
                                                     <div class="col-4">
                                                         <div class="form-group" style="position: relative;">
                                                             <input type="text" name="supp_memo" id="supp_memo"
@@ -82,7 +87,10 @@
                                                                autocomplete="off">
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="col-1">
+                                                    <div onclick="addNewProduct()"><i class="fas fa-plus-square fa-2x mt-1 pl-2"></i></div>
+                                                </div>
+                                                <div class="col-11">
                                                     <div class="form-group" style="position: relative;">
                                                         <input type="text" class="form-control"
                                                                placeholder="Search Product" id="search"
@@ -270,6 +278,12 @@
 
     <script type="text/javascript">
 
+        function addNewSupplier(){
+            window.open('/dashboard/suppliers', '_blank');
+        }
+        function addNewProduct(){
+            window.open('/admin/add_product', '_blank');
+        }
 
         var per_box_qty;
         var sub_unit;

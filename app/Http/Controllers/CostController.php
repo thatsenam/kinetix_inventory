@@ -17,9 +17,9 @@ class CostController extends Controller
         $head = $fieldValues['head'];
         $description = $fieldValues['description'];
         $paytype = $fieldValues['paytype'];
-       
+
         $remarks = $fieldValues['remarks'] ?? '';
-        
+
 
         $clients_bank = $fieldValues['clients_bank'] ?? '';
         $clients_bank_acc = $fieldValues['clients_bank_acc'] ?? '';
@@ -28,23 +28,23 @@ class CostController extends Controller
         $check_no = $fieldValues['check_no'] ?? '';
         $check_date = $fieldValues['check_date'] ?? '';
         $check_type = $fieldValues['check_type'] ?? '';
-        
+
         $shops_bank_account = $fieldValues['shops_bank_account'] ?? '';
         $shops_bank_name = $fieldValues['shops_bank_name'] ?? '';
         $check_remarks = $fieldValues['check_remarks'] ?? '';
 
-        
+
         $mobile_bank_acc_cust = $fieldValues['mobile_bank_acc_cust'] ?? '';
         $mobile_bank_account = $fieldValues['mobile_bank_account'] ?? '';
         $mobile_bank_name = $fieldValues['mobile_bank_name'] ?? '';
-        
+
         $mobile_amount = $fieldValues['mobile_amount'] ?? '';
         $mobile_cash = $fieldValues['mobile_cash'] ?? '';
         $tranxid = $fieldValues['tranxid'] ?? '';
         $mobile_remarks = $fieldValues['mobile_remarks'] ?? '';
 
         $card_type = $fieldValues['card_type'] ?? '';
-        
+
         $card_bank_account = $fieldValues['card_bank_account'] ?? '';
         $card_bank_name = $fieldValues['card_bank_name'] ?? '';
         $card_amount = $fieldValues['card_amount'] ?? '';
@@ -176,13 +176,13 @@ class CostController extends Controller
             ]);
         }
 
-        
+
         ///// Card transaction
 
         if($paytype == 'কার্ড'){
-            
-            $str_arr = explode (",", $card_bank_account);  
-            $str_arr2 = explode (",", $card_bank_name);  
+
+            $str_arr = explode (",", $card_bank_account);
+            $str_arr2 = explode (",", $card_bank_name);
 //            DB::table('bank_transactions')->insert([
             BankTransaction::create([
 
@@ -222,8 +222,8 @@ class CostController extends Controller
         ///// Check transaction
 
         if($paytype == 'ব্যাংক'){
-            $str_arr = explode (",", $shops_bank_account);  
-            $str_arr2 = explode (",", $shops_bank_name);  
+            $str_arr = explode (",", $shops_bank_account);
+            $str_arr2 = explode (",", $shops_bank_name);
             BankTransaction::create([
 
                 'seller_bank_id' => $str_arr[0],
@@ -248,7 +248,7 @@ class CostController extends Controller
         ///// Mobile/Bank Transfer transaction
 
         if($paytype == 'মোবাইল'){
-            $str_arr = explode (",", $mobile_bank_account);  
+            $str_arr = explode (",", $mobile_bank_account);
             $str_arr2 = explode (",", $mobile_bank_name);
             BankTransaction::create([
 
@@ -268,7 +268,7 @@ class CostController extends Controller
 
             ]);
 
-            
+
             $head = $str_arr2[0]." ".$str_arr2[1];
             $description = "ব্যয় ব্যাংক ট্র্যান্সফার ".$vno;
             $cost_debit = 0;
@@ -316,9 +316,9 @@ class CostController extends Controller
         $categories = Category::orderBy('id','ASC')->get();
         if($req->isMethod('post')){
             $data = $req->all();
-            
+
             Cost::where(['id'=>$id])->update(['category_id'=>$data['category'],'sub_category'=>$data['sub_category'],'reason'=>$data['reason'],'amount'=>$data['amount'],'details'=>$data['details'],'date'=>$data['date'],]);
-            
+
             return redirect('/admin/cost_reports')->with('flash_message_success', ' ব্যয় সফলভাবে আপডেট হয়েছে!');
         }
         return view('admin.pos.cost.edit_cost')->with('cost', $cost)->with('categories', $categories)->with('id', $id);
@@ -328,6 +328,7 @@ class CostController extends Controller
     {
         $delete = AccTransaction::where('vno', $id)->delete();
         $delete=BankTransaction::where('invoice_no',$id)->delete();
+
         if ($delete == 1) {
             $success = true;
             $message = " ব্যয় সফলভাবে ডিলিট হয়েছে!";

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Illuminate\Database\Eloquent\Model;
 use Image;
 use App\Filter;
 use App\Seller;
@@ -52,16 +53,19 @@ class PosBankController extends Controller
 
             if($cards){
                 foreach($cards as $card){
-                    $bank_card=new BankCard();
-                    $bank_card->bank_id = $bank_info->id;
-                    $bank_card->acc_no = $bank_acc->id;
-                    $bank_card->card_name = $card;
-                    $bank_card->user_id = auth()->user()->id;
-                    $bank_card->client_id = auth()->user()->client_id;
-                    $bank_card->save();
+                    if(strlen($card)>2)
+                    {
+                        $bank_card=new BankCard();
+                        $bank_card->bank_id = $bank_info->id;
+                        $bank_card->acc_no = $bank_acc->id;
+                        $bank_card->card_name = $card;
+                        $bank_card->user_id = auth()->user()->id;
+                        $bank_card->client_id = auth()->user()->client_id;
+                        $bank_card->save();
+                    }
                 }
             }
-            
+
 
             $acc_head = new AccHead();
             $acc_head->parent_head = "Asset";
@@ -82,11 +86,11 @@ class PosBankController extends Controller
     public function view_banks()
     {
         $banks = BankInfo::orderBy('name')->where('client_id', auth()->user()->client_id)->get();
-        
+
         return view('admin.pos.banking.view_bank', compact('banks'));
     }
 
-    
+
 
     public function edit_bank(Request $req, $id = null){
         $bank = BankInfo::where(['id'=>$id])->first();
@@ -119,9 +123,9 @@ class PosBankController extends Controller
                     $bank_card->save();
                 }
             }
-            
+
            // Cost::where(['id'=>$id])->update(['category_id'=>$data['category'],'sub_category'=>$data['sub_category'],'reason'=>$data['reason'],'amount'=>$data['amount'],'details'=>$data['details'],'date'=>$data['date'],]);
-            
+
             return redirect('/dashboard/view_banks')->with('flash_message_success', 'Bank has been updated successfully!');
         }
         return view('admin.pos.banking.edit_bank')->with('bank', $bank)->with('cards', $cards)->with('id', $id);
@@ -138,7 +142,7 @@ class PosBankController extends Controller
             $bank_infos[$bank->name]=$bank->account->id;
             $bank_infos[$bank->name]=$bank->account->acc_name;
         }
-        
+
         ?>
 
         <ul class='bank-acc-list sugg-list'>
@@ -589,7 +593,7 @@ class PosBankController extends Controller
                     <th>Credit</th>
                     <th>Balance</th>
                 </tr>";
-        
+
         foreach($accounts as $row)
         {
             $Balance = $Balance + $row->debit - $row->credit;
@@ -668,7 +672,7 @@ class PosBankController extends Controller
         ]);
 
         // // $vno = (DB::table('acc_transactions')->max('id') + 1);
-        
+
         $head = $tf_bank_name." A/C: ".$tf_account_name;
         $description = "Cash Withdrwan";
         $debit = 0;
@@ -817,6 +821,9 @@ class PosBankController extends Controller
 
     }
 
+
+
+
     public function delete_bank_transfer(Request $req){
 
         $id = $req['invoice'];
@@ -824,7 +831,7 @@ class PosBankController extends Controller
         $deletebtransfer = BankTransfer::whereIn('vno', [$id])->delete();
         $deleteAccTrans = AccTransaction::whereIn('vno', [$id])->delete();
         $deletebtransaction = BankTransaction::whereIn('vno', [$id])->delete();
-        
+
         if ($deletebtransfer == 1 || $deleteAccTrans == 1 || $deletebtransaction == 1) {
             $success = true;
             $message = "Data Deleted Successfully!";
@@ -1188,6 +1195,24 @@ class PosBankController extends Controller
         }
 
         return datatables()->of($installments)->make(true);
+    }
+
+
+    public function deleteBank($id)
+    {
+        $delete = BankInfo::find($id)->delete();
+
+        if ($delete == 1) {
+            $success = true;
+            $message = " Bank Delete Success";
+        } else {
+            $success = true;
+            $message = " Error";
+        }
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
     }
 
 }

@@ -180,7 +180,7 @@
             </ul>
           </li>
 
-          <li class="nav-item {{ (request()->is('dashboard/sales_invoice', 'dashboard/sales_return', 'dashboard/sales_report_date', 'dashboard/sales_return_report_date', 'dashboard/sales_report_brand')) ? 'menu-open' : '' }}">
+          <li class="nav-item {{ (request()->is('dashboard/sales_invoice', 'dashboard/sales_return', 'dashboard/sales_report_date', 'dashboard/sales_return_report_date', 'dashboard/sales_report_brand', 'dashboard/sales-customer', 'dashboard/sales-product')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-file-invoice-dollar"></i>
               <p>
@@ -220,6 +220,12 @@
                   <p>Sales Report By Brand</p>
                 </a>
               </li>
+                <li class="nav-item">
+                    <a href="{{route('salesby.customer')}}" class="nav-link {{ Route::currentRouteName() == 'salesby.customer' ? 'active' : '' }}">
+                        <i class="fas fa-angle-right nav-icon"></i>
+                        <p>Sales By Customer</p>
+                    </a>
+                </li>
             </ul>
           </li>
           <li class="nav-item {{ (request()->is('dashboard/purchase_products', 'dashboard/purchase_return', 'dashboard/purchase_report_date', 'dashboard/purchase_return_report_date', 'dashboard/purchase_report_brand', 'dashboard/damage_report_date', 'dashboard/purchase-product', 'dashboard/purchase-supplier')) ? 'menu-open' : '' }}">
@@ -617,11 +623,11 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item {{ (request()->is('dashboard/reports/loss-profit-report', 'dashboard/sales-customer', 'dashboard/sales-product')) ? 'menu-open' : '' }}">
+          <li class="nav-item {{ (request()->is('dashboard/reports/loss-profit-report')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-sort-alpha-up"></i>
               <p>
-                General Reports
+                  Loss / Profit Report
                 <i class="fas fa-angle-left right"></i>
                 <span class="badge badge-info right">5</span>
               </p>
@@ -639,12 +645,7 @@
                   <p>Loss Profit Reports</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{route('salesby.customer')}}" class="nav-link {{ Route::currentRouteName() == 'salesby.customer' ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Sales By Customer</p>
-                </a>
-              </li>
+
 
             </ul>
           </li>

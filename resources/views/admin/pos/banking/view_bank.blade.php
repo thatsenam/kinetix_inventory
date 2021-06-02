@@ -41,7 +41,7 @@
                   <thead>
                   <tr>
                     <th>#</th>
-                    <th>Bank Name</th> 
+                    <th>Bank Name</th>
                     <th>Address</th>
                     <th>Bank Account Name</th>
                     <th>Bank Account No</th>
@@ -50,7 +50,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                    @php 
+                    @php
                         $i = 1;
                     @endphp
                     @foreach($banks as $bank)
@@ -110,7 +110,7 @@
                 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                 $.ajax({
                     type: 'POST',
-                    url: "{{url('/admin/delete_cost')}}/" + id,
+                    url: "{{url('/admin/deleteBank')}}/" + id,
                     data: {_token: CSRF_TOKEN},
                     dataType: 'JSON',
                     success: function (results) {
@@ -119,7 +119,7 @@
                         } else {
                             swal.fire("Error!", results.message, "error");
                         }
-                        window.setTimeout(function(){ 
+                        window.setTimeout(function(){
                             location.reload();
                         } ,3000);
                     }

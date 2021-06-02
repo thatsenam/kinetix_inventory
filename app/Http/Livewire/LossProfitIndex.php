@@ -59,11 +59,11 @@ class LossProfitIndex extends Component
     public function mount()
     {
         $this->startDate = date('Y-m-01');
-        $this->endDate = date('Y-m-d'); 
+        $this->endDate = date('Y-m-d');
 
         $this->profitCalculation = DB::table('general_settings')->where('client_id', auth()->user()->client_id)
                                     ->pluck('profit_clc')->first();
-        
+
         $this->invoices = DB::table('sales_invoice')->where('client_id', auth()->user()->client_id)->pluck('invoice_no');
 
         $this->products = Products::where('client_id', auth()->user()->client_id)->get();

@@ -174,7 +174,7 @@ class PosSupplierController extends Controller
     public function edit(Request $request){
         $id = $request->id;
         $get_data = Supplier::where('client_id', auth()->user()->client_id)->where('id', $id)->first();
-        $groups = SupplierGroup::where('id', '!=', $get_data->supplier_group)->get();
+
         $head = AccHead::query()->where('cid', 'sid ' . $get_data->id)->first();
         $opb = AccTransaction::query()->where('type', AccHead::class)
             ->where('type_id', $head->id)
@@ -191,7 +191,7 @@ class PosSupplierController extends Controller
             'district' => $get_data->district,
             'details' => $get_data->details,
             'supplier_group_id' => $get_data->supplier_group,
-            'groups' => $groups,
+
             'opb' => $opb,
         );
         return json_encode($data);

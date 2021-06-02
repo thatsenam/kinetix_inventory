@@ -1,7 +1,17 @@
 @extends('admin.pos.master')
 
 @section('content')
+
     <div class="content-wrapper">
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+    @endif
         <!-- Content Header (Page header) -->
         <section class="content-header">
         <div class="container-fluid">
@@ -9,6 +19,7 @@
             <div class="col-sm-6">
                 <h1>Manage Customers</h1>
             </div>
+
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -72,7 +83,7 @@
                                             <a class="dropdown-item" href="#" data-toggle="modal"
                                                         data-target="#paymodal" data-id="{{$customer->id}}"
                                                         onClick="open_container3(this);"><i
-                                                            class="fa fa-money-bill-alt"></i>Pay</a>
+                                                            class="fa fa-money-bill-alt"></i>Receive</a>
                                                     <a class="dropdown-item"
                                                         href="{{url('/dashboard/customer/'.$customer->id)}}"><i
                                                             class="fa fa-eye" aria-hidden="true"></i> View</a>
@@ -84,10 +95,10 @@
                                                     <a class="dropdown-item" href="#"
                                                         onclick="deleteConfirmation({{$customer->id}})"><i
                                                             class="fa fa-trash text-danger"></i> Delete</a>
-                                                    <a class="dropdown-item" href="#"
-                                                        onclick="DeactiveConfirmation({{$customer->id}})"><i
-                                                            class="fas fa-power-off"></i> {{ $customer->status?"Active":"Inactive" }}
-                                                    </a>
+{{--                                                    <a class="dropdown-item" href="#"--}}
+{{--                                                        onclick="DeactiveConfirmation({{$customer->id}})"><i--}}
+{{--                                                            class="fas fa-power-off"></i> {{ $customer->status?"Active":"Inactive" }}--}}
+{{--                                                    </a>--}}
                                             </div>
                                             </div>
                                         </td>
@@ -149,7 +160,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="inputPhone" class="required">Phone:</label>
-                                        <input class="form-control" required="" placeholder="Phone..."
+                                        <input class="form-control @if (count($errors) > 0) is-invalid @endif" required="" placeholder="Phone..."
                                         name="inputPhone" type="text" id="inputPhone" aria-required="true">
                                     </div>
                                 </div>

@@ -147,62 +147,39 @@
                   <p>View All Products</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{route('labels.print')}}" class="nav-link {{ Route::currentRouteName() == 'labels.print' ? 'active' : '' }}">
-                  <i class="fas fa-print nav-icon"></i>
-                  <p>Print Labels</p>
-                </a>
-              </li>
+                <li class="nav-item">
+                    <a href="{{url('/admin/create_category')}}" class="nav-link {{ (request()->is('admin/create_category')) ? 'active' : '' }}">
+                        <i class="fas fa-plus-square nav-icon"></i>
+                        <p>Add New Category</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url('/admin/view_categories')}}" class="nav-link {{ (request()->is('admin/view_categories')) ? 'active' : '' }}">
+                        <i class="fas fa-clipboard-list nav-icon"></i>
+                        <p>View All Categories</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url('/admin/create_brand')}}" class="nav-link {{ (request()->is('admin/create_brand')) ? 'active' : '' }}">
+                        <i class="fas fa-plus-square nav-icon"></i>
+                        <p>Add New Brand</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url('/admin/view_brands')}}" class="nav-link {{ (request()->is('admin/view_brands')) ? 'active' : '' }}">
+                        <i class="fas fa-clipboard-list nav-icon"></i>
+                        <p>View All Brands</p>
+                    </a>
+                </li>
+{{--              <li class="nav-item">--}}
+{{--                <a href="{{route('labels.print')}}" class="nav-link {{ Route::currentRouteName() == 'labels.print' ? 'active' : '' }}">--}}
+{{--                  <i class="fas fa-print nav-icon"></i>--}}
+{{--                  <p>Print Labels</p>--}}
+{{--                </a>--}}
+{{--              </li>--}}
             </ul>
           </li>
-          <li class="nav-item {{ (request()->is('admin/create_category', 'admin/view_categories')) ? 'active menu-open' : '' }}">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-sitemap"></i>
-              <p>
-                Category Options
-                <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">2</span>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{url('/admin/create_category')}}" class="nav-link {{ (request()->is('admin/create_category')) ? 'active' : '' }}">
-                  <i class="fas fa-plus-square nav-icon"></i>
-                  <p>Add New Category</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{url('/admin/view_categories')}}" class="nav-link {{ (request()->is('admin/view_categories')) ? 'active' : '' }}">
-                  <i class="fas fa-clipboard-list nav-icon"></i>
-                  <p>View All Categories</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item {{ (request()->is('admin/create_brand', 'admin/view_brands')) ? 'active menu-open' : '' }}">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fab fa-bandcamp"></i>
-              <p>
-                Brand Options
-                <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">2</span>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{url('/admin/create_brand')}}" class="nav-link {{ (request()->is('admin/create_brand')) ? 'active' : '' }}">
-                  <i class="fas fa-plus-square nav-icon"></i>
-                  <p>Add New Brand</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{url('/admin/view_brands')}}" class="nav-link {{ (request()->is('admin/view_brands')) ? 'active' : '' }}">
-                  <i class="fas fa-clipboard-list nav-icon"></i>
-                  <p>View All Brands</p>
-                </a>
-              </li>
-            </ul>
-          </li>
+
           <li class="nav-item {{ (request()->is('dashboard/sales_invoice', 'dashboard/sales_return', 'dashboard/sales_report_date', 'dashboard/sales_return_report_date', 'dashboard/sales_report_brand')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-file-invoice-dollar"></i>
@@ -245,7 +222,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item {{ (request()->is('dashboard/purchase_products', 'dashboard/purchase_return', 'dashboard/damage_products', 'dashboard/purchase_report_date', 'dashboard/purchase_return_report_date', 'dashboard/purchase_report_brand', 'dashboard/damage_report_date')) ? 'menu-open' : '' }}">
+          <li class="nav-item {{ (request()->is('dashboard/purchase_products', 'dashboard/purchase_return', 'dashboard/purchase_report_date', 'dashboard/purchase_return_report_date', 'dashboard/purchase_report_brand', 'dashboard/damage_report_date', 'dashboard/purchase-product', 'dashboard/purchase-supplier')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-shopping-cart"></i>
               <p>
@@ -267,12 +244,7 @@
                   <p>Purchase Return</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="/dashboard/damage_products" class="nav-link {{ (request()->is('dashboard/damage_products')) ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Damage Products</p>
-                </a>
-              </li>
+
               <li class="nav-item">
                 <a href="{{route('purchase_report_date')}}" class="nav-link {{ Route::currentRouteName() == 'purchase_report_date' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
@@ -291,6 +263,44 @@
                   <p>Purchase Report By Brand</p>
                 </a>
               </li>
+                <li class="nav-item">
+                    <a href="{{route('salesby.product')}}" class="nav-link {{ Route::currentRouteName() == 'salesby.product' ? 'active' : '' }}">
+                        <i class="fas fa-angle-right nav-icon"></i>
+                        <p>Sales By Product</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('purchaseby.product')}}" class="nav-link {{ Route::currentRouteName() == 'purchaseby.product' ? 'active' : '' }}">
+                        <i class="fas fa-angle-right nav-icon"></i>
+                        <p>Purchase By Product</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('purchaseby.supplier')}}" class="nav-link {{ Route::currentRouteName() == 'purchaseby.supplier' ? 'active' : '' }}">
+                        <i class="fas fa-angle-right nav-icon"></i>
+                        <p>Purchas By Supplier</p>
+                    </a>
+                </li>
+            </ul>
+          </li>
+
+        <li class="nav-item {{ (request()->is( 'dashboard/damage_products', 'dashboard/damage_report_date')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-shopping-cart"></i>
+              <p>
+                  Damage Entry
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right">7</span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="/dashboard/damage_products" class="nav-link {{ (request()->is('dashboard/damage_products')) ? 'active' : '' }}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>Damage Products</p>
+                </a>
+              </li>
               <li class="nav-item">
                 <a href="{{route('damage_report_date')}}" class="nav-link {{ Route::currentRouteName() == 'damage_report_date' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
@@ -299,6 +309,7 @@
               </li>
             </ul>
           </li>
+
           <li class="nav-item {{ (request()->is('dashboard/add_bank', 'dashboard/view_banks', 'dashboard/check_clearance', 'dashboard/bank_deposit', 'dashboard/bank_withdraw', 'dashboard/bank_ledger', 'dashboard/bank_transfer', 'dashboard/bank_transfer_report')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-money-check-alt"></i>
@@ -606,7 +617,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item {{ (request()->is('dashboard/reports/loss-profit-report', 'dashboard/sales-customer', 'dashboard/sales-product', 'dashboard/purchase-product', 'dashboard/purchase-supplier')) ? 'menu-open' : '' }}">
+          <li class="nav-item {{ (request()->is('dashboard/reports/loss-profit-report', 'dashboard/sales-customer', 'dashboard/sales-product')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-sort-alpha-up"></i>
               <p>
@@ -634,24 +645,7 @@
                   <p>Sales By Customer</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{route('salesby.product')}}" class="nav-link {{ Route::currentRouteName() == 'salesby.product' ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Sales By Product</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('purchaseby.product')}}" class="nav-link {{ Route::currentRouteName() == 'purchaseby.product' ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Purchase By Product</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('purchaseby.supplier')}}" class="nav-link {{ Route::currentRouteName() == 'purchaseby.supplier' ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Purchas By Supplier</p>
-                </a>
-              </li>
+
             </ul>
           </li>
           <li class="nav-item {{ (request()->is('dashboard/warranty-management/receive-from-customer', 'dashboard/warranty-management/send-to-supplier', 'dashboard/warranty-management/receive-from-supplier', 'dashboard/warranty-management/delivery-to-customer', 'dashboard/warranty-management/warranty-report')) ? 'menu-open' : '' }}">

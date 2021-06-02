@@ -9,12 +9,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>সরবরাহকারী</h1>
+                        <h1>Supplier</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/Dashboard">হোম</a></li>
-                            <li class="breadcrumb-item active">সরবরাহকারী তথ্য</li>
+                            <li class="breadcrumb-item"><a href="/Dashboard">Home</a></li>
+                            <li class="breadcrumb-item active">Supplier Info</li>
                         </ol>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                         @endif
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">সরবরাহকারী বিস্তারিত</h3>
+                                <h3 class="card-title">Supplier Details</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -46,15 +46,15 @@
                                         <table class="table table-bordered table-sm">
                                             <tbody>
                                             <tr>
-                                                <th scope="row">নাম</th>
+                                                <th scope="row">Name</th>
                                                 <td>{{$supplier->name}}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">ঠিকানা</th>
+                                                <th scope="row">Address</th>
                                                 <td>{{$supplier->address}}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">মোবাইল</th>
+                                                <th scope="row">Phone</th>
                                                 <td>{{$supplier->phone}}</td>
                                             </tr>
 
@@ -65,19 +65,19 @@
                                         <table class="table table-bordered table-sm">
                                             <tbody>
                                             <tr>
-                                                <th scope="row"> মোট ক্রয়</th>
+                                                <th scope="row"> Total Purchase</th>
                                                 <td>{{ $total_purchase }}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row"> মোট ছাড়</th>
+                                                <th scope="row"> Total Discount</th>
                                                 <td>{{ $sumDiscount }}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">মোট পরিশোধ</th>
+                                                <th scope="row">Total Paid</th>
                                                 <td>{{ $fromPayment }}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">সর্বমোট বকেয়া</th>
+                                                <th scope="row">Total Due</th>
                                                 <td>{{$supplier->due}}</td>
                                             </tr>
                                             </tbody>
@@ -95,13 +95,13 @@
                                         <li class="nav-item">
                                             <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill"
                                                href="#custom-tabs-four-home" role="tab"
-                                               aria-controls="custom-tabs-four-home" aria-selected="true">লেজার</a>
+                                               aria-controls="custom-tabs-four-home" aria-selected="true">Ledger</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill"
                                                href="#custom-tabs-four-profile" role="tab"
-                                               aria-controls="custom-tabs-four-profile" aria-selected="false">ক্রয়
-                                                সমূহ</a>
+                                               aria-controls="custom-tabs-four-profile" aria-selected="false">Purchases
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -117,7 +117,7 @@
                                                         <div class="card card-widget widget-user-2">
                                                             <!-- Add the bg color to the header using any of the bg-* classes -->
                                                             <div class="card-header bg-info">
-                                                                <h3 class="card-title">গ্রাহক:</h3>
+                                                                <h3 class="card-title">Customer:</h3>
                                                             </div>
                                                             <div class="card-body">
                                                                 <b><i class="fa fa-user mr-2"></i> {{$supplier->name}}
@@ -138,7 +138,7 @@
                                                         <div class="card card-widget widget-user-2">
                                                             <!-- Add the bg color to the header using any of the bg-* classes -->
                                                             <div class="card-header bg-info">
-                                                                <h3 class="card-title">প্রস্তুতকারক</h3>
+                                                                <h3 class="card-title">Form</h3>
                                                             </div>
                                                             <div class="card-body">
                                                                 <b><i class="fa fa-globe mr-2"></i> {{$GenSettings->site_name ?? " "}}
@@ -163,10 +163,10 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <button type="button" name="filter" id="filter"
-                                                            class="btn btn-primary">ফিল্টার
+                                                            class="btn btn-primary">Filter
                                                     </button>
                                                     <button type="button" name="refresh" id="refresh"
-                                                            class="btn btn-default">রিফ্রেশ
+                                                            class="btn btn-default">Refresh
                                                     </button>
                                                 </div>
                                                 <div class="col-md-3">
@@ -180,12 +180,12 @@
                                             <table id="ledger" class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>তারিখ</th>
-                                                    <th>মেমো নং</th>
-                                                    <th>বিস্তারিত</th>
-                                                    <th>ডেবিট</th>
-                                                    <th>ক্রেডিট</th>
-                                                    <th>বাকী</th>
+                                                    <th>Date</th>
+                                                    <th>Invoice</th>
+                                                    <th>Details</th>
+                                                    <th>Debit</th>
+                                                    <th>Credit</th>
+                                                    <th>Due</th>
                                                 </tr>
                                                 </thead>
                                             </table>
@@ -195,11 +195,11 @@
                                             <table id="sales" class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>তারিখ</th>
-                                                    <th>মেমো নং</th>
-                                                    <th>মোট</th>
-                                                    <th>পরিশোধ</th>
-                                                    <th>বাকী</th>
+                                                    <th>Date</th>
+                                                    <th>Invoice No</th>
+                                                    <th>Total</th>
+                                                    <th>Paid</th>
+                                                    <th>Due</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -333,19 +333,14 @@
                     "columnDefs": [
                         {"orderable": false, "targets": 0}
                     ],
+                    title: "Supplier Ledger",
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
 
                     "pageLength": 50,
-                    "oLanguage": {
-                        "sSearch": "খুঁজুন:"
-                    },
-                    "language": {
-                        "paginate": {
-                            "previous": "পূর্বের পাতা",
-                            "next": "পরবর্তী পাতা",
-                        },
-                        "info": "মোট _TOTAL_ রেকর্ড থেকে _START_ থেকে _END_ পর্যন্ত দেখানো হচ্ছে",
-                        "infoEmpty": "মোট 0 রেকর্ড থেকে 0 থেকে 0 পর্যন্ত দেখানো হচ্ছে",
-                    },
+
                     ajax: {
                         url: '{{ route("supplier.details") }}',
                         data: {from_date: from_date, to_date: to_date, sid: sid, supplier_id:$('#supplier_id').val()},

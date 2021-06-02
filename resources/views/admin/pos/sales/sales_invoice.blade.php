@@ -33,7 +33,7 @@
     <div class="main-panel">
         <div class="content-wrapper">
             <section class="content">
-                <h3 class="ml-2">Sales Invocie</h3>
+                <h3 class="ml-2">Sales Invoice</h3>
 
                 <div class="box-body">
                     <div class="row">
@@ -125,14 +125,14 @@
                                                 </div>
 
                                                 <div class="row">
-                                                    <div class="col-4">
+                                                    <div class="col-4" style="display: none">
                                                         <div class="form-group" style="position: relative;">
                                                             <input type="text" name="barcode" id="barcode"
                                                                    class="form-control"
                                                                    placeholder="Barcode" autocomplete="off">
                                                         </div>
                                                     </div>
-                                                    <div class="col-8">
+                                                    <div class="col-12">
                                                         <div class="form-group" style="position: relative;">
                                                             <input type="text" class="form-control"
                                                                    placeholder="Search Product"

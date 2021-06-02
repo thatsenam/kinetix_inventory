@@ -40,33 +40,27 @@
                 <table id="BrandViewTable" class="table table-bordered table-hover">
                   <thead>
                   <tr>
-                    <th>ID</th>
+                    <th>serial</th>
                     <th>Name</th>
-                    <th>URL</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
                   </thead>
                   <tbody>
-                    @php 
+                    @php
                         $i = 1;
                     @endphp
                     @foreach($brands as $brand)
                     <tr>
                         <td>{{$i++}}</td>
                         <td>{{$brand->name}}</td>
-                        <td>{{$brand->url}}</td>
                         <td class="text-center"><?php
                             if($brand->status == 1){
                                 echo '<span class="badge badge-success">Active</span>';
                             }elseif($brand->status == 0){echo '<span class="badge badge-danger">Inactive</span>';}
                         ?></td>
                         <td class="project-actions">
-                          <a class="btn btn-info btn-sm" href="{{url('/brands/'.$brand->url)}}" target="_blank">
-                              <i class="fas fa-eye">
-                              </i>
-                              View
-                          </a>
+
                           <a class="btn btn-info btn-sm" href="{{url('/admin/edit_brand/'.$brand->id)}}">
                               <i class="fas fa-pencil-alt">
                               </i>
@@ -126,7 +120,7 @@
                         } else {
                             swal.fire("Error!", results.message, "error");
                         }
-                        window.setTimeout(function(){ 
+                        window.setTimeout(function(){
                             location.reload();
                         } ,3000);
                     }

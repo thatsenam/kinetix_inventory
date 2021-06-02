@@ -40,9 +40,9 @@
                 <table id="CatViewTable" class="table table-bordered table-hover">
                   <thead>
                   <tr>
-                    <th>ID</th>
+                    <th>Serial</th>
                     <th>Name</th>
-                    <th>URL</th>
+{{--                    <th>URL</th>--}}
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -52,18 +52,18 @@
                     <tr>
                         <td>{{ $i + 1}}</td>
                         <td>{{$cat->name}}</td>
-                        <td>{{$cat->url}}</td>
+{{--                        <td>{{$cat->url}}</td>--}}
                         <td class="text-center"><?php
                             if($cat->status == 1){
                                 echo '<span class="badge badge-success">Active</span>';
                             }elseif($cat->status == 0){echo '<span class="badge badge-danger">Inactive</span>';}
                         ?></td>
                         <td class="project-actions">
-                          <a class="btn btn-info btn-sm" href="{{url('/category/'.$cat->url)}}" target="_blank">
-                              <i class="fas fa-eye">
-                              </i>
-                              View
-                          </a>
+{{--                          <a class="btn btn-info btn-sm" href="{{url('/category/'.$cat->url)}}" target="_blank">--}}
+{{--                              <i class="fas fa-eye">--}}
+{{--                              </i>--}}
+{{--                              View--}}
+{{--                          </a>--}}
                           <a class="btn btn-info btn-sm" href="{{url('/admin/edit_category/'.$cat->id)}}">
                               <i class="fas fa-pencil-alt">
                               </i>
@@ -98,7 +98,7 @@
       $("#CatViewTable").DataTable({
         "responsive": true,
         "autoWidth": false,
-        // "order": [[ 0, "desc" ]] 
+        // "order": [[ 0, "desc" ]]
       });
     });
     function deleteConfirmation(id) {
@@ -124,7 +124,7 @@
                         } else {
                             swal.fire("Error!", results.message, "error");
                         }
-                        window.setTimeout(function(){ 
+                        window.setTimeout(function(){
                             location.reload();
                         } ,3000);
                     }

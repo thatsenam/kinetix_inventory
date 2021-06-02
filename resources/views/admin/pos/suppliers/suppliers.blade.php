@@ -140,7 +140,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="inputName" class="required">Name:</label>
+                                        <label for="inputName" class="required">Name: <span style="color: red">*</span></label>
                                         <input class="form-control" placeholder="Name..." name="inputName" type="text"
                                                id="inputName" aria-required="true" required>
                                     </div>
@@ -148,7 +148,7 @@
 
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="inputPhone" class="required">Phone:</label>
+                                        <label for="inputPhone" class="required">Phone: <span style="color: red">*</span></label>
                                         <input class="form-control" placeholder="Phone..." name="inputPhone" type="text"
                                                id="inputPhone" aria-required="true" required>
                                     </div>
@@ -162,32 +162,33 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
+                                        <label for="inputAddress">Address:</label>
+                                        <input class="form-control" placeholder="Address..." name="inputAddress"
+                                               type="text" id="inputAddress">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group" style="display: none">
                                         <label for="inputPhone">Village or area name:</label>
                                         <input class="form-control" placeholder="Village or area name..."
                                                name="inputArea" type="text" id="inputArea">
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="form-group">
+                                    <div class="form-group" style="display: none">
                                         <label for="inputPhone">Upazilla :</label>
                                         <input class="form-control" placeholder="Upazilla..." name="inputUpazilla"
                                                type="text" id="inputUpazilla" aria-required="true">
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="form-group">
+                                    <div class="form-group" style="display: none">
                                         <label for="inputPhone">District :</label>
                                         <input class="form-control" placeholder="District..." name="inputDistrict"
                                                type="text" id="inputDistrict" aria-required="true">
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="inputAddress">Address:</label>
-                                        <input class="form-control" placeholder="Address..." name="inputAddress"
-                                               type="text" id="inputAddress">
-                                    </div>
-                                </div>
+
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="inputAddress">Previous Due</label>
@@ -220,7 +221,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Paid</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Pay</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -528,32 +529,33 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
+                                        <label for="inputAddress" class="required">Address:</label>
+                                        <input class="form-control" placeholder="Address..." name="address" type="text"
+                                               id="address">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group" style="display: none">
                                         <label for="inputPhone">Village or area name:</label>
                                         <input class="form-control" placeholder="Village or area name..." name="area"
                                                type="text" id="area" aria-required="true" required>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="form-group">
+                                    <div class="form-group" style="display: none">
                                         <label for="inputPhone">Upazilla :</label>
                                         <input class="form-control" placeholder="upazilla..." name="upazilla" type="text"
                                                id="upazilla" aria-required="true">
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="form-group">
+                                    <div class="form-group" style="display: none">
                                         <label for="inputPhone">District:</label>
                                         <input class="form-control" placeholder="district..." name="district" type="text"
                                                id="district" aria-required="true">
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="inputAddress" class="required">Address:</label>
-                                        <input class="form-control" placeholder="Address..." name="address" type="text"
-                                               id="address">
-                                    </div>
-                                </div>
+
 
                             </div>
                             <div class="row">

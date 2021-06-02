@@ -62,7 +62,7 @@
               <div class="card-body">
                 <div class="tab-content" id="custom-tabs-four-tabContent">
                   <div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-                        <div class="form-group">
+                        <div class="form-group" style="display: none">
                             <label for="inputBarcode">Barcode</label>
                             <input type="text" name="inputBarcode" id="inputBarcode" class="form-control" placeholder="Barcode here...">
                         </div>
@@ -98,10 +98,10 @@
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label>Unit<span class="text-danger">*</span></label>
-                                <select id="unit" name="unit" class="form-control custom-select">
+                                <select id="unit" name="unit" class="form-control custom-select" required>
                                     <option value="" selected disabled>Select</option>
                                     <option value="KG">KG</option>
-                                    <option value="Pcs">Pcs</option>
+                                    <option selected value="Pcs">Pcs</option>
                                 </select>
                             </div>
                             <div class="col-md-6 form-group">

@@ -107,8 +107,7 @@ class PosSalesController extends Controller
                     data-pbq='<?php echo $pbq; ?>' data-serial='<?php echo $serial; ?>'
                     data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?>'
                     data-vat='<?php echo $vat; ?>'>
-                    <img src="<?php echo $url; ?>/images/products/<?php echo $image; ?>"
-                         style="width:60px; height:60px;"> &nbsp; <?php echo $name; ?> | <?php echo $price; ?>
+                     &nbsp; <?php echo $name; ?> | <?php echo $price; ?>
                 </li>
 
                 <?php

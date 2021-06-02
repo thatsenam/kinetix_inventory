@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="receipt-header receipt-header-mid">
                     <div class="row">
                         <div class="col-xs-8 col-sm-8 col-md-8 text-left">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div>
                     <table class="table table-bordered">
                         <thead>
@@ -110,7 +110,7 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="receipt-header receipt-header-mid receipt-footer">
                     <div class="row">
                         <div class="col-xs-8 col-sm-8 col-md-8 text-left">
@@ -126,8 +126,8 @@
                         </div>
                     </div>
                 </div>
-                
-            </div>    
+
+            </div>
         </div>
     </div>
 
@@ -197,7 +197,7 @@
 		.receipt-main td p:last-child {
 			margin: 0;
 			padding: 0;
-		}	
+		}
 		.receipt-main td h2 {
 			font-size: 20px;
 			font-weight: 900;
@@ -215,7 +215,7 @@
 			margin: 24px 0;
 			overflow: hidden;
 		}
-		
+
 		#container {
 			background-color: #dcdcdc;
 		}
@@ -235,7 +235,7 @@
             position: relative;
             padding: 0;
             border: 0;
-            
+
             border: none;
             background: transparent;
         }
@@ -247,7 +247,7 @@
 
         span.print-icon {
             position: relative;
-            display: inline-block;  
+            display: inline-block;
             padding: 0;
             margin-top: 20%;
 

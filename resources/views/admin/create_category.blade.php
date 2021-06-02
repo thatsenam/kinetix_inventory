@@ -88,7 +88,7 @@
                                 <label for="inputStatus">Status <span class="text-danger">*</span></label>
                                 <select id="inputStatus" name="cat_status" class="form-control custom-select">
                                     <option selected disabled>Select one</option>
-                                    <option value="1">Active</option>
+                                    <option selected value="1">Active</option>
                                     <option value="0">Inactive</option>
                                 </select>
                             </div>

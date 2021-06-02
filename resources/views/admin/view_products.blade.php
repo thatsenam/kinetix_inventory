@@ -56,9 +56,9 @@
                     <th>Name</th>
                     <th>Price</th>
                     <th>Stock</th>
-                    <th>Featured</th>
                     <th>Unit</th>
                     <th>Sub-Unit</th>
+                    <th>Sub-Unit Number</th>
                     <th>Actions</th>
                   </tr>
                   </thead>
@@ -78,10 +78,11 @@
                             @endif
                         </td>
                         <td>{{$product->stock}}</td>
-                        <td><?php if($product->is_featured == 0){ echo '<span class="badge badge-warning">Regular</span>';}elseif($product->is_featured == 1){ echo "<span class='badge badge-success'>Featured</span>";} ?></td>
+{{--                        <td><?php if($product->is_featured == 0){ echo '<span class="badge badge-warning">Regular</span>';}elseif($product->is_featured == 1){ echo "<span class='badge badge-success'>Featured</span>";} ?></td>--}}
 
                         <td>{{$product->unit}}</td>
                         <td>{{$product->sub_unit}}</td>
+                        <td>{{$product->per_box_qty}}</td>
                         <td class="project-actions text-center">
 {{--                          <a class="btn btn-info btn-sm mb-1" href="{{url('/products/'.$product->id)}}" target="_blank" title="View"><i class="fas fa-eye"></i></a>--}}
                           <a class="btn btn-info btn-sm mb-1" href="{{url('/admin/edit_product/'.$product->id)}}" title="Edit"><i class="fas fa-pencil-alt"></i></a>

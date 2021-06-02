@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Illuminate\Database\Eloquent\Model;
 use Image;
 use App\Sales;
 use App\Filter;
@@ -66,6 +67,11 @@ class PosCustomerController extends Controller
     {
 
         if ($request->isMethod('post')) {
+
+            $this->validate($request,[
+                'inputPhone' => 'unique:customers,phone|required',
+            ]);
+
             $data = $request->all();
             $customer = new Customer;
             $customer->name = $data['inputName'];

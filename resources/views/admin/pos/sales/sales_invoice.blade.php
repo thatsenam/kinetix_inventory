@@ -1007,6 +1007,7 @@
                             sub_unit = $(this).find(".active").attr("data-sub_unit");
                             unit = $(this).find(".active").attr("data-unit");
 
+                            console.log(pbq)
                             if (pbq) {
                                 $('#search').val(name);
                                 $('#square_foot_modal').modal('toggle');
@@ -2290,67 +2291,68 @@
                         $("#wait").show();
                     },
                     error: function (ts) {
+                        window.location.href = "/dashboard/sales_invoicemain/" + ts.responseText;
 
-                        alert(ts.responseText);
-
-                        var invoice = ts.responseText;
-
-                        printPos(invoice);
-                        $('#cust_phone').val("");
-                        $('#cust_name').val("");
-                        $('#cust_id').val("0");
-                        $('#vat').val("0");
-                        $('#disc').val("0");
-                        $('#scharge').val("0");
-                        $('#discount').val("0");
-                        $('#amount').val("0")
-                        $('#total').val("0");
-                        $('#payment').val("0");
-                        $('#paytype').val("cash");
-                        $('#hid_total').val("0");
-                        $('#total_vat').val("0");
-
-                        $('#card_bank').val("");
-                        $('#card_bank_id').val("");
-                        $('#card_bank_account').val("");
-                        $('#card_bank_acc_id').val("0");
-                        $('#card_type').val("visa");
-                        $('#card_amount').val("");
-                        $('#card_cash').val("");
-                        $('#card_remarks').val("");
-
-                        $('#mobile_bank').val("");
-                        $('#mobile_bank_id').val("");
-                        $('#mobile_bank_account').val("");
-                        $('#mobile_bank_acc_id').val("0");
-                        $('#mobile_bank_acc_cust').val("");
-                        $('#mobile_amount').val("");
-                        $('#mobile_cash').val("");
-                        $('#tranxid').val("");
-                        $('#mobile_remarks').val("");
-
-
-                        $('#clients_bank').val("");
-                        $('#clients_bank_acc').val("");
-                        $('#check_no').val("");
-                        $('#check_type').val("pay_cash");
-                        $('#shops_bank').val("");
-                        $('#bank_id').val("0");
-                        $('#shops_bank_account').val("");
-                        $('#account_id').val("0");
-                        $('#check_amount').val("");
-                        $('#check_cash').val("");
-                        $('#check_date').val("");
-                        $('#check_remarks').val("");
-
-
-                        $('.price-table td').remove();
-
-                        $("#wait").hide();
-
-                        $('#save').attr('disabled', false);
-
-                        location.reload();
+                        // alert(ts.responseText);
+                        //
+                        // var invoice = ts.responseText;
+                        //
+                        // printPos(invoice);
+                        // $('#cust_phone').val("");
+                        // $('#cust_name').val("");
+                        // $('#cust_id').val("0");
+                        // $('#vat').val("0");
+                        // $('#disc').val("0");
+                        // $('#scharge').val("0");
+                        // $('#discount').val("0");
+                        // $('#amount').val("0")
+                        // $('#total').val("0");
+                        // $('#payment').val("0");
+                        // $('#paytype').val("cash");
+                        // $('#hid_total').val("0");
+                        // $('#total_vat').val("0");
+                        //
+                        // $('#card_bank').val("");
+                        // $('#card_bank_id').val("");
+                        // $('#card_bank_account').val("");
+                        // $('#card_bank_acc_id').val("0");
+                        // $('#card_type').val("visa");
+                        // $('#card_amount').val("");
+                        // $('#card_cash').val("");
+                        // $('#card_remarks').val("");
+                        //
+                        // $('#mobile_bank').val("");
+                        // $('#mobile_bank_id').val("");
+                        // $('#mobile_bank_account').val("");
+                        // $('#mobile_bank_acc_id').val("0");
+                        // $('#mobile_bank_acc_cust').val("");
+                        // $('#mobile_amount').val("");
+                        // $('#mobile_cash').val("");
+                        // $('#tranxid').val("");
+                        // $('#mobile_remarks').val("");
+                        //
+                        //
+                        // $('#clients_bank').val("");
+                        // $('#clients_bank_acc').val("");
+                        // $('#check_no').val("");
+                        // $('#check_type').val("pay_cash");
+                        // $('#shops_bank').val("");
+                        // $('#bank_id').val("0");
+                        // $('#shops_bank_account').val("");
+                        // $('#account_id').val("0");
+                        // $('#check_amount').val("");
+                        // $('#check_cash').val("");
+                        // $('#check_date').val("");
+                        // $('#check_remarks').val("");
+                        //
+                        //
+                        // $('.price-table td').remove();
+                        //
+                        // $("#wait").hide();
+                        //
+                        // $('#save').attr('disabled', false);
+                        //
+                        // location.reload();
 
 
                     },

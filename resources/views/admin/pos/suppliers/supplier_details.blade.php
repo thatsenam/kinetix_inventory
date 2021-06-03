@@ -170,10 +170,10 @@
                                                     </button>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <div class="text-right">
-                                                        <a href="javascript:window.print();" class="btn btn-default"><i
-                                                                class="fas fa-print"></i> প্রিন্ট</a>
-                                                    </div>
+{{--                                                    <div class="text-right">--}}
+{{--                                                        <a href="javascript:window.print();" class="btn btn-default"><i--}}
+{{--                                                                class="fas fa-print"></i> প্রিন্ট</a>--}}
+{{--                                                    </div>--}}
                                                 </div>
                                             </div>
                                             <span class="float-right font-weight-bolder">Previous Balance : <span id="previousBalance">0</span></span>

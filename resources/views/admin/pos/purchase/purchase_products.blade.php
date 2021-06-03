@@ -392,6 +392,7 @@
                             }else{
                                 $('#qty_type').text(sub_unit)
                             }
+
                             if (pbq) {
                                 $('#search').val(name);
                                 $('#square_foot_modal').modal('toggle');
@@ -1207,6 +1208,7 @@
 
             sub_unit = su;
             unit = u;
+
             if (pbq) {
                 $('#search').val(name);
                 $('#square_foot_modal').modal('toggle');

@@ -27,7 +27,7 @@ class PosController extends Controller
 
         $client_id = auth()->user()->id;
         $user_id = Auth::id();
-        
+
         $get_license = DB::table('users')
             ->where('client_id',auth()->user()->client_id)
             ->where('id', $user_id)->first();
@@ -84,7 +84,7 @@ class PosController extends Controller
         $sale_return = 0;
         $total_stock = 0;
         $stock_amount = 0;
-        
+
         foreach($getSKU as $index=>$sku){
             // dd($sku);
             $pid = $sku->pid;
@@ -131,7 +131,7 @@ class PosController extends Controller
 
             $qty = $pPurchase - $returns - $psold + $sale_return - $damage;
             $total_stock += $qty;
-            
+
             if($profitCalculation == '2')
             {
                 $avg_purchase_price = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
@@ -350,7 +350,7 @@ class PosController extends Controller
     }
 
     public function voucherEntry(){
-        $vno = AccTransaction::max('vno');
+        $vno = time();
         $subhead = DB::table('acc_heads')->distinct()->get('sub_head');
         $heads = DB::table('acc_heads')->get('head');
         $accheads = AccHead::all();
@@ -371,7 +371,7 @@ class PosController extends Controller
 
         $count = count($TableArray);
 
-        $vno = (AccTransaction::max('vno') + 1);
+        $vno = time();
 
          for($i = 0; $i < $count;){
 
@@ -482,7 +482,7 @@ class PosController extends Controller
                 $transaction->save();
         }
 
-        $vno = (AccTransaction::max('vno')+1);
+        $vno = time();
 
         return $vno;
     }

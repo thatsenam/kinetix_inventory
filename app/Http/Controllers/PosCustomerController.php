@@ -433,13 +433,11 @@ class PosCustomerController extends Controller
             'user_type' => "customer",
         ]);
 
-        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->pluck('vno')->unique()->count();
-        $vno = date('Ymd') . '-' . ($vno_counting + 1);
+        $vno = time();
 
         if ($paytype == 'cash') {
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = $cust_name . " " . $cust_phone;
             $description = "Payment Invoice " . $invoice;

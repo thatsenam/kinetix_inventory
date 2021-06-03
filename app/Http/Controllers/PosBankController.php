@@ -319,8 +319,7 @@ class PosBankController extends Controller
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = $debit_head;
             $description = "Check for Invoice ".$invoice;
@@ -421,8 +420,7 @@ class PosBankController extends Controller
         $remarks = $req['remarks'];
         $user = Auth::id();
 
-        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-        $vno = date('Ymd') . '-' . ($vno_counting + 1);
+        $vno = time();
 
         BankTransaction::create([
             'vno' => $vno,
@@ -492,8 +490,7 @@ class PosBankController extends Controller
         $remarks = $req['remarks'];
         $user = Auth::id();
 
-        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-        $vno = date('Ymd') . '-' . ($vno_counting + 1);
+        $vno = time();
 
         BankTransaction::create([
             'vno' => $vno,
@@ -631,8 +628,7 @@ class PosBankController extends Controller
         $amount = $req['amount'];
         $date = $req['date'];
 
-        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-        $vno = date('Ymd') . '-' . ($vno_counting + 1);
+        $vno = time();
 
         BankTransfer::create([
             'vno' => $vno,
@@ -689,8 +685,7 @@ class PosBankController extends Controller
             // 'user' => $user,
         ]);
 
-        $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-        $vno = date('Ymd') . '-' . ($vno_counting + 1);
+        $vno = time();
 
         $head = $tt_bank_name." A/C: ".$tt_account_name;
         $description = "Cash Deposit";
@@ -879,8 +874,7 @@ class PosBankController extends Controller
             $debit = 0;
             $credit = $data['inputLoanAmount'];
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
             AccTransaction::create([
                 'user_id' => $user,
                 'client_id' => auth()->user()->client_id,
@@ -945,8 +939,7 @@ class PosBankController extends Controller
             $installment->save();
 
             $user = Auth::id();
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $getBankName = DB::table('bank_info')->select('name')->where('id', $data['bank_id'])->first();
 

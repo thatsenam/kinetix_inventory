@@ -383,8 +383,7 @@ class PosSupplierController extends Controller
 
         if ($paytype == 'cash') {
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = $cust_name . " " . $cust_phone;
             $description = "Payment Invoice " . $invoice;
@@ -451,8 +450,7 @@ class PosSupplierController extends Controller
 
             /////Insert into Accounts For Card Transaction
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = $cust_name . " " . $cust_phone;
             $description = "Pay Invoice " . $invoice;
@@ -544,8 +542,7 @@ class PosSupplierController extends Controller
 
             /////Insert into Accounts For Bank Transaction
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = $cust_name . " " . $cust_phone;
             $description = "Payment Invoice " . $invoice;
@@ -612,8 +609,7 @@ class PosSupplierController extends Controller
 
             /////Insert into Accounts For Mobile Transaction
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = $cust_name . " " . $cust_phone;
             $description = "Payment Invoice " . $invoice;

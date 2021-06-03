@@ -50,7 +50,6 @@ class LossProfitIndex extends Component
         {
             $this->customerReport();
         }
-
         $this->setting = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
 
         return view('livewire.loss-profit-index');
@@ -163,6 +162,8 @@ class LossProfitIndex extends Component
             $this->total_profit_footer += $total_profit;
 
             $query->profit = $profit;
+            $query->sale_price = $sale_price;
+            $query->purchase_price = $purchase_price;
             $query->total_profit = $total_profit;
 
             return $query;
@@ -210,6 +211,8 @@ class LossProfitIndex extends Component
             $total_profit = round($total_profit, 2);
             $this->total_profit_footer += $total_profit;
 
+            $query->sale_price = $sale_price;
+            $query->purchase_price = $purchase_price;
             $query->profit = $profit;
             $query->total_profit = $total_profit;
 
@@ -256,7 +259,8 @@ class LossProfitIndex extends Component
             $total_profit = $profit * $qnt;
             $total_profit = round($total_profit, 2);
             $this->total_profit_footer += $total_profit;
-
+            $query->sale_price = $sale_price;
+            $query->purchase_price = $purchase_price;
             $query->profit = $profit;
             $query->total_profit = $total_profit;
 
@@ -272,12 +276,13 @@ class LossProfitIndex extends Component
         $this->total_profit_footer = 0;
 
         $this->product_array = DB::table('sales_invoice')->where('sales_invoice.client_id', auth()->user()->client_id)
-                    ->select('date', 'pid', 'sales_invoice.invoice_no as invoice', 'customers.name as cname', 'product_name', 'qnt', 'price', 'total')
+                    ->select('sales_invoice.date', 'sales_invoice_details.pid', 'sales_invoice.invoice_no as invoice', 'customers.name as cname', 'product_name',
+                        'qnt', 'price', 'total')
                     ->join('sales_invoice_details', 'sales_invoice.invoice_no', 'sales_invoice_details.invoice_no')
                     ->join('products', 'sales_invoice_details.pid', 'products.id')
                     ->join('customers', 'sales_invoice.cid', 'customers.id')
-                    ->whereDate('date', '>=', $this->startDate)
-                    ->whereDate('date', '<=', $this->endDate)
+                    ->whereDate('sales_invoice.date', '>=', $this->startDate)
+                    ->whereDate('sales_invoice.date', '<=', $this->endDate)
                     ->where('customers.id', $this->selected_customer)
                     ->get();
 
@@ -304,7 +309,8 @@ class LossProfitIndex extends Component
             $total_profit = $profit * $qnt;
             $total_profit = round($total_profit, 2);
             $this->total_profit_footer += $total_profit;
-
+            $query->sale_price = $sale_price;
+            $query->purchase_price = $purchase_price;
             $query->profit = $profit;
             $query->total_profit = $total_profit;
 

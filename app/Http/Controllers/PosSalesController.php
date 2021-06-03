@@ -62,7 +62,10 @@ class PosSalesController extends Controller
 //            ->whereIn('products.id', $products)
             ->where('product_name', 'like', '%' . $s_text . '%')
             ->join('categories', 'categories.id', 'products.cat_id')
-            ->select('products.id as id', 'products.product_name as product_name', 'products.after_pprice as after_pprice', 'products.before_price as before_price', 'products.serial as serial', 'products.warranty as warranty', 'products.product_img as product_img', 'products.sub_unit', 'products.unit', 'products.per_box_qty', 'categories.vat as vat')->limit(9)->get(); ?>
+            ->select('products.id as id', 'products.product_name as product_name', 'products.after_pprice as after_pprice',
+                'products.before_price as before_price', 'products.serial as serial', 'products.warranty as warranty',
+                'products.product_img as product_img', 'products.sub_unit', 'products.unit', 'products.per_box_qty',
+                'categories.vat as vat')->limit(9)->get(); ?>
 
 
         <ul class='products-list sugg-list' style='width:100%;'>
@@ -639,8 +642,7 @@ class PosSalesController extends Controller
             if ($due > 0 && $payment == 0) {
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-                $vno = date('Ymd') . '-' . ($vno_counting + 1);
+                $vno = time();
 
                 $head = "Sales";
                 $description = "Due Sale Invoice " . $invoice;
@@ -699,8 +701,7 @@ class PosSalesController extends Controller
             if ($payment > 0 && $due == 0) {
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-                $vno = date('Ymd') . '-' . ($vno_counting + 1);
+                $vno = time();
 
                 $head = "Sales";
                 $description = "Sale Invoice " . $invoice;
@@ -759,8 +760,7 @@ class PosSalesController extends Controller
             if ($payment > 0 && $due > 0) {
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-                $vno = date('Ymd') . '-' . ($vno_counting + 1);
+                $vno = time();
 
                 $head = "Sales";
                 $description = "Due Sale Invoice " . $invoice;
@@ -885,8 +885,7 @@ class PosSalesController extends Controller
             ///// into Accounts For Mobile Transaction
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = "Sales";
             $description = "Sale Invoice " . $invoice;
@@ -1039,8 +1038,7 @@ class PosSalesController extends Controller
             if ($payment > 0 && $due > 0 && $card_cash == 0) {
 
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-                $vno = date('Ymd') . '-' . ($vno_counting + 1);
+                $vno = time();
 
                 $head = "Sales";
                 $description = "Sale Invoice " . $invoice;
@@ -1118,9 +1116,7 @@ class PosSalesController extends Controller
 
             if ($payment > 0 && $due == 0 && $card_cash == 0) {
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-                $vno = date('Ymd') . '-' . ($vno_counting + 1);
+                $vno = time();
 
                 $head = "Sales";
                 $description = "Sale Invoice " . $invoice;
@@ -1179,9 +1175,7 @@ class PosSalesController extends Controller
 
             if ($payment > 0 && $due == 0 && $card_cash > 0) {
                 // $vno = (DB::table('acc_transactions')->max('id') + 1);
-                $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                    ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-                $vno = date('Ymd') . '-' . ($vno_counting + 1);
+                $vno = time();
 
                 $head = "Sales";
                 $description = "Sale Invoice " . $invoice;
@@ -1318,8 +1312,7 @@ class PosSalesController extends Controller
             ///// into Accounts For Check Transaction
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = "Sales";
             $description = "Sale Invoice " . $invoice;
@@ -1584,9 +1577,7 @@ class PosSalesController extends Controller
         if ($due > 0 && $payment == 0) {
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = "Sales Return";
             $description = "Sales Return Invoice " . $rinvoice;
@@ -1645,9 +1636,7 @@ class PosSalesController extends Controller
         if ($payment > 0 && $due == 0) {
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = "Sales Return";
             $description = "Sale Invoice " . $rinvoice;
@@ -1706,9 +1695,7 @@ class PosSalesController extends Controller
         if ($payment > 0 && $due > 0) {
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))
-                ->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = "Sales Return";
             $description = "Sales Return Invoice " . $rinvoice;

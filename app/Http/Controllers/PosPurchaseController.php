@@ -44,14 +44,23 @@ class PosPurchaseController extends Controller
     public function get_purchase_products(Request $req){
 
         $s_text = $req['s_text'];
-        $products = DB::table('products')
-            ->where('client_id',auth()->user()->client_id)
-            ->where('product_name', 'like', '%'.$s_text.'%')
-            ->orWhere('product_name', $s_text)
-            ->where('product_name', '!=', '')
+//        $products = DB::table('products')
+//            ->where('client_id',auth()->user()->client_id)
+//            ->where('product_name', 'like', '%'.$s_text.'%')
+//            ->orWhere('product_name', $s_text)
+//            ->where('product_name', '!=', '')
+//
+//            ->orderByRaw("(product_name = '{$s_text}') desc, length(product_name)")
+//            ->limit(9)->get();
 
-            ->orderByRaw("(product_name = '{$s_text}') desc, length(product_name)")
-            ->limit(9)->get(); ?>
+        $products = DB::table('products')->where('products.client_id', auth()->user()->client_id)
+        //            ->whereIn('products.id', $products)
+        ->where('product_name', 'like', '%' . $s_text . '%')
+        ->join('categories', 'categories.id', 'products.cat_id')
+        ->select('products.id as id', 'products.product_name as product_name', 'products.after_pprice as after_pprice',
+        'products.before_price as before_price', 'products.serial as serial', 'products.warranty as warranty',
+        'products.product_img as product_img', 'products.sub_unit', 'products.unit', 'products.per_box_qty',
+        'categories.vat as vat')->limit(9)->get(); ?>
 
         <ul class='products-list sugg-list'>
 
@@ -62,6 +71,10 @@ class PosPurchaseController extends Controller
                 $id = $row->id;
                 $name = $row->product_name;
                 $serial = $row->serial;
+                $pbq = $row->per_box_qty;
+                $vat = $row->vat ;
+                $su = $row->sub_unit;
+                $u = $row->unit;
 
                 $products_price = DB::table('purchase_details')
                     ->where('client_id',auth()->user()->client_id)
@@ -77,7 +90,7 @@ class PosPurchaseController extends Controller
 
                 $url = config('global.url'); ?>
 
-                <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>");' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-serial='<?php echo $serial; ?>' ><?php echo $name; ?> </li>
+                <li tabindex='<?php echo $i; ?>' onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>" , "<?php echo $vat; ?>" , "<?php echo $pbq; ?>" , "<?php echo $su; ?>" , "<?php echo $u; ?>" );' data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>' data-pbq='<?php echo $pbq; ?>' data-serial='<?php echo $serial; ?>' >  <?php echo $name; ?> </li>
 
                 <?php
 
@@ -351,8 +364,7 @@ class PosPurchaseController extends Controller
 
         if($payment>0){
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = "Purchase";
             $description = "Purchase from Invoice ".$pur_inv;
@@ -427,8 +439,7 @@ class PosPurchaseController extends Controller
 
         }else{
 
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = "Purchase";
             $description = "Due Purchase from Invoice ".$pur_inv;
@@ -599,8 +610,7 @@ class PosPurchaseController extends Controller
             ->where('id', $supp_id)->first();
 
             // $vno = (DB::table('acc_transactions')->max('id') + 1);
-            $vno_counting = AccTransaction::whereDate('date', date('Y-m-d'))->where('client_id', auth()->user()->client_id)->distinct()->count('vno');
-            $vno = date('Ymd') . '-' . ($vno_counting + 1);
+            $vno = time();
 
             $head = "Purchase Return";
             $description = "Purchase Return from Supplier Memo ".$supp_memo;
@@ -880,7 +890,7 @@ class PosPurchaseController extends Controller
     public function delete_purchase(Request $req){
 
         $purinv = $req['purinv'];
-        
+
         DB::table('purchase_primary')
             ->where('client_id',auth()->user()->client_id)
             ->where('pur_inv', $purinv)->delete();

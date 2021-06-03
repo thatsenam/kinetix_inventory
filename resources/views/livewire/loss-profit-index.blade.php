@@ -20,7 +20,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="d-flex justify-content-between border bg-success p-1">
                     <div class="form-check form-check-inline">
                         <input wire:model="radioOption" class="form-check-input" type="radio" id="general" value="general">
@@ -89,6 +89,8 @@
                                 <th>Invoice</th>
                                 <th>Item</th>
                                 <th>Qnt</th>
+                                <th>Sale Price</th>
+                                <th>Purchase Price</th>
                                 <th>Profit</th>
                                 <th>Total Profit</th>
                             </tr>
@@ -100,15 +102,21 @@
                                     <td>{{ $product->invoice }}</td>
                                     <td>{{ $product->product_name }}</td>
                                     <td>{{ $product->qnt }}</td>
-                                    <td>{{ $product->profit }}</td>
-                                    <td>{{ $product->total_profit }}</td>
+                                    <td>{{ number_format($product->sale_price,2) }}</td>
+                                    <td>{{ number_format($product->purchase_price,2) }}</td>
+                                    <td>{{ number_format($product->profit,2) }}</td>
+                                    <td>{{ number_format($product->total_profit,2) }}</td>
+
                                 </tr>
                                 @if($loop->last)
                                     <tr>
                                         <th colspan="3">Total</th>
                                         <th>{{ $qnt_footer }}</th>
-                                        <th>{{ $profit_footer }}</th>
-                                        <th>{{ $total_profit_footer }}</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>{{ number_format($profit_footer,2) }}</th>
+                                        <th>{{ number_format($total_profit_footer,2) }}</th>
+
                                     </tr>
                                 @endif
                             @empty
@@ -157,10 +165,10 @@
     });
 
     window.addEventListener("LoadDataTable", function (){
-        // $('#myTable').DataTable().destroy(); 
+        // $('#myTable').DataTable().destroy();
         $('#myTable').DataTable();
     });
-    
+
     window.addEventListener("LoadSelect2", function () {
 
         $('#SelectInvoice').select2({

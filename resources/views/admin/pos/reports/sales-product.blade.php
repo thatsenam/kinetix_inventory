@@ -1,5 +1,5 @@
 @extends('admin.pos.master')
-        
+
 @section('content')
 
 <div class="content-wrapper">
@@ -8,7 +8,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Sales By Product</h1>
+            <h1>Sales Report By Product</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -124,7 +124,7 @@
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
- 
+
             // converting to interger to find total
             var intVal = function ( i ) {
                 return typeof i === 'string' ?
@@ -132,8 +132,8 @@
                     typeof i === 'number' ?
                         i : 0;
             };
- 
-            // computing column Total of the complete result 
+
+            // computing column Total of the complete result
             var qty = api
                 .column( 2 )
                 .data()
@@ -161,9 +161,9 @@
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-			
-				
-            // Update footer by showing the total with the reference of the column index 
+
+
+            // Update footer by showing the total with the reference of the column index
               $( api.column( 1 ).footer() ).html('Total');
               $( api.column( 2 ).footer() ).html(qty);
               $( api.column( 4 ).footer() ).html(total);

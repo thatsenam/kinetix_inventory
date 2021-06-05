@@ -63,7 +63,7 @@
                                 <label for="cat_desc">Category Description</label>
                                 <textarea id="cat_desc" name="cat_desc" class="form-control">{{$description}}</textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="parent_cat">Parent Category</label>
                                 <select id="parent_cat" name="parent_cat" class="form-control">
                                     <option value="0">Main Category</option>
@@ -87,7 +87,7 @@
                                     <label class="custom-file-label" for="inputImage">Choose file</label>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label for="inputType">Category Type <span class="small">(If fetaured category block will be diplayed on homepage)</span></label>
                                 <select id="inputType" name="cat_type" class="form-control custom-select">
                                     <option selected value="{{$type}}"><?php

@@ -42,6 +42,9 @@ class PosSalesController extends Controller
 
     public function sales_invoice()
     {
+
+
+
         $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
         if ($warehouses->count() < 2) {
             $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
@@ -86,6 +89,8 @@ class PosSalesController extends Controller
                     ->where('pid', $pid)->sum('qnt');
                 $stock = $pPurchase - $returns - $psold + $sale_return - $damage;
 
+                $pur_price = PurchaseDetails::Where('pid',$pid)->latest()->take(1)->first()->price;
+
                 $id = $row->id;
                 $name = $row->product_name;
                 $price = $row->after_pprice;
@@ -104,11 +109,11 @@ class PosSalesController extends Controller
                 $url = config('global.url'); ?>
 
                 <li tabindex='<?php echo $i; ?>'
-                    onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $warranty; ?>", "<?php echo $stock; ?>", "<?php echo $vat; ?>", "<?php echo $pbq; ?>", "<?php echo $sub_unit; ?>", "<?php echo $unit; ?>");'
+                    onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>", "<?php echo $warranty; ?>", "<?php echo $stock; ?>", "<?php echo $vat; ?>", "<?php echo $pbq; ?>", "<?php echo $sub_unit; ?>", "<?php echo $unit; ?>", "<?php echo $pur_price; ?>");'
                     data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>'
                     data-sub_unit='<?php echo $sub_unit; ?>' data-unit='<?php echo $unit; ?>'
                     data-pbq='<?php echo $pbq; ?>' data-serial='<?php echo $serial; ?>'
-                    data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?>'
+                    data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?> 'data-pur='<?php echo $pur_price; ?>'
                     data-vat='<?php echo $vat; ?>'>
                      &nbsp; <?php echo $name; ?> | <?php echo $price; ?>
                 </li>
@@ -1836,7 +1841,7 @@ class PosSalesController extends Controller
         return DataTables()->of($sales)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $action = '<a data-id=' . $row->invoice_no . ' title="Print Transport Copy" href="/dashboard/sales_invoice/' . $row->invoice_no . '" class="mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-truck"></i></span></a><a data-id=' . $row->invoice_no . ' title="View" href="/dashboard/sales_invoicemain/' . $row->invoice_no . '" class="mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a><a data-id=' . $row->invoice_no . ' title="Delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
+                $action = '<a data-id=' . $row->invoice_no . ' title="View" href="/dashboard/sales_invoicemain/' . $row->invoice_no . '" class="mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a><a data-id=' . $row->invoice_no . ' title="Delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
                 return $action;
             })
             // <a data-id='.$row->invoice_no.' title="View Details" href="#" class="view mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a>

@@ -125,6 +125,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Asset',
             'sub_head' => 'Current Asset',
             'head' => 'Cash In Hand',
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -133,6 +134,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Asset',
             'sub_head' => 'Current Asset',
             'head' => "Temporary Investment",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -141,6 +143,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Asset',
             'sub_head' => 'Fixed Asset',
             'head' => "Furniture",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -149,6 +152,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Asset',
             'sub_head' => 'Fixed Asset',
             'head' => "Investment",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -157,14 +161,16 @@ class AccHeadIndex extends Component
             'parent_head' => "Owner's Equity",
             'sub_head' => "Capital",
             'head' => "Capital A/C Chairman",
+            'is_default' => '1',
         ];
-        
+
         $items[] = [
             'user_id' => $user_id,
             'client_id' => $client_id,
             'parent_head' => 'Expense',
             'sub_head' => "Office Expense",
             'head' => "Electricity Bill",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -173,6 +179,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Expense',
             'sub_head' => "Office Expense",
             'head' => "House Rent",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -181,6 +188,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Expense',
             'sub_head' => "Office Expense",
             'head' => "Entertainment",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -189,6 +197,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Expense',
             'sub_head' => "Operational Expense",
             'head' => "Transport Cost",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -197,6 +206,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Expense',
             'sub_head' => "Operational Expense",
             'head' => "Labour Cost",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -205,6 +215,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Expense',
             'sub_head' => "Operational Expense",
             'head' => "Other Cost",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -213,6 +224,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Expense',
             'sub_head' => "Purchase",
             'head' => "Purchase",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -221,6 +233,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Expense',
             'sub_head' => "Purchase",
             'head' => "Purchase Return",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -229,6 +242,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Income',
             'sub_head' => "Sales",
             'head' => "Sales",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -237,6 +251,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Income',
             'sub_head' => "Sales",
             'head' => "Sales Return",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -245,6 +260,7 @@ class AccHeadIndex extends Component
             'parent_head' => 'Expense',
             'sub_head' => "Purchase",
             'head' => "Purchase I.V.A",
+            'is_default' => '1',
         ];
 
         $items[] = [
@@ -253,14 +269,13 @@ class AccHeadIndex extends Component
             'parent_head' => 'Liabilities',
             'sub_head' => "Accounts Payable",
             'head' => "Sales I.V.A",
+            'is_default' => '1',
         ];
 
-        // AccHead::where('client_id', auth()->user()->client_id)->delete();
-
-        foreach ($items as $item) 
+        foreach ($items as $item)
         {
             AccHead::updateOrCreate(
-                ['client_id' => $item['client_id'], 'parent_head' => $item['parent_head'], 'sub_head' => $item['sub_head'], 'head' => $item['head']],
+                ['client_id' => $item['client_id'], 'parent_head' => $item['parent_head'], 'sub_head' => $item['sub_head'], 'head' => $item['head'],'is_default' => $item['is_default']],
                 [
                     'user_id' => $user_id,
                 ]

@@ -17,7 +17,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Manage Customers</h1>
+                <h1>Customer List</h1>
             </div>
 
             <div class="col-sm-6">
@@ -211,7 +211,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Payment</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Receive</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -851,7 +851,7 @@
         function deleteConfirmation(id) {
             swal.fire({
                 title: "Delete?",
-                text: "Are you sure!!",
+                text: "Are you sure!! Supplier-related all data will be removed, that can not be recovered." ,
                 type: "warning",
                 showCancelButton: !0,
                 confirmButtonText: "Yes!",

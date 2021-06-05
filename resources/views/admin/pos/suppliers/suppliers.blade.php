@@ -197,7 +197,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12">
+                                <div class="col-12" style="display:none">
                                     <div class="form-group">
                                         <label for="inputAddress">Supplier Details:</label>
                                         <textarea class="form-control" placeholder="Supplier Details..."
@@ -474,7 +474,7 @@
                                     <div class="form-group">
                                         <label for="note">Note:</label>
                                         <textarea class="form-control" rows="3" name="note" cols="50" id="note"
-                                                  placeholder="নোট..."></textarea>
+                                                  placeholder="Note:..."></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -523,7 +523,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="inputPhone">E-mail:</label>
-                                        <input class="form-control" placeholder="ইমেইল..." name="email" type="text"
+                                        <input class="form-control" placeholder="E-mail:..." name="email" type="text"
                                                id="email" aria-required="true">
                                     </div>
                                 </div>
@@ -568,9 +568,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" >
                                 <div class="col-12">
-                                    <div class="form-group">
+                                    <div class="form-group" style="display:none">
                                         <label for="inputAddress">Supplier details:</label>
                                         <textarea class="form-control" placeholder="Supplier details..."
                                                   name="details" id="details" rows="5"></textarea>
@@ -803,7 +803,7 @@
         function deleteConfirmation(id) {
             swal.fire({
                 title: "Delete?",
-                text: "Are you sure!!",
+                text: "Are you sure!! Supplier-related all data will be removed, that can not be recovered." ,
                 type: "warning",
                 showCancelButton: !0,
                 confirmButtonText: "Yes!",

@@ -41,7 +41,7 @@
                   <li class="nav-item">
                     <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">New Bank Info</a>
                   </li>
-                  
+
                 </ul>
               </div>
               <div class="card-body">
@@ -52,18 +52,18 @@
                             <select id="category" name="category" class="form-control custom-select">
                                 <option value="" selected disabled>Select Bank Type</option>
                                 <option value="general_bank">General Bank</option>
-                                <option value="mobile_bank">Mobile Bank</option> 
+                                <option value="mobile_bank">Mobile Bank</option>
                             </select>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="bank_name">Bank Name<span class="text-danger">*</span></label>
                             <input type="text" name="bank_name" id="bank_name" class="form-control" placeholder="Bank Name ...">
-                        </div> 
+                        </div>
                         <div class="form-group" id="bank_address_div">
                             <label for="bank_address">Bank Address<span class="text-danger">*</span></label>
                             <input type="text" name="bank_address" id="bank_address" class="form-control" placeholder="Bank Address ...">
-                        </div> 
+                        </div>
                         <div class="form-group" id="acc_name_div">
                             <label for="acc_name">Bank Account Name<span class="text-danger">*</span></label>
                             <input type="text" name="acc_name" id="acc_name" class="form-control" placeholder="Bank Account Name...">
@@ -77,9 +77,9 @@
                                 <button type="button" class="btn btn-primary" onclick="addCardFunc()" id="addCard">+ Add Card</button>
                             </div>
                         </div>
-                        
+
                   </div>
-                  
+
                 </div>
               </div>
               <!-- /.card -->
@@ -109,14 +109,14 @@
         var wrapper = $('.field_wrapper');
         var fieldHTML = '<div class="row"><input type="file" name="addImage[]" id="sku" class="form-control col-md-9 m-1" placeholder="Add New Additional Image" required><a href="javascript:void(0);" class="remove_button col-md-2 m-auto text-danger" title="Remove Field">Remove</a></div>';
         var x = 1;
-        
+
         $(addButton).click(function(){
-            if(x < maxField){ 
+            if(x < maxField){
                 x++;
                 $(wrapper).append(fieldHTML);
             }
         });
-        
+
         $(wrapper).on('click', '.remove_button', function(e){
             e.preventDefault();
             $(this).parent('div').remove();
@@ -155,7 +155,7 @@
                     required: true
                 },
                 // inputBrand: {
-                //     required: 
+                //     required:
                 // },
                 // description: {
                 //     required: true
@@ -245,7 +245,7 @@
     function addCardFunc(){
         $(".add_card").append(
             '<div class="form-group cards_name">'+
-                            '<label for="card_name">Card Name<span class="text-danger">*</span></label>'+
+                            '<label for="card_name">Card Name'+
                             '<input type="text" name="card_name[]" id="card_name" class="form-control" placeholder="Card Name...">'+
                         '</div>'
         );

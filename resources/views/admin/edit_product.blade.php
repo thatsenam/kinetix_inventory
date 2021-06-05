@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
+                        <div class="form-group" style="display: none">
                             <label for="inputBarcode">Barcode</label>
                             <input type="text" name="inputBarcode" id="inputBarcode" class="form-control" value="{{$barcode}}">
                         </div>

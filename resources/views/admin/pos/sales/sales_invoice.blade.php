@@ -379,9 +379,15 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <div class="row">
-
+                                                    <div class="col-6" style="margin-top:-10px;">
+                                                        <div class="form-group">
+                                                            <label>Due</label>
+                                                            <input type="text" name="due" id="due"
+                                                                   class="form-control"
+                                                                   placeholder="Due" value="0">
+                                                        </div>
+                                                    </div>
                                                     <div class="col-6" style="margin-top:-10px;">
                                                         <div class="form-group">
                                                             <label>Payment Type</label>
@@ -394,6 +400,11 @@
                                                             </select>
                                                         </div>
                                                     </div>
+                                                </div>
+
+                                                <div class="row">
+
+
                                                     <div class="col-6" style="margin-top:-10px;">
                                                         <div class="form-group">
                                                             <label>Sale By</label>
@@ -402,11 +413,7 @@
                                                                    value="<?php echo $user_name; ?>">
                                                         </div>
                                                     </div>
-                                                </div>
-
-                                                <div class="row">
-
-                                                    <div class="col-12" style="margin-top:-10px;">
+                                                    <div class="col-6" style="margin-top:-10px;">
                                                         <div class="form-group">
                                                             <label>Remarks</label>
                                                             <input type="text" name="remarks" id="remarks"
@@ -414,6 +421,11 @@
                                                                    placeholder="" value="">
                                                         </div>
                                                     </div>
+                                                </div>
+
+                                                <div class="row">
+
+
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-6" style="margin-top:-10px;">
@@ -713,68 +725,73 @@
             <div class="card-body">
                 <h3 style="text-align: center;">Credit/ Debit Card Info</h3>
 
-                <table class=""
-                       style="width: 100%; border: 1px solid #e6e6e6; padding: 5px; border-collapse: collapse;">
+                <form action="" id="card_payment_modal">
+                    <table class=""
+                           style="width: 100%; border: 1px solid #e6e6e6; padding: 5px; border-collapse: collapse;">
 
-                    <tr>
-                        <td><label style="padding:10px;">Card Type</label></td>
-                        <td>
-                            <select class="form-control" id="card_type" name="card_type">
-                                <option value="visa">Visa Card</option>
-                                <option value="master">Masters Card</option>
-                                <option value="dbbl">DBBL Nexus Card</option>
-                            </select>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Card Type</label></td>
+                            <td>
+                                <select class="form-control" id="card_type" name="card_type">
+                                    <option value="visa">Visa Card</option>
+                                    <option value="master">Masters Card</option>
+                                    <option value="dbbl">DBBL Nexus Card</option>
+                                </select>
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td><label style="padding:10px;">Shop Bank</label></td>
-                        <td style="position: relative;"><input type="text" class="form-control" id="card_bank"
-                                                               name="card_bank">
-                            <div id="shop_card_div"
-                                 style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
-                            </div>
-                            <input type="hidden" id="card_bank_id" name="card_bank_id" value="0">
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Shop Bank <span style="color: red">*</span></label></td>
+                            <td style="position: relative;"><input type="text" class="form-control" id="card_bank"
+                                                                   name="card_bank">
+                                <div id="shop_card_div"
+                                     style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
+                                </div>
+                                <input type="hidden" id="card_bank_id" name="card_bank_id" value="0">
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td><label style="padding:10px;">Shop Account</label></td>
-                        <td style="position: relative;"><input type="text" class="form-control" id="card_bank_account"
-                                                               name="card_bank_account">
-                            <div id="card_bank_acc_id_div"
-                                 style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
-                            </div>
-                            <input type="hidden" id="card_bank_acc_id" name="card_bank_acc_id" value="0">
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Shop Account <span style="color: red">*</span></label></td>
+                            <td style="position: relative;"><input type="text" class="form-control"
+                                                                   id="card_bank_account"
+                                                                   name="card_bank_account">
+                                <div id="card_bank_acc_id_div"
+                                     style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
+                                </div>
+                                <input type="hidden" id="card_bank_acc_id" name="card_bank_acc_id" value="0">
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td><label style="padding:10px;">Amount</label></td>
-                        <td><input type="text" class="form-control" id="card_amount" name="card_amount"></td>
-                    </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Amount</label></td>
+                            <td><input type="text" class="form-control" id="card_amount" name="card_amount"></td>
+                        </tr>
 
-                    <tr>
-                        <td><label style="padding:10px;">Cash (Partial Payment)</label></td>
-                        <td><input type="text" class="form-control" id="card_cash" name="card_cash"></td>
-                    </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Cash (Partial Payment)</label></td>
+                            <td><input type="text" class="form-control" id="card_cash" name="card_cash"></td>
+                        </tr>
 
-                    <tr>
-                        <td><label style="padding:10px;">Remarks</label></td>
-                        <td><input type="text" class="form-control" id="card_remarks" name="card_remarks"></td>
-                    </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Remarks</label></td>
+                            <td><input type="text" class="form-control" id="card_remarks" name="card_remarks"></td>
+                        </tr>
 
-                    <tr>
-                        <td>
-                            <div style="width:80px; margin-left: 20px;" class="btn btn-primary card_total"></div>
-                        </td>
-                        <td>
-                            <div style="width:50px; margin: 20px auto;"><input type="button"
-                                                                               class="btn btn-success btn-lg"
-                                                                               id="card_ok" value="OK"></div>
-                        </td>
-                    </tr>
-                </table>
+                        <tr>
+                            <td>
+                                <div style="width:80px; margin-left: 20px;" class="btn btn-primary card_total"></div>
+                            </td>
+                            <td>
+                                <div style="width:50px; margin: 20px auto;">
+{{--                                    <input type="button" class="btn btn-success btn-lg" id="card_ok" value="OK">--}}
+                                    <input type="submit" class="btn btn-success btn-lg" value="ok">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </form>
             </div>
         </div>
     </div>
@@ -785,6 +802,27 @@
 
 
     <script type="text/javascript">
+        $(document).ready(function () {
+            $("#card_payment_modal").submit(function (e) {
+                event.preventDefault();
+                var shop_bank = $('#card_bank').val();
+                var card_bank_acc_id = $('#card_bank_account').val();
+
+                alert(shop_bank)
+                alert(card_bank_acc_id)
+
+                if (shop_bank == 0) {
+                    alert('Bank Name Can Not Empty')
+                }
+                if (card_bank_acc_id == 0) {
+                    alert('Bank Account Can Not Empty')
+                }
+                else{
+                    $('#card_info').hide();
+                }
+
+            });
+        });
 
         var per_box_qty;
         var sub_unit;
@@ -802,6 +840,39 @@
         var vat_type = '{{ $GenSettings->vat_type }}'
 
         $(document).ready(function () {
+            $("#payment").change(function () {
+                var total = $('#show_grand_total').val();
+                var payment = $('#payment').val();
+
+                var due = total - payment
+                $("#due").val(due);
+
+
+            });
+
+            $("#discount").change(function () {
+                var total = $('#show_grand_total').val();
+                var payment = $('#payment').val();
+
+                var due = total - payment
+                $("#due").val(due);
+
+
+            });
+        });
+
+        $(document).ready(function () {
+
+            $("#price").keyup(function (e) {
+                if (e.which == 13) {
+
+                    $('#qnt').trigger(e);
+                    // $('#qnt').trigger(jQuery.Event('keypress', { keycode: 13 }));
+                    var total = $('#show_grand_total').val();
+                    $("#due").val(total);
+                }
+            });
+
 
             $('#date').datepicker({
                 dateFormat: 'yy-mm-dd'
@@ -1004,6 +1075,7 @@
                             var name = $(this).find(".active").attr("data-name");
                             var price = $(this).find(".active").attr("data-price");
                             var pbq = $(this).find(".active").attr("data-pbq");
+                            var pur_price = $(this).find(".active").attr("data-pur");
                             sub_unit = $(this).find(".active").attr("data-sub_unit");
                             unit = $(this).find(".active").attr("data-unit");
 
@@ -1011,10 +1083,10 @@
                             if (pbq) {
                                 $('#search').val(name);
                                 $('#square_foot_modal').modal('toggle');
-                                if (!sub_unit){
+                                if (!sub_unit) {
                                     $('#qty_type').text(unit)
 
-                                }else{
+                                } else {
                                     $('#qty_type').text(sub_unit)
 
                                 }
@@ -1041,7 +1113,7 @@
                             $('#search').val(name);
                             $('#pid_hid').val(id);
 
-                            $('#purchase_price_show').html(price);
+                            $('#purchase_price_show').html(pur_price);
 
                             $('#price').val(price);
 
@@ -1079,7 +1151,7 @@
                         //$("#wait").show();
                     },
                     error: function (ts) {
-                            console.log(ts);
+                        console.log(ts);
                         $('#products_div').show();
                         $('#products_div').html(ts.responseText);
                         //alert((ts.responseText));
@@ -1648,8 +1720,8 @@
                 var access = 0;
                 let selectedSerials = $('#serialInput').val();
                 console.log(selectedSerials)
-                if (serial_qty != selectedSerials.length){
-                    alert('Please Select Serial Number of : '+serial_qty);
+                if (serial_qty != selectedSerials.length) {
+                    alert('Please Select Serial Number of : ' + serial_qty);
                     return;
 
                 }
@@ -1701,8 +1773,6 @@
                     if (product_serial == 1) {
 
 
-
-
                         $.ajaxSetup({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1736,7 +1806,7 @@
 
                                     var inputs = $(".serialfield");
                                     let selectedSerials = $('#serialInput').val();
-                                    if (Number(qnt) != selectedSerials.length){
+                                    if (Number(qnt) != selectedSerials.length) {
                                         var tdval = $(".price-table tr").find(`[data-prodid='${id}']`);
                                         tdval.parent().find('.delete').click();
 
@@ -1745,7 +1815,7 @@
 
                                 });
                                 $('#serialInput').empty();
-                                $('#serialInput').select2({placeholder:"Please Select Serial Number"});
+                                $('#serialInput').select2({placeholder: "Please Select Serial Number"});
 
                                 console.log(serial_unsold.length)
                                 for (let i = 0; i < serial_unsold.length; i++) {
@@ -2570,7 +2640,7 @@
             $("#cust_div").hide();
         }
 
-        function selectProducts(id, name, price, serial, warranty, stock, vat, pbq, su, u) {
+        function selectProducts(id, name, price, serial, warranty, stock, vat, pbq, su, u, pur_price) {
             sub_unit = su;
             unit = u;
             if (pbq) {
@@ -2594,11 +2664,8 @@
 
             // var show = {!! json_encode($purchasePrice) !!};
 
-            // if(show == 1)
-            // {
-            // }
+            $('#purchase_price_show').html(pur_price);
 
-            $('#purchase_price_show').html(price);
             $('#price').val(price);
 
             product_id = id;

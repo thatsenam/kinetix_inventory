@@ -214,6 +214,12 @@
                   <p>Sales Return Report</p>
                 </a>
               </li>
+                <li class="nav-item">
+                    <a href="{{route('salesby.product')}}" class="nav-link {{ Route::currentRouteName() == 'salesby.product' ? 'active' : '' }}">
+                        <i class="fas fa-angle-right nav-icon"></i>
+                        <p>Sales Report By Product</p>
+                    </a>
+                </li>
               <li class="nav-item">
                 <a href="{{route('sales_report_brand')}}" class="nav-link {{ Route::currentRouteName() == 'sales_report_brand' ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>
@@ -269,12 +275,7 @@
                   <p>Purchase Report By Brand</p>
                 </a>
               </li>
-                <li class="nav-item">
-                    <a href="{{route('salesby.product')}}" class="nav-link {{ Route::currentRouteName() == 'salesby.product' ? 'active' : '' }}">
-                        <i class="fas fa-angle-right nav-icon"></i>
-                        <p>Sales By Product</p>
-                    </a>
-                </li>
+
                 <li class="nav-item">
                     <a href="{{route('purchaseby.product')}}" class="nav-link {{ Route::currentRouteName() == 'purchaseby.product' ? 'active' : '' }}">
                         <i class="fas fa-angle-right nav-icon"></i>
@@ -380,34 +381,34 @@
                   <p>Bank Transfer Report</p>
                 </a>
               </li>
-              <li class="nav-item">
-                  <a href="{{route('admin.pos.bank-loans.create')}}"
-                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank-loans.create' ? 'active' : '' }}">
-                      <i class="fas fa-angle-right nav-icon"></i>
-                      <p>Bank Loan </p>
-                  </a>
-              </li>
-              <li class="nav-item">
-                  <a href="{{route('admin.pos.bank_loans.report')}}"
-                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank_loans.report' ? 'active' : '' }}">
-                      <i class="fas fa-angle-right nav-icon"></i>
-                      <p>Bank Loan Report</p>
-                  </a>
-              </li>
-              <li class="nav-item">
-                  <a href="{{route('admin.pos.bank-loans.create_installment')}}"
-                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank-loans.create_installment' ? 'active' : '' }}">
-                      <i class="fas fa-angle-right nav-icon"></i>
-                      <p>Bank Loan Installments</p>
-                  </a>
-              </li>
-              <li class="nav-item">
-                  <a href="{{route('admin.pos.bank_loans.installment_report')}}"
-                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank_loans.installment_report' ? 'active' : '' }}">
-                      <i class="fas fa-angle-right nav-icon"></i>
-                      <p>Installment Reports</p>
-                  </a>
-              </li>
+{{--              <li class="nav-item">--}}
+{{--                  <a href="{{route('admin.pos.bank-loans.create')}}"--}}
+{{--                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank-loans.create' ? 'active' : '' }}">--}}
+{{--                      <i class="fas fa-angle-right nav-icon"></i>--}}
+{{--                      <p>Bank Loan </p>--}}
+{{--                  </a>--}}
+{{--              </li>--}}
+{{--              <li class="nav-item">--}}
+{{--                  <a href="{{route('admin.pos.bank_loans.report')}}"--}}
+{{--                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank_loans.report' ? 'active' : '' }}">--}}
+{{--                      <i class="fas fa-angle-right nav-icon"></i>--}}
+{{--                      <p>Bank Loan Report</p>--}}
+{{--                  </a>--}}
+{{--              </li>--}}
+{{--              <li class="nav-item">--}}
+{{--                  <a href="{{route('admin.pos.bank-loans.create_installment')}}"--}}
+{{--                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank-loans.create_installment' ? 'active' : '' }}">--}}
+{{--                      <i class="fas fa-angle-right nav-icon"></i>--}}
+{{--                      <p>Bank Loan Installments</p>--}}
+{{--                  </a>--}}
+{{--              </li>--}}
+{{--              <li class="nav-item">--}}
+{{--                  <a href="{{route('admin.pos.bank_loans.installment_report')}}"--}}
+{{--                      class="nav-link {{ Route::currentRouteName() == 'admin.pos.bank_loans.installment_report' ? 'active' : '' }}">--}}
+{{--                      <i class="fas fa-angle-right nav-icon"></i>--}}
+{{--                      <p>Installment Reports</p>--}}
+{{--                  </a>--}}
+{{--              </li>--}}
             </ul>
           </li>
           <li class="nav-item {{ (request()->is('dashboard/customers', 'dashboard/customers/customer_ledger', 'dashboard/customers/due-report', 'dashboard/customers/due-collection-report')) ? 'menu-open' : '' }}">
@@ -623,32 +624,13 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item {{ (request()->is('dashboard/reports/loss-profit-report')) ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-sort-alpha-up"></i>
-              <p>
-                  Loss / Profit Report
-                <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">5</span>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              {{-- <li class="nav-item">
-                <a href="{{route('reports.stock-report')}}" class="nav-link">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Stock Reports</p>
-                </a>
-              </li> --}}
-              <li class="nav-item">
+
+            <li class="nav-item">
                 <a href="/dashboard/reports/loss-profit-report" class="nav-link {{ (request()->is('dashboard/reports/loss-profit-report')) ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Loss Profit Reports</p>
+                    <i class="nav-icon fas fa-sort-alpha-up"></i>
+                    <p>Loss Profit Reports</p>
                 </a>
-              </li>
-
-
-            </ul>
-          </li>
+            </li>
           <li class="nav-item {{ (request()->is('dashboard/warranty-management/receive-from-customer', 'dashboard/warranty-management/send-to-supplier', 'dashboard/warranty-management/receive-from-supplier', 'dashboard/warranty-management/delivery-to-customer', 'dashboard/warranty-management/warranty-report')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-history"></i>

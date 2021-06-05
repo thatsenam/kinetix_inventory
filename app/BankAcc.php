@@ -18,4 +18,9 @@ class BankAcc extends Model
             $builder->where('client_id', auth()->user()->client_id ?? -1);
         });
     }
+
+    public function account()
+    {
+        return $this->hasOne(BankInfo::class, 'id','bank_id');
+    }
 }

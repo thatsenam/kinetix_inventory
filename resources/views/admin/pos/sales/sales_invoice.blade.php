@@ -561,79 +561,96 @@
             <div class="card-body">
                 <h3 style="text-align: center;">Check Info</h3>
 
-                <table class=""
-                       style="width: 100%; border: 1px solid #e6e6e6; padding: 5px; border-collapse: collapse;">
-                    <tr>
-                        <td><label style="padding:10px;">Client's Bank</label></td>
-                        <td><input type="text" class="form-control" id="clients_bank" name="clients_bank"></td>
-                    </tr>
-                    <tr>
-                        <td><label style="padding:10px;">Client's Bank Account</label></td>
-                        <td><input type="text" class="form-control" id="clients_bank_acc" name="clients_bank_acc"></td>
-                    </tr>
-                    <tr>
-                        <td><label style="padding:10px;">Check No</label></td>
-                        <td><input type="text" class="form-control" id="check_no" name="check_no"></td>
-                    </tr>
+                <form action="" id="check_info_modal">
+                    <table class=""
+                           style="width: 100%; border: 1px solid #e6e6e6; padding: 5px; border-collapse: collapse;">
+                        <tr>
+                            <td><label style="padding:10px;">Client's Bank</label></td>
+                            <td>
+                                <input type="text" class="form-control" id="clients_bank" name="clients_bank">
 
-                    <tr>
-                        <td><label style="padding:10px;">Check Type</label></td>
-                        <td>
-                            <select class="form-control" id="check_type" name="check_type">
-                                <option value="pay_cash">Cash</option>
-                                <option value="pay_account">Account</option>
-                            </select>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Client's Bank Account</label></td>
+                            <td><input type="text" class="form-control" id="clients_bank_acc" name="clients_bank_acc"></td>
+                        </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Check No</label></td>
+                            <td>
+                                <input type="text" class="form-control" id="check_no" name="check_no">
 
-                    <tr class="hide_tr" style="display: none;">
-                        <td><label style="padding:10px;">Shop's Bank</label></td>
-                        <td style="position: relative;"><input type="text" class="form-control" id="shops_bank"
-                                                               name="shops_bank">
-                            <div id="shop_bank_div"
-                                 style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
-                            </div>
-                            <input type="hidden" id="bank_id" name="bank_id" value="0">
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
 
-                    <tr class="hide_tr" style="display: none;">
-                        <td><label style="padding:10px;">Shop's Bank Account</label></td>
-                        <td style="position: relative;"><input type="text" class="form-control" id="shops_bank_account"
-                                                               name="shops_bank_account">
-                            <div id="shop_account_div"
-                                 style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
-                            </div>
-                            <input type="hidden" id="account_id" name="account_id" value="0">
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Check Type</label></td>
+                            <td>
+                                <select class="form-control" id="check_type" name="check_type">
+                                    <option value="pay_cash">Cash</option>
+                                    <option value="pay_account">Account</option>
+                                </select>
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td><label style="padding:10px;">Amount</label></td>
-                        <td><input type="text" class="form-control" id="check_amount" name="check_amount"></td>
-                    </tr>
-                    <tr>
-                        <td><label style="padding:10px;">Cash (Partial Payment)</label></td>
-                        <td><input type="text" class="form-control" id="check_cash" name="check_cash"></td>
-                    </tr>
-                    <tr>
-                        <td><label style="padding:10px;">Check Date</label></td>
-                        <td><input type="text" class="form-control" id="check_date" name="check_date"></td>
-                    </tr>
-                    <tr>
-                        <td><label style="padding:10px;">Remarks</label></td>
-                        <td><input type="text" class="form-control" id="check_remarks" name="check_remarks"></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div style="width:80px; margin-left: 20px;" class="btn btn-primary check_total"></div>
-                        </td>
-                        <td>
-                            <div style="width:50px; margin: 20px auto;"><input type="button" class="btn btn-success"
-                                                                               id="check_ok" value="OK"></div>
-                        </td>
-                    </tr>
-                </table>
+                        <tr class="hide_tr" style="display: none;">
+                            <td><label style="padding:10px;">Shop's Bank</label></td>
+                            <td style="position: relative;">
+                                {{--                            <input type="text" class="form-control" id="shops_bank" name="shops_bank">--}}
+                                <select id="shops_bank"   name="shops_bank" class="form-control">
+                                    @foreach($bank as $b)
+                                        <option value="{{$b->acc_name}},{{$b->account->name?? "n/a"}}">{{$b->account->name?? " "}}({{$b->acc_name}})</option>
+                                    @endforeach
+                                </select>
+                                <div id="shop_bank_div"
+                                     style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
+                                </div>
+                                <input type="hidden" id="bank_id" name="bank_id" value="0">
+                            </td>
+                        </tr>
+
+                        <tr class="hide_tr" style="display: none;">
+                            <td><label style="padding:10px;"></label></td>
+                            <td style="position: relative;">
+                                <input type="hidden" class="form-control" value="0" id="shops_bank_account"
+                                       name="shops_bank_account">
+                                <div id="shop_account_div"
+                                     style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
+                                </div>
+                                <input type="hidden" id="account_id" name="account_id" value="0">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><label style="padding:10px;">Amount</label></td>
+                            <td><input type="text" class="form-control" id="check_amount" name="check_amount"></td>
+                        </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Cash (Partial Payment)</label></td>
+                            <td><input type="text" class="form-control" id="check_cash" name="check_cash"></td>
+                        </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Check Date</label></td>
+                            <td><input type="text" class="form-control" id="check_date" name="check_date"></td>
+                        </tr>
+                        <tr>
+                            <td><label style="padding:10px;">Remarks</label></td>
+                            <td><input type="text" class="form-control" id="check_remarks" name="check_remarks"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="width:80px; margin-left: 20px;" class="btn btn-primary check_total"></div>
+                            </td>
+                            <td>
+                                <div style="width:50px; margin: 20px auto;">
+{{--                                    <input type="button" class="btn btn-success" id="check_ok" value="OK">--}}
+                                    <input type="submit" value="ok" class="btn btn-success">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </form>
             </div>
         </div>
     </div>
@@ -802,14 +819,56 @@
 
 
     <script type="text/javascript">
+
+        // $(document).ready(function()
+        // {
+        //     $("#clients_bank").change(function()
+        //     {
+        //         var clients_bank=$(this).val();
+        //         // var post_id = 'id='+ country_id;
+        //         alert(clients_bank);
+        //         $.ajax
+        //         ({
+        //             type: "POST",
+        //             url: "ajax.php",
+        //             data: post_id,
+        //             cache: false,
+        //             success: function(cities)
+        //             {
+        //                 $(".city").html(cities);
+        //             }
+        //         });
+        //
+        //     });
+        // });
+
         $(document).ready(function () {
+            $("#check_info_modal").submit(function (e) {
+                event.preventDefault();
+                var check_amount = $('#check_amount').val();
+                var check_date = $('#check_date').val();
+
+
+                if (check_date == "") {
+                    alert('Date Can Not Empty')
+                }
+                if (check_amount == "") {
+                    alert('Amount Can Not Empty')
+                }else{
+                    $('#check_info').hide();
+                }
+
+
+
+            });
+
+
             $("#card_payment_modal").submit(function (e) {
                 event.preventDefault();
                 var shop_bank = $('#card_bank').val();
                 var card_bank_acc_id = $('#card_bank_account').val();
 
-                alert(shop_bank)
-                alert(card_bank_acc_id)
+
 
                 if (shop_bank == 0) {
                     alert('Bank Name Can Not Empty')

@@ -46,13 +46,15 @@ class PosSalesController extends Controller
 
 
         $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+
+        $bank= BankAcc::where('client_id', auth()->user()->client_id)->get();
         if ($warehouses->count() < 2) {
             $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
             $warehouse_id = $getW->id;
         } else {
             $warehouse_id = "";
         }
-        return view('admin.pos.sales.sales_invoice', compact('warehouses', 'warehouse_id'));
+        return view('admin.pos.sales.sales_invoice', compact('warehouses', 'warehouse_id','bank'));
     }
 
     public function get_products(Request $req)

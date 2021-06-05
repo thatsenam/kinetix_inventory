@@ -89,7 +89,7 @@ class PosSalesController extends Controller
                     ->where('pid', $pid)->sum('qnt');
                 $stock = $pPurchase - $returns - $psold + $sale_return - $damage;
 
-                $pur_price = PurchaseDetails::Where('pid',$pid)->latest()->take(1)->first()->price;
+                $pur_price = PurchaseDetails::Where('pid',$pid)->latest()->take(1)->first()->price ?? 0;
 
                 $id = $row->id;
                 $name = $row->product_name;

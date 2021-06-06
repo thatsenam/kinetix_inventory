@@ -210,6 +210,17 @@ class PosPurchaseController extends Controller
 
         <?php
     }
+    public function get_suppmemo_list(Request $req){
+
+        $s_text = $req['s_text'];
+
+//        $suppmemo = DB::table('purchase_primary')
+//            ->where('client_id',auth()->user()->client_id)
+//            ->where('pur_inv', 'like', '%'.$s_text.'%')->limit(9)->get();
+        $suppmemo = PurchasePrimary::all()->pluck('pur_inv');
+
+        return $suppmemo ;
+    }
 
     public function get_serial_purchased($product)
     {

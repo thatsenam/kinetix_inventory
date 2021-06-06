@@ -38,20 +38,20 @@
                                                                    class="form-control">
                                                         </div>
                                                     </div>
-                                                    <div class="col-3">
-                                                        <div class="form-group" style="position: relative;">
-                                                            <input type="text" name="supp_memo" id="supp_memo"
-                                                                   class="form-control" placeholder="Memo No"
-                                                                   autocomplete="off">
-                                                            <div id="memo_div"
-                                                                 style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
-                                                        </div>
-                                                    </div>
+{{--                                                    <div class="col-3">--}}
+{{--                                                        <div class="form-group" style="position: relative;">--}}
+{{--                                                            <input type="text" name="supp_memo" id="supp_memo"--}}
+{{--                                                                   class="form-control" placeholder="Memo No"--}}
+{{--                                                                   autocomplete="off">--}}
+{{--                                                            <div id="memo_div"--}}
+{{--                                                                 style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
                                                 @else
                                                     <input type="hidden" name="warehouse_id" id="warehouse_id"
                                                            value="{{ $warehouse_id }}">
                                                     <div class="col-1">
-                                                        <div onclick="addNewSupplier()"><i class="fas fa-plus-square fa-2x mt-1 pl-2"></i></div>
+                                                        <div onclick="addNewSupplier()"><i class="fas fa-plus-square fa-2x mt-1 pl-2" style="cursor: pointer; color: #1bceb3;"></i></div>
 
                                                     </div>
                                                     <div class="col-7">
@@ -88,7 +88,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-1">
-                                                    <div onclick="addNewProduct()"><i class="fas fa-plus-square fa-2x mt-1 pl-2"></i></div>
+                                                    <div onclick="addNewProduct()"><i class="fas fa-plus-square fa-2x mt-1 pl-2" style="cursor: pointer;color: #1bceb3;"></i></div>
                                                 </div>
                                                 <div class="col-11">
                                                     <div class="form-group" style="position: relative;">
@@ -198,7 +198,7 @@
                                                 </div>
                                                 <div class="col-6">
                                                     <div style="width: 120px; margin: 50px auto;">
-                                                        <input type="button" class="btn btn-success" id="pur_save"
+                                                        <input type="button" class="btn btn-info" id="pur_save"
                                                                value="Save">
                                                     </div>
                                                 </div>
@@ -297,7 +297,19 @@
         var serial_array = {};
         var vat_type = '{{ $GenSettings->vat_type }}'
 
+        $(document).ready(function () {
 
+
+            $("#price").keyup(function (e) {
+                if (e.which == 13) {
+
+                    $('#qnt').trigger(e);
+                    // $('#qnt').trigger(jQuery.Event('keypress', { keycode: 13 }));
+                    var total = $('#show_grand_total').val();
+                    $("#due").val(total);
+                }
+            });
+        });
         $(document).ready(function () {
 
             $('#serial').on('keyup', function (e) {
@@ -305,10 +317,12 @@
                 e.preventDefault();
 
                 if (e.which == 13) {
-                    alert('access');
+                    swal.fire("Done!", "access", "success");
                 }
 
             });
+
+
 
             $('#date').datepicker({dateFormat: 'yy-mm-dd'});
 
@@ -553,7 +567,42 @@
                 });
 
             });
+            $("#supp_memo").change(function(){
+                var s_text = $(this).val();
 
+                var formData = new FormData();
+                formData.append('s_text', s_text);
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: "{{ URL::route('get_suppmemo_list') }}",
+                    method: 'post',
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: "json",
+                    beforeSend: function () {
+                        //$("#wait").show();
+                    },
+                    error: function (ts) {
+                        // alert(ts.responseText);
+
+
+                    },
+                    success: function (data) {
+                        alert(data);
+
+                    }
+
+                });
+
+            });
 
             $("#supp_memo").keyup(function (e) {
 
@@ -717,7 +766,8 @@
 
                 }
                 if(unique ==1 ){
-                    alert('Enter Unique Serial Number');
+                    swal.fire("Error", "Enter Unique Serial Number", "error");
+                    // alert('Enter Unique Serial Number');
                 }
                 function onlyUnique(value, index, self) {
                     return self.indexOf(value) === index;
@@ -744,7 +794,8 @@
                 console.log(typeof unique);
                 console.log(typeof inputedSerials);
                 if (areEqual(unique, inputedSerials) ===false){
-                    alert('Please Enter Unique Serial Number')
+                    swal.fire("Error", "Please Enter Unique Serial Number", "error");
+                    // alert('Please Enter Unique Serial Number')
                     return false;
                 }
 
@@ -787,7 +838,8 @@
 
                     var warehouse_id = $('#warehouse_id').val();
                     if (warehouse_id == null) {
-                        alert('Please Select Warehouse');
+                        swal.fire("Error!", "Please Select Warehouse", "error");
+                        // alert('Please Select Warehouse');
                         return;
                     }
 
@@ -851,18 +903,21 @@
                     }
 
                     if (supp_id == 0) {
-                        alert("No suplier selected. Please select a supplier or create a new supplier!");
+                        swal.fire("Error!", "No suplier selected. Please select a supplier or create a new supplier!", "error");
+
                         return false;
                     }
 
                     if (id == 0) {
-                        alert("Invalid product. Please select product or add product before proceed!!");
+                        swal.fire("Error!", "Invalid product. Please select product or add product before proceed!!", "error");
+                        // alert();
                         return false;
                     }
 
                     if (id == '' || name == '' || qnt == '' || price == '') {
 
-                        alert("Please Fillup All Fields ");
+                        swal.fire("Error!", "Please Fillup All Fields ", "error");
+                        // alert("Please Fillup All Fields ");
                         return false;
                     }
 
@@ -924,7 +979,8 @@
 
                 var warehouse_id = $('#warehouse_id').val();
                 if (warehouse_id == null) {
-                    alert('Please Select Warehouse');
+                    swal.fire("Error!", 'Please Select Warehouse', "error");
+                    // alert('Please Select Warehouse');
                     return;
                 }
 
@@ -978,7 +1034,8 @@
 
 
                 if (i < 5) {
-                    alert("Please Make A List.");
+                    swal.fire("Error!", "Please Make A List.", "error");
+                    // alert("Please Make A List.");
                     return false;
                 }
 
@@ -1031,7 +1088,9 @@
                     error: function (ts) {
 
                         // alert(ts.responseText);
-                        alert("Your Purchase Has Been Completed!!!");
+                        // swal.fire("Done!", "access", "success");
+                        swal.fire("Done!", "Your Purchase Has Been Completed!!!", "success");
+                        // alert("Your Purchase Has Been Completed!!!");
 
                         if (ts.responseText == '') {
 
@@ -1077,8 +1136,8 @@
                     success: function (data) {
 
                         // alert(data);
-
-                        alert("Your Purchase Has Been Completed!!!");
+                        swal.fire("Error!","Your Purchase Has Been Completed!!!", "error");
+                        // alert("Your Purchase Has Been Completed!!!");
                         location.reload()
                         //$('.cart-table tr').remove();
 

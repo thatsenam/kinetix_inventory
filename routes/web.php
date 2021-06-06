@@ -285,6 +285,7 @@ Route::post('/dashboard/save_purchase_products', 'PosPurchaseController@save_pur
 Route::post('/dashboard/get_supplier', 'PosPurchaseController@get_supplier')->name('get_supplier')->middleware('auth');
 
 Route::post('/dashboard/get_suppmemo', 'PosPurchaseController@get_suppmemo')->name('get_suppmemo')->middleware('auth');
+Route::post('/dashboard/get_suppmemo_list', 'PosPurchaseController@get_suppmemo_list')->name('get_suppmemo_list')->middleware('auth');
 
 Route::get('/dashboard/purchase_return', 'PosPurchaseController@purchase_return')->name('purchase_return')->middleware('auth');
 

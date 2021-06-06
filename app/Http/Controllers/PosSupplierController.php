@@ -80,6 +80,7 @@ class PosSupplierController extends Controller
     public function setSupplier(Request $request)
     {
 
+
         if ($request->isMethod('post')) {
             //dd($request->all());
             $data = $request->all();
@@ -176,9 +177,10 @@ class PosSupplierController extends Controller
         $get_data = Supplier::where('client_id', auth()->user()->client_id)->where('id', $id)->first();
 
         $head = AccHead::query()->where('cid', 'sid ' . $get_data->id)->first();
+
         $opb = AccTransaction::query()->where('type', AccHead::class)
             ->where('type_id', $head->id)
-            ->where('description', "OpeningBalance")->sum('credit');
+            ->where('description', "Opening Balance")->sum('credit');
 
         $data = array(
             'id' => $get_data->id,
@@ -194,11 +196,13 @@ class PosSupplierController extends Controller
 
             'opb' => $opb,
         );
+
         return json_encode($data);
     }
 
     public function updateSupp(Request $request)
     {
+
         $id = $request->id;
         $name = $request->name;
         $phone = $request->phone;
@@ -212,6 +216,8 @@ class PosSupplierController extends Controller
         $opb = $request->inputOpeningBalance ?? 0;
 
         $prev_supplier = Supplier::find($id);
+
+
 
         DB::table('suppliers')
             ->where('client_id', auth()->user()->client_id)
@@ -231,11 +237,13 @@ class PosSupplierController extends Controller
             ->where('head', $head)->first();
         //        dd($opb);
 
-        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Cr');
+//        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Cr');
 
-        $prev_supp_name = $prev_supplier->name;
+        $prev_supp_name = $prev_supplier->name . " " . $prev_supplier->phone;
 
-        AccTransaction::where('client_id', auth()->user()->client_id)->where('sort_by', $sid)->where('head', $prev_supp_name)->update(['head' => $head]);
+        AccTransaction::where('head', $prev_supp_name)
+                        ->update(['head' => $head->head]);
+
 
         echo 'Supplier Updated!';
     }
@@ -243,7 +251,15 @@ class PosSupplierController extends Controller
     public function deleteSupp($id){
         $supplier = Supplier::find($id);
         $head = $supplier->name. " " .$supplier->phone;
-        $deleteTrans = AccTransaction::where('head', $head)->where('description',"OpeningBalance")->delete();
+
+        $acc_count = AccTransaction::where('head',$head)->count();
+
+        if($acc_count <= 1 ){
+            $deleteTrans = AccTransaction::where('head', $head)->where('description',"Opening Balance")->delete();
+            AccHead::where('head',$head)->delete();
+        }
+
+
         // $deleteAcc = AccHead::where('head', $head)->delete();
         $delete = Supplier::where('id', $id)->delete();
         if ($delete == 1) {

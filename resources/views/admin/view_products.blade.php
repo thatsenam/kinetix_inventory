@@ -71,8 +71,7 @@
                     <tr>
                         <td>{{$i++}}</td>
                         <td style="width: 30%;">{{$product->product_name}}</td>
-                        @php( $des = substr_replace($product->product_desc, "...", 20) )
-                        <td style="width: 30%;">{{$des}}</td>
+                        <td style="width: 30%;">{{$product->product_desc}} </td>
                         <td>
                             @if(empty($product->after_pprice))
                                 {{$product->before_price}}

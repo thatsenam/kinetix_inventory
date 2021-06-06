@@ -30,10 +30,10 @@
                         </div>
                         <div class="col-md-6 text-right">
                             <div class="receipt-right">
-                                <h5>{{$GenSettings->site_name?? ''}}.</h5>
-                                <p>{{$GenSettings->phone ?? ''}}<i class="fa fa-phone"></i></p>
-                                <p>{{$GenSettings->email ?? ''}} <i class="fa fa-envelope-o"></i></p>
-                                <p>{{$GenSettings->site_address ?? ''}} <i class="fa fa-location-arrow"></i></p>
+                                <h3>{{$GenSettings->site_name?? ''}}.</h3>
+                                <h5>{{$GenSettings->phone ?? ''}}<i class="fa fa-phone"></i></h5>
+                                <h5>{{$GenSettings->email ?? ''}} <i class="fa fa-envelope-o"></i></h5>
+                                <h5>{{$GenSettings->site_address ?? ''}} <i class="fa fa-location-arrow"></i></h5>
                             </div>
                         </div>
                     </div>
@@ -44,9 +44,9 @@
                         <div class="col-xs-8 col-sm-8 col-md-8 text-left">
                             <div class="receipt-right">
                             @foreach($cust_details as $cust_detail)
-                                <h5>{{$cust_detail->name}} <small>  |   Reciept Number : {{$get_customer->invoice_no ?? ''}}</small></h5>
-                                <p><b>Mobile :</b> {{$cust_detail->phone?? ''}}</p>
-                                <p><b>Address :</b> {{$cust_detail->address?? ''}}</p>
+                                <h4>{{$cust_detail->name}} <small>  |   Reciept Number : {{$get_customer->invoice_no ?? ''}}</small></h4>
+                                <h5><b>Mobile :</b> {{$cust_detail->phone?? ''}}</h5>
+                                <h5><b>Address :</b> {{$cust_detail->address?? ''}}</h5>
                             @endforeach
                             </div>
                         </div>
@@ -78,17 +78,17 @@
                                     <p>
                                         <strong>Total Amount: </strong>
                                     </p>
-                                    <p>
-                                        <strong>Late Fees: </strong>
-                                    </p>
+{{--                                    <p>--}}
+{{--                                        <strong>Late Fees: </strong>--}}
+{{--                                    </p>--}}
                                 </td>
                                 <td>
                                     <p>
                                         <strong><i class="fa fa-inr"></i> {{$get_customer->amount??''}}/-</strong>
                                     </p>
-                                    <p>
-                                        <strong><i class="fa fa-inr"></i> 0.00/-</strong>
-                                    </p>
+{{--                                    <p>--}}
+{{--                                        <strong><i class="fa fa-inr"></i> 0.00/-</strong>--}}
+{{--                                    </p>--}}
                                 </td>
                             </tr>
                             <tr>
@@ -132,6 +132,13 @@
     </div>
 
     <style>
+
+        span{
+            font-size: 180% /*px, cm, in, etc.*/;
+        }
+        p {
+            font-size: 180% /*px, cm, in, etc.*/;
+        }
         .text-danger strong {
     		color: #9f181c;
 		}

@@ -505,7 +505,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="inputName" class="required">Name:</label>
+                                        <label for="inputName" class="required">Name: <span class="text-danger">*</span></label>
                                         <input class="form-control" placeholder="Name..." name="name" type="text"
                                                id="name" aria-required="true" required>
                                         <input class="form-control" placeholder="Name..." name="sup_id" type="text"
@@ -515,7 +515,7 @@
 
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="inputPhone" class="required">Phone:</label>
+                                        <label for="inputPhone" class="required">Phone:<span class="text-danger">*</span></label>
                                         <input class="form-control" placeholder="Phone..." name="phone" type="text"
                                                id="phone" aria-required="true" required>
                                     </div>
@@ -847,7 +847,7 @@
             $("#CartMsg").hide();
             $('.save').click(function (e) {
                 e.preventDefault();
-                if ($('#name').val() == '' || $('#phone').val() == '' || $('#address').val() == '') {
+                if ($('#name').val() == '' || $('#phone').val() == '' ) {
                     alert("Please fill all field with (*) sign!");
                     return false;
                 }

@@ -12,7 +12,7 @@ if (!function_exists('addOrUpdateOpeningBalance')) {
         $credit = 0;
         if ($entry_type == "Cr") $credit = $amount; else $debit = $amount;
 
-        $txn = AccTransaction::firstOrNew(['head' => $head, 'description' => 'OpeningBalance', 'type' => AccHead::class, 'type_id' => $head_id]);
+        $txn = AccTransaction::firstOrNew(['head' => $head, 'description' => 'Opening Balance', 'type' => AccHead::class, 'type_id' => $head_id]);
         $txn->credit = $credit;
         $txn->debit = $debit;
         $txn->date = date("Y/m/d");

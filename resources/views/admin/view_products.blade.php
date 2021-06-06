@@ -54,7 +54,6 @@
                   <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Description</th>
                     <th>Price</th>
                     <th>Stock</th>
                     <th>Unit</th>
@@ -71,7 +70,6 @@
                     <tr>
                         <td>{{$i++}}</td>
                         <td style="width: 30%;">{{$product->product_name}}</td>
-                        <td style="width: 30%;">{{$product->product_desc}} </td>
                         <td>
                             @if(empty($product->after_pprice))
                                 {{$product->before_price}}

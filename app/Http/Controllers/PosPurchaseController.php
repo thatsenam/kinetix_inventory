@@ -837,7 +837,7 @@ class PosPurchaseController extends Controller
                         // ->select('purchase_primary.pur_inv', 'purchase_primary.supp_inv', 'products.product_name',
                         // 'purchase_details.qnt', 'purchase_details.price', 'purchase_primary.vat_amount', 'purchase_primary.total')
                         ->join('purchase_details', 'purchase_primary.pur_inv', 'purchase_details.pur_inv')
-                        ->join('suppliers', 'purchase_primary.sid', 'suppliers.id')
+                            ->join('suppliers', 'purchase_primary.sid', 'suppliers.id','suppliers.name')
                         ->join('products', 'purchase_details.pid', 'products.id')
                         ->join('brands', 'products.brand_id', 'brands.id')
                         ->where('sid', $supplier_id)

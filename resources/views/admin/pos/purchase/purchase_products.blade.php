@@ -191,7 +191,7 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="form-group">
-                                                        <label>Payment</label>
+                                                        <label> Cash Payment </label>
                                                         <input type="text" name="payment" id="payment"
                                                                class="form-control" placeholder="" value="0">
                                                     </div>
@@ -697,20 +697,27 @@
                 var qnt = $('#qnt').val();
                 var access = 0;
                 let inputedSerials = [];
+                var unique = 0;
                 for (i = 0; i < serial_qty; i++) {
                     var ser = $('#serial-' + i).val();
                     console.log(serial_unsold)
                     if (ser == '') {
                         $('#serial-' + i).addClass("is-invalid");
                         access = 1;
+
                     }else if (serial_unsold.includes(ser)) {
                         $('#serial-' + i).addClass("is-invalid");
                         access = 1;
+                        unique = 1;
+
                     } else {
                         $('#serial-' + i).removeClass("is-invalid");
                     }
                     inputedSerials.push(ser)
 
+                }
+                if(unique ==1 ){
+                    alert('Enter Unique Serial Number');
                 }
                 function onlyUnique(value, index, self) {
                     return self.indexOf(value) === index;

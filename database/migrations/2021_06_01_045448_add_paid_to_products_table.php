@@ -14,7 +14,7 @@ class AddPaidToProductsTable extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('reorder')->default(3);
+            $table->string('reorder')->nullable();
         });
     }
 

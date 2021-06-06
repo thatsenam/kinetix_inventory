@@ -194,7 +194,7 @@
                             data: 'sl',
                         },
                         {
-                            data: 'pur_inv',
+                            data: 'name',
                         },
                         {
                             data: 'supp_inv',

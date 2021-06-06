@@ -259,7 +259,7 @@ class AccHeadIndex extends Component
             'client_id' => $client_id,
             'parent_head' => 'Expense',
             'sub_head' => "Purchase",
-            'head' => "Purchase I.V.A",
+            'head' => "Purchase Vat",
             'is_default' => '1',
         ];
 
@@ -268,7 +268,7 @@ class AccHeadIndex extends Component
             'client_id' => $client_id,
             'parent_head' => 'Liabilities',
             'sub_head' => "Accounts Payable",
-            'head' => "Sales I.V.A",
+            'head' => "Sales Vat",
             'is_default' => '1',
         ];
 

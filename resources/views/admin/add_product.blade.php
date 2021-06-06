@@ -105,7 +105,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6 form-group">
-                                <label>Sub Unit<span class="text-danger">*</span></label>
+                                <label>Sub Unit</label>
                                 <select id="sub_unit" name="sub_unit" class="form-control custom-select">
                                     <option value="" selected >Select</option>
                                     <option value="Box">Box</option>
@@ -117,7 +117,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label> How many units in the sub unit?<span class="text-danger">*</span></label>
+                            <label> How many units in the sub unit?</label>
                             <input type="text" name="per_box_qty" id="per_box_qty" class="form-control" placeholder="How many units in the sub unit?">
                         </div>
 

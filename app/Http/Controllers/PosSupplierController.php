@@ -208,7 +208,7 @@ class PosSupplierController extends Controller
         $upazilla = $request->upazilla;
         $district = $request->district;
         $details = $request->details;
-        $supplier_group = $request->supplier_group;
+
         $opb = $request->inputOpeningBalance ?? 0;
 
         $prev_supplier = Supplier::find($id);
@@ -216,7 +216,8 @@ class PosSupplierController extends Controller
         DB::table('suppliers')
             ->where('client_id', auth()->user()->client_id)
             ->where(['id' => $id])
-            ->update(['name' => $name, 'phone' => $phone, 'address' => $address, 'email' => $email, 'area' => $area, 'upazilla' => $upazilla, 'district' => $district, 'details' => $details, 'supplier_group' => $supplier_group]);
+            ->update(['name' => $name, 'phone' => $phone, 'address' => $address, 'email' => $email,
+                'area' => $area, 'upazilla' => $upazilla, 'district' => $district, 'details' => $details]);
 
         $sid = "sid " . $id;
         $head = $name . " " . $phone;

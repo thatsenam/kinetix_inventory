@@ -433,12 +433,12 @@
                   <p>Customer Ledger</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="/dashboard/customers/due-report" class="nav-link {{ (request()->is('dashboard/customers/due-report')) ? 'active' : '' }}">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Due Report</p>
-                </a>
-              </li>
+{{--              <li class="nav-item">--}}
+{{--                <a href="/dashboard/customers/due-report" class="nav-link {{ (request()->is('dashboard/customers/due-report')) ? 'active' : '' }}">--}}
+{{--                  <i class="fas fa-angle-right nav-icon"></i>--}}
+{{--                  <p>Due Report</p>--}}
+{{--                </a>--}}
+{{--              </li>--}}
               <li class="nav-item">
                 <a href="/dashboard/customers/due-collection-report" class="nav-link {{ (request()->is('dashboard/customers/due-collection-report')) ? 'active' : '' }}">
                   <i class="fas fa-angle-right nav-icon"></i>

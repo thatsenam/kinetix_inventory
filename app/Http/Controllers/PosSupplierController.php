@@ -232,9 +232,9 @@ class PosSupplierController extends Controller
             ->where('cid', $sid)->update([
                 'head' => $head,
             ]);
-        $head = AccHead::where('client_id', auth()->user()->client_id)
-            ->where('cid', $sid)
-            ->where('head', $head)->first();
+//        $head = AccHead::where('client_id', auth()->user()->client_id)
+//            ->where('cid', $sid)
+//            ->where('head', $head)->first();
         //        dd($opb);
 
 //        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Cr');
@@ -242,7 +242,7 @@ class PosSupplierController extends Controller
         $prev_supp_name = $prev_supplier->name . " " . $prev_supplier->phone;
 
         AccTransaction::where('head', $prev_supp_name)
-                        ->update(['head' => $head->head]);
+                        ->update(['head' => $head]);
 
 
         echo 'Supplier Updated!';

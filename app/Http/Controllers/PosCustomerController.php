@@ -27,35 +27,40 @@ use App\Supplier;
 use App\BankInfo;
 use App\BankAcc;
 use Illuminate\Support\Facades\DB;
+
 // use Response;
 
 class PosCustomerController extends Controller
 {
 
-    public function get_customer(Request $req){
+    public function get_customer(Request $req)
+    {
 
         $s_text = $req['s_text'];
 
         $customer = DB::table('customers')
-            ->where('client_id',auth()->user()->client_id)
-            ->where('phone', 'like', '%'.$s_text.'%')->limit(9)->get(); ?>
+            ->where('client_id', auth()->user()->client_id)
+            ->where('phone', 'like', '%' . $s_text . '%')->limit(9)->get(); ?>
 
         <ul class='customer-list sugg-list'>
 
-        <?php $i = 1;
+            <?php $i = 1;
 
-        foreach($customer as $row){
+            foreach ($customer as $row) {
 
-            $id = $row->id;
-            $name = $row->name;
-            $phone = $row->phone;
-            $address = $row->address ?? '';
+                $id = $row->id;
+                $name = $row->name;
+                $phone = $row->phone;
+                $address = $row->address ?? '';
 
-            $i = $i + 1; ?>
+                $i = $i + 1; ?>
 
-            <li tabindex='<?php echo $i; ?>' onclick='selectCustomer("<?php echo $id; ?>", "<?php echo $phone; ?>", "<?php echo $name; ?>", "<?php echo $address; ?>");' data-id='<?php echo $id; ?>' data-phone='<?php echo $phone; ?>' data-name='<?php echo $name; ?>' data-address='<?php echo $address; ?>'><?php echo $phone; ?> | <?php echo $name; ?></li>
+                <li tabindex='<?php echo $i; ?>'
+                    onclick='selectCustomer("<?php echo $id; ?>", "<?php echo $phone; ?>", "<?php echo $name; ?>", "<?php echo $address; ?>");'
+                    data-id='<?php echo $id; ?>' data-phone='<?php echo $phone; ?>' data-name='<?php echo $name; ?>'
+                    data-address='<?php echo $address; ?>'><?php echo $phone; ?> | <?php echo $name; ?></li>
 
-        <?php } ?>
+            <?php } ?>
 
         </ul>
 
@@ -68,7 +73,7 @@ class PosCustomerController extends Controller
 
         if ($request->isMethod('post')) {
 
-            $this->validate($request,[
+            $this->validate($request, [
                 'inputPhone' => 'unique:customers,phone|required',
             ]);
 
@@ -129,9 +134,13 @@ class PosCustomerController extends Controller
 
     public function customers_phone(Request $request)
     {
-    $customer_phone = Customer::all()->pluck('phone');
-
-    return $customer_phone;
+        $customer_phone = Customer::all()->pluck('phone');
+        return $customer_phone;
+    }
+    public function supplier_phone(Request $request)
+    {
+         $supplier= Supplier::all()->pluck('phone');
+        return $supplier;
     }
 
 
@@ -226,7 +235,8 @@ class PosCustomerController extends Controller
         echo 'Customer Updated Successfully!';
     }
 
-    public function deleteCust($id){
+    public function deleteCust($id)
+    {
         $delete = Customer::where('id', $id)->delete();
         if ($delete == 1) {
             $success = true;
@@ -241,8 +251,9 @@ class PosCustomerController extends Controller
         ]);
     }
 
-    public function UpCust($id){
-        $update = DB::table('customers')->where(['id'=>$id])->update(['status'=>"0"]);
+    public function UpCust($id)
+    {
+        $update = DB::table('customers')->where(['id' => $id])->update(['status' => "0"]);
         if ($update == 1) {
             $success = true;
             $message = "Customer Status Updated!";
@@ -256,57 +267,59 @@ class PosCustomerController extends Controller
         ]);
     }
 
-    public function getCustomer($id){
+    public function getCustomer($id)
+    {
 
-        $customer = Customer::where(['id'=>$id])->first();
-        $get_head = DB::table('acc_heads')->where('cid',"cid ".$id)->first();
+        $customer = Customer::where(['id' => $id])->first();
+        $get_head = DB::table('acc_heads')->where('cid', "cid " . $id)->first();
         $head = $get_head->head;
 
 
-        $ledgers = AccTransaction::where(['head'=>$head])->get();
-        $total_sale = DB::table('sales_invoice')->where('cid',$id)->sum('amount');
-        $sales = DB::table('sales_invoice')->where('cid',$id)->get();
-        $fromSales = DB::table('sales_invoice')->where('cid',$id)->sum('payment');
-        $fromPayment = DB::table('payment_invoice')->where('cid',$id)->sum('amount');
+        $ledgers = AccTransaction::where(['head' => $head])->get();
+        $total_sale = DB::table('sales_invoice')->where('cid', $id)->sum('amount');
+        $sales = DB::table('sales_invoice')->where('cid', $id)->get();
+        $fromSales = DB::table('sales_invoice')->where('cid', $id)->sum('payment');
+        $fromPayment = DB::table('payment_invoice')->where('cid', $id)->sum('amount');
         $total_sale_paid = $fromSales + $fromPayment;
         $sale_due = $total_sale - $total_sale_paid;
-        $total_return = DB::table('sales_return')->where('cid',$id)->sum('tprice');
-        $cash_return = DB::table('sales_return')->where('cid',$id)->sum('cash_return');
+        $total_return = DB::table('sales_return')->where('cid', $id)->sum('tprice');
+        $cash_return = DB::table('sales_return')->where('cid', $id)->sum('cash_return');
         $return_due = $total_return - $cash_return;
-        return view('admin.pos.customer.customer_details')->with(compact('customer','get_head','total_sale','total_sale_paid','sale_due','total_return','cash_return','return_due','ledgers','sales'));
-
+        return view('admin.pos.customer.customer_details')->with(compact('customer', 'get_head', 'total_sale', 'total_sale_paid', 'sale_due', 'total_return', 'cash_return', 'return_due', 'ledgers', 'sales'));
 
 
     }
 
-    public function sales_filter(Request $request){
-        if(request()->ajax()){
+    public function sales_filter(Request $request)
+    {
+        if (request()->ajax()) {
             $head = $request->custhead;
-            if(!empty($request->from_date)){
-                $data = DB::table('acc_transactions')->where('head',$head)
-                ->whereBetween('date', array($request->from_date, $request->to_date))->get();
-            }else{
-                $data = DB::table('acc_transactions')->where('head',$request->custhead)->get();
+            if (!empty($request->from_date)) {
+                $data = DB::table('acc_transactions')->where('head', $head)
+                    ->whereBetween('date', array($request->from_date, $request->to_date))->get();
+            } else {
+                $data = DB::table('acc_transactions')->where('head', $request->custhead)->get();
             }
             return datatables()->of($data)->make(true);
         }
     }
 
-    public function filter_data(Request $request){
-        if(request()->ajax()){
+    public function filter_data(Request $request)
+    {
+        if (request()->ajax()) {
             $head = $request->custhead;
-            if(!empty($request->from_date)){
-                $data = DB::table('acc_transactions')->where('head',$request->custhead)->whereBetween('date', array($request->from_date, $request->to_date))->get()->toArray();
-            }else{
-                $data = DB::table('acc_transactions')->where('head',$request->custhead)->get()->toArray();
+            if (!empty($request->from_date)) {
+                $data = DB::table('acc_transactions')->where('head', $request->custhead)->whereBetween('date', array($request->from_date, $request->to_date))->get()->toArray();
+            } else {
+                $data = DB::table('acc_transactions')->where('head', $request->custhead)->get()->toArray();
             }
 
-            $balance  = 0;
+            $balance = 0;
 
-            foreach($data as $index=>$d){
-                if($d->debit > 0){
+            foreach ($data as $index => $d) {
+                if ($d->debit > 0) {
                     $balance = ($balance + $d->debit);
-                }else{
+                } else {
                     $balance = ($balance - $d->credit);
                 }
 
@@ -316,14 +329,15 @@ class PosCustomerController extends Controller
         }
     }
 
-    public function search(Request $request) {
-        if($request->ajax()) {
+    public function search(Request $request)
+    {
+        if ($request->ajax()) {
             $output = "";
-            $banks = DB::table('bank_info')->where('name', 'LIKE','%'. $request->text .'%')->get();
+            $banks = DB::table('bank_info')->where('name', 'LIKE', '%' . $request->text . '%')->get();
 
-            if(count($banks)) {
-                foreach($banks as $bank){
-                    $output .= '<button type="button" id="'.$bank->id.'" class="wow btn btn-sm btn-default mr-2">' . $bank->name . '</button>';
+            if (count($banks)) {
+                foreach ($banks as $bank) {
+                    $output .= '<button type="button" id="' . $bank->id . '" class="wow btn btn-sm btn-default mr-2">' . $bank->name . '</button>';
                 }
                 return response($output);
             } else {
@@ -332,13 +346,14 @@ class PosCustomerController extends Controller
         }
     }
 
-    public function search_bank_acc(Request $request) {
-        if($request->ajax()) {
+    public function search_bank_acc(Request $request)
+    {
+        if ($request->ajax()) {
             $output = "";
-            $banks = DB::table('bank_acc')->where('bank_id',$request->text)->get();
-            if(count($banks)) {
-                foreach($banks as $bank){
-                    $output .= '<button type="button" id="'.$bank->bank_id.'" class="bank_acc btn btn-sm btn-default mr-2">' . $bank->acc_name . '</button>';
+            $banks = DB::table('bank_acc')->where('bank_id', $request->text)->get();
+            if (count($banks)) {
+                foreach ($banks as $bank) {
+                    $output .= '<button type="button" id="' . $bank->bank_id . '" class="bank_acc btn btn-sm btn-default mr-2">' . $bank->acc_name . '</button>';
                 }
                 return response($output);
             } else {
@@ -745,45 +760,47 @@ class PosCustomerController extends Controller
         return view('admin.pos.customer.payinvoice')->with(compact('cust_details', 'get_customer'));
     }
 
-    public function saleinvoice($id){
+    public function saleinvoice($id)
+    {
         $invoiceno = $id;
         $get_customer = DB::table('sales_invoice')->where('invoice_no', $id)->first();
         $custid = $get_customer->cid;
-        $cust_details = Customer::where(['id'=>$custid])->get();
+        $cust_details = Customer::where(['id' => $custid])->get();
 
         $details = DB::table('sales_invoice_details')
-        ->select('products.product_name as name', 'products.product_img as image', 'sales_invoice_details.qnt as qnt',
-        'sales_invoice_details.price as price','sales_invoice_details.vat')
-        ->join('products', 'sales_invoice_details.pid', 'products.id')
-        ->where('sales_invoice_details.invoice_no', $invoiceno)->get();
+            ->select('products.product_name as name', 'products.product_img as image', 'sales_invoice_details.qnt as qnt',
+                'sales_invoice_details.price as price', 'sales_invoice_details.vat')
+            ->join('products', 'sales_invoice_details.pid', 'products.id')
+            ->where('sales_invoice_details.invoice_no', $invoiceno)->get();
 
         $total = 0;
-        foreach($details as $row){
+        foreach ($details as $row) {
             $qnt = $row->qnt;
             $total += $qnt;
         }
 
         $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
 
-        return view('admin.pos.customer.saleinvoice')->with(compact('cust_details','get_customer','details', 'settings','total'));
+        return view('admin.pos.customer.saleinvoice')->with(compact('cust_details', 'get_customer', 'details', 'settings', 'total'));
     }
 
-    public function saleinvoicemain($id){
+    public function saleinvoicemain($id)
+    {
         $invoiceno = $id;
         $get_customer = DB::table('sales_invoice')->where('invoice_no', $id)->first();
         $custid = $get_customer->cid;
-        $cust_details = Customer::where(['id'=>$custid])->get();
+        $cust_details = Customer::where(['id' => $custid])->get();
 
         $details = DB::table('sales_invoice_details')
-        ->select('products.product_name as name', 'products.product_img as image',
-            'sales_invoice_details.qnt as qnt','sales_invoice_details.box',
-        'sales_invoice_details.price as price','sales_invoice_details.vat')
-        ->join('products', 'sales_invoice_details.pid', 'products.id')
-        ->where('sales_invoice_details.invoice_no', $invoiceno)->get();
+            ->select('products.product_name as name', 'products.product_img as image',
+                'sales_invoice_details.qnt as qnt', 'sales_invoice_details.box',
+                'sales_invoice_details.price as price', 'sales_invoice_details.vat')
+            ->join('products', 'sales_invoice_details.pid', 'products.id')
+            ->where('sales_invoice_details.invoice_no', $invoiceno)->get();
 
         $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
 
-        return view('admin.pos.customer.saleinvoice_old')->with(compact('cust_details','get_customer','details', 'settings'));
+        return view('admin.pos.customer.saleinvoice_old')->with(compact('cust_details', 'get_customer', 'details', 'settings'));
     }
 
 
@@ -793,8 +810,7 @@ class PosCustomerController extends Controller
 
         $customers_due = [];
 
-        foreach($customers as $customer)
-        {
+        foreach ($customers as $customer) {
             $debit = 0;
             $credit = 0;
             $cid = 'cid ' . $customer->id;
@@ -851,15 +867,14 @@ class PosCustomerController extends Controller
         $stdate = $req['from_date'];
         $enddate = $req['to_date'];
 
-        if(!$stdate){
+        if (!$stdate) {
             $stdate = date('Y-m-d', strtotime('-1 day'));
         }
-        if(!$enddate){
+        if (!$enddate) {
             $enddate = date('Y-m-d', strtotime('+1 day'));
         }
 
-        foreach($customers as $customer)
-        {
+        foreach ($customers as $customer) {
             $cid = 'cid ' . $customer->id;
             $head = $customer->name . ' ' . $customer->phone;
             $name = $customer->name;
@@ -873,8 +888,7 @@ class PosCustomerController extends Controller
                 ->whereDate('date', '<=', $enddate)
                 ->get();
 
-            foreach($collection as $collect)
-            {
+            foreach ($collection as $collect) {
                 $collections [] = [
                     'date' => $collect->date,
                     'name' => $name,
@@ -897,7 +911,8 @@ class PosCustomerController extends Controller
         return view('admin.pos.customer.customer-ledger', compact('customers', 'setting'));
     }
 
-    public function get_customer_ledger(Request $req){
+    public function get_customer_ledger(Request $req)
+    {
 
         $stdate = $req['stdate'];
         $enddate = $req['enddate'];
@@ -908,13 +923,13 @@ class PosCustomerController extends Controller
         $head = $customer->name . ' ' . $customer->phone;
 
         $previousBalance = AccTransaction::where('client_id', auth()->user()->client_id)
-            ->where('head', $head)
-            ->whereDate('date', '<', $stdate)
-            ->sum('debit') -
+                ->where('head', $head)
+                ->whereDate('date', '<', $stdate)
+                ->sum('debit') -
             AccTransaction::where('client_id', auth()->user()->client_id)
-            ->where('head', $head)
-            ->whereDate('date', '<', $stdate)
-            ->sum('credit');
+                ->where('head', $head)
+                ->whereDate('date', '<', $stdate)
+                ->sum('credit');
 
         $accounts = AccTransaction::where('client_id', auth()->user()->client_id)
             ->where('head', $head)
@@ -928,7 +943,7 @@ class PosCustomerController extends Controller
 
         $Balance = 0;
 
-        $trow = "<tr><th>Previous Balance</th><th colspan='4'></th><th>". $previousBalance ."</th></tr>";
+        $trow = "<tr><th>Previous Balance</th><th colspan='4'></th><th>" . $previousBalance . "</th></tr>";
 
         $trow .= "<tr>
                     <th>Date</th>
@@ -939,13 +954,12 @@ class PosCustomerController extends Controller
                     <th>Balance</th>
                 </tr>";
 
-        foreach($accounts as $row)
-        {
+        foreach ($accounts as $row) {
             $Balance = $Balance + $row->debit - $row->credit;
 
             $date = date('d-M-Y', strtotime($row->date));
 
-            $trow .= "<tr><td>".$date."</td><td>".$row->vno."</td><td>".$row->description."</td><td>".$row->debit."</td><td>".$row->credit."</td><td>". $Balance ."</td></tr>";
+            $trow .= "<tr><td>" . $date . "</td><td>" . $row->vno . "</td><td>" . $row->description . "</td><td>" . $row->debit . "</td><td>" . $row->credit . "</td><td>" . $Balance . "</td></tr>";
         }
 
         return $trow;

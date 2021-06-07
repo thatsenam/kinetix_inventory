@@ -222,7 +222,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="">
+
                                             <div id="serial_input">
 
                                             </div>
@@ -233,7 +233,6 @@
                                                 <button type="button" id="serial_save" class="btn btn-primary">SAVE
                                                 </button>
                                             </div>
-                                        </form>
                                     </div>
 
                                 </div>
@@ -407,7 +406,7 @@
                                 $('#qty_type').text(sub_unit)
                             }
 
-                            if (pbq) {
+                            if (pbq > 0) {
                                 $('#search').val(name);
                                 $('#square_foot_modal').modal('toggle');
 
@@ -596,7 +595,27 @@
 
                     },
                     success: function (data) {
-                        alert(data);
+
+                        if (data.includes(s_text)) {
+                            $('#pur_save').prop('disabled',true)
+                            $('#supp_memo').addClass('is-invalid')
+                        }
+                        else
+                        {
+                            $('#pur_save').prop('disabled',false)
+                            $('#supp_memo').removeClass('is-invalid')
+                        }
+
+                        // data.forEach((item, index)=>{
+                        //
+                        //     if (s_text == item ){
+                        //         document.getElementById("pur_save").disabled = true;
+                        //         // alert('Memo Number Already Used')
+                        //     }
+                        //     // else {
+                        //     //     document.getElementById("pur_save").disabled = false;
+                        //     // };
+                        // })
 
                     }
 
@@ -895,12 +914,18 @@
                                 // alert($(inputs[i]).val());
                                 val = $(inputs[i]).val();
                                 if (val == '') {
-                                    $('#serial_modal').modal('toggle');
+                                    var tdval = $(".price-table tr").find(`[data-prodid='${id}']`);
+                                    tdval.parent().find('.delete').click();
+
+                                        return false;
                                     $("#msg").show();
                                 }
                             }
                         });
                     }
+
+
+
 
                     if (supp_id == 0) {
                         swal.fire("Error!", "No suplier selected. Please select a supplier or create a new supplier!", "error");
@@ -1275,7 +1300,7 @@
             sub_unit = su;
             unit = u;
 
-            if (pbq) {
+            if (pbq > 0) {
                 $('#search').val(name);
                 $('#square_foot_modal').modal('toggle');
                 if (!sub_unit) {

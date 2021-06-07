@@ -46,7 +46,7 @@
             </div>
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Purchase Report By Suppliier</h3>
+                <h3 class="card-title">Purchase Report By Supplier</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -88,6 +88,10 @@
 
 @section('page-js-script')
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
   $(document).ready(function() {
     $("#from_date,#to_date").datepicker({
       changeMonth: true,

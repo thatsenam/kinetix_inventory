@@ -1,5 +1,5 @@
 @extends('admin.pos.master')
-        
+
 @section('content')
 
 <div class="content-wrapper">
@@ -26,7 +26,7 @@
           <div class="col-12">
             <div class="row input-daterange mb-3">
               <div class="col-md-3">
-                  <select id="selectAction" class="form-control select2">
+                  <select id="selectAction" class="form-control select2 js-example-basic-single">
                       <option>Select Product</option>
                       @foreach($products as $product)
                         <option value="{{$product->pid}}">{{$product->product_name}}</option>
@@ -88,8 +88,13 @@
 
 @section('page-js-script')
 <script type="text/javascript">
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+    });
   $(document).ready(function() {
-    $("#from_date,#to_date").datepicker({
+
+
+      $("#from_date,#to_date").datepicker({
       changeMonth: true,
       changeYear: true,
       dateFormat: "yy-mm-dd",
@@ -123,7 +128,7 @@
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
- 
+
             // converting to interger to find total
             var intVal = function ( i ) {
                 return typeof i === 'string' ?
@@ -131,8 +136,8 @@
                     typeof i === 'number' ?
                         i : 0;
             };
- 
-            // computing column Total of the complete result 
+
+            // computing column Total of the complete result
             var qty = api
                 .column( 2 )
                 .data()
@@ -160,9 +165,9 @@
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-			
-				
-            // Update footer by showing the total with the reference of the column index 
+
+
+            // Update footer by showing the total with the reference of the column index
               $( api.column( 1 ).footer() ).html('Total');
               $( api.column( 2 ).footer() ).html(qty);
               $( api.column( 4 ).footer() ).html(total);

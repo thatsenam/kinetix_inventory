@@ -127,6 +127,14 @@ class PosCustomerController extends Controller
         return view('admin.pos.customer.customers')->with(compact('customers', 'bank_infos', 'getbanks'));
     }
 
+    public function customers_phone(Request $request)
+    {
+    $customer_phone = Customer::all()->pluck('phone');
+
+    return $customer_phone;
+    }
+
+
     public function custDetals(Request $request)
     {
         $id = $request->id;

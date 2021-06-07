@@ -1873,6 +1873,7 @@
                                     }
 
                                 });
+
                                 $('#serialInput').empty();
                                 $('#serialInput').select2({placeholder: "Please Select Serial Number"});
 

@@ -76,10 +76,10 @@
                                                 <th scope="row">Total Paid</th>
                                                 <td>{{ $fromPayment }}</td>
                                             </tr>
-                                            <tr>
-                                                <th scope="row">Total Due</th>
-                                                <td>{{$supplier->due}}</td>
-                                            </tr>
+{{--                                            <tr>--}}
+{{--                                                <th scope="row">Total Due</th>--}}
+{{--                                                <td>{{$supplier->due}}</td>--}}
+{{--                                            </tr>--}}
                                             </tbody>
                                         </table>
                                     </div>

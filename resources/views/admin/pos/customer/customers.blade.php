@@ -198,7 +198,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save Customer</button>
+                            <button type="submit" id="save_customer" class="btn btn-primary">Save Customer</button>
                         </div>
                     </form>
                 </div>
@@ -548,6 +548,43 @@
 @section('page-js-script')
 
     <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#inputPhone").change(function(){
+                var s_text = $(this).val();
+                var formData = new FormData();
+                formData.append('s_text', s_text);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: '/dashboard/customers_phone',
+                    method: 'post',
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: "json",
+                    success: function (data) {
+
+                        if (data.includes(s_text)) {
+                            $('#save_customer').prop('disabled',true)
+                            $('#inputPhone').addClass('is-invalid')
+                        }
+                        else
+                        {
+                            $('#save_customer').prop('disabled',false)
+                            $('#inputPhone').removeClass('is-invalid')
+                        }
+                    }
+                });
+            });
+        });
+
+
         $(function () {
             $('#contact_add_form').validate({
                 rules: {

@@ -171,6 +171,7 @@ Route::group(['middleware' => ['auth']], function(){
 
     //POS Customer Options
     Route::match(['get','post'],'/dashboard/customers','PosCustomerController@setCustomer')->name('set_customer');
+    Route::match(['get','post'],'/dashboard/customers_phone','PosCustomerController@customers_phone')->name('customers_phone');
     Route::match(['get','post'],'/dashboard/update_cust','PosCustomerController@edit')->name('edit_customer');
     Route::match(['get','post'],'/dashboard/get_cust_details','PosCustomerController@custDetals')->name('get_cust_details');
 

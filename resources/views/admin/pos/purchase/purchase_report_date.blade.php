@@ -46,7 +46,7 @@
                                         <th>Supplier</th>
                                         <th>Supp Invocie</th>
                                         <th>Discount</th>
-                                        <th>IVA</th>
+                                        <th>Vat</th>
                                         <th>Amount</th>
                                         <th>Total</th>
                                         <th>Payment</th>

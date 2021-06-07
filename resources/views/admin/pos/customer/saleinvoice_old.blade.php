@@ -46,8 +46,9 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="float-right">
-                                        <img src="/images/theme/{{$settings->logo_big}}" alt="" width="120"
-                                             style="border-radius: 25px;"><br>
+    {{--                                        <img src="/images/theme/{{$settings->logo_big}}" alt="" width="120"--}}
+    {{--                                             style="border-radius: 25px;">--}}
+                                        <br>
                                         <small>Date: <?php echo date('Y-m-d'); ?></small>
                                     </div>
                                 </div>
@@ -102,7 +103,7 @@
                                             <th>Unit</th>
                                             <th>Price</th>
                                             <th>Subtotal</th>
-                                            <th class="{{ !$is_product_base?'d-none':'' }}">IVA(%)</th>
+{{--                                            <th class="{{ !$is_product_base?'d-none':'' }}">Vat(%)</th>--}}
                                             <th>G.Total</th>
                                         </tr>
                                         </thead>
@@ -123,7 +124,7 @@
                                                     echo number_format((float)$stotal, 2, '.', '');
                                                     ?></td>
                                                 @if($is_product_base)
-                                                    <td>{{ ($detail->vat / $stotal) * 100 }} </td>
+{{--                                                    <td>{{ ($detail->vat / $stotal) * 100 }} </td>--}}
                                                 @endif
                                                 @if($is_product_base)
                                                     <td>{{$detail->vat + $stotal }}</td>

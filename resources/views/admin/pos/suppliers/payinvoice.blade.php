@@ -1,5 +1,5 @@
 @extends('admin.pos.master')
-        
+
 @section('content')
 
 <!-- Content Wrapper. Contains page content -->
@@ -25,7 +25,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            
+
             <div class="hr mb-4 bg-info" style="height: 30px;"></div>
             <!-- Main content -->
             <div class="invoice p-3 mb-3">
@@ -89,10 +89,10 @@
                       @foreach($details as $d)
                       <tr>
                         <td>{{$i++}}</td>
-                        <td>{{$d->product_name}}</td>
-                        <td>{{$d->qnt}}</td>
-                        <td>{{$d->price}}</td>
-                        <td>{{$d->price * $d->qnt}}</td>
+                        <td>{{$d->name ?? " "}}</td>
+                        <td>{{$d->qnt ?? " "}}</td>
+                        <td>{{$d->price ?? " "}}</td>
+                        <td>{{$d->price * $d->qnt }}</td>
                       </tr>
                       @endforeach
                       <tr>
@@ -106,7 +106,7 @@
               </div>
               <!-- /.row -->
 
-              
+
               <!-- /.row -->
 
               <!-- this row will not appear when printing -->
@@ -128,7 +128,7 @@
 @endsection
 
 @section('page-js-script')
-<script type="text/javascript"> 
+<script type="text/javascript">
   window.addEventListener("load", window.print());
 </script>
 @stop

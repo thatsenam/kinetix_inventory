@@ -214,10 +214,8 @@ class PosPurchaseController extends Controller
 
         $s_text = $req['s_text'];
 
-//        $suppmemo = DB::table('purchase_primary')
-//            ->where('client_id',auth()->user()->client_id)
-//            ->where('pur_inv', 'like', '%'.$s_text.'%')->limit(9)->get();
-        $suppmemo = PurchasePrimary::all()->pluck('pur_inv');
+
+        $suppmemo = PurchasePrimary::all()->pluck('supp_inv');
 
         return $suppmemo ;
     }

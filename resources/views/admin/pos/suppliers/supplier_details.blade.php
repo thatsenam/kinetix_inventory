@@ -117,7 +117,7 @@
                                                         <div class="card card-widget widget-user-2">
                                                             <!-- Add the bg color to the header using any of the bg-* classes -->
                                                             <div class="card-header bg-info">
-                                                                <h3 class="card-title">Customer:</h3>
+                                                                <h3 class="card-title">Supplier:</h3>
                                                             </div>
                                                             <div class="card-body">
                                                                 <b><i class="fa fa-user mr-2"></i> {{$supplier->name}}
@@ -138,7 +138,7 @@
                                                         <div class="card card-widget widget-user-2">
                                                             <!-- Add the bg color to the header using any of the bg-* classes -->
                                                             <div class="card-header bg-info">
-                                                                <h3 class="card-title">Form</h3>
+                                                                <h3 class="card-title">From</h3>
                                                             </div>
                                                             <div class="card-body">
                                                                 <b><i class="fa fa-globe mr-2"></i> {{$GenSettings->site_name ?? " "}}

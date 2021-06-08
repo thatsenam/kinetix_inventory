@@ -2,35 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\PurchasePrimary;
-use Auth;
-use Image;
+use App\AccHead;
+use App\AccTransaction;
+use App\BankAcc;
+use App\BankInfo;
+use App\BankTransaction;
+use App\Company;
+use App\Customer;
 use App\Filter;
+use App\Manufacturer;
+use App\Product;
+use App\ProductImage;
+use App\Products;
+use App\PurchaseDetails;
+use App\PurchasePrimary;
+use App\SalesInvoice;
+use App\SalesInvoiceDetails;
+use App\SalesReturn;
 use App\Seller;
 use App\Serial;
-use DataTables;
-use App\AccHead;
-use App\BankAcc;
-use App\Company;
-use App\Product;
-use App\BankInfo;
-use App\Category;
-use App\Customer;
-use App\Products;
-use App\Warehouse;
-use App\SalesReturn;
-use App\Manufacturer;
-use App\ProductImage;
-use App\SalesInvoice;
-use App\AccTransaction;
-use App\BankTransaction;
-use App\PurchaseDetails;
-use Illuminate\Support\Str;
-use App\SalesInvoiceDetails;
 use App\Stock;
+use App\Warehouse;
+use Auth;
+use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Contracts\DataTable;
+use Image;
 
 class PosSalesController extends Controller
 {
@@ -44,17 +41,16 @@ class PosSalesController extends Controller
     {
 
 
-
         $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
 
-        $bank= BankAcc::where('client_id', auth()->user()->client_id)->get();
+        $bank = BankAcc::where('client_id', auth()->user()->client_id)->get();
         if ($warehouses->count() < 2) {
             $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
             $warehouse_id = $getW->id;
         } else {
             $warehouse_id = "";
         }
-        return view('admin.pos.sales.sales_invoice', compact('warehouses', 'warehouse_id','bank'));
+        return view('admin.pos.sales.sales_invoice', compact('warehouses', 'warehouse_id', 'bank'));
     }
 
     public function get_products(Request $req)
@@ -91,7 +87,7 @@ class PosSalesController extends Controller
                     ->where('pid', $pid)->sum('qnt');
                 $stock = $pPurchase - $returns - $psold + $sale_return - $damage;
 
-                $pur_price = PurchaseDetails::Where('pid',$pid)->latest()->take(1)->first()->price ?? 0;
+                $pur_price = PurchaseDetails::Where('pid', $pid)->latest()->take(1)->first()->price ?? 0;
 
                 $id = $row->id;
                 $name = $row->product_name;
@@ -115,9 +111,10 @@ class PosSalesController extends Controller
                     data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>'
                     data-sub_unit='<?php echo $sub_unit; ?>' data-unit='<?php echo $unit; ?>'
                     data-pbq='<?php echo $pbq; ?>' data-serial='<?php echo $serial; ?>'
-                    data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?> 'data-pur='<?php echo $pur_price; ?>'
+                    data-warranty='<?php echo $warranty; ?>' data-stock='<?php echo $stock; ?> '
+                    data-pur='<?php echo $pur_price; ?>'
                     data-vat='<?php echo $vat; ?>'>
-                     &nbsp; <?php echo $name; ?> | <?php echo $price; ?>
+                    &nbsp; <?php echo $name; ?> | <?php echo $price; ?>
                 </li>
 
                 <?php
@@ -1475,8 +1472,9 @@ class PosSalesController extends Controller
         } else {
             $warehouse_id = "";
         }
+        $invoices = SalesInvoice::query()->pluck('invoice_no');
 
-        return view("admin.pos.sales.sales_return", compact('warehouses', 'warehouse_id'));
+        return view("admin.pos.sales.sales_return", compact('warehouses', 'warehouse_id', 'invoices'));
     }
 
 
@@ -1955,7 +1953,7 @@ class PosSalesController extends Controller
                 'sales_return.cash_return as cash_return', 'sales_return.remarks as remarks')
             ->join('customers', 'sales_return.cid', 'customers.id')
             ->join('products', 'sales_return.pid', 'products.id')
-            ->whereBetween('date', [$stdate, $enddate])
+            ->whereBetween('sales_return.date', [$stdate, $enddate])
             ->get();
 
         $sales->map(function ($sale) {
@@ -1976,6 +1974,7 @@ class PosSalesController extends Controller
             return $sale;
         });
 
+//        dd($sales);
 
         return DataTables()->of($sales)
             ->addIndexColumn()

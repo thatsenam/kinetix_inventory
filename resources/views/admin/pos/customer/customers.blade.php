@@ -152,14 +152,14 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="inputName" class="required">Name:</label>
+                                        <label for="inputName" class="required">Name *</label>
                                         <input class="form-control" required="" placeholder="Name..."
                                                name="inputName" type="text" id="inputName" aria-required="true">
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="inputPhone" class="required">Phone:</label>
+                                        <label for="inputPhone" class="required">Phone *</label>
                                         <input class="form-control @if (count($errors) > 0) is-invalid @endif" required="" placeholder="Phone..."
                                         name="inputPhone" type="text" id="inputPhone" aria-required="true">
                                     </div>
@@ -506,13 +506,13 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="name">Name:</label>
+                                <label for="name">Name *</label>
                                 <input class="form-control" name="name" type="text" id="name">
                                 <input class="form-control" name="update_cust_id" type="text" id="update_cust_id"
                                 hidden>
                             </div>
                             <div class="form-group">
-                                <label for="phone">Phone:</label>
+                                <label for="phone">Phone *</label>
                                 <input class="form-control" name="phone" type="text" id="phone">
                             </div>
                             <div class="form-group">
@@ -855,7 +855,7 @@
             $("#CartMsg").hide();
             $('.save').click(function (e) {
                 e.preventDefault();
-                if ($('#name').val() == '' || $('#phone').val() == '' || $('#address').val() == '' || $('#date').val() == '') {
+                if ($('#name').val() == '' || $('#phone').val() == '') {
                     alert("Info fields can't be empty! Please give info to continue.");
                     return false;
                 }
@@ -888,7 +888,7 @@
         function deleteConfirmation(id) {
             swal.fire({
                 title: "Delete?",
-                text: "Are you sure!! Supplier-related all data will be removed, that can not be recovered." ,
+                text: "Are you sure!! Customer-related all data will be removed, that can not be recovered." ,
                 type: "warning",
                 showCancelButton: !0,
                 confirmButtonText: "Yes!",

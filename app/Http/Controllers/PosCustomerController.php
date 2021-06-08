@@ -2,31 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use Illuminate\Database\Eloquent\Model;
-use Image;
-use App\Sales;
-use App\Filter;
-use App\Seller;
 use App\AccHead;
-use App\Company;
-use App\Product;
-use App\Category;
-use App\Customer;
-use App\Manufacturer;
-use App\ProductImage;
-use App\SalesInvoice;
 use App\AccTransaction;
-use App\PaymentInvoice;
-use App\BankTransaction;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\CustomerDueCollection;
-use App\GeneralSetting;
-use App\Supplier;
 use App\BankInfo;
-use App\BankAcc;
+use App\BankTransaction;
+use App\Company;
+use App\Customer;
+use App\Filter;
+use App\GeneralSetting;
+use App\Manufacturer;
+use App\PaymentInvoice;
+use App\Product;
+use App\ProductImage;
+use App\Seller;
+use App\Supplier;
+use Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Image;
 
 // use Response;
 
@@ -98,7 +91,7 @@ class PosCustomerController extends Controller
             ]);
 
 
-            addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Dr');
+            addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Dr', "cid " . $cust_id);
 
 
             return redirect('/dashboard/customers')->with('flash_message_success', 'Customer Added Successfully!');
@@ -137,9 +130,10 @@ class PosCustomerController extends Controller
         $customer_phone = Customer::all()->pluck('phone');
         return $customer_phone;
     }
+
     public function supplier_phone(Request $request)
     {
-         $supplier= Supplier::all()->pluck('phone');
+        $supplier = Supplier::all()->pluck('phone');
         return $supplier;
     }
 
@@ -175,9 +169,10 @@ class PosCustomerController extends Controller
 
         $head = AccHead::query()->where('cid', 'cid ' . $get_data->id)->first();
         try {
-            $opb = AccTransaction::query()->where('type', AccHead::class)
+            $opb = AccTransaction::query()
+                ->where('type', AccHead::class)
                 ->where('type_id', $head->id)
-                ->where('description', "OpeningBalance")->sum('debit');
+                ->where('description', "Opening Balance")->sum('debit');
         } catch (\Exception $exception) {
             $opb = 0;
         }
@@ -214,23 +209,26 @@ class PosCustomerController extends Controller
         $head = $name . " " . $phone;
 
         AccHead::where('client_id', auth()->user()->client_id)
-            ->where('cid', $cid)->update([
+            ->where('cid', $cid)
+            ->update([
                 'head' => $head,
             ]);
 
         $prev_cust_name = $prev_customer->name;
         $prev_cust_phone = $prev_customer->phone;
         $cust_head = $prev_cust_name . " " . $prev_cust_phone;
-
-        AccTransaction::where('client_id', auth()->user()->client_id)
-            ->where('sort_by', $cid)
-            ->where('head', $cust_head)
-            ->update([
-                'head' => $head,
-            ]);
         $head = AccHead::query()->where('client_id', auth()->user()->client_id)->firstWhere('cid', $cid);
 
-        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Dr');
+        AccTransaction::where('client_id', auth()->user()->client_id)
+            ->where('type', AccHead::class)
+            ->where('type_id', $head->id)
+            ->where('description', "OpeningBalance")
+            ->update([
+                'head' => $head->head,
+                'sort_by' => $cid
+            ]);
+
+        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Dr',$cid);
 
         echo 'Customer Updated Successfully!';
     }

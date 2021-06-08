@@ -3,23 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\AccHead;
-use App\BankTransaction;
-use App\Customer;
-use App\PaymentInvoice;
-use App\Helpers\AppHelper;
-use App\PurchaseDetails;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use App\Product;
-use App\Supplier;
-use App\ProductImage;
 use App\AccTransaction;
 use App\BankInfo;
+use App\BankTransaction;
+use App\Customer;
 use App\GeneralSetting;
+use App\Helpers\AppHelper;
+use App\PaymentInvoice;
+use App\Product;
+use App\ProductImage;
+use App\Supplier;
 use App\SupplierGroup;
-use Image;
 use Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Image;
 
 class PosSupplierController extends Controller
 {
@@ -27,7 +25,7 @@ class PosSupplierController extends Controller
 
     public function getPreviousBalance_customer(Request $request)
     {
-        $start_date =$request->from_date;
+        $start_date = $request->from_date;
         $end_date = $request->to_date;
 
         $sid = $request->sid;
@@ -77,6 +75,7 @@ class PosSupplierController extends Controller
         );
         return json_encode($data);
     }
+
     public function setSupplier(Request $request)
     {
 
@@ -110,7 +109,8 @@ class PosSupplierController extends Controller
             ]);
 
 
-            addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Cr');
+            addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Cr', `sid {$sid}`);
+
 
             return redirect('/dashboard/suppliers')->with('flash_message_success', 'Supplier Added Successfully!');
         }
@@ -172,7 +172,8 @@ class PosSupplierController extends Controller
         ]);
     }
 
-    public function edit(Request $request){
+    public function edit(Request $request)
+    {
         $id = $request->id;
         $get_data = Supplier::where('client_id', auth()->user()->client_id)->where('id', $id)->first();
 
@@ -218,7 +219,6 @@ class PosSupplierController extends Controller
         $prev_supplier = Supplier::find($id);
 
 
-
         DB::table('suppliers')
             ->where('client_id', auth()->user()->client_id)
             ->where(['id' => $id])
@@ -229,34 +229,36 @@ class PosSupplierController extends Controller
         $head = $name . " " . $phone;
 
         AccHead::where('client_id', auth()->user()->client_id)
-            ->where('cid', $sid)->update([
+            ->where('cid', $sid)
+            ->update([
                 'head' => $head,
+                'cid' => $sid
             ]);
-//        $head = AccHead::where('client_id', auth()->user()->client_id)
-//            ->where('cid', $sid)
-//            ->where('head', $head)->first();
-        //        dd($opb);
+        $head = AccHead::where('client_id', auth()->user()->client_id)
+            ->where('cid', $sid)
+            ->where('head', $head)->first();
 
-//        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Cr');
+        $previousHead = $prev_supplier->name . ' ' . $prev_supplier->phone;
 
-        $prev_supp_name = $prev_supplier->name . " " . $prev_supplier->phone;
+        AccTransaction::where('client_id', auth()->user()->client_id)->where('sort_by', $sid)->where('head', $previousHead)->update(['head' => $head->head]);
 
-        AccTransaction::where('head', $prev_supp_name)
-                        ->update(['head' => $head]);
+
+        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Cr', $sid);
 
 
         echo 'Supplier Updated!';
     }
 
-    public function deleteSupp($id){
+    public function deleteSupp($id)
+    {
         $supplier = Supplier::find($id);
-        $head = $supplier->name. " " .$supplier->phone;
+        $head = $supplier->name . " " . $supplier->phone;
 
-        $acc_count = AccTransaction::where('head',$head)->count();
+        $acc_count = AccTransaction::where('head', $head)->count();
 
-        if($acc_count <= 1 ){
-            $deleteTrans = AccTransaction::where('head', $head)->where('description',"Opening Balance")->delete();
-            AccHead::where('head',$head)->delete();
+        if ($acc_count <= 1) {
+            $deleteTrans = AccTransaction::where('head', $head)->where('description', "Opening Balance")->delete();
+            AccHead::where('head', $head)->delete();
         }
 
 
@@ -275,21 +277,22 @@ class PosSupplierController extends Controller
         ]);
     }
 
-    public function suppDetails(Request $request){
+    public function suppDetails(Request $request)
+    {
         $id = $request->id;
         $get_data = DB::table('suppliers')
-            ->where('client_id',auth()->user()->client_id)
-            ->select('suppliers.name','suppliers.phone','suppliers.address')->where('id', $id)->first();
+            ->where('client_id', auth()->user()->client_id)
+            ->select('suppliers.name', 'suppliers.phone', 'suppliers.address')->where('id', $id)->first();
         $get_head = DB::table('acc_heads')
-            ->where('client_id',auth()->user()->client_id)
-            ->where('cid',"sid ".$id)->first();
+            ->where('client_id', auth()->user()->client_id)
+            ->where('cid', "sid " . $id)->first();
         $head = $get_head->head;
         $debit = DB::table('acc_transactions')
-            ->where('client_id',auth()->user()->client_id)
-            ->where('head',$head)->sum('debit');
+            ->where('client_id', auth()->user()->client_id)
+            ->where('head', $head)->sum('debit');
         $credit = DB::table('acc_transactions')
-            ->where('client_id',auth()->user()->client_id)
-            ->where('head',$head)->sum('credit');
+            ->where('client_id', auth()->user()->client_id)
+            ->where('head', $head)->sum('credit');
         $balance = $debit - $credit;
         $data = array(
             'id' => $id,
@@ -672,7 +675,8 @@ class PosSupplierController extends Controller
 
     }
 
-    public function getSupplier($id){
+    public function getSupplier($id)
+    {
 
         $supplier = Supplier::where(['id' => $id])->first();
 
@@ -714,8 +718,8 @@ class PosSupplierController extends Controller
 
     public function getPreviousBalance(Request $request)
     {
-        $start_date =  $request->from_date;
-        $end_date =  $request->to_date;
+        $start_date = $request->from_date;
+        $end_date = $request->to_date;
         $sid = $request->sid;
         $id = explode(' ', $sid)[1];
         $supplier = Supplier::find($id);
@@ -757,31 +761,32 @@ class PosSupplierController extends Controller
 //        return $previousTxn->get();
     }
 
-    public function filter_data(Request $request){
-        if(request()->ajax()){
+    public function filter_data(Request $request)
+    {
+        if (request()->ajax()) {
             $sid = $request->sid;
             $sid = $request->sid;
             $supp = Supplier::find($request->supplier_id);
             $head = $supp->name . " " . $supp->phone;
 
-            if(!empty($request->from_date)){
+            if (!empty($request->from_date)) {
                 $data = DB::table('acc_transactions')
-                    ->where('client_id',auth()->user()->client_id)
-                    ->where('head',$head)
+                    ->where('client_id', auth()->user()->client_id)
+                    ->where('head', $head)
                     ->whereBetween('date', array($request->from_date, $request->to_date))
                     ->get()->toArray();
-            }else{
+            } else {
                 $data = DB::table('acc_transactions')
-                    ->where('client_id',auth()->user()->client_id)
-                    ->where('sort_by',$sid)->get()->toArray();
+                    ->where('client_id', auth()->user()->client_id)
+                    ->where('sort_by', $sid)->get()->toArray();
             }
 
-            $balance  = 0;
+            $balance = 0;
 
-            foreach($data as $index=>$d){
-                if($d->debit > 0){
+            foreach ($data as $index => $d) {
+                if ($d->debit > 0) {
                     $balance = ($balance + $d->debit);
-                }else{
+                } else {
                     $balance = ($balance - $d->credit);
                 }
 
@@ -791,21 +796,22 @@ class PosSupplierController extends Controller
         }
     }
 
-    public function purchaseinvoice($id){
+    public function purchaseinvoice($id)
+    {
         $invoiceno = $id;
         $get_supplier = DB::table('purchase_primary')
             ->where('pur_inv', $id)->first();
         $sid = $get_supplier->sid;
-        $supp_details = Supplier::where(['id'=>$sid])->get();
+        $supp_details = Supplier::where(['id' => $sid])->get();
 
         $details = DB::table('purchase_details')
             ->select('products.product_name as name', 'products.product_img as image',
-        'purchase_details.qnt as qnt', 'purchase_details.price as price', 'purchase_details.total as total', 'purchase_details.vat')
-        ->join('products', 'purchase_details.pid', 'products.id','products.name')
+                'purchase_details.qnt as qnt', 'purchase_details.price as price', 'purchase_details.total as total', 'purchase_details.vat')
+            ->join('products', 'purchase_details.pid', 'products.id', 'products.name')
             ->where('purchase_details.pur_inv', $invoiceno)->get();
 
         $settings = GeneralSetting::where('client_id', auth()->user()->client_id)->first();
 
-        return view('admin.pos.suppliers.payinvoice')->with(compact('supp_details','get_supplier','details', 'settings'));
+        return view('admin.pos.suppliers.payinvoice')->with(compact('supp_details', 'get_supplier', 'details', 'settings'));
     }
 }

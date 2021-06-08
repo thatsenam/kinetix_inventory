@@ -17,9 +17,12 @@ class UsersController extends Controller
 {
 
     public function LoginRegister(){
-        return view('users.login_register');
+
+        return redirect(route('pos_index'));
     }
     public function register(Request $request){
+        return redirect(route('pos_index'));
+
         if($request->isMethod('post')){
             $data = $request->all();
             $userCheck = User::where('email',$data['inputEmail'])->count();

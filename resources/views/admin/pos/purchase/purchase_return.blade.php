@@ -92,7 +92,7 @@
                                                             <th>Sub-unit</th>
                                                             <th>Unit</th>
                                                             <th>Price</th>
-                                                            <th>IVA</th>
+                                                            <th>VAT</th>
                                                             <th>Total</th>
                                                             <th>Delete</th>
                                                         </tr>
@@ -141,7 +141,7 @@
                                                 </div>
                                                 <div class="col-6">
                                                     <div class="form-group">
-                                                        <label>Total IVA</label>
+                                                        <label>Total VAT</label>
                                                         <input type="text" name="total_vat" id="total_vat"
                                                                class="form-control" readonly="true" value="0">
                                                     </div>
@@ -365,8 +365,8 @@
                 var formData = new FormData();
                 formData.append('s_text', s_text);
 
-                    formData.append('products', JSON.stringify(allowedProducts));
-                     formData.append('supp_memo', supp_memo);
+                formData.append('products', JSON.stringify(allowedProducts));
+                formData.append('supp_memo', supp_memo);
 
                 $.ajaxSetup({
                     headers: {
@@ -1028,7 +1028,7 @@
             var name = name;
             var price = Number(price);
             var total = Number(total);
-            var totalVat = Number(totalVat).toFixed(2);
+            var totalVat = Number(totalVat||0).toFixed(2);
 
             $('.price-table').show();
 

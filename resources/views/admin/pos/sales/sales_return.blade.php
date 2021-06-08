@@ -89,8 +89,13 @@
                                                         </div>
                                                         <div class="col-4">
                                                             <div class="form-group" style="position: relative;">
-                                                                <input type="text" name="invoice" id="invoice"
-                                                                       class="form-control" placeholder="Invoice">
+                                                                <select name="invoice" id="invoice"
+                                                                        class="form-control searchable">
+                                                                    <option></option>
+                                                                    @foreach($invoices as $invoice)
+                                                                        <option>{{ $invoice }}</option>
+                                                                    @endforeach
+                                                                </select>
                                                                 <div id="memo_div"
                                                                      style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                                             </div>
@@ -358,7 +363,9 @@
                             $('#cust_name').val(name);
                             $('#cust_id').val(id);
 
-                            $("#search").focus();
+                            // $('#invoice').click()
+                            $("#invoice").select2("open");
+
                             $("#cust_div").hide();
 
                             //window.location.replace("{{Request::root()}}/admin/editcat/"+val);
@@ -409,92 +416,7 @@
 
             });
 
-            $("#invoice").keyup(function (e) {
-
-                if (e.which == 40 || e.which == 38) {
-
-                    $("#invoice").blur();
-
-                    $('.invoice-list').find("li:first").focus().addClass('active').siblings().removeClass();
-
-                    $('.invoice-list').on('focus', 'li', function () {
-                        $this = $(this);
-                        $this.addClass('active').siblings().removeClass();
-                        $this.closest('.invoice-list').scrollTop($this.index() * $this.outerHeight());
-                    });
-
-                    $('.invoice-list').on('keydown', 'li', function (e) {
-
-                        $this = $(this);
-                        if (e.keyCode == 40) {
-
-                            $this.next().focus();
-
-                            return false;
-                        } else if (e.keyCode == 38) {
-                            $this.prev().focus();
-                            return false;
-                        }
-                    });
-
-                    $('.invoice-list').on('keyup', function (e) {
-                        if (e.which == 13) {
-
-                            var invoice = $(this).find(".active").attr("data-invoice");
-
-                            $('#invoice').val(invoice).trigger('change');
-
-                            $("#search").focus();
-                            $("#memo_div").hide();
-
-                            //window.location.replace("{{Request::root()}}/admin/editcat/"+val);
-
-                        }
-                    });
-
-                    return false;
-                }
-
-                var s_text = $(this).val();
-
-                var formData = new FormData();
-                formData.append('s_text', s_text);
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
-                $.ajax({
-                    url: "{{ URL::route('get_invoice') }}",
-                    method: 'post',
-                    data: formData,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    dataType: "json",
-                    beforeSend: function () {
-                        //$("#wait").show();
-                    },
-                    error: function (ts) {
-                        //alert(ts.responseText);
-                        $('#memo_div').show();
-                        $('#memo_div').html(ts.responseText);
-
-                    },
-                    success: function (data) {
-                        //alert(data);
-                        $('#memo_div').show();
-                        $('#memo_div').html(ts.responseText);
-
-
-                    }
-
-                });
-
-            });
-
+            $('#invoice').on('change', () => $('#search').focus())
 
             $("#barcode").keypress(function (e) {
 
@@ -633,7 +555,7 @@
 
                 var formData = new FormData();
                 formData.append('s_text', s_text);
-                formData.append('products', JSON.stringify(allowedProducts||'[]'));
+                formData.append('products', JSON.stringify(allowedProducts || '[]'));
 
                 $.ajaxSetup({
                     headers: {
@@ -836,8 +758,6 @@
                 }
 
             });
-
-
 
 
             $('#cancel').click(function () {
@@ -1076,7 +996,10 @@
         }
 
         $('#invoice').on('change', function () {
-            fetchInvoice($(this).val())
+            setTimeout(() => {
+                console.log($('#search').focus())
+            }, 100)
+            fetchInvoice($(this).val());
         })
 
 

@@ -89,8 +89,8 @@
                                                 <td>{{$cash_return}}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">Total Due Return</th>
-                                                <td>{{$return_due}}</td>
+                                                <th scope="row">&nbsp;</th>
+                                                <td>&nbsp;</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -169,7 +169,7 @@
                                                         <div class="card card-widget widget-user-2">
                                                             <!-- Add the bg color to the header using any of the bg-* classes -->
                                                             <div class="card-header bg-info">
-                                                                <h3 class="card-title">:</h3>
+                                                                <h3 class="card-title">Shop:</h3>
                                                             </div>
                                                             <div class="card-body">
                                                                 <b><i class="fa fa-globe mr-2"></i> {{$GenSettings->site_name ?? " "}}

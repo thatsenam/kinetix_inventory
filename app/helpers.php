@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 if (!function_exists('addOrUpdateOpeningBalance')) {
 
-    function addOrUpdateOpeningBalance($head_id, $head, $amount, $entry_type)
+    function addOrUpdateOpeningBalance($head_id, $head, $amount, $entry_type,$sort_by)
     {
         $debit = 0;
         $credit = 0;
@@ -15,6 +15,7 @@ if (!function_exists('addOrUpdateOpeningBalance')) {
         $txn = AccTransaction::firstOrNew(['head' => $head, 'description' => 'Opening Balance', 'type' => AccHead::class, 'type_id' => $head_id]);
         $txn->credit = $credit;
         $txn->debit = $debit;
+        $txn->sort_by = $sort_by;
         $txn->date = date("Y/m/d");
         $txn->save();
     }

@@ -1241,7 +1241,6 @@
                         $this.addClass('active').siblings().removeClass();
                         $this.closest('.bank-list').scrollTop($this.index() * $this.outerHeight());
                     });
-
                     $('.bank-list').on('keydown', 'li', function (e) {
 
                         $this = $(this);
@@ -1255,7 +1254,6 @@
                             return false;
                         }
                     });
-
                     $('.bank-list').on('keyup', function (e) {
                         if (e.which == 13) {
 

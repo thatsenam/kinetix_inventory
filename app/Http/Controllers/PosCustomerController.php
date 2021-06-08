@@ -33,7 +33,9 @@ class PosCustomerController extends Controller
 
         $customer = DB::table('customers')
             ->where('client_id', auth()->user()->client_id)
-            ->where('phone', 'like', '%' . $s_text . '%')->limit(9)->get(); ?>
+            ->where('phone', 'like', '%' . $s_text . '%')
+            ->orWhere('name', 'like', '%' . $s_text . '%')
+            ->limit(9)->get(); ?>
 
         <ul class='customer-list sugg-list'>
 
@@ -228,7 +230,7 @@ class PosCustomerController extends Controller
                 'sort_by' => $cid
             ]);
 
-        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Dr',$cid);
+        addOrUpdateOpeningBalance($head->id, $head->head, $opb, 'Dr', $cid);
 
         echo 'Customer Updated Successfully!';
     }
@@ -304,13 +306,38 @@ class PosCustomerController extends Controller
 
     public function filter_data(Request $request)
     {
+        $previous_balance = 0;
+
         if (request()->ajax()) {
             $head = $request->custhead;
             if (!empty($request->from_date)) {
-                $data = DB::table('acc_transactions')->where('head', $request->custhead)->whereBetween('date', array($request->from_date, $request->to_date))->get()->toArray();
+                $data = DB::table('acc_transactions')
+                    ->where('head', $request->custhead)
+                    ->whereBetween('date', array($request->from_date, $request->to_date))
+                    ->get();
+                $previousTxn = DB::table('acc_transactions')
+                    ->where('client_id', auth()->user()->client_id)
+                    ->where('head', $head)
+                    ->whereDate('date', '<', $request->from_date);
+                $previous_balance = $previousTxn->sum('credit') - $previousTxn->sum('debit');
             } else {
-                $data = DB::table('acc_transactions')->where('head', $request->custhead)->get()->toArray();
+                $data = DB::table('acc_transactions')
+                    ->where('head', $request->custhead)
+                    ->get();
             }
+
+
+            if (count($data)) {
+                $prependTxn = clone $data[0];
+            } else {
+                $prependTxn = clone AccTransaction::query()->first();
+            }
+
+            $prependTxn->description = "Previous Balance";
+            $prependTxn->vno = "-";
+            $prependTxn->balance = $previous_balance;
+            $prependTxn->debit = 0;
+            $prependTxn->credit = $previous_balance;
 
             $balance = 0;
 

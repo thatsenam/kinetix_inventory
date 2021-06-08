@@ -9,12 +9,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>মেমো</h1>
+            <h1>Memo</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{route('home')}}">হোম</a></li>
-              <li class="breadcrumb-item active">মেমো</li>
+              <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+              <li class="breadcrumb-item active">Memo</li>
             </ol>
           </div>
         </div>
@@ -34,7 +34,7 @@
                 <div class="col-12">
                   <h4>
                     <i class="fas fa-globe"></i> {{$GenSettings->site_name ?? " "}}
-                    <small class="float-right">তারিখ: <?php echo date('Y-m-d'); ?></small>
+                    <small class="float-right">Date: <?php echo date('Y-m-d'); ?></small>
                   </h4>
                 </div>
                 <!-- /.col -->
@@ -42,7 +42,7 @@
               <!-- info row -->
               <div class="row invoice-info">
                 <div class="col-sm-4 invoice-col">
-                  প্রতিষ্ঠান
+                  Ship
                   <address>
                     <strong>{{$GenSettings->site_name ?? " "}}</strong><br>
                     {{$GenSettings->site_address ?? " "}} <br>
@@ -51,7 +51,7 @@
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-4 invoice-col">
-                  প্রাপক
+                  Customer
                   <address>
                     @foreach($supp_details as $detail)
                     <input type="hidden" name="custid" id="custid" value="{{$detail->id}}">
@@ -64,8 +64,8 @@
                 <!-- /.col -->
                 <div class="col-sm-4 invoice-col">
                   <br>
-                  <b>মেমো #{{$get_supplier->pur_inv}}</b><br>
-                  <b>পরিশোধের তারিখ:</b> {{ $get_supplier->date }}<br>
+                  <b>Memo #{{$get_supplier->pur_inv}}</b><br>
+                  <b>Payment Date:</b> {{ $get_supplier->date }}<br>
                 </div>
                 <!-- /.col -->
               </div>
@@ -78,10 +78,10 @@
                     <thead>
                     <tr>
                       <th>#</th>
-                      <th>পণ্য</th>
-                      <th>পরিমান</th>
-                      <th>মূল্য</th>
-                      <th>মোট</th>
+                      <th>Product</th>
+                      <th>Amount</th>
+                      <th>Price</th>
+                      <th>Total</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -96,7 +96,7 @@
                       </tr>
                       @endforeach
                       <tr>
-                        <td colspan="3" class="text-right"><strong>মোট</strong></td>
+                        <td colspan="3" class="text-right"><strong>Total</strong></td>
                         <td colspan="2" class="text-right">{{$get_supplier->amount }}</td>
                       </tr>
                     </tbody>

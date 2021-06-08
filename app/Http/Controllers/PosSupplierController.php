@@ -764,6 +764,7 @@ class PosSupplierController extends Controller
     public function filter_data(Request $request)
     {
         if (request()->ajax()) {
+            $previous_balance = 0;
             $sid = $request->sid;
             $sid = $request->sid;
             $supp = Supplier::find($request->supplier_id);
@@ -774,12 +775,38 @@ class PosSupplierController extends Controller
                     ->where('client_id', auth()->user()->client_id)
                     ->where('head', $head)
                     ->whereBetween('date', array($request->from_date, $request->to_date))
-                    ->get()->toArray();
+                    ->get();
+
+
+                $previousTxn = DB::table('acc_transactions')
+                    ->where('client_id', auth()->user()->client_id)
+                    ->where('head', $head)
+                    ->whereDate('date', '<', $request->from_date);
+                $previous_balance = $previousTxn->sum('credit') - $previousTxn->sum('debit');
             } else {
                 $data = DB::table('acc_transactions')
                     ->where('client_id', auth()->user()->client_id)
-                    ->where('sort_by', $sid)->get()->toArray();
+                    ->where('sort_by', $sid)
+                    ->get();
             }
+
+
+//            dd($data);
+
+            if (count($data)) {
+                $prependTxn = clone $data[0];
+            } else {
+                $prependTxn = clone AccTransaction::query()->first();
+
+            }
+
+            $prependTxn->description = "Previous Balance";
+            $prependTxn->vno = "-";
+            $prependTxn->balance = $previous_balance;
+            $prependTxn->debit = 0;
+            $prependTxn->credit = $previous_balance;
+            $data = $data->prepend($prependTxn);
+
 
             $balance = 0;
 

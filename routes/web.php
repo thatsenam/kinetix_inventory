@@ -1,6 +1,7 @@
 
 <?php
 
+use App\Http\Controllers\PosSalesController;
 use App\Http\Controllers\PosSupplierController;
 use App\Products;
 use Illuminate\Http\Request;
@@ -458,4 +459,8 @@ Route::match(['get','post'],'/admin/edit_cost/{id}','CostController@editCost');
 Route::match(['get','post'],'/admin/delete_cost/{id}','CostController@deleteCost');
 Route::match(['get','post'],'/admin/deleteBank/{id}','PosBankController@deleteBank');
 Route::get('/admin/cost_reports', 'CostController@cost_reports')->name('admin.cost_reports');
+
+
+Route::get('/dashboard/get_sales_info/{invoice_no}', [PosSalesController::class, 'get_sales_info'])->name('get_sales_info')->middleware('auth');
+Route::get('/dashboard/get_purchase_info/{invoice_no}', [PosSalesController::class, 'get_purchase_info'])->name('get_purchase_info')->middleware('auth');
 

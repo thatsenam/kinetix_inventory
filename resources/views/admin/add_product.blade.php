@@ -334,6 +334,18 @@
         $('#inputSpecs').summernote(),
         $('#inputFeature').summernote()
     });
+
+    $(document).ready(function () {
+        $('#sub_unit').on('change', () => {
+            if ($('#sub_unit').val()) {
+                $('#per_box_qty').val('')
+                $('#per_box_qty').prop('required', true)
+            } else {
+                $('#per_box_qty').prop('required', false)
+
+            }
+        });
+    })
 </script>
 
 @endif

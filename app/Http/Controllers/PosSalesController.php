@@ -1926,6 +1926,18 @@ class PosSalesController extends Controller
         }
     }
 
+    public function get_sales_info($invoice_id)
+    {
+        $salesInvoice = SalesInvoice::query()->where('client_id',auth()->user()->client_id)->firstWhere('invoice_no', $invoice_id);
+
+        return $salesInvoice->customer;
+    }
+    public function get_purchase_info($invoice_id)
+    {
+        $purchaseInvoice = PurchasePrimary::query()->where('client_id',auth()->user()->client_id)->firstWhere('pur_inv', $invoice_id);
+
+        return $purchaseInvoice->supplier;
+    }
 
     public function sales_return_report_date()
     {
@@ -1949,7 +1961,7 @@ class PosSalesController extends Controller
 
         $sales = DB::table('sales_return')->where('sales_return.client_id', auth()->user()->client_id)
             ->select('sales_return.id as retid', 'sales_return.date as date', 'sales_return.rinvoice as rinvoice', 'sales_return.sinvoice as sinvoice', 'products.product_name as pname',
-                'customers.name as cname', 'sales_return.qnt as qnt', 'sales_return.uprice as uprice', 'sales_return.tprice as tprice', 'sales_return.vat_amount as vat_amount',
+                'customers.name as cname', 'sales_return.qnt as qnt', 'sales_return.uprice as uprice', 'sales_return.tprice as tprice', 'sales_return.vat_amount as vat_amount', 'sales_return.total as total',
                 'sales_return.cash_return as cash_return', 'sales_return.remarks as remarks')
             ->join('customers', 'sales_return.cid', 'customers.id')
             ->join('products', 'sales_return.pid', 'products.id')
@@ -1967,9 +1979,8 @@ class PosSalesController extends Controller
                 $sale->serial = '';
             }
 
-            $total = $sale->vat_amount + $sale->tprice;
 
-            $sale->total = $total;
+            $sale->total = $sale->total;
 
             return $sale;
         });

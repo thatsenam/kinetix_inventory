@@ -93,4 +93,9 @@ class SalesInvoice extends Model
             $builder->where('client_id', auth()->user()->client_id ?? -1);
         });
     }
+
+    public function getCustomerAttribute()
+    {
+        return Customer::find($this->cid);
+    }
 }

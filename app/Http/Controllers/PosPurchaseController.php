@@ -129,6 +129,9 @@ class PosPurchaseController extends Controller
                 $id = $row->id;
                 $name = $row->product_name;
                 $serial = $row->serial;
+                $sub_unit = $row->sub_unit;
+                $unit = $row->unit;
+                $pbq = $row->per_box_qty;
 
                 $products_price = DB::table('purchase_details')
                     ->where('client_id', auth()->user()->client_id)
@@ -147,6 +150,8 @@ class PosPurchaseController extends Controller
                 <li tabindex='<?php echo $i; ?>'
                     onclick='selectProducts("<?php echo $id; ?>", "<?php echo $name; ?>", "<?php echo $price; ?>", "<?php echo $serial; ?>");'
                     data-id='<?php echo $id; ?>' data-name='<?php echo $name; ?>' data-price='<?php echo $price; ?>'
+                    data-sub_unit='<?php echo $sub_unit; ?>' data-unit='<?php echo $unit; ?>'
+                    data-pbq='<?php echo $pbq; ?>'
                     data-serial='<?php echo $serial; ?>'><?php echo $name; ?> </li>
 
                 <?php

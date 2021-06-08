@@ -103,13 +103,13 @@
                                                     @endif
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-3">
-                                                        <div class="form-group" style="position: relative;">
+                                                    <div>
+                                                        <div class="form-group" style="position: relative;display: none">
                                                             <input type="text" name="barcode" id="barcode"
                                                                    class="form-control" placeholder="Barcode">
                                                         </div>
                                                     </div>
-                                                    <div class="col-9">
+                                                    <div class="col">
                                                         <div class="form-group" style="position: relative;">
                                                             <input type="text" class="form-control"
                                                                    placeholder="Search Product" id="search">
@@ -276,7 +276,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title float-center" id="square_foot_modalLabel">Quantity</h5>
+                        <h5 class="modal-title float-center" id="square_foot_modalLabel">Quantity  -  <span id="qty_type"></span> </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -519,7 +519,14 @@
                             var pbq = $(this).find(".active").attr("data-pbq");
                             sub_unit = $(this).find(".active").attr("data-sub_unit");
                             unit = $(this).find(".active").attr("data-unit");
-                            if (pbq) {
+
+                            if (!sub_unit) {
+                                $('#qty_type').text(unit)
+
+                            } else {
+                                $('#qty_type').text(sub_unit)
+                            }
+                            if (sub_unit) {
                                 $('#search').val(name);
 
                                 $('#square_foot_modal').modal('toggle');
@@ -967,7 +974,13 @@
         function selectProducts(id, name, price, serial, warranty, stock, vat, pbq, su, u) {
             sub_unit = su;
             unit = u;
-            if (pbq) {
+            if (!sub_unit) {
+                $('#qty_type').text(unit)
+
+            } else {
+                $('#qty_type').text(sub_unit)
+            }
+            if (sub_unit) {
                 $('#search').val(name);
                 $('#square_foot_modal').modal('toggle');
 
@@ -996,6 +1009,15 @@
         }
 
         $('#invoice').on('change', function () {
+            fetch('/dashboard/get_sales_info/' + $('#invoice').val())
+                .then(async (response) => {
+                    let customer = await response.json();
+                    $('#cust_phone').val(customer.phone)
+                    $('#cust_name').val(customer.name)
+                    $('#cust_id').val(customer.id)
+                    console.log(customer)
+                });
+
             setTimeout(() => {
                 console.log($('#search').focus())
             }, 100)

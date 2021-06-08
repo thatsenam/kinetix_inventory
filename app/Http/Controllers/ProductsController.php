@@ -150,23 +150,26 @@ class ProductsController extends Controller
             }
 
             $data = $req->all();
+
+
             Products::where(['id'=>$id])->update([
                 'cat_id'=>$data['inputCategory'],
                 'brand_id'=>$data['inputBrand'],
                 'product_name'=>$data['inputName'],
                 'product_desc'=>$data['inputDescription'],
-                // 'product_specs'=>$data['inputSpecs'],
                 'before_price'=>$data['inputPrice'],
-                // 'after_pprice'=>$data['DiscountPrice'],
                 'barcode'=>$barcode,
                 'product_code'=>$data['inputCode'],
                 'sku'=>$data['inputSKU'],
                 'product_size'=>$data['inputSize'],
                 'warranty'=>$data['inputWarranty'],
                 'stock'=>$data['inputStock'],
-                // 'is_featured'=>$data['inputStatus'],
                 'serial' => $data['serial'],
                 'reorder' => $data['reorder'],
+                'sub_unit'=>$data['sub_unit'] ?? '',
+                'unit'=>$data['unit'] ?? '',
+                'per_box_qty'=>$data['per_box_qty'] ?? '',
+
             ]);
 
             $DataProduct = Products::where('id', $id)->first();

@@ -655,7 +655,7 @@ class PosPurchaseController extends Controller
                 'user_id' => $user
             ]);
 
-            $head = $supplier->name?? " "." ".$supplier->phone;;
+            $head = $supplier->name." ".$supplier->phone;;
             $description = "Purchase Return";
             $credit = 0;
             $debit = $total+$total_vat;

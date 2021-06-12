@@ -447,7 +447,7 @@
                                                 <div class="row">
 
                                                     <div class="col-6" style="margin-top:-10px;">
-                                                        <div class="form-group">
+                                                        <div class="form-group d-none">
                                                             <div style="width: 50px; margin: 0 auto;">
                                                                 <input type="button" class="btn btn-primary btn-md"
                                                                        id="reprint"
@@ -1139,7 +1139,7 @@
                             unit = $(this).find(".active").attr("data-unit");
 
                             console.log(pbq)
-                            if (pbq) {
+                            if (sub_unit) {
                                 $('#search').val(name);
                                 $('#square_foot_modal').modal('toggle');
                                 if (!sub_unit) {
@@ -1241,7 +1241,6 @@
                         $this.addClass('active').siblings().removeClass();
                         $this.closest('.bank-list').scrollTop($this.index() * $this.outerHeight());
                     });
-
                     $('.bank-list').on('keydown', 'li', function (e) {
 
                         $this = $(this);
@@ -1255,7 +1254,6 @@
                             return false;
                         }
                     });
-
                     $('.bank-list').on('keyup', function (e) {
                         if (e.which == 13) {
 
@@ -2703,7 +2701,7 @@
         function selectProducts(id, name, price, serial, warranty, stock, vat, pbq, su, u, pur_price) {
             sub_unit = su;
             unit = u;
-            if (pbq) {
+            if (sub_unit) {
                 $('#search').val(name);
                 $('#square_foot_modal').modal('toggle');
 

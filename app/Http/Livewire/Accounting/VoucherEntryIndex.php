@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire\Accounting;
 
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use App\AccTransaction;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class VoucherEntryIndex extends Component
 {
@@ -60,6 +60,14 @@ class VoucherEntryIndex extends Component
                 $this->credit = $this->amount;
                 $this->debit = 0;
             }
+        } else if ($this->voucher_type === 'Opening') {
+            if ($this->type === 'Debit') {
+                $this->debit = $this->amount;
+                $this->credit = 0;
+            } else {
+                $this->credit = $this->amount;
+                $this->debit = 0;
+            }
         } else {
             if ($this->type === 'Debit') {
                 $this->debit = 0;
@@ -98,6 +106,9 @@ class VoucherEntryIndex extends Component
     public function updatedVoucherType()
     {
         if ($this->voucher_type == 'Journal') {
+            $this->isDisable = '';
+            $this->type = '';
+        } else if ($this->voucher_type == 'Opening') {
             $this->isDisable = '';
             $this->type = '';
         } else {
@@ -142,7 +153,7 @@ class VoucherEntryIndex extends Component
 
                 AccTransaction::create($data);
 
-                if ($this->voucher_type != 'Journal') {
+                if ($this->voucher_type != 'Journal'&& $this->voucher_type != 'Opening') {
                     $second = [
                         'sort_by' => '1',
                         'vno' => $this->vno,
@@ -187,7 +198,7 @@ class VoucherEntryIndex extends Component
     {
         $this->dispatchBrowserEvent('livewire:load');
         $client_id = auth()->user()->client_id;
-        
+
         $all_heads = DB::table('acc_heads')->where('client_id', $client_id)->pluck('head');
 
         return view('livewire.accounting.voucher-entry-index', compact('all_heads'));

@@ -65,7 +65,7 @@
                                                                 <option value="" disabled selected> Select Memo
                                                                 </option>
                                                                 @foreach($pd as $key=> $d)
-                                                                    <option value="{{ $key }}"> {{ $d }}  ({{ $key }})</option>
+                                                                    <option value="{{ $key }}">  {{ $key }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -92,7 +92,7 @@
                                                             <th>Sub-unit</th>
                                                             <th>Unit</th>
                                                             <th>Price</th>
-                                                            <th>IVA</th>
+                                                            <th>VAT</th>
                                                             <th>Total</th>
                                                             <th>Delete</th>
                                                         </tr>
@@ -141,7 +141,7 @@
                                                 </div>
                                                 <div class="col-6">
                                                     <div class="form-group">
-                                                        <label>Total IVA</label>
+                                                        <label>Total VAT</label>
                                                         <input type="text" name="total_vat" id="total_vat"
                                                                class="form-control" readonly="true" value="0">
                                                     </div>
@@ -204,7 +204,8 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title float-center" id="square_foot_modalLabel">Quantity</h5>
+                        <h5 class="modal-title float-center" id="square_foot_modalLabel">Quantity - <span
+                                id="qty_type"></span></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -249,6 +250,15 @@
 
         function elementInitialization() {
             $('#supp_memo').select2();
+            $('#supp_memo').on('change', () => {
+                fetch('/dashboard/get_purchase_info/' + $('#supp_memo').val())
+                    .then(async (response) => {
+                        let customer = await response.json();
+                        $('#supp_name').val(customer.name)
+                        $('#supp_id').val(customer.id)
+                        console.log(customer)
+                    });
+            });
         }
 
 
@@ -323,7 +333,14 @@
                             var pbq = $(this).find(".active").attr("data-pbq");
                             sub_unit = $(this).find(".active").attr("data-sub_unit");
                             unit = $(this).find(".active").attr("data-unit");
-                            if (pbq) {
+
+                            if (!sub_unit) {
+                                $('#qty_type').text(unit)
+
+                            } else {
+                                $('#qty_type').text(sub_unit)
+                            }
+                            if (sub_unit) {
                                 $('#search').val(name);
 
                                 $('#square_foot_modal').modal('toggle');
@@ -351,7 +368,6 @@
                             $("#products_div").hide();
 
 
-
                         }
                     });
 
@@ -359,14 +375,14 @@
                 }
 
                 var s_text = $(this).val();
-                var supp_memo =$('#supp_memo').val();
+                var supp_memo = $('#supp_memo').val();
 
 
                 var formData = new FormData();
                 formData.append('s_text', s_text);
 
-                    formData.append('products', JSON.stringify(allowedProducts));
-                     formData.append('supp_memo', supp_memo);
+                formData.append('products', JSON.stringify(allowedProducts));
+                formData.append('supp_memo', supp_memo);
 
                 $.ajaxSetup({
                     headers: {
@@ -975,7 +991,13 @@
         function selectProducts(id, name, price, serial, vat, pbq, su, u) {
             sub_unit = su;
             unit = u;
-            if (pbq) {
+            if (!sub_unit) {
+                $('#qty_type').text(unit)
+
+            } else {
+                $('#qty_type').text(sub_unit)
+            }
+            if (sub_unit) {
                 $('#search').val(name);
                 $('#square_foot_modal').modal('toggle');
                 per_box_qty = pbq;
@@ -1028,7 +1050,7 @@
             var name = name;
             var price = Number(price);
             var total = Number(total);
-            var totalVat = Number(totalVat).toFixed(2);
+            var totalVat = Number(totalVat || 0).toFixed(2);
 
             $('.price-table').show();
 

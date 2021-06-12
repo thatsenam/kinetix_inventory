@@ -46,8 +46,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="float-right">
-    {{--                                        <img src="/images/theme/{{$settings->logo_big}}" alt="" width="120"--}}
-    {{--                                             style="border-radius: 25px;">--}}
+                                        {{--                                        <img src="/images/theme/{{$settings->logo_big}}" alt="" width="120"--}}
+                                        {{--                                             style="border-radius: 25px;">--}}
                                         <br>
                                         <small>Date: <?php echo date('Y-m-d'); ?></small>
                                     </div>
@@ -103,7 +103,7 @@
                                             <th>Unit</th>
                                             <th>Price</th>
                                             <th>Subtotal</th>
-{{--                                            <th class="{{ !$is_product_base?'d-none':'' }}">Vat(%)</th>--}}
+                                            {{--                                            <th class="{{ !$is_product_base?'d-none':'' }}">Vat(%)</th>--}}
                                             <th>G.Total</th>
                                         </tr>
                                         </thead>
@@ -116,7 +116,7 @@
                                                 <td>{{$detail->box}}</td>
                                                 <td>{{$detail->qnt}}</td>
                                                 <td>{{$detail->price}}</td>
-                                                <td ><?php
+                                                <td><?php
                                                     $paid = $get_customer->payment;
                                                     $ship = 0;
                                                     $stotal = $detail->qnt * $detail->price;
@@ -124,11 +124,11 @@
                                                     echo number_format((float)$stotal, 2, '.', '');
                                                     ?></td>
                                                 @if($is_product_base)
-{{--                                                    <td>{{ ($detail->vat / $stotal) * 100 }} </td>--}}
+                                                    {{--                                                    <td>{{ ($detail->vat / $stotal) * 100 }} </td>--}}
                                                 @endif
                                                 @if($is_product_base)
                                                     <td>{{$detail->vat + $stotal }}</td>
-                                                    @else
+                                                @else
                                                     <td>{{ $stotal }}</td>
                                                 @endif
 
@@ -219,7 +219,13 @@
 
 @section('page-js-script')
     <script type="text/javascript">
-        //   window.addEventListener("load", window.print());
+        window.addEventListener("load", () => {
+            window.print()
+            setTimeout(()=>{
+                window.location.href = document.referrer;
+            },1000)
+
+        });
     </script>
 @stop
 <style>

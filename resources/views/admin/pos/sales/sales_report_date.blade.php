@@ -52,7 +52,7 @@
                                 <th>Invoice</th>
                                 <th>Serial</th>
                                 <th>Customer</th>
-                                <th>IVA</th>
+                                <th>VAT</th>
                                 <th>S.Charge</th>
                                 <th>Discount</th>
                                 <th>Amount</th>

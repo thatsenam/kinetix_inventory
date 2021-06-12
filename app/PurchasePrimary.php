@@ -86,4 +86,15 @@ class PurchasePrimary extends Model
             $builder->where('client_id', auth()->user()->client_id ?? -1);
         });
     }
+
+    public function getDiscountInPercentageAttribute()
+    {
+        $result = $this->discount / $this->amount;
+        return number_format($result * 100, 2);
+    }
+
+    public function getSupplierAttribute()
+    {
+        return Supplier::find($this->sid);
+    }
 }

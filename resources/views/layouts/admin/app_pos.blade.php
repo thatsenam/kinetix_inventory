@@ -318,7 +318,7 @@
                                 <a href="{{route('purchaseby.supplier')}}"
                                    class="nav-link {{ Route::currentRouteName() == 'purchaseby.supplier' ? 'active' : '' }}">
                                     <i class="fas fa-angle-right nav-icon"></i>
-                                    <p>Purchas By Supplier</p>
+                                    <p>Purchase By Supplier</p>
                                 </a>
                             </li>
                         </ul>

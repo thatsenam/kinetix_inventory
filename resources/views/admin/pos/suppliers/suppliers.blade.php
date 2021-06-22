@@ -148,7 +148,8 @@
 
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="inputPhone" class="required">Phone: <span style="color: red">*</span></label>
+                                        <label for="inputPhone" class="required">Phone: <span
+                                                style="color: red">*</span></label>
                                         <input class="form-control" placeholder="Phone..." name="inputPhone" type="text"
                                                id="inputPhone" aria-required="true" required>
                                     </div>
@@ -208,7 +209,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="submit" id="save_customer" class="btn btn-primary" disabled>Add Supplier</button>
+                            <button type="submit" id="save_customer" class="btn btn-primary" disabled>Add Supplier
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -515,7 +517,8 @@
 
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="inputPhone" class="required">Phone:<span class="text-danger">*</span></label>
+                                        <label for="inputPhone" class="required">Phone:<span
+                                                class="text-danger">*</span></label>
                                         <input class="form-control" placeholder="Phone..." name="phone" type="text"
                                                id="phone" aria-required="true" required>
                                     </div>
@@ -544,14 +547,16 @@
                                 <div class="col-6">
                                     <div class="form-group" style="display: none">
                                         <label for="inputPhone">Upazilla :</label>
-                                        <input class="form-control" placeholder="upazilla..." name="upazilla" type="text"
+                                        <input class="form-control" placeholder="upazilla..." name="upazilla"
+                                               type="text"
                                                id="upazilla" aria-required="true">
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group" style="display: none">
                                         <label for="inputPhone">District:</label>
-                                        <input class="form-control" placeholder="district..." name="district" type="text"
+                                        <input class="form-control" placeholder="district..." name="district"
+                                               type="text"
                                                id="district" aria-required="true">
                                     </div>
                                 </div>
@@ -568,7 +573,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" >
+                            <div class="row">
                                 <div class="col-12">
                                     <div class="form-group" style="display:none">
                                         <label for="inputAddress">Supplier details:</label>
@@ -594,7 +599,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            $("#inputPhone").change(function(){
+            $("#inputPhone").change(function () {
                 var s_text = $(this).val();
                 var formData = new FormData();
                 formData.append('s_text', s_text);
@@ -615,19 +620,16 @@
                     success: function (data) {
 
                         if (data.includes(s_text)) {
-                            $('#save_customer').prop('disabled',true)
+                            $('#save_customer').prop('disabled', true)
                             $('#inputPhone').addClass('is-invalid')
-                        }
-                        else
-                        {
-                            $('#save_customer').prop('disabled',false)
+                        } else {
+                            $('#save_customer').prop('disabled', false)
                             $('#inputPhone').removeClass('is-invalid')
                         }
                     }
                 });
             });
         });
-
 
 
         $(function () {
@@ -785,6 +787,14 @@
 
         });
 
+        $('#phone').on('input', async function () {
+            let supplier_id = $('#supp_id').val();
+            let phone = $('#phone').val();
+            let request = await fetch("{{ url('supplier/is-phone-unique') }}/" + `${phone}/${supplier_id}`);
+            console.log(await request.json(),supplier_id);
+        });
+
+
         function open_container2(id) {
             $.ajaxSetup({
                 headers: {
@@ -841,7 +851,7 @@
         function deleteConfirmation(id) {
             swal.fire({
                 title: "Delete?",
-                text: "Are you sure!! Supplier-related all data will be removed, that can not be recovered." ,
+                text: "Are you sure!! Supplier-related all data will be removed, that can not be recovered.",
                 type: "warning",
                 showCancelButton: !0,
                 confirmButtonText: "Yes!",
@@ -885,7 +895,7 @@
             $("#CartMsg").hide();
             $('.save').click(function (e) {
                 e.preventDefault();
-                if ($('#name').val() == '' || $('#phone').val() == '' ) {
+                if ($('#name').val() == '' || $('#phone').val() == '') {
                     alert("Please fill all field with (*) sign!");
                     return false;
                 }
@@ -1013,8 +1023,8 @@
 // 			            window.open("/payment/invoice/" + data.responseText + "", '_blank');
                         console.log(data);
                         // location.reload();
-                        setTimeout(function() {
-                        location.reload();
+                        setTimeout(function () {
+                            location.reload();
                         }, 2000);
                     },
                     error: function (ts) {

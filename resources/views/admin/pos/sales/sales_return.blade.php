@@ -967,7 +967,7 @@
             $('#cust_name').val(name);
             $('#cust_id').val(id);
 
-            $("#search").focus();
+            $("#invoice").select2("open");
             $("#cust_div").hide();
         }
 

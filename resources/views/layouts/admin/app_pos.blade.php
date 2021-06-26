@@ -74,7 +74,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                    <a href="{{ route('change-password') }}" class="nav-link" >
+                    <a href="{{ route('change-password') }}" class="nav-link">
                         <p>Change Password</p>
                     </a>
                     <br>
@@ -83,7 +83,6 @@
                       document.getElementById('logout-form').submit();">
                         {{ __('Logout') }}
                     </a>
-
 
 
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -644,10 +643,31 @@
                             <i class="nav-icon fas fa-hourglass-end"></i>
                             <p>Stock
                                 <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">5</span>
+                                <span class="badge badge-info right">6</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{route('stock-entry')}}"
+                                   class="nav-link {{ Route::currentRouteName() == 'stock-entry' ? 'active' : '' }}">
+                                    <i class="fas fa-angle-right nav-icon"></i>
+                                    <p>Opening Stock Entry</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('adjustments.adjustment.index')}}"
+                                   class="nav-link {{ Route::currentRouteName() == 'adjustments.adjustment.index' ? 'active' : '' }}">
+                                    <i class="fas fa-angle-right nav-icon"></i>
+                                    <p>Stock Adjustment</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('adjustments.adjustment.details')}}"
+                                   class="nav-link {{ Route::currentRouteName() == 'adjustments.adjustment.details' ? 'active' : '' }}">
+                                    <i class="fas fa-angle-right nav-icon"></i>
+                                    <p>Stock Adjustment Details</p>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a href="{{route('admin.pos.warehouse.manage')}}"
                                    class="nav-link {{ Route::currentRouteName() == 'admin.pos.warehouse.manage' ? 'active' : '' }}">
@@ -840,7 +860,23 @@
         @yield('content')
 
     @endif
+    <div class="d-none">
+        <div id="printHeader" class=" mx-auto text-center">
+            <h2><?php echo e($GenSettings->site_name??''); ?></h2>
+            <h5><?php echo e($GenSettings->site_address??''); ?></h5>
+            <h4><?php echo e($GenSettings->phone??''); ?> - <?php echo e($GenSettings->email??''); ?></h4>
+            <br>
+            <h3 id="reportName"></h3>
+            <br>
+        </div>
+    </div>
 
+    <script>
+        function getReportHeader(title) {
+            document.getElementById('reportName').innerText = title
+            return document.getElementById('printHeader').outerHTML
+        }
+    </script>
     @yield('page-js-files')
     @yield('page-js-script')
 

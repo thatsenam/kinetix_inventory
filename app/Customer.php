@@ -31,4 +31,15 @@ class Customer extends Model
         return $this->hasMany(CustomerDueCollection::class);
     }
 
+
+    public function getDueAttribute()
+    {
+
+
+
+        return 9;
+
+    }
+
+
 }

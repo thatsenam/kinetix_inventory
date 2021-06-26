@@ -115,6 +115,85 @@
             "install-path": "../brick/math"
         },
         {
+            "name": "crestapps/laravel-code-generator",
+            "version": "v2.4.4",
+            "version_normalized": "2.4.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CrestApps/laravel-code-generator.git",
+                "reference": "841422cb5768a205c4d688af8ebae45f140edce5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CrestApps/laravel-code-generator/zipball/841422cb5768a205c4d688af8ebae45f140edce5",
+                "reference": "841422cb5768a205c4d688af8ebae45f140edce5",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": ">=5.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9||~1.0",
+                "orchestra/testbench": "~3.0",
+                "phpunit/phpunit": "^5.0||^6.0||^7.0"
+            },
+            "time": "2019-11-12T19:59:01+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "CrestApps\\CodeGenerator\\CodeGeneratorServiceProvider"
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "CrestApps\\CodeGenerator\\": "src/",
+                    "CrestApps\\CodeGenerator\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Majd Alhayek (Mike)",
+                    "email": "mike@crestapps.com",
+                    "homepage": "https://www.crestapps.com"
+                }
+            ],
+            "description": "An intelligent code generator for Laravel framework that will save you time! This awesome tool will help you generate resources like views, controllers, routes, migrations, languages and/or form-requests! It is extremely flexible and customizable to cover many on the use cases. It is shipped with cross-browsers compatible template, along with a client-side validation to modernize your application.",
+            "keywords": [
+                "Alhayek",
+                "CrestApps",
+                "Majd Alhayek",
+                "Mike CallCompleterFullNameAlhayek",
+                "code generator",
+                "code-generator",
+                "controller creator",
+                "crud",
+                "crud builder",
+                "crud generator",
+                "generator",
+                "generators",
+                "laravel",
+                "laravel code generator",
+                "laravel crud",
+                "laravel crud builder",
+                "laravel crud generator",
+                "laravel-code-generator",
+                "routes creator",
+                "views creator"
+            ],
+            "support": {
+                "issues": "https://github.com/CrestApps/laravel-code-generator/issues",
+                "source": "https://github.com/CrestApps/laravel-code-generator/tree/master"
+            },
+            "install-path": "../crestapps/laravel-code-generator"
+        },
+        {
             "name": "doctrine/cache",
             "version": "1.11.3",
             "version_normalized": "1.11.3.0",
@@ -7781,6 +7860,7 @@
     ],
     "dev": true,
     "dev-package-names": [
+        "crestapps/laravel-code-generator",
         "doctrine/cache",
         "doctrine/dbal",
         "doctrine/deprecations",

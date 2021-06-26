@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdjustmentsController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\PosSalesController;
 use App\Http\Controllers\PosSupplierController;
+use App\Http\Controllers\StockEntryController;
 use App\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -468,3 +470,23 @@ Route::get('supplier/is-phone-unique/{phone}/{id}', function ($phone, $id) {
     $supplier = \App\Supplier::query()->where('id', '!-', $id)->where('phone', $phone)->get();
     return ['unique' => count($supplier) == 0];
 })->name('is-phone-unique');
+
+Route::get('/stock-entry', [StockEntryController::class, 'entry'])->name('stock-entry')->middleware('auth');
+Route::get('/product-list/{category}', [StockEntryController::class, 'products'])->name('products')->middleware('auth');
+Route::post('/save-stock-entry', [StockEntryController::class, 'saveStockEntry'])->name('save-stock-entry')->middleware('auth');
+
+Route::group([
+    'prefix' => 'adjustments',
+    'middleware' => 'auth'
+], function () {
+
+    Route::get('/', [AdjustmentsController::class, 'index'])->name('adjustments.adjustment.index');
+    Route::get('/details', [AdjustmentsController::class, 'details'])->name('adjustments.adjustment.details');
+    Route::get('/create', [AdjustmentsController::class, 'create'])->name('adjustments.adjustment.create');
+    Route::get('/show/{adjustment}', [AdjustmentsController::class, 'show'])->name('adjustments.adjustment.show')->where('id', '[0-9]+');
+    Route::get('/{adjustment}/edit', [AdjustmentsController::class, 'edit'])->name('adjustments.adjustment.edit')->where('id', '[0-9]+');
+    Route::post('/', [AdjustmentsController::class, 'store'])->name('adjustments.adjustment.store');
+    Route::put('adjustment/{adjustment}', [AdjustmentsController::class, 'update'])->name('adjustments.adjustment.update')->where('id', '[0-9]+');
+    Route::delete('/adjustment/{adjustment}', [AdjustmentsController::class, 'destroy'])->name('adjustments.adjustment.destroy')->where('id', '[0-9]+');
+
+});

@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'f9f9ca388da4f16ee97f154191ef411f5bccfb99',
+    'reference' => 'fc79438270dfdcfc4f5c82c11cfe42a647349907',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -59,6 +59,15 @@ private static $installed = array (
       array (
         0 => '*',
       ),
+    ),
+    'crestapps/laravel-code-generator' => 
+    array (
+      'pretty_version' => 'v2.4.4',
+      'version' => '2.4.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '841422cb5768a205c4d688af8ebae45f140edce5',
     ),
     'davedevelopment/hamcrest-php' => 
     array (
@@ -500,7 +509,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'f9f9ca388da4f16ee97f154191ef411f5bccfb99',
+      'reference' => 'fc79438270dfdcfc4f5c82c11cfe42a647349907',
     ),
     'laravel/tinker' => 
     array (

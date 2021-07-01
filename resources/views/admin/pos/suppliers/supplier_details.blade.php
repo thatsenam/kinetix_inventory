@@ -76,10 +76,7 @@
                                                 <th scope="row">Total Paid</th>
                                                 <td>{{ $fromPayment }}</td>
                                             </tr>
-{{--                                            <tr>--}}
-{{--                                                <th scope="row">Total Due</th>--}}
-{{--                                                <td>{{$supplier->due}}</td>--}}
-{{--                                            </tr>--}}
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -170,13 +167,10 @@
                                                     </button>
                                                 </div>
                                                 <div class="col-md-3">
-{{--                                                    <div class="text-right">--}}
-{{--                                                        <a href="javascript:window.print();" class="btn btn-default"><i--}}
-{{--                                                                class="fas fa-print"></i> প্রিন্ট</a>--}}
-{{--                                                    </div>--}}
+
                                                 </div>
                                             </div>
-                                            <span class="float-right font-weight-bolder">Previous Balance : <span id="previousBalance">0</span></span>
+
                                             <table id="ledger" class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
@@ -213,7 +207,7 @@
                                                             </a></td>
                                                         <td>{{ $purc->amount }}</td>
                                                         <td>{{ $purc->payment }}</td>
-                                                        <td>{{ $purc->total }}</td>
+                                                        <td>{{ $purc->total-$purc->payment }}</td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
@@ -313,17 +307,6 @@
 
             function load_data(from_date = '', to_date = '', sid = '') {
 
-                $.ajax({
-                    url: "{{ route('supplier.details.previousBalance') }}",
-                    cache: false,
-                    data: {from_date: from_date, to_date: to_date, sid: $('#id').val()},
-                    success: function (response) {
-                        console.log(response)
-                        $("#previousBalance").text(response.p_balance);
-                    }
-                });
-
-
                 $("#ledger").DataTable({
                     "responsive": true,
                     "autoWidth": false,
@@ -343,7 +326,7 @@
 
                     ajax: {
                         url: '{{ route("supplier.details") }}',
-                        data: {from_date: from_date, to_date: to_date, sid: sid, supplier_id:$('#supplier_id').val()},
+                        data: {from_date: from_date, to_date: to_date, sid: sid, supplier_id: $('#supplier_id').val()},
 
                     },
                     columns: [

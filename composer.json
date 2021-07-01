@@ -23,6 +23,7 @@
         "yajra/laravel-datatables-oracle": "^9.10"
     },
     "require-dev": {
+        "crestapps/laravel-code-generator": "^2.4",
         "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.9.1",
         "kitloong/laravel-migrations-generator": "^4.4",

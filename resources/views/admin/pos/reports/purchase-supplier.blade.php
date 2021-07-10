@@ -113,7 +113,11 @@
       if(from_date != '' &&  to_date != ''){
         $('#bysupplier').DataTable().destroy();
         load_data(from_date, to_date, supID);
-      }else{
+      }
+      else if(supID == "Select Supplier"){
+          alert('Select Supplier')
+      }
+      else{
         alert('Both Date is required');
       }
     });

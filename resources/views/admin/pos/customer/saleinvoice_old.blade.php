@@ -222,8 +222,8 @@
         window.addEventListener("load", () => {
             window.print()
             setTimeout(()=>{
-                window.location.href = document.referrer;
-            },1000)
+                window.location.href = "/dashboard/sales_invoice" ;
+            },3000)
 
         });
     </script>

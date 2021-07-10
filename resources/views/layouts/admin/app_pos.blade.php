@@ -143,7 +143,7 @@
                             <p>
                                 Product Options
                                 <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">3</span>
+                                <span class="badge badge-info right">6</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -189,12 +189,7 @@
                                     <p>View All Brands</p>
                                 </a>
                             </li>
-                            {{--              <li class="nav-item">--}}
-                            {{--                <a href="{{route('labels.print')}}" class="nav-link {{ Route::currentRouteName() == 'labels.print' ? 'active' : '' }}">--}}
-                            {{--                  <i class="fas fa-print nav-icon"></i>--}}
-                            {{--                  <p>Print Labels</p>--}}
-                            {{--                </a>--}}
-                            {{--              </li>--}}
+
                         </ul>
                     </li>
 
@@ -204,7 +199,7 @@
                             <p>
                                 Sales
                                 <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">5</span>
+                                <span class="badge badge-info right">7</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -329,7 +324,7 @@
                             <p>
                                 Damage Entry
                                 <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">7</span>
+                                <span class="badge badge-info right">2</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -357,7 +352,7 @@
                             <p>
                                 Banking
                                 <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">8</span>
+                                <span class="badge badge-info right">9</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -460,7 +455,7 @@
                             <p>
                                 Customers
                                 <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">4</span>
+                                <span class="badge badge-info right">3</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -601,49 +596,13 @@
               </li> -->
                         </ul>
                     </li>
-                    {{-- Accounting --}}
-                    {{-- <li class="nav-item">
-                      <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
-                        <p>
-                          Accounts
-                          <i class="fas fa-angle-left right"></i>
-                          <span class="badge badge-info right">5</span>
-                        </p>
-                      </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="{{route('ledgers')}}" class="nav-link">
-                            <i class="fas fa-angle-right nav-icon"></i>
-                            <p>Ledger Reports</p>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="{{route('trials')}}" class="nav-link">
-                            <i class="fas fa-angle-right nav-icon"></i>
-                            <p>Trial Balance</p>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="{{route('reports.loss-profit')}}" class="nav-link">
-                            <i class="fas fa-angle-right nav-icon"></i>
-                            <p>Loss/Profit Reports</p>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="{{route('cash.flow')}}" class="nav-link">
-                            <i class="fas fa-angle-right nav-icon"></i>
-                            <p>Cash Flow</p>
-                          </a>
-                        </li>
-                      </ul>
-                    </li> --}}
+
                     <li class="nav-item {{ (request()->is('admin/manage_warehouse', 'admin/warehouse_report', 'dashboard/reports/stock-report', 'admin/stock_transfer', 'admin/stock-transfer-report')) ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-hourglass-end"></i>
                             <p>Stock
                                 <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">6</span>
+                                <span class="badge badge-info right">8</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -766,7 +725,7 @@
                             <p>
                                 Servicing
                                 <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">5</span>
+                                <span class="badge badge-info right">3</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -793,14 +752,7 @@
                             </li>
                         </ul>
                     </li>
-                    {{-- @can(PermissionAccess::$ViewUser)
-                    <li class="nav-item {{ (request()->is('admin/users')) ? 'menu-open' : '' }}">
-                      <a href="#" class="nav-link">
-                        <i class="nav-icon nav-icon fas fa-users"></i>
-                        Users
-                      </a>
-                    </li>
-                    @endcan --}}
+
                     <li class="nav-item {{ (request()->is('admin/settings')) ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link">
                             <i class="nav-icon nav-icon fas fa-cog"></i>

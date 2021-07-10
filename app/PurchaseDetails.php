@@ -85,4 +85,14 @@ class PurchaseDetails extends Model
             $builder->where('client_id', auth()->user()->client_id ?? -1);
         });
     }
+
+//    public function product(){
+//        return $this->hasOne(Products::class,'id','pid');
+//    }
+
+    public function getProductAttribute()
+    {
+        return \App\Products::query()->firstWhere('id', $this->pid);
+    }
+
 }

@@ -86,4 +86,11 @@ class SalesInvoiceDetails extends Model
             $builder->where('client_id', auth()->user()->client_id ?? -1);
         });
     }
+
+
+
+    public function getProductAttribute()
+    {
+        return Products::find($this->pid);
+    }
 }

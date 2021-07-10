@@ -39,8 +39,8 @@
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="row">
-                                    <input type="hidden" name="cust_head" id="cust_id" value="{{$get_head->head}}">
-                                    <input type="hidden" name="cust_id" id="id" value="{{$get_head->cid}}">
+                                    <input type="hidden" name="cust_head" id="cust_id" value="{{$get_head->head ?? " "}}">
+                                    <input type="hidden" name="cust_id" id="id" value="{{$get_head->cid ?? " "}}">
                                     <div class="col-md-4">
                                         <table class="table table-bordered table-sm">
                                             <tbody>
@@ -72,7 +72,7 @@
                                             </tr>
                                             <tr>
                                                 <th scope="row">Total Due</th>
-                                                <td>{{ $customer->due}}</td>
+                                                <td>{{$total_sale -  $total_sale_paid}}</td>
                                             </tr>
                                             </tbody>
                                         </table>

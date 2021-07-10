@@ -783,7 +783,8 @@ class PosSupplierController extends Controller
                     ->where('head', $head)
                     ->whereDate('date', '<', $request->from_date);
                 $previous_balance = $previousTxn->sum('credit') - $previousTxn->sum('debit');
-            } else {
+            }
+            else {
                 $data = DB::table('acc_transactions')
                     ->where('client_id', auth()->user()->client_id)
                     ->where('sort_by', $sid)

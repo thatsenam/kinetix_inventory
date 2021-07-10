@@ -5,7 +5,7 @@
 
     <div class="content-wrapper">
         <section class="content">
-            <h2 class="ml-3">Purchase Products</h2>
+            <h2 class="ml-3">Purchase Products Edit</h2>
             <div class="box-body">
                 <div class="row">
                     <div class="col-12" style="position: relative;">
@@ -38,15 +38,7 @@
                                                                    class="form-control">
                                                         </div>
                                                     </div>
-                                                    {{--                                                    <div class="col-3">--}}
-                                                    {{--                                                        <div class="form-group" style="position: relative;">--}}
-                                                    {{--                                                            <input type="text" name="supp_memo" id="supp_memo"--}}
-                                                    {{--                                                                   class="form-control" placeholder="Memo No"--}}
-                                                    {{--                                                                   autocomplete="off">--}}
-                                                    {{--                                                            <div id="memo_div"--}}
-                                                    {{--                                                                 style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>--}}
-                                                    {{--                                                        </div>--}}
-                                                    {{--                                                    </div>--}}
+
                                                 @else
                                                     <input type="hidden" name="warehouse_id" id="warehouse_id"
                                                            value="{{ $warehouse_id }}">
@@ -60,12 +52,13 @@
                                                         <div class="form-group" style="position: relative;">
                                                             <input type="text" name="supp_name" id="supp_name"
                                                                    class="form-control" placeholder="Supplier Name"
-                                                                   autocomplete="off">
+                                                                   autocomplete="off"
+                                                                   value="{{$purchase_p->supplier->name}}">
                                                             <div id="supp_div"
                                                                  style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
 
-                                                            <input type="hidden" name="supp_id" id="supp_id" value="0"
-                                                                   class="form-control">
+                                                            <input type="hidden" name="supp_id" id="supp_id"
+                                                                   class="form-control" value="{{$purchase_p->sid}}">
                                                         </div>
                                                     </div>
 
@@ -73,7 +66,7 @@
                                                         <div class="form-group" style="position: relative;">
                                                             <input type="text" name="supp_memo" id="supp_memo"
                                                                    class="form-control" placeholder="Memo No"
-                                                                   autocomplete="off">
+                                                                   autocomplete="off" value="{{$purchase_p->supp_inv}}">
                                                             <div id="memo_div"
                                                                  style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;"></div>
                                                         </div>
@@ -121,7 +114,23 @@
                                                             <th>Total</th>
                                                             <th>Delete</th>
                                                         </tr>
+
+                                           <tbody>
+                                           @foreach($purchase_d as $purchase)
+                                               <tr>
+                                                   <td>{{$loop->iteration}}</td>
+                                                   <td data-prodid="{{$purchase->pid}}" style="width:200px;" class="name">{{optional($purchase->product)->product_name}}</td>
+                                                   <td class="box">@if($purchase->qnt != 0 && optional($purchase->product)->per_box_qty != 0 ) {{intdiv($purchase->qnt ,optional($purchase->product)->per_box_qty)}} @endif -{{optional($purchase->product)->sub_unit}} </td>
+                                                   <td class="qnt">{{$purchase->qnt}}</td>
+                                                   <td class="price">{{$purchase->price}}</td>
+                                                   <td class="totalVatTd">{{$purchase->vat}}</td>
+                                                   <td class="totalPriceTd">{{$purchase->total}}</td>
+                                                   <td><i class="delete mdi mdi-delete"></i></td>
+                                               </tr>
+                                           @endforeach
+                                           </tbody>
                                                     </table>
+
                                                 </div>
                                             </div>
 
@@ -146,7 +155,7 @@
                                                 <div class="col-4">
                                                     <div class="form-group">
                                                         <input type="text" name="date" id="date" class="form-control"
-                                                               placeholder="date" value="<?php echo date("Y-m-d");?>"
+                                                               placeholder="date" value="{{$purchase_p->date}}"
                                                                style="padding: 0.94rem 0.5rem;">
 
                                                     </div>
@@ -158,7 +167,8 @@
                                                     <div class="form-group">
                                                         <label>Amount</label>
                                                         <input type="text" name="amount" id="amount"
-                                                               class="form-control" placeholder="">
+                                                               class="form-control" placeholder=""
+                                                               value="{{$purchase_p->amount}}">
 
                                                     </div>
                                                 </div>
@@ -166,7 +176,8 @@
                                                     <div class="form-group">
                                                         <label>Discount</label>
                                                         <input type="text" name="discount" id="discount"
-                                                               class="form-control" placeholder="" value="0">
+                                                               class="form-control" placeholder=""
+                                                               value="{{$purchase_p->discount}}">
 
                                                     </div>
                                                 </div>
@@ -176,17 +187,18 @@
                                                 <div class="col-6">
                                                     <div class="form-group">
                                                         <label>Total VAT</label>
-                                                        <input type="text" name="total_vat" id="total_vat"
-                                                               class="form-control" readonly="true" value="0">
+                                                        <input type="text" name="total_vat" id="total_vat" class="form-control" readonly="true" value="0">
+                                                        <input type="text" name="invoice" id="invoice" class="form-control"  value="{{$invoice}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
                                                     <div class="form-group">
                                                         <label>Total</label>
                                                         <input type="text" name="total" id="total" class="form-control"
-                                                               placeholder="">
+                                                               placeholder="" value="{{$purchase_p->total}}">
                                                         <input type="hidden" name="hid_total" id="hid_total"
-                                                               class="form-control" placeholder="">
+                                                               class="form-control" placeholder=""
+                                                               value="{{$purchase_p->total}}">
 
                                                     </div>
                                                 </div>
@@ -197,7 +209,8 @@
                                                     <div class="form-group">
                                                         <label> Cash Payment </label>
                                                         <input type="text" name="payment" id="payment"
-                                                               class="form-control" placeholder="" value="0">
+                                                               class="form-control" placeholder=""
+                                                               value="{{$purchase_p->payment ?? 0}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -280,16 +293,13 @@
 
 @section('page-js-script')
 
-
-
-
-
     <script type="text/javascript">
         var this_selected_row;
 
 
         function remove(id) {
 
+            alert(id);
             console.log(this_selected_row)
 
             let qnt = this_selected_row.closest('tr').find('.qnt');
@@ -326,14 +336,19 @@
         var box = 0;
         var fraction = 0;
         var product_id;
-        var product_serial;
+        var product_serial  ;
         var product_vat;
         var serial_qty;
 
-        var serial_array = {};
+        console.log(product_serial)
+
+
+        var serial_array = @json($serials);
         var vat_type = '{{ $GenSettings->vat_type }}'
 
         $(document).ready(function () {
+
+
 
 
             $("#price").keyup(function (e) {
@@ -639,12 +654,8 @@
                             $('#pur_save').prop('disabled', false)
                             $('#supp_memo').removeClass('is-invalid')
                         }
-
-
                     }
-
                 });
-
             });
 
             $("#supp_memo").keyup(function (e) {
@@ -785,24 +796,32 @@
             });
 
             $('#serial_save').click(function (e) {
+
+                product_id = $('#product_id').val();
                 var i, val = [];
                 var qnt = $('#qnt').val();
                 var access = 0;
                 let inputedSerials = [];
                 var unique = 0;
+
                 for (i = 0; i < serial_qty; i++) {
                     var ser = $('#serial-' + i).val();
-                    console.log(serial_unsold)
+                    console.log(ser)
+                    console.log("- - - - - - -")
+
                     if (ser == '') {
                         $('#serial-' + i).addClass("is-invalid");
                         access = 1;
 
-                    } else if (serial_unsold.includes(ser)) {
-                        $('#serial-' + i).addClass("is-invalid");
-                        access = 1;
-                        unique = 1;
+                    }
+                    // else if
+                    // (serial_unsold.includes(ser)) {
+                    //     $('#serial-' + i).addClass("is-invalid");
+                    //     access = 1;
+                    //     unique = 1;
 
-                    } else {
+                    // }
+                else {
                         $('#serial-' + i).removeClass("is-invalid");
                     }
                     inputedSerials.push(ser)
@@ -1025,32 +1044,48 @@
                 var productID = Number($(this).closest('tr').find(".name").attr('data-prodid'));
                 var totalVatTd = Number($(this).closest('tr').find(".totalVatTd").html());
                 var qnt = Number($(this).closest('tr').find(".qnt").html());
-
+                serial_qty = qnt;
                 var serial = serial_array[productID];
 
                 document.getElementById("product_id").value = productID;
                 console.log(serial)
 
-                $("#serial_input").empty();
-                for (i = 0; i < qnt; i++) {
-                    if (!serial[i]) continue;
+                // $("#serial_input").empty();
+                // for (i = 0; i < qnt; i++) {
+                //     if (!serial[i]) continue;
+                //
+                //     $('#serial_input').append(
+                //         `<div class='form-group row' id='serial_div-${i}'>
+                //         <label for='serial-${i}' class='col-3 col-form-label'>Serial ${(i + 1)}</label><span class='btn btn-xs btn-danger remove' onClick='remove(${i})' ><i class='mdi mdi-delete remove '></i></span>
+                //             <div class='col-7'>
+                //             <input type='text' class='form-control serialfield d-inline' id='serial-${i}' required>
+                //             </div>
+                //
+                //             </div>
+                //         `
+                //     );
 
-                    $('#serial_input').append(
-                        `<div class='form-group row' id='serial_div-${i}'>
-                        <label for='serial-${i}' class='col-3 col-form-label'>Serial ${(i + 1)}</label><span class='btn btn-xs btn-danger remove' onClick='remove(${i})' ><i class='mdi mdi-delete remove '></i></span>
-                            <div class='col-7'>
-                            <input type='text' class='form-control serialfield d-inline' id='serial-${i}' required>
-                            </div>
+                    $("#serial_input").empty();
+                    for (i = 0; i < qnt; i++) {
+                        if (!serial[i]) continue;
+                        $('#serial_input').append(
+                            "<div class='form-group row' id='serial_div-" + i + "'>" +
+                            "<label for='serial-" + i + "' class='col-3 col-form-label'>Serial " + (i + 1) + "</label>" + "<span class='btn btn-xs btn-danger remove' onClick='remove("+i+")'><i class='mdi mdi-delete remove '></i></span>" +
+                            "<div class='col-7'>" +
+                            "<input type='text' class='form-control serialfield' id='serial-" + i + "' required>" +
+                            "</div>" +
+                            "</div>"
+                        );
+                        // document.getElementById("serial-" + i).value = serial[i];
 
-                            </div>
-                        `
-                    );
+                        $("#serial-"+i).val(serial[i]);
+
+                    }
 
 
-                    document.getElementById("serial-" + i).value = serial[i];
 
 
-                }
+                // }
 
 
                 $('#serial_modal').modal('toggle');
@@ -1145,22 +1180,26 @@
                 fieldValues.payment = $('#payment').val() ?? 0;
                 fieldValues.total = $('#total').val();
                 fieldValues.total_vat = $('#total_vat').val();
+                fieldValues.invoice = $('#invoice').val();
 
                 var formData = new FormData();
 
                 formData.append('fieldValues', JSON.stringify(fieldValues));
                 formData.append('cartData', JSON.stringify(cartData));
                 formData.append('serialArray', JSON.stringify(serial_array));
-                console.log(serial_array)
+                console.log(cartData)
+                // console.log(serial_array)
                 // alert('sss');
 
-                product_id = '';
-                product_serial = '';
-                serial_qty = '';
-                serial_array = {};
-                serial_unsold = '';
-                warranty = '';
-                product_stock = '';
+
+                //
+                // product_id = '';
+                // product_serial = '';
+                // serial_qty = '';
+                //
+                // serial_unsold = '';
+                // warranty = '';
+                // product_stock = '';
 
                 $.ajaxSetup({
                     headers: {
@@ -1169,10 +1208,9 @@
                 });
 
                 $.ajax({
-                    url: "{{ URL::route('save_purchase_products') }}",
+                    url: "{{ URL::route('save_purchase_products_edit') }}",
                     method: 'post',
                     data: formData,
-                    //data: cartData,
                     contentType: false,
                     cache: false,
                     processData: false,
@@ -1182,59 +1220,19 @@
                     },
                     error: function (ts) {
 
-                        // alert(ts.responseText);
-                        // swal.fire("Done!", "access", "success");
+
                         swal.fire("Done!", "Your Purchase Has Been Completed!!!", "success");
-                        // alert("Your Purchase Has Been Completed!!!");
 
-                        if (ts.responseText == '') {
 
-                            //alert(ts.responseText);
+                        window.location.replace('/dashboard/purchase_report_date')
 
-                            $('#supp_name').val("");
-                            $('#supp_id').val("0");
-                            $('#amount').val("0");
-                            $('#discount').val("0");
-                            $('#total').val("0");
-                            $('#payment').val("0");
-                            $('#total_vat').val("0");
-
-                            $('#hid_total').val("0");
-
-                            $('.price-table td').remove();
-
-                            $('#pur_save').attr('disabled', false);
-
-                            $("#wait").hide();
-
-                        } else {
-                            //alert(ts.responseText);
-
-                            $('#supp_name').val("");
-                            $('#supp_id').val("0");
-                            $('#supp_memo').val("");
-                            $('#amount').val("0");
-                            $('#discount').val("0");
-                            $('#total').val("0");
-                            $('#payment').val("0");
-
-                            $('#hid_total').val("0");
-                            $('#total_vat').val("0");
-                            $('.price-table td').remove();
-
-                            $('#pur_save').attr('disabled', false);
-
-                            $("#wait").hide();
-                        }
 
                     },
                     success: function (data) {
 
-                        // alert(data);
                         swal.fire("Error!", "Your Purchase Has Been Completed!!!", "error");
-                        // alert("Your Purchase Has Been Completed!!!");
-                        location.reload()
-                        //$('.cart-table tr').remove();
+
+                        window.location.replace('/dashboard/purchase_report_date')
 
                     }
                 });

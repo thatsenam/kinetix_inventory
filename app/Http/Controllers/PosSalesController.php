@@ -53,6 +53,34 @@ class PosSalesController extends Controller
         return view('admin.pos.sales.sales_invoice', compact('warehouses', 'warehouse_id', 'bank'));
     }
 
+    public function sales_invoice_edit($invoice)
+    {
+
+
+        $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+
+        $bank = BankAcc::where('client_id', auth()->user()->client_id)->get();
+        if ($warehouses->count() < 2) {
+            $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
+            $warehouse_id = $getW->id;
+        } else {
+            $warehouse_id = "";
+        }
+
+        $sales_p = SalesInvoice::firstWhere('invoice_no',$invoice);
+        $sales_d =SalesInvoiceDetails::where('invoice_no',$invoice)->get();
+
+        $data = Serial::query()->where('sale_inv',$invoice)->pluck('product_id','serial')->toArray();
+        $serials = [];
+
+        foreach ($data as $ser=>$product_id){
+            $serials[$product_id][] = strval($ser)  ;
+
+        }
+
+        return view('admin.pos.sales.sales_invoice_edit', compact('warehouses', 'warehouse_id', 'bank','sales_p','sales_d','serials'));
+    }
+
     public function get_products(Request $req)
     {
 
@@ -630,7 +658,7 @@ class PosSalesController extends Controller
                 'box' => $take_cart_items[$j1],
                 'out_qnt' => $take_cart_items[$j2],
                 'particulars' => 'Sales',
-                'remarks' => 'Sales Invoice No-' . $invoice,
+                'remarks' =>$invoice,
                 'user_id' => $user,
                 'client_id' => auth()->user()->client_id,
             ]);
@@ -662,6 +690,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -679,6 +708,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user
                 ]);
 
@@ -696,6 +726,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -721,6 +752,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -738,6 +770,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                     'note' => $invoice,
                     'user_id' => $user
                 ]);
 
@@ -755,6 +788,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                     'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -780,6 +814,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                     'note' => $invoice,
                     'user_id' => $user
 
                 ]);
@@ -797,6 +832,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                     'note' => $invoice,
                     'user_id' => $user
                 ]);
 
@@ -814,6 +850,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                     'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -832,6 +869,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                     'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -904,6 +942,7 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
+                'note' => $invoice,
                 'user_id' => $user,
 
             ]);
@@ -921,6 +960,7 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
+                 'note' => $invoice,
                 'user_id' => $user
             ]);
 
@@ -937,8 +977,9 @@ class PosSalesController extends Controller
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
-                'note' => "Mobile",
+
                 'date' => $date,
+                 'note' => $invoice,
                 'user_id' => $user,
 
             ]);
@@ -959,6 +1000,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                     'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -980,6 +1022,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                     'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -1058,6 +1101,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -1075,6 +1119,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user
                 ]);
 
@@ -1092,7 +1137,8 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    'note' => "Card",
+
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -1111,7 +1157,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    'note' => "Card",
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -1136,6 +1182,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -1153,6 +1200,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user
                 ]);
 
@@ -1170,7 +1218,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    'note' => "Card",
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -1195,6 +1243,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -1212,6 +1261,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user
                 ]);
 
@@ -1229,7 +1279,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
-                    'note' => "Card",
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -1248,6 +1298,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -1334,6 +1385,7 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
+                'note' => $invoice,
                 'user_id' => $user,
 
             ]);
@@ -1351,6 +1403,7 @@ class PosSalesController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
+                'note' => $invoice,
                 'user_id' => $user
             ]);
 
@@ -1367,7 +1420,7 @@ class PosSalesController extends Controller
                 'description' => $description,
                 'debit' => $debit,
                 'credit' => $credit,
-                'note' => "Check",
+                'note' => $invoice,
                 'date' => $date,
                 'user_id' => $user,
 
@@ -1390,6 +1443,7 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user,
 
                 ]);
@@ -1412,7 +1466,1046 @@ class PosSalesController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $invoice,
                     'user_id' => $user,
+
+                ]);
+
+            }
+
+        }
+
+        return $invoice;
+
+    }
+    public function sales_invoice_save_edit(Request $req)
+    {
+
+        $fieldValues = json_decode($req['fieldValues'], true);
+
+        $warehouse = $fieldValues['warehouse_id'];
+        $cust_id = $fieldValues['cust_id'];
+        $cust_name = $fieldValues['cust_name'];
+        $cust_phone = $fieldValues['cust_phone'];
+        $cust_address = $fieldValues['cust_address'] ?? '';
+        $vat = $fieldValues['vat'];
+        $vat = round($vat, 2);
+        $scharge = $fieldValues['scharge'];
+        $scharge = round($scharge, 2);
+        $discount = $fieldValues['discount'];
+        $discount = round($discount, 2);
+        $amount = $fieldValues['amount'];
+        $amount = round($amount, 2);
+        $gtotal = (($amount + $vat + $scharge) - $discount);
+        $gtotal = round($gtotal, 2);
+        $sales_amount = (($amount + $scharge) - $discount);
+        $sales_amount = round($sales_amount, 2);
+        $paytype = $fieldValues['paytype'];
+        $payment = $fieldValues['payment'];
+        // $due = $fieldValues['total'];
+        $due = $gtotal - $payment;
+        $remarks = $fieldValues['remarks'];
+        $date = $fieldValues['date'];
+        $user = Auth::id();
+
+        $clients_bank = $fieldValues['clients_bank'];
+        $clients_bank_acc = $fieldValues['clients_bank_acc'];
+        $check_amount = $fieldValues['check_amount'];
+        $check_amount = round($check_amount, 2);
+        $check_cash = $fieldValues['check_cash'];
+        $check_cash = round($check_cash, 2);
+        $check_date = $fieldValues['check_date'];
+        $check_type = $fieldValues['check_type'];
+        $shops_bank = $fieldValues['shops_bank'];
+        $bank_id = $fieldValues['bank_id'];
+        $shops_bank_account = $fieldValues['shops_bank_account'];
+        $account_id = $fieldValues['account_id'];
+        $check_remarks = $fieldValues['check_remarks'];
+
+        $mobile_bank = $fieldValues['mobile_bank'];
+        $mobile_bank_id = $fieldValues['mobile_bank_id'];
+        $mobile_bank_acc_cust = $fieldValues['mobile_bank_acc_cust'];
+        $mobile_bank_account = $fieldValues['mobile_bank_account'];
+        $mobile_bank_acc_id = $fieldValues['mobile_bank_acc_id'];
+        $mobile_amount = $fieldValues['mobile_amount'];
+        $mobile_amount = round($mobile_amount, 2);
+        $mobile_cash = $fieldValues['mobile_cash'];
+        $mobile_cash = round($mobile_cash, 2);
+        $tranxid = $fieldValues['tranxid'];
+        $mobile_remarks = $fieldValues['mobile_remarks'];
+
+        $card_type = $fieldValues['card_type'];
+        $card_bank = $fieldValues['card_bank'];
+        $card_bank_id = $fieldValues['card_bank_id'];
+        $card_bank_account = $fieldValues['card_bank_account'];
+        $card_bank_acc_id = $fieldValues['card_bank_acc_id'];
+        $card_amount = $fieldValues['card_amount'];
+        $card_amount = round($card_amount, 2);
+        $card_cash = $fieldValues['card_cash'];
+        $card_cash = round($card_cash, 2);
+        $card_remarks = $fieldValues['card_remarks'];
+        $invoice_id = $fieldValues['invoice_id'];
+
+
+        SalesInvoice::where('invoice_no',$invoice_id)->delete();
+        SalesInvoiceDetails::where('invoice_no',$invoice_id)->delete();
+        Stock::where('remarks',$invoice_id)->delete();
+        AccTransaction::where('note',$invoice_id)->delete();
+
+        if ($card_type == 'visa') {
+            $card = "Visa Card";
+        } else if ($card_type == 'master') {
+            $card = "Master Card";
+        } else if ($card_type == 'dbbl') {
+            $card = "DBBL Nexus Card";
+        }
+
+
+        ////// into Customers Table////////////
+
+        if (($cust_id == 0 || $cust_id == '') && ($cust_name != '' && $cust_phone != '')) {
+
+            $cust_id = (DB::table('customers')->max('id') + 1);
+
+            Customer::create([
+                'id' => $cust_id,
+                'name' => $cust_name,
+                'phone' => $cust_phone,
+                'address' => $cust_address,
+                'user_id' => $user,
+            ]);
+
+            AccHead::create([
+                'cid' => $cust_id,
+                'parent_head' => "Asset",
+                'sub_head' => "Customers Receivable",
+                'head' => $cust_name . " " . $cust_phone,
+            ]);
+        }
+
+        if ($due < 0) {
+            $payment = ($payment + $due);
+            $due = 0;
+        }
+
+        $inv_counting = SalesInvoice::whereDate('date', date('Y-m-d'))
+            ->where('client_id', auth()->user()->client_id)->distinct()->count('invoice_no');
+        $invoice = $invoice_id;
+
+        // $maxid = (DB::table('sales_invoice')->max('id') + 1);
+
+        // $invoice = "Inv-".$maxid;
+
+        if ($card_amount > 0 || $mobile_amount > 0) {
+
+            if ($card_amount == '') {
+                $card_amount = 0;
+            }
+            if ($mobile_amount == '') {
+                $mobile_amount = 0;
+            }
+            if ($card_cash == '') {
+                $card_cash = 0;
+            }
+            if ($mobile_cash == '') {
+                $mobile_cash = 0;
+            }
+            if ($payment == '') {
+                $payment = 0;
+            }
+
+            $payment = ($payment + $card_amount + $mobile_amount + $card_cash + $mobile_cash);
+        }
+
+        SalesInvoice::create([
+            'invoice_no' => $invoice,
+            'cid' => $cust_id,
+            'vat' => $vat,
+            'scharge' => $scharge,
+            'discount' => $discount,
+            'amount' => $amount,
+            'gtotal' => $gtotal,
+            'payment' => $payment,
+            'vat_amount' => $vat,
+            'due' => $due,
+            'remarks' => $remarks,
+            'date' => $date,
+            'user_id' => $user,
+        ]);
+
+        $serials = json_decode($req['serialArray'], true);
+
+        foreach ($serials as $productID => $serial) {
+            foreach ($serial as $ser) {
+                Serial::where('client_id', auth()->user()->client_id)
+                    ->where('product_id', $productID)
+                    ->where('serial', $ser)->update([
+                        'status' => 'sold',
+                        'sale_inv' => $invoice,
+                    ]);
+            }
+        }
+
+        $take_cart_items = json_decode($req['cartData'], true);
+//         dd($take_cart_items);
+        $count = count($take_cart_items);
+
+        for ($i = 0; $i < $count;) {
+
+            $j = $i;
+            $j1 = $i + 1;
+            $j2 = $i + 2;
+            $j3 = $i + 3;
+            $j4 = $i + 4;
+            $j5 = $i + 5;
+
+
+            ///////Adjust Stock/////////
+
+            $get_stock = DB::table('products')->select('stock')->where('id', $take_cart_items[$j])->first();
+            if (!$get_stock) {
+                $stock = (0 - $take_cart_items[$j2]);
+
+            } else {
+                $stock = ($get_stock->stock - $take_cart_items[$j2]);
+
+            }
+
+            DB::table('products')->where('id', $take_cart_items[$j])->update(['stock' => $stock]);
+
+            SalesInvoiceDetails::create([
+                'invoice_no' => $invoice,
+                'pid' => $take_cart_items[$j],
+                'qnt' => $take_cart_items[$j2],
+                'box' => $take_cart_items[$j1],
+                'price' => $take_cart_items[$j3],
+                'vat' => $take_cart_items[$j4],
+                'total' => $take_cart_items[$j5],
+                'user_id' => $user,
+            ]);
+
+            Stock::create([
+                'date' => $date,
+                'warehouse_id' => $warehouse,
+                'product_id' => $take_cart_items[$j],
+                'box' => $take_cart_items[$j1],
+                'out_qnt' => $take_cart_items[$j2],
+                'particulars' => 'Sales',
+                'remarks' =>$invoice,
+                'user_id' => $user,
+                'client_id' => auth()->user()->client_id,
+            ]);
+
+            $i = $i + 6;
+        }
+
+
+        //////Save to Accounts//////
+
+        if ($paytype == 'cash') {
+
+            if ($due > 0 && $payment == 0) {
+
+                // $vno = (DB::table('acc_transactions')->max('id') + 1);
+                $vno = time();
+
+                $head = "Sales";
+                $description = "Due Sale Invoice " . $invoice;
+                $debit = 0;
+                $credit = $sales_amount;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+
+                $head = "Sales IVA";
+                $description = "Due Sales IVA from Invoice " . $invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+                ]);
+
+                $head = $cust_name . " " . $cust_phone;
+                $description = "Due Sale Invoice " . $invoice;
+                $debit = $gtotal;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+
+            }
+
+            if ($payment > 0 && $due == 0) {
+
+                // $vno = (DB::table('acc_transactions')->max('id') + 1);
+                $vno = time();
+
+                $head = "Sales";
+                $description = "Sale Invoice " . $invoice;
+                $debit = 0;
+                $credit = $sales_amount;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+                ]);
+
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice " . $invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+                ]);
+
+                $head = "Cash In Hand";
+                $description = "Sale Invoice " . $invoice;
+                $debit = $payment;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+
+            }
+
+            if ($payment > 0 && $due > 0) {
+
+                // $vno = (DB::table('acc_transactions')->max('id') + 1);
+                $vno = time();
+
+                $head = "Sales";
+                $description = "Due Sale Invoice " . $invoice;
+                $debit = 0;
+                $credit = $sales_amount;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice " . $invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+                ]);
+
+                $head = "Cash In Hand";
+                $description = "Sale from Invoice " . $invoice;
+                $debit = $payment;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'note' => $invoice,
+                    'user_id' => $user,
+
+                ]);
+
+                $head = $cust_name . " " . $cust_phone;
+                $description = "Due Sale from Invoice " . $invoice;
+                $debit = $due;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'note' => $invoice,
+                    'user_id' => $user,
+
+                ]);
+
+            }
+
+        }
+
+        ///// mobile transaction
+
+        if ($paytype == 'mobile') {
+
+            if ($mobile_bank_id != 0 && $mobile_bank_acc_id == 0) {
+
+                $maxmobid = (DB::table('bank_acc')->max('id') + 1);
+
+                BankAcc::Create(['id' => $maxmobid, 'bank_id' => $mobile_bank_id, 'acc_name' => $mobile_bank_account, 'user' => $user]);
+
+                $mobile_bank_acc_id = $maxmobid;
+            }
+
+            if ($mobile_bank_id == 0) {
+
+                $maxbankid = (DB::table('bank_info')->max('id') + 1);
+
+                BankInfo::Create(['id' => $maxbankid, 'name' => $mobile_bank, 'user' => $user]);
+
+                $maxmobid = (DB::table('bank_acc')->max('id') + 1);
+
+                BankAcc::Create(['id' => $maxmobid, 'bank_id' => $maxbankid, 'acc_name' => $mobile_bank_account, 'user' => $user]);
+
+                $mobile_bank_id = $maxbankid;
+
+                $mobile_bank_acc_id = $maxmobid;
+            }
+
+
+            BankTransaction::Create([
+
+                'seller_bank_id' => $mobile_bank_id,
+                'seller_bank_acc_id' => $mobile_bank_acc_id,
+                'clients_bank_acc' => $mobile_bank_acc_cust,
+                'date' => $date,
+                'cid' => $cust_id,
+                'invoice_no' => $invoice,
+                'deposit' => $mobile_amount,
+                'type' => 'mobile',
+                'status' => 'paid',
+                'tranxid' => $tranxid,
+                'remarks' => $mobile_remarks,
+                'user_id' => $user,
+
+
+            ]);
+
+            ///// into Accounts For Mobile Transaction
+
+            // $vno = (DB::table('acc_transactions')->max('id') + 1);
+            $vno = time();
+
+            $head = "Sales";
+            $description = "Sale Invoice " . $invoice;
+            $debit = 0;
+            $credit = $sales_amount;
+
+            AccTransaction::Create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "cid" . " " . $cust_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user,
+                'note' => $invoice,
+
+            ]);
+
+            $head = "Sales IVA";
+            $description = "Sales IVA from Invoice " . $invoice;
+            $credit = $vat;
+            $debit = 0;
+
+            AccTransaction::create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "cid" . " " . $cust_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user,
+                'note' => $invoice,
+            ]);
+
+            $head = $mobile_bank . " " . $mobile_bank_account;
+            $description = "Sale Invoice " . $invoice;
+            $debit = $mobile_amount;
+            $credit = 0;
+
+            //            DB::table('acc_transactions')->([
+            AccTransaction::Create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "cid" . " " . $cust_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user,
+                'note' => $invoice,
+
+            ]);
+
+            if ($mobile_cash > 0) {
+
+                $head = "Cash in Hand";
+                $description = "Sale Invoice " . $invoice;
+                $debit = $mobile_cash;
+                $credit = 0;
+
+                //                DB::table('acc_transactions')->([
+                AccTransaction::Create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+
+            }
+            $due = $gtotal - $mobile_amount - $mobile_cash;
+            if ($due > 0) {
+                $head = $cust_name . " " . $cust_phone;
+                $description = "Due Sale from Invoice " . $invoice;
+                $debit = $due;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+
+            }
+        }
+
+
+        ///// Card transaction
+
+        if ($paytype == 'card') {
+
+            if ($card_bank_id != 0 && $card_bank_acc_id == 0) {
+
+                $maxcardid = (DB::table('bank_acc')->max('id') + 1);
+
+                //                BankAcc::Create
+                BankAcc::Create
+                (['id' => $maxcardid, 'bank_id' => $card_bank_id, 'acc_name' => $card_bank_account, 'user' => $user]);
+
+                $card_bank_acc_id = $maxcardid;
+            }
+
+            if ($card_bank_id == 0) {
+
+                $maxbankid = (DB::table('bank_info')->max('id') + 1);
+
+                //                DB::table('bank_info')->
+                BankInfo::Create
+                (['id' => $maxbankid, 'name' => $card_bank, 'user' => $user]);
+
+                $maxcardid = (DB::table('bank_acc')->max('id') + 1);
+
+                BankAcc::Create(['id' => $maxcardid, 'bank_id' => $maxbankid, 'acc_name' => $card_bank_account, 'user' => $user]);
+
+                $card_bank_id = $maxbankid;
+
+                $card_bank_acc_id = $maxcardid;
+            }
+
+
+            BankTransaction::Create([
+
+                'seller_bank_id' => $card_bank_id,
+                'seller_bank_acc_id' => $card_bank_acc_id,
+                'clients_bank' => $card,
+                'date' => $date,
+                'cid' => $cust_id,
+                'invoice_no' => $invoice,
+                'deposit' => $card_amount,
+                'type' => 'card',
+                'status' => 'paid',
+                'remarks' => $card_remarks,
+                'user_id' => $user,
+
+            ]);
+
+            ///// into Accounts For Card Transaction
+
+            if ($payment > 0 && $due > 0 && $card_cash == 0) {
+
+                // $vno = (DB::table('acc_transactions')->max('id') + 1);
+                $vno = time();
+
+                $head = "Sales";
+                $description = "Sale Invoice " . $invoice;
+                $debit = 0;
+                $credit = $sales_amount;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice " . $invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                     'note' => $invoice,
+                ]);
+
+                $head = $card_bank_account;
+                $description = "Sale Invoice " . $invoice;
+                $debit = $card_amount;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+
+                $head = $cust_name . " " . $cust_phone;
+                $description = "Sale Invoice " . $invoice;
+                $debit = $due;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'note' => $invoice,
+                    'user_id' => $user,
+
+                ]);
+
+            }
+
+            if ($payment > 0 && $due == 0 && $card_cash == 0) {
+                // $vno = (DB::table('acc_transactions')->max('id') + 1);
+                $vno = time();
+
+                $head = "Sales";
+                $description = "Sale Invoice " . $invoice;
+                $debit = 0;
+                $credit = $sales_amount;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+
+                ]);
+
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice " . $invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+
+                ]);
+
+                $head = $card_bank_account;
+                $description = "Sale Invoice " . $invoice;
+                $debit = $card_amount;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+
+            }
+
+            if ($payment > 0 && $due == 0 && $card_cash > 0) {
+                // $vno = (DB::table('acc_transactions')->max('id') + 1);
+                $vno = time();
+
+                $head = "Sales";
+                $description = "Sale Invoice " . $invoice;
+                $debit = 0;
+                $credit = $gtotal;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+
+                ]);
+
+                $head = "Sales IVA";
+                $description = "Sales IVA from Invoice " . $invoice;
+                $credit = $vat;
+                $debit = 0;
+
+                AccTransaction::create([
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+
+                    'note' => $invoice,
+                ]);
+
+                $head = $card_bank_account;
+                $description = "Sale Invoice " . $invoice;
+                $debit = $card_amount;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+
+                    'user_id' => $user,
+                    'note' => $invoice,
+                ]);
+
+                $head = "Cash in Hand";
+                $description = "Sale Invoice " . $invoice;
+                $debit = $card_cash;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+            }
+
+        }
+
+        ///// Check transaction
+
+        if ($paytype == 'check') {
+
+            if ($check_type == 'pay_account') {
+
+                if ($bank_id != 0 && $account_id == 0) {
+
+                    $maxaccountid = (DB::table('bank_acc')->max('id') + 1);
+
+                    BankAcc::Create(['id' => $maxaccountid, 'bank_id' => $bank_id, 'acc_name' => $shops_bank_account, 'user' => $user]);
+
+                    $account_id = $maxaccountid;
+                }
+
+                if ($bank_id == 0) {
+
+                    $maxbankid = (DB::table('bank_info')->max('id') + 1);
+
+                    BankInfo::Create(['id' => $maxbankid, 'name' => $shops_bank, 'user' => $user]);
+
+                    $maxaccountid = (DB::table('bank_acc')->max('id') + 1);
+
+//                    DB::table('bank_acc')->
+                    BankAcc::Create([
+                        'id' => $maxaccountid,
+                        'bank_id' => $maxbankid,
+                        'acc_name' => $shops_bank_account,
+                        'user' => $user
+                    ]);
+
+                    $bank_id = $maxbankid;
+
+                    $account_id = $maxaccountid;
+                }
+            }
+
+
+//            DB::table('bank_transactions')->
+
+            BankTransaction::Create([
+
+                'seller_bank_id' => $bank_id,
+                'seller_bank_acc_id' => $account_id,
+                'clients_bank' => $clients_bank,
+                'clients_bank_acc' => $clients_bank_acc,
+                'date' => $date,
+                'cid' => $cust_id,
+                'invoice_no' => $invoice,
+                'deposit' => $check_amount,
+                'type' => 'check',
+                'status' => 'pending',
+                'check_date' => $check_date,
+                'remarks' => $check_remarks,
+                'user_id' => $user,
+
+
+            ]);
+
+            ///// into Accounts For Check Transaction
+
+            // $vno = (DB::table('acc_transactions')->max('id') + 1);
+            $vno = time();
+
+            $head = "Sales";
+            $description = "Sale Invoice " . $invoice;
+            $debit = 0;
+            $credit = $sales_amount;
+
+            //AccTransaction::Create
+
+            AccTransaction::Create([
+
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "cid" . " " . $cust_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user,
+                'note' => $invoice,
+
+            ]);
+
+            $head = "Sales IVA";
+            $description = "Sales IVA from Invoice " . $invoice;
+            $credit = $vat;
+            $debit = 0;
+
+            AccTransaction::create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "cid" . " " . $cust_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user,
+                    'note' => $invoice,
+            ]);
+
+            $head = $cust_name . " " . $cust_phone;
+            $description = "Sale Invoice " . $invoice;
+            $debit = $check_amount;
+            $credit = 0;
+
+            AccTransaction::Create([
+
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "cid" . " " . $cust_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user,
+                'note' => $invoice,
+
+            ]);
+
+
+            if ($check_cash > 0) {
+
+                $head = "Cash in Hand";
+                $description = "Sale Invoice " . $invoice;
+                $debit = $check_cash;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
+
+                ]);
+
+            }
+
+            $due = $gtotal - $check_amount - $check_cash;
+            if ($due > 0) {
+                $head = $cust_name . " " . $cust_phone;
+                $description = "Due Sale from Invoice " . $invoice;
+                $debit = $due;
+                $credit = 0;
+
+                AccTransaction::Create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "cid" . " " . $cust_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $invoice,
 
                 ]);
 

@@ -1,6 +1,6 @@
 @extends('admin.pos.master')
 
-@section('title', 'Sales Invoice')
+@section('title', 'Sales Invoice Edit')
 
 
 @section('content')
@@ -33,7 +33,7 @@
     <div class="main-panel">
         <div class="content-wrapper">
             <section class="content">
-                <h3 class="ml-2">Sales Invoice</h3>
+                <h3 class="ml-2">Sales Invoice Edit</h3>
 
                 <div class="box-body">
                     <div class="row">
@@ -45,6 +45,7 @@
                                         <div class="row">
                                             <div class="col-md-7">
                                                 <div class="row">
+                                                    <input type="text" name="invoice_id" id="invoice_id" value="{{$sales_p->invoice_no}}" hidden="">
                                                     @if($warehouses->count()>1)
                                                         <div class="col-3">
                                                             <select name="warehouse_id" id="warehouse_id"
@@ -57,24 +58,27 @@
                                                             </select>
                                                         </div>
                                                         <div class="col-3">
+
                                                             <div class="form-group" style="position: relative;">
                                                                 <input type="text" name="cust_phone" id="cust_phone"
                                                                        class="form-control" placeholder="Customer Phone"
-                                                                       autocomplete="off">
+                                                                       autocomplete="off"
+                                                                       value="{{$sales_p->customer->phone}}">
                                                                 <div id="cust_div"
                                                                      style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
                                                                 </div>
 
                                                                 <input type="hidden" name="cust_id" id="cust_id"
-                                                                       value="0"
-                                                                       class="form-control">
+
+                                                                       class="form-control" value="{{$sales_p->cid}}">
 
                                                             </div>
                                                         </div>
                                                         <div class="col-3">
                                                             <div class="form-group" style="position: relative;">
                                                                 <input type="text" name="cust_name" id="cust_name"
-                                                                       class="form-control" placeholder="Customer Name">
+                                                                       class="form-control" placeholder="Customer Name"
+                                                                       value="{{$sales_p->customer->name}}">
                                                                 <div id="memo_div"
                                                                      style="width: 100%; display: none; position: absolute; top: 45px; left: 0; z-index: 999;">
                                                                 </div>
@@ -84,7 +88,8 @@
                                                             <div class="form-group" style="position: relative;">
                                                                 <input type="text" name="cust_address" id="cust_address"
                                                                        class="form-control"
-                                                                       placeholder="Customer Address">
+                                                                       placeholder="Customer Address"
+                                                                       value="{{$sales_p->customer->address}}">
                                                             </div>
                                                         </div>
                                                     @else
@@ -94,21 +99,23 @@
                                                             <div class="form-group" style="position: relative;">
                                                                 <input type="text" name="cust_phone" id="cust_phone"
                                                                        class="form-control" placeholder="Customer Phone"
-                                                                       autocomplete="off">
+                                                                       autocomplete="off"
+                                                                       value="{{$sales_p->customer->phone}}">
                                                                 <div id="cust_div"
                                                                      style="width: 100%; display: none; position: absolute; top: 30px; left: 0; z-index: 999;">
                                                                 </div>
 
                                                                 <input type="hidden" name="cust_id" id="cust_id"
-                                                                       value="0"
-                                                                       class="form-control">
+
+                                                                       class="form-control" value="{{$sales_p->cid}}">
 
                                                             </div>
                                                         </div>
                                                         <div class="col-4">
                                                             <div class="form-group" style="position: relative;">
                                                                 <input type="text" name="cust_name" id="cust_name"
-                                                                       class="form-control" placeholder="Customer Name">
+                                                                       class="form-control" placeholder="Customer Name"
+                                                                       value="{{$sales_p->customer->name}}">
                                                                 <div id="memo_div"
                                                                      style="width: 100%; display: none; position: absolute; top: 45px; left: 0; z-index: 999;">
                                                                 </div>
@@ -118,7 +125,8 @@
                                                             <div class="form-group" style="position: relative;">
                                                                 <input type="text" name="cust_address" id="cust_address"
                                                                        class="form-control"
-                                                                       placeholder="Customer Address">
+                                                                       placeholder="Customer Address"
+                                                                       value="{{$sales_p->customer->address}}">
                                                             </div>
                                                         </div>
                                                     @endif
@@ -217,7 +225,24 @@
                                                                     <th>Total</th>
                                                                     <th>Delete</th>
                                                                 </tr>
+
+
+                                                                @foreach($sales_d as $sales)
+                                                                <tr data-vat="{{$loop->index}}">
+                                                                    <td class="name" data-prodid="2" style="width:200px;">
+                                                                        {{$sales->Product->product_name}}
+                                                                    </td>
+                                                                    <td class="box">{{intdiv($sales->Product->per_box_qty , $sales->qnt)}} {{$sales->Product->sub_unit}} - {{$sales->Product->per_box_qty % $sales->qnt }} </td>
+                                                                    <td class="qnty">{{$sales->qnt}}</td>
+                                                                    <td class="uprice">{{$sales->price}}</td>
+                                                                    <td class="prod_vat">{{$sales->vat}}</td>
+                                                                    <td class="totalPriceTd">{{$sales->total}}</td>
+                                                                    <td><i class="delete mdi mdi-delete"></i></td>
+                                                                </tr>
+                                                                @endforeach
                                                             </table>
+
+
                                                         </div>
                                                     </div>
 
@@ -319,7 +344,7 @@
                                                             <label>Amount</label>
                                                             <input type="text" name="amount" id="amount"
                                                                    class="form-control bg-white" placeholder=""
-                                                                   value="0" disabled>
+                                                                   disabled value="{{$sales_p->amount}}">
                                                         </div>
                                                     </div>
                                                     <div class="col-6">
@@ -328,7 +353,7 @@
                                                             <input type="text" name="show_grand_total"
                                                                    id="show_grand_total"
                                                                    class="form-control bg-white" placeholder=""
-                                                                   disabled>
+                                                                   disabled value="{{$sales_p->gtotal}}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -337,9 +362,10 @@
                                                     <div class="form-group">
                                                         <label>Total</label>
                                                         <input type="text" name="total" id="total" class="form-control"
-                                                               placeholder="" value="0">
+                                                               placeholder="" value="{{$sales_p->gtotal}}">
                                                         <input type="hidden" name="hid_total" id="hid_total"
-                                                               class="form-control" placeholder="" value="0">
+                                                               class="form-control" placeholder=""
+                                                               value="{{$sales_p->gtotal}}">
 
                                                     </div>
                                                 </div>
@@ -348,7 +374,8 @@
                                                         <div class="form-group">
                                                             <label>Discount</label>
                                                             <input type="text" name="discount" id="discount"
-                                                                   class="form-control" placeholder="" value="0">
+                                                                   class="form-control" placeholder=""
+                                                                   value="{{$sales_p->discount}}">
 
                                                         </div>
                                                     </div>
@@ -357,7 +384,7 @@
                                                             <label>S. Charge</label>
                                                             <input type="text" name="scharge" id="scharge"
                                                                    class="form-control"
-                                                                   placeholder="" value="{{ $scharge ?? 0 }}">
+                                                                   placeholder="" value="{{$sales_p->scharge}}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -375,7 +402,7 @@
                                                             <label>Payment</label>
                                                             <input type="text" name="payment" id="payment"
                                                                    class="form-control"
-                                                                   placeholder="" value="0">
+                                                                   placeholder="" value="{{$sales_p->payment}}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -385,7 +412,7 @@
                                                             <label>Due</label>
                                                             <input type="text" name="due" id="due"
                                                                    class="form-control"
-                                                                   placeholder="Due" value="0">
+                                                                   placeholder="Due" value="{{$sales_p->due}}">
                                                         </div>
                                                     </div>
                                                     <div class="col-6" style="margin-top:-10px;">
@@ -573,7 +600,8 @@
                         </tr>
                         <tr>
                             <td><label style="padding:10px;">Client's Bank Account</label></td>
-                            <td><input type="text" class="form-control" id="clients_bank_acc" name="clients_bank_acc"></td>
+                            <td><input type="text" class="form-control" id="clients_bank_acc" name="clients_bank_acc">
+                            </td>
                         </tr>
                         <tr>
                             <td><label style="padding:10px;">Check No</label></td>
@@ -597,9 +625,12 @@
                             <td><label style="padding:10px;">Shop's Bank</label></td>
                             <td style="position: relative;">
                                 {{--                            <input type="text" class="form-control" id="shops_bank" name="shops_bank">--}}
-                                <select id="shops_bank"   name="shops_bank" class="form-control">
+                                <select id="shops_bank" name="shops_bank" class="form-control">
                                     @foreach($bank as $b)
-                                        <option value="{{$b->acc_name}},{{$b->account->name?? "n/a"}}">{{$b->account->name?? " "}}({{$b->acc_name}})</option>
+                                        <option
+                                            value="{{$b->acc_name}},{{$b->account->name?? "n/a"}}">{{$b->account->name?? " "}}
+                                            ({{$b->acc_name}})
+                                        </option>
                                     @endforeach
                                 </select>
                                 <div id="shop_bank_div"
@@ -643,7 +674,7 @@
                             </td>
                             <td>
                                 <div style="width:50px; margin: 20px auto;">
-{{--                                    <input type="button" class="btn btn-success" id="check_ok" value="OK">--}}
+                                    {{--                                    <input type="button" class="btn btn-success" id="check_ok" value="OK">--}}
                                     <input type="submit" value="ok" class="btn btn-success">
                                 </div>
                             </td>
@@ -801,7 +832,7 @@
                             </td>
                             <td>
                                 <div style="width:50px; margin: 20px auto;">
-{{--                                    <input type="button" class="btn btn-success btn-lg" id="card_ok" value="OK">--}}
+                                    {{--                                    <input type="button" class="btn btn-success btn-lg" id="card_ok" value="OK">--}}
                                     <input type="submit" class="btn btn-success btn-lg" value="ok">
                                 </div>
                             </td>
@@ -821,15 +852,13 @@
     <script type="text/javascript">
 
 
-
-
-        $(document).ready(function()
-        {
+        $(document).ready(function () {
             $('body').on('click', '.name', function (event) {
 
                 productID = Number($(this).closest('tr').find(".name").attr('data-prodid'));
-
-
+                serial_qty = $(this).closest('tr').find(".qnty").text();
+               //  alert(serial_qty);
+               // console.log(serial_qty)
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -846,7 +875,6 @@
                         console.log(serial_unsold);
 
                         $('#serial_modal').modal('toggle');
-
 
 
                         $('#serialInput').empty();
@@ -885,10 +913,9 @@
                 }
                 if (check_amount == "") {
                     alert('Amount Can Not Empty')
-                }else{
+                } else {
                     $('#check_info').hide();
                 }
-
 
 
             });
@@ -900,14 +927,12 @@
                 var card_bank_acc_id = $('#card_bank_account').val();
 
 
-
                 if (shop_bank == 0) {
                     alert('Bank Name Can Not Empty')
                 }
                 if (card_bank_acc_id == 0) {
                     alert('Bank Account Can Not Empty')
-                }
-                else{
+                } else {
                     $('#card_info').hide();
                 }
 
@@ -922,7 +947,7 @@
         var product_id;
         var product_serial;
         var serial_qty;
-        var serial_array = {};
+        var serial_array =  @json($serials);;
         var serial_unsold;
         var warranty;
         var product_stock;
@@ -1168,7 +1193,7 @@
                             var pur_price = $(this).find(".active").attr("data-pur");
                             sub_unit = $(this).find(".active").attr("data-sub_unit");
                             unit = $(this).find(".active").attr("data-unit");
-                                alert(sub_unit)
+
                             console.log(pbq)
                             if (sub_unit) {
                                 $('#search').val(name);
@@ -1805,19 +1830,18 @@
             $('#serial_save').click(function (e) {
 
                 var qnt = $('#qnt').val();
-                let selectedSerials = $('#serialInput').val();+
+                let selectedSerials = $('#serialInput').val();
+                +
 
-                console.log(selectedSerials)
+                    console.log(selectedSerials)
 
                 if (serial_qty != selectedSerials.length) {
                     alert('Please Select Serial Number of : ' + serial_qty);
 
-                }
-                else{
+                } else {
                     serial_array[product_id] = selectedSerials;
                     $('#serial_modal').modal('hide');
                 }
-
 
 
                 // var result = selectedSerials.join();
@@ -1828,7 +1852,6 @@
 
                 // var tdval = $(".price-table tr").find(`[data-prodid='${product_id}']`);
                 // tdval.append(result);
-
 
 
                 console.log(JSON.stringify(serial_array));
@@ -2414,6 +2437,7 @@
                 fieldValues.mobile_cash = $('#mobile_cash').val();
                 fieldValues.tranxid = $('#tranxid').val();
                 fieldValues.mobile_remarks = $('#mobile_remarks').val();
+                fieldValues.invoice_id = $('#invoice_id').val();
 
                 var formData = new FormData();
 
@@ -2436,7 +2460,7 @@
                 });
 
                 $.ajax({
-                    url: "{{ URL::route('sales_invoice_save') }}",
+                    url: "{{ URL::route('sales_invoice_save_edit') }}",
                     method: 'post',
                     data: formData,
                     //data: cartData,
@@ -2449,73 +2473,15 @@
                     },
                     error: function (ts) {
                         window.location.href = "/dashboard/sales_invoicemain/" + ts.responseText;
-
-                        // alert(ts.responseText);
-                        //
-                        // var invoice = ts.responseText;
-                        //
-                        // printPos(invoice);
-                        // $('#cust_phone').val("");
-                        // $('#cust_name').val("");
-                        // $('#cust_id').val("0");
-                        // $('#vat').val("0");
-                        // $('#disc').val("0");
-                        // $('#scharge').val("0");
-                        // $('#discount').val("0");
-                        // $('#amount').val("0")
-                        // $('#total').val("0");
-                        // $('#payment').val("0");
-                        // $('#paytype').val("cash");
-                        // $('#hid_total').val("0");
-                        // $('#total_vat').val("0");
-                        //
-                        // $('#card_bank').val("");
-                        // $('#card_bank_id').val("");
-                        // $('#card_bank_account').val("");
-                        // $('#card_bank_acc_id').val("0");
-                        // $('#card_type').val("visa");
-                        // $('#card_amount').val("");
-                        // $('#card_cash').val("");
-                        // $('#card_remarks').val("");
-                        //
-                        // $('#mobile_bank').val("");
-                        // $('#mobile_bank_id').val("");
-                        // $('#mobile_bank_account').val("");
-                        // $('#mobile_bank_acc_id').val("0");
-                        // $('#mobile_bank_acc_cust').val("");
-                        // $('#mobile_amount').val("");
-                        // $('#mobile_cash').val("");
-                        // $('#tranxid').val("");
-                        // $('#mobile_remarks').val("");
-                        //
-                        //
-                        // $('#clients_bank').val("");
-                        // $('#clients_bank_acc').val("");
-                        // $('#check_no').val("");
-                        // $('#check_type').val("pay_cash");
-                        // $('#shops_bank').val("");
-                        // $('#bank_id').val("0");
-                        // $('#shops_bank_account').val("");
-                        // $('#account_id').val("0");
-                        // $('#check_amount').val("");
-                        // $('#check_cash').val("");
-                        // $('#check_date').val("");
-                        // $('#check_remarks').val("");
-                        //
-                        //
-                        // $('.price-table td').remove();
-                        //
-                        // $("#wait").hide();
-                        //
-                        // $('#save').attr('disabled', false);
-                        //
-                        // location.reload();
+                        // alert(ts);
+                        console.log(ts);
 
 
                     },
                     success: function (data) {
 
-                        alert(data);
+                        // alert(data);
+                        console.log(data);
 
                     }
                 });
@@ -2740,12 +2706,7 @@
                 $('#square_foot_modal').on('shown.bs.modal', function () {
                     $('#quantity').trigger('focus')
                 });
-
-                    $('#qty_type').text(sub_unit)
-
             } else {
-                $('#qty_type').text(unit)
-
                 $('#search').val(name);
                 per_box_qty = 0;
                 box = 0;
@@ -3406,6 +3367,6 @@
         vertical-align: middle;
     }
 
-    }
+        }
 
 </style>

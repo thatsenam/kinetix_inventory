@@ -183,7 +183,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(['get', 'post'], '/dashboard/up_cust/{id}', 'PosCustomerController@UpCust');
 
     Route::match(['get', 'post'], '/dashboard/customer/{id}', 'PosCustomerController@getCustomer');
-    Route::get('/customer/details/prev', [PosSupplierController::class, 'getPreviousBalance_customer'])->name('customer.details.previousBalance');
+//    Route::get('/customer/details/prev', [PosSupplierController::class, 'getPreviousBalance_customer'])->name('customer.details.previousBalance');
+    Route::get('/customer/details/prev', 'PosSupplierController@getPreviousBalance_customer')->name('customer.details.previousBalance');
 
     Route::match(['get', 'post'], '/customer/details', 'PosCustomerController@filter_data')->name('customer.details');
     Route::resource('customer', 'PosCustomerController');
@@ -278,11 +279,13 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('/dashboard/pos', 'PosController@index')->name('pos_index')->middleware('auth');
 
 Route::get('/dashboard/purchase_products', 'PosPurchaseController@purchase_products')->name('purchase_products')->middleware('auth');
+Route::get('/dashboard/purchase_products_edit/{invoice}', 'PosPurchaseController@purchase_products_edit')->name('purchase_products_edit')->middleware('auth');
 
 Route::post('/dashboard/get_purchase_products', 'PosPurchaseController@get_purchase_products')->name('get_purchase_products')->middleware('auth');
 Route::post('/dashboard/get_purchase_return_products', 'PosPurchaseController@get_purchase_return_products')->name('get_purchase_return_products')->middleware('auth');
 
 Route::post('/dashboard/save_purchase_products', 'PosPurchaseController@save_purchase_products')->name('save_purchase_products')->middleware('auth');
+Route::post('/dashboard/save_purchase_products_edit', 'PosPurchaseController@save_purchase_products_edit')->name('save_purchase_products_edit')->middleware('auth');
 
 Route::post('/dashboard/get_supplier', 'PosPurchaseController@get_supplier')->name('get_supplier')->middleware('auth');
 
@@ -313,8 +316,10 @@ Route::match(['get', 'post'], '/dashboard/get_purchase_report_brand', 'PosPurcha
 
 
 Route::get('/dashboard/sales_invoice', 'PosSalesController@sales_invoice')->name('sales_invoice')->middleware('auth');
+Route::get('/dashboard/sales_invoice_edit/{invoice}', 'PosSalesController@sales_invoice_edit')->name('sales_invoice_edit')->middleware('auth');
 
 Route::get('/dashboard/sales_invoice_save', 'PosSalesController@sales_invoice_save')->name('sales_invoice_save')->middleware('auth');
+Route::post('/dashboard/sales_invoice_save_edit', 'PosSalesController@sales_invoice_save_edit')->name('sales_invoice_save_edit')->middleware('auth');
 
 Route::post('/dashboard/sales_invoice_save', 'PosSalesController@sales_invoice_save')->name('sales_invoice_save')->middleware('auth');
 

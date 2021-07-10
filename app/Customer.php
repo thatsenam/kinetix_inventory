@@ -35,9 +35,7 @@ class Customer extends Model
     public function getDueAttribute()
     {
 
-
-
-        return 9;
+        return 0;
 
     }
 

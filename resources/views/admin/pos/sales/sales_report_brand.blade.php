@@ -73,7 +73,7 @@
                                             <th>Product Name</th>
                                             <th>Qnt</th>
                                             <th>Price</th>
-                                            <th>IVA</th>
+                                            <th>Vat</th>
                                             <th>Total</th>
                                             <th>GTotal</th>
                                         </tr>

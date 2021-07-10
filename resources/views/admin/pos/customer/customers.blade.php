@@ -537,7 +537,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button class="btn btn-primary save">Update</button>
+                            <button id="update_cus" class="btn btn-primary save">Update</button>
                         </div>
                     </form>
                 </div>
@@ -578,6 +578,38 @@
                         {
                             $('#save_customer').prop('disabled',false)
                             $('#inputPhone').removeClass('is-invalid')
+                        }
+                    }
+                });
+            });
+            $("#phone").change(function(){
+                var s_text = $(this).val();
+                var formData = new FormData();
+                formData.append('s_text', s_text);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: '/dashboard/customers_phone',
+                    method: 'post',
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: "json",
+                    success: function (data) {
+
+                        if (data.includes(s_text)) {
+                            $('#update_cus').prop('disabled',true)
+                            $('#phone').addClass('is-invalid')
+                        }
+                        else
+                        {
+                            $('#update_cus').prop('disabled',false)
+                            $('#phone').removeClass('is-invalid')
                         }
                     }
                 });

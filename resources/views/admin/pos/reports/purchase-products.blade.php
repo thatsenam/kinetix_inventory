@@ -111,10 +111,15 @@
       var pid = $('#selectAction').val();
       var from_date = $('#from_date').val();
       var to_date = $('#to_date').val();
+
       if(from_date != '' &&  to_date != ''){
         $('#byproduct').DataTable().destroy();
         load_data(from_date, to_date, pid);
-      }else{
+      }
+      else if(pid == "Select Product") {
+            alert("Select A Product")
+        }
+      else{
         alert('Both Date is required');
       }
     });

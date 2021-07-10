@@ -38,19 +38,37 @@ class PosPurchaseController extends Controller
 
         return view('admin.pos.purchase.purchase_products', compact('warehouses', 'warehouse_id'));
     }
+    public function purchase_products_edit($invoice)
+    {
+        $warehouses = Warehouse::where('client_id', auth()->user()->client_id)->get();
+        if ($warehouses->count() < 2) {
+            $getW = Warehouse::where('client_id', auth()->user()->client_id)->first();
+            $warehouse_id = $getW->id;
+        } else {
+            $warehouse_id = "";
+        }
+
+        $purchase_p = PurchasePrimary::firstWhere('pur_inv',$invoice);
+        $purchase_d =PurchaseDetails::where('pur_inv',$invoice)->get();
+
+        $data = Serial::query()->where('pur_inv',$invoice)->pluck('product_id','serial')->toArray();
+        $serials = [];
+
+        foreach ($data as $ser=>$product_id){
+            $serials[$product_id][] = strval($ser)  ;
+
+        }
+
+//        dd($serials);
+
+
+        return view('admin.pos.purchase.purchase_products_edit', compact('warehouses', 'warehouse_id','purchase_p', 'purchase_d','invoice','serials'));
+    }
 
     public function get_purchase_products(Request $req)
     {
 
         $s_text = $req['s_text'];
-//        $products = DB::table('products')
-//            ->where('client_id',auth()->user()->client_id)
-//            ->where('product_name', 'like', '%'.$s_text.'%')
-//            ->orWhere('product_name', $s_text)
-//            ->where('product_name', '!=', '')
-//
-//            ->orderByRaw("(product_name = '{$s_text}') desc, length(product_name)")
-//            ->limit(9)->get();
 
         $products = DB::table('products')->where('products.client_id', auth()->user()->client_id)
             //            ->whereIn('products.id', $products)
@@ -311,12 +329,14 @@ class PosPurchaseController extends Controller
 
         foreach ($serials as $productID => $serial) {
             foreach ($serial as $ser) {
-                Serial::create([
-                    'product_id' => $productID,
-                    'serial' => $ser,
-                    'supplier_id' => $supp_id,
-                    'pur_inv' => $pur_inv,
-                ]);
+                    if ($ser != null){
+                        Serial::create([
+                            'product_id' => $productID,
+                            'serial' => $ser,
+                            'supplier_id' => $supp_id,
+                            'pur_inv' => $pur_inv,
+                        ]);
+                    }
             }
         }
 
@@ -408,6 +428,7 @@ class PosPurchaseController extends Controller
                 'credit' => $credit,
                 'date' => $date,
                 'user_id' => $user,
+                'note' => $pur_inv,
             ]);
 
             $head = "Purchase I.V.A";
@@ -423,6 +444,295 @@ class PosPurchaseController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
+                'user_id' => $user,
+                  'note' => $pur_inv,
+            ]);
+
+            $head = "Cash In Hand";
+            $description = "Purchase";
+            $credit = $payment;
+            $debit = 0;
+
+            AccTransaction::create([
+
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid" . " " . $supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'user_id' => $user,
+                'note' => $pur_inv,
+
+            ]);
+
+            $due = $gtotal - $payment;
+            if ($due > 0) {
+                $head = $supplier->name . " " . $supplier->phone;
+                $description = "Purchase Due From Invoice  " . $pur_inv;
+                $credit = $due;
+                $debit = 0;
+
+                AccTransaction::create([
+
+                    'vno' => $vno,
+                    'head' => $head,
+                    'sort_by' => "sid" . " " . $supp_id,
+                    'description' => $description,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'date' => $date,
+                    'user_id' => $user,
+                    'note' => $pur_inv,
+
+                ]);
+            }
+
+        } else {
+
+            $vno = time();
+
+            $head = "Purchase";
+            $description = "Due Purchase from Invoice " . $pur_inv;
+            $credit = 0;
+            $debit = $purchase_total;
+
+            AccTransaction::create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid" . " " . $supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'note' => $pur_inv,
+                'user_id' => $user
+            ]);
+
+            $head = "Due Purchase I.V.A";
+            $description = "Purchase I.V.A from Invoice " . $pur_inv;
+            $credit = 0;
+            $debit = $total_vat;
+
+            AccTransaction::create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid" . " " . $supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'note' => $pur_inv,
+                'user_id' => $user
+            ]);
+
+            $head = $supplier->name . " " . $supplier->phone;
+            $description = "Purchase";
+            $credit = $gtotal;
+            $debit = 0;
+
+            AccTransaction::create([
+                'vno' => $vno,
+                'note' => $pur_inv,
+                'head' => $head,
+                'sort_by' => "sid" . " " . $supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+
+                'user_id' => $user
+            ]);
+        }
+
+    }
+    public function save_purchase_products_edit(Request $req)
+    {
+
+        $fieldValues = json_decode($req['fieldValues'], true);
+
+        $warehouse = $fieldValues['warehouse_id'];
+        $supp_name = $fieldValues['supp_name'];
+        $supp_id = $fieldValues['supp_id'];
+        $supp_memo = $fieldValues['supp_memo'];
+        $discount = (double)$fieldValues['discount'];
+        $discount = round($discount, 2);
+        $amount = (double)$fieldValues['amount'];
+        $amount = round($amount, 2);
+        $payment = (double)$fieldValues['payment'];
+        $payment = round($payment, 2);
+        $total = $fieldValues['total'];
+        $total = round($total, 2);
+        $total_vat = $fieldValues['total_vat'];
+        $total_vat = round($total_vat, 2);
+        $date = $fieldValues['date'];
+        $invoice = $fieldValues['invoice'];
+        $user = Auth::id();
+
+        $gtotal = $amount + $total_vat - $discount;
+        $purchase_total = $amount - $discount;
+        if ($discount == '') {
+            $discount = "0.00";
+        }
+        if ($payment == '') {
+            $payment = "0.00";
+        }
+
+        if ($supp_id == 0) {
+            $maxsupid = (DB::table('suppliers')->max('id') + 1);
+            Supplier::create([
+                'name' => $supp_name
+            ]);
+            $supp_id = $maxsupid;
+        }
+
+        $inv_counting = PurchasePrimary::whereDate('date', date('Y-m-d'))
+            ->where('client_id', auth()->user()->client_id)->distinct()->count('pur_inv');
+
+
+        $pur_inv = $invoice;
+
+        PurchasePrimary::where('pur_inv',$invoice)->delete();
+        PurchaseDetails::where('pur_inv',$invoice)->delete();
+        Serial::where('pur_inv',$invoice)->delete();
+        $remarks = 'Purchase Invoice No-' . $invoice;
+        Stock::where('remarks',$remarks)->delete();
+        AccTransaction::where('note', $invoice) ->delete();
+
+        PurchasePrimary::create([
+            'pur_inv' => $pur_inv,
+            'sid' => $supp_id,
+            'supp_inv' => $supp_memo,
+            'discount' => $discount,
+            'amount' => $amount,
+            'total' => $gtotal,
+            'vat_amount' => $total_vat,
+            'payment' => $payment,
+            'date' => $date,
+            'user' => $user
+        ]);
+
+        $serials = json_decode($req['serialArray'], true);
+
+        foreach ($serials as $productID => $serial) {
+            foreach ($serial as $ser) {
+                    if ($ser != null){
+                        Serial::create([
+                            'product_id' => $productID,
+                            'serial' => $ser,
+                            'supplier_id' => $supp_id,
+                            'pur_inv' => $pur_inv,
+                        ]);
+                    }
+            }
+        }
+
+        $take_cart_items = json_decode($req['cartData'], true);
+        $count = count($take_cart_items);
+        // dd($take_cart_items);
+
+        for ($i = 0; $i < $count;) {
+
+            $j = $i;
+            $j1 = $i + 1;
+            $j2 = $i + 2;
+            $j3 = $i + 3;
+            $j4 = $i + 4;
+            $j5 = $i + 5;
+            $j6 = $i + 6;
+
+            if ($take_cart_items[$j] == 0) {
+
+                $max_pid = (Products::max('id') + 1);
+
+                $product = new Products;
+                $product->id = $max_pid;
+                $product->product_name = $take_cart_items[$j1];
+                $product->price = $take_cart_items[$j4];
+                $product->stock = $take_cart_items[$j3];
+                $product->save();
+
+                $pid = $max_pid;
+
+            } else {
+
+                $product = DB::table('products')->where('id', $take_cart_items[$j])->first();
+
+                $stock = $product->stock ?? 0;
+                $stock = ($stock + $take_cart_items[$j3]);
+
+                DB::table('products')->where('id', $take_cart_items[$j])->update(['stock' => $stock]);
+
+                $pid = $take_cart_items[$j];
+            }
+
+            PurchaseDetails::create([
+                'pur_inv' => $pur_inv,
+                'pid' => $pid,
+                'qnt' => $take_cart_items[$j3],
+                'box' => $take_cart_items[$j2],
+                'price' => $take_cart_items[$j4],
+                'vat' => $take_cart_items[$j5],
+                'total' => $take_cart_items[$j6],
+                'user' => $user
+            ]);
+
+            Stock::create([
+                'date' => $date,
+                'warehouse_id' => $warehouse,
+                'product_id' => $pid,
+                'box' => $take_cart_items[$j2],
+                'in_qnt' => $take_cart_items[$j3],
+                'particulars' => 'Purchase',
+                'remarks' => 'Purchase Invoice No-' . $pur_inv,
+                'user_id' => $user,
+                'client_id' => auth()->user()->client_id,
+            ]);
+
+
+            $i = $i + 7;
+        }
+
+        //////Save to Accounts//////
+
+        $supplier = DB::table('suppliers')->where('id', $supp_id)->first();
+
+        if ($payment > 0) {
+
+            $vno = time();
+
+            $head = "Purchase";
+            $description = "Purchase from Invoice " . $pur_inv;
+            $credit = 0;
+            $debit = $purchase_total;
+
+            AccTransaction::create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid" . " " . $supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'note' => $pur_inv,
+                'user_id' => $user,
+            ]);
+
+            $head = "Purchase I.V.A";
+            $description = "Purchase I.V.A from Invoice " . $pur_inv;
+            $credit = 0;
+            $debit = $total_vat;
+
+            AccTransaction::create([
+                'vno' => $vno,
+                'head' => $head,
+                'sort_by' => "sid" . " " . $supp_id,
+                'description' => $description,
+                'debit' => $debit,
+                'credit' => $credit,
+                'date' => $date,
+                'note' => $pur_inv,
                 'user_id' => $user
             ]);
 
@@ -440,6 +750,7 @@ class PosPurchaseController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
+                'note' => $pur_inv,
                 'user_id' => $user,
 
             ]);
@@ -460,6 +771,7 @@ class PosPurchaseController extends Controller
                     'debit' => $debit,
                     'credit' => $credit,
                     'date' => $date,
+                    'note' => $pur_inv,
                     'user_id' => $user,
 
                 ]);
@@ -482,6 +794,7 @@ class PosPurchaseController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
+                'note' => $pur_inv,
                 'user_id' => $user
             ]);
 
@@ -498,6 +811,7 @@ class PosPurchaseController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
+                'note' => $pur_inv,
                 'user_id' => $user
             ]);
 
@@ -514,6 +828,7 @@ class PosPurchaseController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'date' => $date,
+                'note' => $pur_inv,
                 'user_id' => $user
             ]);
         }
@@ -823,6 +1138,7 @@ class PosPurchaseController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $action = '<a data-id=' . $row->pur_inv . ' title="View Details" href="#" class="view mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a>
+            <a data-id=' . $row->pur_inv . ' title="edit" href="#" class="edit"><span class="btn btn-xs btn-info"><i class="mdi mdi-pencil"></i></span></a>
             <a data-id=' . $row->pur_inv . ' title="Delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
                 return $action;
             })

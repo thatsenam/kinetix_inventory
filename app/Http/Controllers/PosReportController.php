@@ -507,6 +507,7 @@ class PosReportController extends Controller
             $newtime = $request->from_date;
             $lastTime = $request->to_date;
             if (!empty($request->from_date)) {
+
                 $data = DB::table('sales_invoice_details')
                     ->select('sales_invoice_details.pid', 'sales_invoice_details.invoice_no', 'sales_invoice_details.qnt',
                         'sales_invoice_details.price', 'sales_invoice_details.total', 'sales_invoice_details.vat', 'products.product_name')
@@ -515,14 +516,20 @@ class PosReportController extends Controller
                     ->where('pid', $pid)
                     ->whereBetween('sales_invoice_details.created_at', array($request->from_date, $request->to_date))
                     ->get();
-            } else {
+
+
+
+            } else
+            {
                 $data = DB::table('sales_invoice_details')
                     ->where('sales_invoice_details.client_id', auth()->user()->client_id)
                     ->select('sales_invoice_details.pid', 'sales_invoice_details.invoice_no', 'sales_invoice_details.qnt',
                         'sales_invoice_details.price', 'sales_invoice_details.total', 'sales_invoice_details.vat', 'products.product_name')
                     ->join('products', 'sales_invoice_details.pid', 'products.id')
                     ->get();
+
             }
+
             return datatables()->of($data)->make(true);
         }
         return view('admin.pos.reports.sales-product')->with(compact('products'));

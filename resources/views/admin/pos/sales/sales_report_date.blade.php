@@ -364,6 +364,16 @@
 
         });
 
+
+        $('body').on('click', '.edit', function(){
+            var invoice = $(this).data("id");
+
+
+            window.location.replace('/dashboard/sales_invoice_edit/'+ invoice);
+
+
+        });
+
         $('body').on('click', '.view', function(){
 
                         var s_text = $(this).data("id");

@@ -2913,20 +2913,7 @@ class PosSalesController extends Controller
             $sales_product = SalesInvoiceDetails::where('client_id', auth()->user()->client_id)
                 ->where('invoice_no', $inv)->select('price', 'pid', 'qnt')->get();
             $netProfit = 0;
-//            foreach ($sales_product as $sale_product) {
-//                if ($profitCalculation == '2') {
-//                    $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
-//                        ->where('pid', $sale_product->pid)->latest()->first()->price;
-//                } else {
-//                    $purchasePrice = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
-//                        ->where('pid', $sale_product->pid)->avg('price');
-//                }
-//                $purchasePrice = PurchaseDetails::where('client_id', auth()->user()->client_id)
-//                    ->where('pid', $sale_product->pid)->avg('price');
-//
-//                $profit = ($sale_product->price - $purchasePrice) * $sale_product->qnt;
-//                $netProfit += $profit;
-//            }
+
             $sale->profit = round($netProfit, 2);
 
         }
@@ -2934,7 +2921,7 @@ class PosSalesController extends Controller
         return DataTables()->of($sales)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $action = '<a data-id=' . $row->invoice_no . ' title="View" href="/dashboard/sales_invoicemain/' . $row->invoice_no . '" class="mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a><a data-id=' . $row->invoice_no . ' title="Delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
+                $action = '<a data-id=' . $row->invoice_no . ' title="View" href="/dashboard/sales_invoicemain/' . $row->invoice_no . '" class="mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a><a data-id=' . $row->invoice_no . ' title="edit" href="#" class="edit"><span class="btn btn-xs btn-info"><i class="mdi mdi-pencil"></i></span></a><a data-id=' . $row->invoice_no . ' title="Delete" href="#" class="delete"><span class="btn btn-xs btn-danger"><i class="mdi mdi-delete"></i></span></a>';
                 return $action;
             })
             // <a data-id='.$row->invoice_no.' title="View Details" href="#" class="view mr-2"><span class="btn btn-xs btn-info"><i class="mdi mdi-eye"></i></span></a>

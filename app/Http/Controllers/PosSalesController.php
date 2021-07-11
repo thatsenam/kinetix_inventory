@@ -113,6 +113,7 @@ class PosSalesController extends Controller
                     ->where('pid', $pid)->sum('qnt');
                 $damage = DB::table('damage_products')->where('client_id', auth()->user()->client_id)
                     ->where('pid', $pid)->sum('qnt');
+
                 $stock = $pPurchase - $returns - $psold + $sale_return - $damage;
 
                 $pur_price = PurchaseDetails::Where('pid', $pid)->latest()->take(1)->first()->price ?? 0;
@@ -2554,6 +2555,8 @@ class PosSalesController extends Controller
 
             DB::table('acc_transactions')->where('vno', $vno)->delete();
         }
+
+        return "OK";
     }
 
     public function sales_return()
@@ -2929,10 +2932,32 @@ class PosSalesController extends Controller
             ->make(true);
     }
 
-    public function sales_report_brand()
+    public function sales_report_brand( Request  $request)
     {
         $brands = DB::table('brands')->where('client_id', auth()->user()->client_id)->get();
-        return view("admin.pos.sales.sales_report_brand", compact('brands'));
+
+
+        $bid = $request->select_brands;
+        $formtime = $request->from_date;
+        $lastTime = $request->to_date;
+
+
+        if (!empty($request->from_date)) {
+            $product = Products::query()->where('brand_id',$bid)->pluck('id');
+
+            $data = SalesInvoiceDetails::where('client_id', auth()->user()->client_id)
+                ->wherein('pid', $product)
+                ->whereBetween('created_at', [$formtime, $lastTime])->get();
+
+
+        } else {
+
+            $data = SalesInvoiceDetails::where('client_id', auth()->user()->client_id)->get();
+
+        }
+
+
+        return view("admin.pos.sales.sales_report_brand", compact('brands' ,'formtime' ,'lastTime','data'));
     }
 
     public function get_sales_report_brand(Request $req)

@@ -322,13 +322,22 @@
 
         //JKGGGGGGGGGGGGGG
         $('body').on('click', '.delete', function(){
+            var invoice = $(this).data("id");
 
-            if(confirm("Are you Sure to Delete?")){
+            swal.fire({
+                title: "Delete?",
+                text: "Please ensure and then confirm!",
+                type: "warning",
+                showCancelButton: !0,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: !0
+            }).then(function (e) {
 
-                var invoice = $(this).data("id");
+
 
                 var formData = new FormData();
-        	    formData.append('invoice', invoice);
+                formData.append('invoice', invoice);
 
                 $.ajaxSetup({
                     headers: {
@@ -337,30 +346,32 @@
                 });
 
                 $.ajax({
-            		  url: "{{ URL::route('delete_sales_invoice')}}",
-                      method: 'post',
-                      data: formData,
-                      contentType: false,
-                      cache: false,
-                      processData: false,
-                      dataType: "json",
-            		  beforeSend: function(){
-                			//$("#wait").show();
-                		},
-            		  error: function(ts) {
+                    url: "{{ URL::route('delete_sales_invoice')}}",
+                    method: 'post',
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: "json",
+                    beforeSend: function(){
+                        //$("#wait").show();
+                    },
+                    error: function(ts) {
+                        // console.log(ts);
 
-                          // alert(ts.responseText);
-                          location.reload();
-                      },
-                      success: function(data){
+                        // alert(ts.responseText);
+                        location.reload();
+                    },
+                    success: function(data){
 
-                          // alert(data);
-                      }
+                        location.reload();
+                        // alert(data);
+                    }
                 });
+            }, function (dismiss) {
+                return false;
+            });
 
-            }else{
-                e.preventDefault();
-            }
 
         });
 

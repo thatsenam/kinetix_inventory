@@ -1,5 +1,5 @@
 @extends('admin.pos.master')
-        
+
 @section('content')
 
 <div class="content-wrapper">
@@ -63,12 +63,7 @@
                   </thead>
                   <tfoot>
                     <tr>
-                        <th>Date</th>
-                        <th>View Invoice</th>
-                        <th>Name</th>
-                        <th>Total</th>
-                        <th>Payment</th>
-                        <th>Due</th>
+
                     </tr>
                   </tfoot>
                 </table>

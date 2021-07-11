@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Brands;
@@ -37,7 +38,19 @@ class BrandsController extends Controller
     }
 
     public function viewBrands(){
-        $brands = Brands::orderBy('name', 'ASC')->where('client_id',auth()->user()->client_id)->get();
+
+        $product = Products::all()->pluck('cat_id')->toArray();
+
+
+        $brands = Brands::orderBy('name', 'ASC')
+            ->where('client_id',auth()->user()->client_id)
+            ->get()->map(function ($brand) use ($product){
+                $brand['used'] = false;
+                if (in_array($brand->id , $product)){
+                    $brand['used'] = true;
+                }
+                return $brand;
+            });
         return view('admin.view_brands')->with('brands', $brands);
     }
 

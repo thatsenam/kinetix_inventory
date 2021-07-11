@@ -207,7 +207,7 @@
                                                     <th>Invoice</th>
                                                     <th>Sub Total</th>
                                                     <th>Total</th>
-                                                    <th>PAid</th>
+                                                    <th>Paid</th>
                                                     <th>Due</th>
                                                 </tr>
                                                 </thead>

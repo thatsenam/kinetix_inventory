@@ -310,7 +310,7 @@
                             <div class="payment_details_div row" id="card" style="display: none;">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="card_type">Card Type</label>
+                                        <label for="card_type">Card Type *</label>
                                         <select class="form-control" id="card_type" name="card_type">
                                             <option value="" selected="selected">SelectOne</option>
                                             <option value="credit">Credit Card</option>
@@ -322,7 +322,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="card_number">Company Bank</label>
+                                        <label for="card_number">Company Bank *</label>
                                         <select class="form-control" id="card_bank_account" name="card_bank_account">
                                             @foreach($getbanks as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -376,7 +376,7 @@
                                     <div class="row col-12">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="card_number">Company Bank</label>
+                                                <label for="card_number">Company Bank *</label>
                                                 <select class="form-control" id="shops_bank_account"
                                                         name="shops_bank_account">
                                                     @foreach($getbanks as $item)
@@ -415,7 +415,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Bank Name</label>
+                                        <label>Bank Name *</label>
                                         <select class="form-control" id="bt_shops_bank_acc" name="bt_shops_bank_acc">
                                             @foreach($getbanks as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -585,7 +585,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button class="btn btn-primary save">Update</button>
+                            <button class="btn btn-primary save" id="up_sup">Update</button>
                         </div>
                     </form>
                 </div>
@@ -625,6 +625,36 @@
                         } else {
                             $('#save_customer').prop('disabled', false)
                             $('#inputPhone').removeClass('is-invalid')
+                        }
+                    }
+                });
+            });
+            $("#phone").change(function () {
+                var s_text = $(this).val();
+                var formData = new FormData();
+                formData.append('s_text', s_text);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: '/dashboard/supplier_phone',
+                    method: 'post',
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: "json",
+                    success: function (data) {
+
+                        if (data.includes(s_text)) {
+                            $('#up_sup').prop('disabled', true)
+                            $('#phone').addClass('is-invalid')
+                        } else {
+                            $('#up_sup').prop('disabled', false)
+                            $('#phone').removeClass('is-invalid')
                         }
                     }
                 });
@@ -937,6 +967,14 @@
                 if ($('#payamount').val() == '' || $('#paidon').val() == '') {
                     alert("Please fill all field with (*) sign!");
                     return false;
+                }
+                if ($('#paytype').val() == 'card') {
+
+                    if ($('#card_bank_account').val() == '' || $('#card_type').val() == '') {
+                        alert("Please fill with (*) sign!");
+                        return false;
+                    }
+
                 }
                 if ($('#paytype').val() == 'check') {
                     if ($('#clients_bank').val() == '' || $('#clients_bank_acc').val() == '' || $('#check_amount').val() == '' || $('#check_date').val() == '') {

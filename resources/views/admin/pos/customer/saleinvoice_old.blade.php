@@ -164,7 +164,7 @@
                                             </tr>
 
                                             <tr>
-                                                <th>Total IVA</th>
+                                                <th>Total Vat</th>
                                                 @if($is_product_base)
                                                     <td>{{ $get_customer->vat }}</td>
                                                 @else

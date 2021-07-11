@@ -77,7 +77,7 @@
                             {{$product->after_pprice}} <small style="color:crimson;text-decoration: line-through;">{{$product->before_price}}</small>
                             @endif
                         </td>
-                        <td>{{$product->stock}}</td>
+                        <td>{{$product->cur_stock}}</td>
 {{--                        <td><?php if($product->is_featured == 0){ echo '<span class="badge badge-warning">Regular</span>';}elseif($product->is_featured == 1){ echo "<span class='badge badge-success'>Featured</span>";} ?></td>--}}
 
                         <td>{{$product->unit}}</td>

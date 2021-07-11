@@ -24,43 +24,60 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <div class="row input-daterange mb-3">
-              <div class="col-md-3">
-                  <select id="selectAction" class="form-control select2">
-                      <option>Select Product</option>
-                      @foreach($products as $product)
-                        <option value="{{$product->pid}}">{{$product->product_name}}</option>
-                      @endforeach
-                  </select>
-              </div>
-              <div class="col-md-3">
-                <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date" readonly>
-              </div>
-              <div class="col-md-3">
-                <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date" readonly>
-              </div>
-              <div class="col-md-3">
-                <button type="button" name="filter" id="filter" class="btn btn-primary">Filter</button>
-                <button type="button" name="refresh" id="refresh" class="btn btn-default">Refresh</button>
-              </div>
-            </div>
+              <form action="">
+                  <div class="row input-daterange mb-3">
+                      <div class="col-md-3">
+                          <select id="select_product" name="select_product" class="form-control select2" required>
+                              <option value="" >Select Product</option>
+                              @foreach($products as $product)
+                                  <option value="{{$product->pid}}">{{$product->product_name}}</option>
+                              @endforeach
+                          </select>
+                      </div>
+                      <div class="col-md-3">
+                          <input type="date" name="from_date" id="from_date" value="{{$formtime}}"  class="form-control" placeholder="From Date" required>
+                      </div>
+                      <div class="col-md-3">
+                          <input type="date" name="to_date" id="to_date"  value="{{$lastTime}}" class="form-control" placeholder="To Date" required>
+                      </div>
+                      <div class="col-md-3">
+                          <input type="submit" class="btn btn-primary" value="Filter">
+                          <a href="{{route('salesby.product')}}" class="btn btn-default">Refresh</a>
+                      </div>
+                  </div>
+
+              </form>
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Sales Report By Product</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="byproduct" class="table table-bordered table-hover">
+                <table id="table" class="table table-bordered table-hover">
                   <thead>
                     <tr>
                         <th>Product Name</th>
                         <th>View Invoice</th>
                         <th>Quantity</th>
+                        <th>box</th>
                         <th>Unit Price</th>
                         <th>Total</th>
-                        <th>IVA</th>
                     </tr>
                   </thead>
+                    <tbody>
+
+                    @foreach($data as $sales)
+                        <tr>
+                            <td>{{$sales->product->product_name ?? " "}}</td>
+                            <td><a data-id="INV-1202106061" href="/dashboard/sales_invoice/{{$sales->invoice_no}}"><span class="fa fa-eye"></span> View</a></td>
+                            <td>{{$sales->qnt}}</td>
+                            <td>{{intdiv($sales->qnt ,$sales->product->per_box_qty ?? 1)}} {{$sales->product->sub_unit ?? " "}}  {{$sales->qnt % $sales->product->per_box_qty ?? 1}}</td>
+                            <td>{{$sales->price}}</td>
+                            <td>{{$sales->total}}</td>
+                        </tr>
+                    @endforeach
+
+                    </tbody>
                   <tfoot>
                     <tr>
                       <th></th>
@@ -86,113 +103,16 @@
 </div>
 
 @endsection
+@section('page-js-files')
+    <script>
+        $(document).ready(function() {
+            $('#table').DataTable();
+        } );
 
-@section('page-js-script')
-<script type="text/javascript">
-  $(document).ready(function() {
-    $("#from_date,#to_date").datepicker({
-      changeMonth: true,
-      changeYear: true,
-      dateFormat: "yy-mm-dd",
-    });
-    //On Click Refresh Button
-    $('#refresh').click(function(){
-        $('#from_date').val('');
-        $('#to_date').val('');
-        $('#byproduct').DataTable().destroy();
-        load_data();
-    });
-
-    $('#filter').click(function(){
-      var pid = $('#selectAction').val();
-      var from_date = $('#from_date').val();
-      var to_date = $('#to_date').val();
-      if(from_date != '' &&  to_date != ''){
-        $('#byproduct').DataTable().destroy();
-        load_data(from_date, to_date, pid);
-      }else{
-        alert('Both Date is required');
-      }
-    });
-
-    //Filter By Date
-    load_data ();
-    function load_data(from_date = '', to_date = '', pid = ''){
-      $("#byproduct").DataTable({
-        "responsive": true,
-        "autoWidth": false,
-        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-        "footerCallback": function ( row, data, start, end, display ) {
-            var api = this.api(), data;
-
-            // converting to interger to find total
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
-
-            // computing column Total of the complete result
-            var qty = api
-                .column( 2 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            // Total over this page
-            pageQtyTotal = api
-                .column( 2, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-
-              var total = api
-                .column( 4 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-
-                pageTotal = api
-                .column( 4, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
+        $(document).ready(function() {
+            $('#select_product').select2();
+        });
+    </script>
+    @endsection
 
 
-            // Update footer by showing the total with the reference of the column index
-              $( api.column( 1 ).footer() ).html('Total');
-              $( api.column( 2 ).footer() ).html(qty);
-              $( api.column( 4 ).footer() ).html(total);
-        },
-        "precessing": true,
-        "serverSide": true,
-        "columnDefs": [
-            { "orderable": false, "targets": 0 }
-        ],
-        ajax: {
-          url: '{{ route("salesby.product") }}',
-          data:{from_date:from_date, to_date:to_date, pid:pid},
-        },
-        columns: [
-          {data:'product_name',},
-          {
-            "mData": "invoice_no",
-            "mRender": function (data, type, row) {
-                return "<a data-id=" + row.invoice_no + " href='/dashboard/sales_invoice/" + row.invoice_no + "'><span class='fa fa-eye'></span> View</a>";
-            }
-          },
-          {data:'qnt',},
-          {data:'price',},
-          {data:'total',},
-          {data:'vat',},
-        ]
-      });
-    }
-
-  });
-</script>
-@stop

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Category;
@@ -46,7 +47,23 @@ class CategoryController extends Controller
     }
 
     public function viewCategories(){
-        $categories = Category::orderBy('name', 'ASC')->where('client_id',auth()->user()->client_id)->get();
+        $product = Products::all()->pluck('cat_id')->toArray();
+
+
+        $categories = Category::orderBy('name', 'ASC')
+            ->where('client_id',auth()->user()->client_id)
+            ->get()->map(function ($cat) use ($product) {
+
+                if( in_array( $cat->id ,$product ) )
+                {
+                    $cat['used'] = true;
+                }else{
+                    $cat['used'] = false;
+                }
+                return $cat;
+            });
+
+
         return view('admin.view_categories')->with('categories', $categories);
     }
 

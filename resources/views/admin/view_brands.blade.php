@@ -66,7 +66,7 @@
                               </i>
                               Edit
                           </a>
-                          <button class="btn btn-danger btn-sm" onclick="deleteConfirmation({{$brand->id}})">
+                          <button class="btn btn-danger btn-sm" onclick="deleteConfirmation({{$brand->id}})" @if($brand->used) disabled @endif >
                               <i class="fas fa-trash">
                               </i>
                               Delete

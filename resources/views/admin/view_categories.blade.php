@@ -69,11 +69,10 @@
                               </i>
                               Edit
                           </a>
-                          <button class="btn btn-danger btn-sm" onclick="deleteConfirmation({{$cat->id}})">
-                              <i class="fas fa-trash">
-                              </i>
-                              Delete
-                          </button>
+                            <button class="btn btn-danger btn-sm"
+                                    onclick="deleteConfirmation({{$cat->id}})"  @if($cat->used) disabled @endif>
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
                         </td>
                     </tr>
                     @endforeach

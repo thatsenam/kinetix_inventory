@@ -394,9 +394,9 @@
                                                             <select name="paytype" id="paytype" class="form-control"
                                                                     placeholder="" value="0">
                                                                 <option value='cash'>Cash Payment</option>
-                                                                <option value='card'>Card</option>
-                                                                <option value='mobile'>Mobile</option>
-                                                                <option value='check'>Check</option>
+                                                                <option value='card'>Card Payments</option>
+                                                                <option value='mobile'>Mobile Banking</option>
+                                                                <option value='check'>Check Payments</option>
                                                             </select>
                                                         </div>
                                                     </div>

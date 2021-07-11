@@ -308,7 +308,7 @@
                             <div class="payment_details_div row" id="card" style="display: none;">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="card_type">Card Type</label>
+                                        <label for="card_type">Card Type * </label>
                                         <select class="form-control" id="card_type" name="card_type">
                                             <option value="" selected="selected">--Select Card--</option>
                                             <option value="credit">Credit Card</option>
@@ -320,7 +320,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="card_number">Company Bank</label>
+                                        <label for="card_number">Company Bank *</label>
                                         <select class="form-control" id="card_bank_account" name="card_bank_account">
                                             @foreach($getbanks as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -1004,10 +1004,18 @@
                     }
                     if ($('#check_type').val() == 'pay_account') {
                         if ($('#shops_bank').val() == '' || $('#shops_bank_account').val() == '') {
-                            alert("Please fill cheque data");
+                            alert("Please fields with (*) sign");
                             return false;
                         }
                     }
+                }
+                if ($('#paytype').val() == 'card') {
+
+                    if ($('#card_bank_account').val() == '' || $('#card_type').val() == '') {
+                        alert("Please fill cheque data");
+                        return false;
+                    }
+
                 }
                 // alert($('#paytype').val());
                 // return false;

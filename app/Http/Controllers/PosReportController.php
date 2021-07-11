@@ -502,37 +502,23 @@ class PosReportController extends Controller
             ->get();
 
 
-        if (request()->ajax()) {
-            $pid = $request->pid;
-            $newtime = $request->from_date;
-            $lastTime = $request->to_date;
-            if (!empty($request->from_date)) {
+        $pid = $request->select_product;
+        $formtime = $request->from_date;
+        $lastTime = $request->to_date;
+        if (!empty($request->from_date)) {
 
-                $data = DB::table('sales_invoice_details')
-                    ->select('sales_invoice_details.pid', 'sales_invoice_details.invoice_no', 'sales_invoice_details.qnt',
-                        'sales_invoice_details.price', 'sales_invoice_details.total', 'sales_invoice_details.vat', 'products.product_name')
-                    ->join('products', 'sales_invoice_details.pid', 'products.id')
-                    ->where('sales_invoice_details.client_id', auth()->user()->client_id)
-                    ->where('pid', $pid)
-                    ->whereBetween('sales_invoice_details.created_at', array($request->from_date, $request->to_date))
-                    ->get();
+            $data = SalesInvoiceDetails::where('client_id', auth()->user()->client_id)
+                ->where('pid', $pid)
+                ->whereBetween('created_at', [$formtime, $lastTime])->get();
 
 
+        } else {
 
-            } else
-            {
-                $data = DB::table('sales_invoice_details')
-                    ->where('sales_invoice_details.client_id', auth()->user()->client_id)
-                    ->select('sales_invoice_details.pid', 'sales_invoice_details.invoice_no', 'sales_invoice_details.qnt',
-                        'sales_invoice_details.price', 'sales_invoice_details.total', 'sales_invoice_details.vat', 'products.product_name')
-                    ->join('products', 'sales_invoice_details.pid', 'products.id')
-                    ->get();
+            $data = SalesInvoiceDetails::where('client_id', auth()->user()->client_id)->get();
 
-            }
-
-            return datatables()->of($data)->make(true);
         }
-        return view('admin.pos.reports.sales-product')->with(compact('products'));
+
+        return view('admin.pos.reports.sales-product')->with(compact('products','data' ,'formtime','lastTime'));
     }
 
     public function SalesByCategory(Request $request)

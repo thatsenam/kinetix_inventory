@@ -109,7 +109,26 @@ class ProductsController extends Controller
     }
 
     public function ViewProducts(){
-        $products = Products::orderBy('product_name', 'DESC')->where('client_id',auth()->user()->client_id)->get();
+        $products = Products::firstWhere('client_id',auth()->user()->client_id)
+                        ->get()->map( function ($product){
+
+                $pid = $product->id;
+                $pPurchase = DB::table('purchase_details')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->sum('qnt');
+                $psold = DB::table('sales_invoice_details')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->sum('qnt');
+                $returns = DB::table('purchase_returns')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->sum('qnt');
+                $sale_return = DB::table('sales_return')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->sum('qnt');
+                $damage = DB::table('damage_products')->where('client_id', auth()->user()->client_id)
+                    ->where('pid', $pid)->sum('qnt');
+
+                $stock = $pPurchase - $returns - $psold + $sale_return - $damage;
+
+                $product['cur_stock'] = $stock;
+                return $product;
+            });
         $categories = Category::orderBy('name', 'ASC')->where('client_id',auth()->user()->client_id)->get();
         $brands = Brands::orderBy('name', 'ASC')->where('client_id',auth()->user()->client_id)->get();
         return view('admin.view_products')->with('products', $products)->with('categories', $categories)->with('brands', $brands);

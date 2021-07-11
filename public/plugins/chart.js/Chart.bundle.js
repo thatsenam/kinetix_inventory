@@ -1532,7 +1532,7 @@ function getAlpha(string) {
 // generators
 function hexString(rgba, a) {
    var a = (a !== undefined && rgba.length === 3) ? a : rgba[3];
-   return "#" + hexDouble(rgba[0]) 
+   return "#" + hexDouble(rgba[0])
               + hexDouble(rgba[1])
               + hexDouble(rgba[2])
               + (
@@ -5049,7 +5049,7 @@ var controller_bar = core_datasetController.extend({
 		var start = value.start === undefined ? 0 : value.max >= 0 && value.min >= 0 ? value.min : value.max;
 		var length = value.start === undefined ? value.end : value.max >= 0 && value.min >= 0 ? value.max - value.min : value.min - value.max;
 		var ilen = metasets.length;
-		var i, imeta, ivalue, base, head, size, stackLength;
+		var i, imeta, Vatlue, base, head, size, stackLength;
 
 		if (stacked || (stacked === undefined && stack !== undefined)) {
 			for (i = 0; i < ilen; ++i) {

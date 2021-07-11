@@ -128,7 +128,7 @@
                                     <th style="width: 10%;">Price</th>
                                     <th style="width: 10%;">Sub-unit</th>
                                     <th style="width: 10%;">Unit</th>
-                                    <th style="width: 10%;">IVA</th>
+                                    <th style="width: 10%;">Vat</th>
                                     <th style="width: 10%;">Total</th>
                                     <th style="width: 10%;">Grand Total</th>
                                 </tr>

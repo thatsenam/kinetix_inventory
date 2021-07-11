@@ -696,8 +696,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Due Sales IVA from Invoice " . $invoice;
+                $head = "SalesVat ";
+                $description = "Due Sales Vatfrom Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -758,8 +758,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Sales IVA from Invoice " . $invoice;
+                $head = "SalesVat ";
+                $description = "Sales Vat from Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -820,8 +820,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Sales IVA from Invoice " . $invoice;
+                $head = "SalesVat ";
+                $description = "Sales Vatfrom Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -948,8 +948,8 @@ class PosSalesController extends Controller
 
             ]);
 
-            $head = "Sales IVA";
-            $description = "Sales IVA from Invoice " . $invoice;
+            $head = "Sales Vat ";
+            $description = "Sales Vat from Invoice " . $invoice;
             $credit = $vat;
             $debit = 0;
 
@@ -1107,8 +1107,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Sales IVA from Invoice " . $invoice;
+                $head = "Sales Vat ";
+                $description = "Sales Vatfrom Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -1188,8 +1188,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Sales IVA from Invoice " . $invoice;
+                $head = "Sales Vat ";
+                $description = "Sales Vatfrom Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -1249,8 +1249,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Sales IVA from Invoice " . $invoice;
+                $head = "Sales Vat ";
+                $description = "Sales Vat from Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -1391,8 +1391,8 @@ class PosSalesController extends Controller
 
             ]);
 
-            $head = "Sales IVA";
-            $description = "Sales IVA from Invoice " . $invoice;
+            $head = "Sales Vat ";
+            $description = "Sales Vatfrom Invoice " . $invoice;
             $credit = $vat;
             $debit = 0;
 
@@ -1729,8 +1729,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Due Sales IVA from Invoice " . $invoice;
+                $head = "Sales Vat";
+                $description = "Due Sales Vatfrom Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -1790,8 +1790,8 @@ class PosSalesController extends Controller
                     'note' => $invoice,
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Sales IVA from Invoice " . $invoice;
+                $head = "Sales Vat";
+                $description = "Sales Vatfrom Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -1852,8 +1852,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Sales IVA from Invoice " . $invoice;
+                $head = "Sales Vat";
+                $description = "Sales Vatfrom Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -1981,8 +1981,8 @@ class PosSalesController extends Controller
 
             ]);
 
-            $head = "Sales IVA";
-            $description = "Sales IVA from Invoice " . $invoice;
+            $head = "Sales Vat";
+            $description = "Sales Vatrom Invoice " . $invoice;
             $credit = $vat;
             $debit = 0;
 
@@ -2139,8 +2139,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Sales IVA from Invoice " . $invoice;
+                $head = "Sales Vat";
+                $description = "Sales Vat from Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -2220,8 +2220,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Sales IVA from Invoice " . $invoice;
+                $head = "Sales Vat";
+                $description = "Sales Vat from Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -2285,8 +2285,8 @@ class PosSalesController extends Controller
 
                 ]);
 
-                $head = "Sales IVA";
-                $description = "Sales IVA from Invoice " . $invoice;
+                $head = "Sales Vat";
+                $description = "Sales Vat from Invoice " . $invoice;
                 $credit = $vat;
                 $debit = 0;
 
@@ -2429,8 +2429,8 @@ class PosSalesController extends Controller
 
             ]);
 
-            $head = "Sales IVA";
-            $description = "Sales IVA from Invoice " . $invoice;
+            $head = "Sales Vat";
+            $description = "Sales Vat from Invoice " . $invoice;
             $credit = $vat;
             $debit = 0;
 
@@ -2698,8 +2698,8 @@ class PosSalesController extends Controller
 
             ]);
 
-            $head = "Sales IVA";
-            $description = "Sales Return IVA from Invoice " . $rinvoice;
+            $head = "Sales Vat";
+            $description = "Sales Return Vat from Invoice " . $rinvoice;
             $debit = $total_vat;
             $credit = 0;
 
@@ -2757,8 +2757,8 @@ class PosSalesController extends Controller
 
             ]);
 
-            $head = "Sales IVA";
-            $description = "Sales Return IVA from Invoice " . $rinvoice;
+            $head = "Sales Vat";
+            $description = "Sales Return Vat from Invoice " . $rinvoice;
             $debit = $total_vat;
             $credit = 0;
 
@@ -2816,8 +2816,8 @@ class PosSalesController extends Controller
 
             ]);
 
-            $head = "Sales IVA";
-            $description = "Sales Return IVA from Invoice " . $rinvoice;
+            $head = "Sales Vat";
+            $description = "Sales Return Vat from Invoice " . $rinvoice;
             $debit = $total_vat;
             $credit = 0;
 

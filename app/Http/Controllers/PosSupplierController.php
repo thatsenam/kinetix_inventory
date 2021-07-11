@@ -697,10 +697,10 @@ class PosSupplierController extends Controller
             ->where('client_id', auth()->user()->client_id)
             ->where('sid', $id)->sum('payment');
 
-//        $fromPayment = DB::table('payment_invoice')
-//            ->where('client_id', auth()->user()->client_id)
-//            ->where('sid', $id)->sum('amount');
-        $fromPayment = 0;
+        $fromPayment = DB::table('payment_invoice')
+            ->where('client_id', auth()->user()->client_id)
+            ->where('sid', $id)->sum('amount');
+//        $fromPayment = 0;
 
         $sumDiscount = DB::table('purchase_primary')
             ->where('client_id', auth()->user()->client_id)

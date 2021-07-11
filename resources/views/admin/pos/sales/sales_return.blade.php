@@ -178,7 +178,7 @@
                                                     </div>
                                                     <div class="col-6">
                                                         <div class="form-group">
-                                                            <label>Total IVA</label>
+                                                            <label>Total Vat</label>
                                                             <input type="text" name="total_vat" id="total_vat"
                                                                    class="form-control" readonly="true" value="0">
                                                         </div>

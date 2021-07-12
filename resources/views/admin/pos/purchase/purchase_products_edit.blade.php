@@ -108,7 +108,7 @@
                                                             <th>Sub-unit</th>
                                                             <th>Unit</th>
                                                             <th>Price</th>
-                                                            <th class="{{ $GenSettings->vat_type == \App\VatType::$GLOBAL_BASE?'d-none':'' }}">
+                                                            <th>
                                                                 VAT
                                                             </th>
                                                             <th>Total</th>
@@ -1429,7 +1429,7 @@
 
             }
 
-            $('.price-table').append("<tr><td>" + sl + "</td><td data-prodid='" + id + "' style='width:200px;' class='name'>" + name + "</td><td class='box'>" + box + "</td><td class='qnt'>" + qnt + "</td><td class='price'>" + price + "</td><td class='totalVatTd'" + hidden_class + ">" + totalVat + "</td><td class='totalPriceTd'>" + total + "</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
+            $('.price-table').append("<tr><td>" + sl + "</td><td data-prodid='" + id + "' style='width:200px;' class='name'>" + name + "</td><td class='box'>" + box + "</td><td class='qnt'>" + qnt + "</td><td class='price'>" + price + "</td><td class='totalVatTd'>" + totalVat + "</td> <td class='totalPriceTd'>" + total + "</td><td><i class='delete mdi mdi-delete'></i></td></tr>");
 
             var totalPriceVal = Number($('#hid_total').val());
             var totalVatFieldVal = Number($('#total_vat').val());
